@@ -92,7 +92,7 @@ class Utils():
 
 		for ob in obs:
 			ob.parent = df
-			ob.location = [0, 0, 0]
+			ob.location = [0,0,0]
 			convert.apply_transforms(ob)
 
 
@@ -241,14 +241,16 @@ class Asset():
 		ob.data['gem'] = {'CUT': cut}
 		
 		if not obj:
-			ob.location = [0, 0, 0]
+			ob.location = [0,0,0]
 			convert.to_size(size, ob)
 			self.material(ob_type, ob, data_to.materials, tpe)
 		
 		else:
-			ob.location = obj.location
 			if obj.parent:
+				ob.location = [0,0,0]
 				ob.parent = obj.parent
+			else:
+				ob.location = obj.location
 
 			convert.to_size(size, ob, obj)
 			self.material(ob_type, ob, [obj.material_slots[0].material], tpe)
@@ -304,14 +306,16 @@ class Asset():
 			for iob in data_to.objects:
 				if 'Prongs' in iob.name:
 					ob = iob
-					ob.location = [0, 0, 0]
+					ob.location = [0,0,0]
 					ob.dimensions = ob.dimensions * size
 
 		else:
 			ob = data_to.objects[0]
-			ob.location = obj.location
 			if obj.parent:
+				ob.location = [0,0,0]
 				ob.parent = obj.parent
+			else:
+				ob.location = obj.location
 			convert.to_size(size, ob, obj)
 		
 		self.material(ob_type, ob, data_to.materials)
@@ -328,14 +332,16 @@ class Asset():
 			for iob in data_to.objects:
 				if 'Cutter' in iob.name:
 					ob = iob
-					ob.location = [0, 0, 0]
+					ob.location = [0,0,0]
 					ob.dimensions = ob.dimensions * size
 
 		else:
 			ob = data_to.objects[0]
-			ob.location = obj.location
 			if obj.parent:
+				ob.location = [0,0,0]
 				ob.parent = obj.parent
+			else:
+				ob.location = obj.location
 			convert.to_size(size, ob, obj, True)
 
 		self.material(ob_type, ob, data_to.materials)
@@ -441,7 +447,11 @@ class Import():
 				cut = ob.data['gem']['CUT']
 
 				with D.libraries.load(self.filepath) as (data_from, data_to):
+
 					data_to.objects = [cut.title()+' Prongs']
+
+					if 'Prongs' not in D.materials:
+						data_to.materials.append('Prongs')
 
 				asset.prongs(data_to, size, ob)
 
@@ -457,7 +467,11 @@ class Import():
 				cut = ob.data['gem']['CUT']
 
 				with D.libraries.load(self.filepath) as (data_from, data_to):
+
 					data_to.objects = [cut.title()+' Cutter']
+
+					if 'Cutter' not in D.materials:
+						data_to.materials.append('Cutter')
 
 				asset.cutter(data_to, size, ob)
 

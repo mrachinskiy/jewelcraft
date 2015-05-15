@@ -26,11 +26,77 @@ from bpy.types import Panel
 from . import localization
 
 
-def icon_tria(prop):
-	if prop: icon = 'TRIA_DOWN'
-	else: icon = 'TRIA_RIGHT'
-	return icon
+# Custom icons
+#######################################################################
 
+from bpy.app import version_string
+version = int(''.join(x for x in version_string if x.isdigit()))
+if version >= 2745:
+	icons = True
+else:
+	icons = False
+
+
+preview_collections = {}
+if icons:
+	from os import path
+	from bpy.utils import previews
+
+	pcoll = previews.new()
+	icons_path = path.join(path.dirname(__file__), 'icons')
+
+	load = pcoll.load
+	icon_path = path.join
+
+	load('cut',          icon_path(icons_path, 'cut.png'),          'IMAGE')
+	load('cutter',       icon_path(icons_path, 'cutter.png'),       'IMAGE')
+	load('cut-round',    icon_path(icons_path, 'cut-round.png'),    'IMAGE')
+	load('cut-oval',     icon_path(icons_path, 'cut-oval.png'),     'IMAGE')
+	load('cut-emerald',  icon_path(icons_path, 'cut-emerald.png'),  'IMAGE')
+	load('cut-marquise', icon_path(icons_path, 'cut-marquise.png'), 'IMAGE')
+	load('cut-pearl',    icon_path(icons_path, 'cut-pearl.png'),    'IMAGE')
+	load('cut-baguette', icon_path(icons_path, 'cut-baguette.png'), 'IMAGE')
+	load('cut-square',   icon_path(icons_path, 'cut-square.png'),   'IMAGE')
+
+	preview_collections['main'] = pcoll
+
+#######################################################################
+
+
+
+# Custom icons UI support
+#######################################################################
+
+if icons:
+	pcoll = preview_collections['main']
+	icon_cut = pcoll.get('cut').icon_id
+	icon_cutter = pcoll.get('cutter').icon_id
+else:
+	icon_cut= False
+	icon_cutter= False
+
+def icon_support(icon, custom_icon):
+	if icons:
+		i1 = 'NONE'
+		i2 = custom_icon
+	else:
+		i1 = icon
+		i2 = 0
+	return [i1, i2]
+
+icon_cut = icon_support('MESH_ICOSPHERE', icon_cut)
+icon_cutter = icon_support('MESH_CONE', icon_cutter)
+
+#######################################################################
+
+
+
+def icon_tria(prop):
+	if prop:
+		icon = 'TRIA_DOWN'
+	else:
+		icon = 'TRIA_RIGHT'
+	return icon
 
 
 
@@ -77,13 +143,13 @@ class JewelCraftImportPanel(Panel):
 		row.operator("jewelcraft.import_type", text="", icon="COLOR")
 		row = col.row(align=True)
 		row.prop(props, 'import_gem_cut', text="")
-		row.operator("jewelcraft.import_cut", text="", icon="MESH_ICOSPHERE")
+		row.operator("jewelcraft.import_cut", text="", icon=icon_cut[0], icon_value=icon_cut[1])
 		row = col.row(align=True)
 		row.prop(props, 'import_prongs', text=l['prongs'])
 		row.operator("jewelcraft.import_prongs", text="", icon="SURFACE_NCIRCLE")
 		row = col.row(align=True)
 		row.prop(props, 'import_cutter', text=l['cutter'])
-		row.operator("jewelcraft.import_cutter", text="", icon="MESH_CONE")
+		row.operator("jewelcraft.import_cutter", text="", icon=icon_cutter[0], icon_value=icon_cutter[1])
 
 		col.separator()
 		row = col.row(align=True)
@@ -92,7 +158,7 @@ class JewelCraftImportPanel(Panel):
 		col.separator()
 		col.operator("jewelcraft.import_gem", text=l['make_gem'])
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])
-		
+
 
 
 

@@ -34,7 +34,7 @@ bl_info = {
 	"tracker_url": "http://jewelcourses.com",
 	"category": "Object"}
 
-if "bpy" in locals():
+if 'bpy' in locals():
 	import importlib
 	importlib.reload(localization)
 	importlib.reload(helpers)
@@ -49,7 +49,6 @@ else:
 		PointerProperty,
 	)
 	from bpy.types import PropertyGroup
-	from . import helpers
 	from . import operators
 	from . import ui
 
@@ -72,16 +71,40 @@ def ui_gems_type(self, context):
 def ui_gems_cut(self, context):
 	'''For enum translation'''
 	l = localization.locale[context.scene.jewelcraft.lang]
+	
+	if ui.icons:
+		pcoll = ui.preview_collections['main']
+		icon_get = pcoll.get
+		
+		i_round = icon_get('cut-round').icon_id
+		i_oval = icon_get('cut-oval').icon_id
+		i_emerald = icon_get('cut-emerald').icon_id
+		i_marquise = icon_get('cut-marquise').icon_id
+		i_pearl = icon_get('cut-pearl').icon_id
+		i_baguette = icon_get('cut-baguette').icon_id
+		i_square = icon_get('cut-square').icon_id
 
-	items = [
-		('ROUND',    l['round'],    '', 0),
-		('OVAL',     l['oval'],     '', 1),
-		('EMERALD',  l['emerald'],  '', 2),
-		('MARQUISE', l['marquise'], '', 3),
-		('PEARL',    l['pearl'],    '', 4),
-		('BAGUETTE', l['baguette'], '', 5),
-		('SQUARE',   l['square'],   '', 6),
-	]
+		items = [
+			('ROUND',    l['round'],    '', i_round,    0),
+			('OVAL',     l['oval'],     '', i_oval,     1),
+			('EMERALD',  l['emerald'],  '', i_emerald,  2),
+			('MARQUISE', l['marquise'], '', i_marquise, 3),
+			('PEARL',    l['pearl'],    '', i_pearl,    4),
+			('BAGUETTE', l['baguette'], '', i_baguette, 5),
+			('SQUARE',   l['square'],   '', i_square,   6),
+		]
+
+	else:
+		items = [
+			('ROUND',    l['round'],    '', 0),
+			('OVAL',     l['oval'],     '', 1),
+			('EMERALD',  l['emerald'],  '', 2),
+			('MARQUISE', l['marquise'], '', 3),
+			('PEARL',    l['pearl'],    '', 4),
+			('BAGUETTE', l['baguette'], '', 5),
+			('SQUARE',   l['square'],   '', 6),
+		]
+
 	return items
 
 
@@ -190,16 +213,26 @@ classes = [
 ]
 
 
+
+
+
 def register():
+	ui.preview_collections
+
 	for cls in classes:
 		bpy.utils.register_class(cls)
-	
+
 	bpy.types.Scene.jewelcraft = PointerProperty(type=JewelCraftProperties)
 
 def unregister():
+	pcoll_remove = bpy.utils.previews.remove
+	for pcoll in ui.preview_collections.values():
+		pcoll_remove(pcoll)
+	ui.preview_collections.clear()
+
 	for cls in classes:
 		bpy.utils.unregister_class(cls)
-	
+
 	del bpy.types.Scene.jewelcraft
 
 if __name__ == "__main__":
