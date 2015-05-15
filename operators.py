@@ -39,7 +39,7 @@ class IMPORT_GEM(Operator):
 
 
 class IMPORT_TYPE(Operator):
-	'''Create dupliface for selected gemstones'''
+	'''Change type of selected gemstones'''
 	bl_label = "Change Type"
 	bl_idname = "jewelcraft.import_type"
 
@@ -53,7 +53,7 @@ class IMPORT_TYPE(Operator):
 
 
 class IMPORT_CUT(Operator):
-	'''Create dupliface for selected gemstones'''
+	'''Change cut of selected gemstones'''
 	bl_label = "Change Cut and Size"
 	bl_idname = "jewelcraft.import_cut"
 
@@ -67,7 +67,7 @@ class IMPORT_CUT(Operator):
 
 
 class IMPORT_PRONGS(Operator):
-	'''Create dupliface for selected gemstones'''
+	'''Create prongs for selected gemstones'''
 	bl_label = "Change Cut and Size"
 	bl_idname = "jewelcraft.import_prongs"
 
@@ -81,7 +81,7 @@ class IMPORT_PRONGS(Operator):
 
 
 class IMPORT_CUTTER(Operator):
-	'''Create dupliface for selected gemstones'''
+	'''Create cutters for selected gemstones'''
 	bl_label = "Change Cut and Size"
 	bl_idname = "jewelcraft.import_cutter"
 
@@ -95,7 +95,7 @@ class IMPORT_CUTTER(Operator):
 
 
 class MAKE_DUPLIFACE(Operator):
-	'''Create dupliface for selected gemstones'''
+	'''Create dupliface for selected objects'''
 	bl_label = "Make Dupli-face"
 	bl_idname = "jewelcraft.make_dupliface"
 
@@ -109,7 +109,7 @@ class MAKE_DUPLIFACE(Operator):
 
 
 class EXPORT_STATS(Operator):
-	'''Create dupliface for selected gemstones'''
+	'''Export statistics for the project'''
 	bl_label = "Export Stats"
 	bl_idname = "jewelcraft.export_stats"
 
