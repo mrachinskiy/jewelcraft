@@ -97,15 +97,16 @@ class Utils():
 
 
 	def get_size(self, ob, index):
-		v_coords = []
+		v_co = []
 
 		for v in ob.data.vertices:
-			for vg in v.groups:
-				if vg.group == index:
-					v_coords.append(v.co)
+			if v.groups:
+				for vg in v.groups:
+					if vg.group == index:
+						v_co.append(v.co)
 
-		if v_coords:
-			size = round(Vector(x * y for x, y in zip((v_coords[0] - v_coords[1]), ob.scale)).length, 2)
+		if v_co:
+			size = round(Vector(x * y for x, y in zip(v_co[0]-v_co[1], ob.scale)).length, 2)
 		else:
 			size = False
 
@@ -593,6 +594,7 @@ class Stats():
 					else:
 						if size[0].is_integer(): size[0] = int(size[0])
 						size = size[0]
+
 
 					if (stats.get(tpe) and stats[tpe].get(cut) and stats[tpe][cut].get(size)):
 						stats[tpe][cut][size] = stats[tpe][cut][size] + count
