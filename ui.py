@@ -48,8 +48,9 @@ if icons:
 	load = pcoll.load
 	icon_path = path.join
 
-	load('cut',          icon_path(icons_path, 'cut.png'),          'IMAGE')
-	load('cutter',       icon_path(icons_path, 'cutter.png'),       'IMAGE')
+	load('cut',    icon_path(icons_path, 'cut.png'),    'IMAGE')
+	load('cutter', icon_path(icons_path, 'cutter.png'), 'IMAGE')
+	
 	load('cut-round',    icon_path(icons_path, 'cut-round.png'),    'IMAGE')
 	load('cut-oval',     icon_path(icons_path, 'cut-oval.png'),     'IMAGE')
 	load('cut-emerald',  icon_path(icons_path, 'cut-emerald.png'),  'IMAGE')
@@ -158,8 +159,6 @@ class JewelCraftImportPanel(Panel):
 		col.separator()
 		col.operator("jewelcraft.import_gem", text=l['make_gem'])
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])
-
-
 
 
 

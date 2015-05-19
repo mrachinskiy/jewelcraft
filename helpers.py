@@ -65,7 +65,7 @@ class Utils():
 		obs = []
 		append = obs.append
 		for ob in C.selected_objects:
-			if ob.data.get('gem'):
+			if (ob.data and ob.data.get('gem')):
 				gem = ob
 				append(ob)
 			else:
@@ -84,7 +84,7 @@ class Utils():
 		me = D.meshes.new(name+'Duplifaces')
 		me.from_pydata(verts, [], faces)
 		me.update()
-		
+
 		df = D.objects.new(name+'Duplifaces', me)
 		df.location = ob.location
 		df.dupli_type = 'FACES'
@@ -208,18 +208,19 @@ class Convert():
 			ob.dimensions = [ob.dimensions[0] * size, size2, ob.dimensions[2] * size]
 
 	def apply_transforms(self, ob):
-		me = ob.data
-		vectors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
+		if ob.type == 'MESH':
+			me = ob.data
+			vectors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
 
-		i = 0
-		for vec in vectors:
-			mx = Matrix.Scale(ob.scale[i], 4, vec)
+			i = 0
+			for vec in vectors:
+				mx = Matrix.Scale(ob.scale[i], 4, vec)
+				
+				for vert in me.vertices:
+					vert.co = mx * vert.co
+				i+=1
 			
-			for vert in me.vertices:
-				vert.co = mx * vert.co
-			i+=1
-		
-		ob.scale = [1, 1, 1]
+			ob.scale = [1, 1, 1]
 
 
 
@@ -238,14 +239,14 @@ class Asset():
 		ob = data_to.objects[0]
 		convert = Convert()
 		ob_type = 'GEM'
-		
+
 		ob.data['gem'] = {'CUT': cut}
-		
+
 		if not obj:
 			ob.location = [0,0,0]
 			convert.to_size(size, ob)
 			self.material(ob_type, ob, data_to.materials, tpe)
-		
+
 		else:
 			if obj.parent:
 				ob.location = [0,0,0]
@@ -258,7 +259,7 @@ class Asset():
 
 			sce.objects.unlink(obj)
 			self.D.objects.remove(obj)
-		
+
 		sce.objects.link(ob)
 		sce.objects.active = ob
 		ob.select = True
