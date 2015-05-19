@@ -195,7 +195,7 @@ class JewelCraftProperties(PropertyGroup):
 	}
 
 
-classes = [
+classes = (
 	ui.JewelCraftLocalePanel,
 	ui.JewelCraftImportPanel,
 	ui.JewelCraftExportPanel,
@@ -210,7 +210,7 @@ classes = [
 	operators.EXPORT_STATS,
 	
 	JewelCraftProperties,
-]
+)
 
 
 
