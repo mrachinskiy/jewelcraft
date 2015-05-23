@@ -29,16 +29,15 @@ from . import localization
 # Custom icons
 #######################################################################
 
-from bpy.app import version_string
-version = int(''.join(x for x in version_string if x.isdigit()))
-if version >= 2745:
-	icons = True
+from bpy.app import version
+if version >= (2,74,5):
+	custom_icons = True
 else:
-	icons = False
+	custom_icons = False
 
 
 preview_collections = {}
-if icons:
+if custom_icons:
 	from os import path
 	from bpy.utils import previews
 
@@ -68,7 +67,7 @@ if icons:
 # Custom icons UI support
 #######################################################################
 
-if icons:
+if custom_icons:
 	pcoll = preview_collections['main']
 	icon_cut = pcoll.get('cut').icon_id
 	icon_cutter = pcoll.get('cutter').icon_id
@@ -77,7 +76,7 @@ else:
 	icon_cutter= False
 
 def icon_support(icon, custom_icon):
-	if icons:
+	if custom_icons:
 		i1 = 'NONE'
 		i2 = custom_icon
 	else:
@@ -155,7 +154,7 @@ class JewelCraftImportPanel(Panel):
 		col.separator()
 		row = col.row(align=True)
 		row.prop(props, 'import_gem_size', text=l['size'])
-		
+
 		col.separator()
 		col.operator("jewelcraft.import_gem", text=l['make_gem'])
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])

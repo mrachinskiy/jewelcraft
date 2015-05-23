@@ -34,7 +34,7 @@ bl_info = {
 	"tracker_url": "http://jewelcourses.com",
 	"category": "Object"}
 
-if 'bpy' in locals():
+if "bpy" in locals():
 	import importlib
 	importlib.reload(localization)
 	importlib.reload(helpers)
@@ -53,29 +53,32 @@ else:
 	from . import ui
 
 
+
+
 def ui_gems_type(self, context):
 	'''For enum translation'''
 	l = localization.locale[context.scene.jewelcraft.lang]
 
-	items = [
+	items = (
 		('DIAMOND',  l['diamond'],  '', 0),
 		('ZIRCON',   l['zircon'],   '', 1),
 		('TOPAZ',    l['topaz'],    '', 2),
 		('EMERALD',  l['emerald'],  '', 3),
 		('RUBY',     l['ruby'],     '', 4),
 		('SAPPHIRE', l['sapphire'], '', 5),
-	]
+	)
 	return items
 
 
 def ui_gems_cut(self, context):
 	'''For enum translation'''
 	l = localization.locale[context.scene.jewelcraft.lang]
-	
-	if ui.icons:
+
+
+	if ui.custom_icons:
 		pcoll = ui.preview_collections['main']
 		icon_get = pcoll.get
-		
+
 		i_round = icon_get('cut-round').icon_id
 		i_oval = icon_get('cut-oval').icon_id
 		i_emerald = icon_get('cut-emerald').icon_id
@@ -83,29 +86,28 @@ def ui_gems_cut(self, context):
 		i_pearl = icon_get('cut-pearl').icon_id
 		i_baguette = icon_get('cut-baguette').icon_id
 		i_square = icon_get('cut-square').icon_id
-
-		items = [
-			('ROUND',    l['round'],    '', i_round,    0),
-			('OVAL',     l['oval'],     '', i_oval,     1),
-			('EMERALD',  l['emerald'],  '', i_emerald,  2),
-			('MARQUISE', l['marquise'], '', i_marquise, 3),
-			('PEARL',    l['pearl'],    '', i_pearl,    4),
-			('BAGUETTE', l['baguette'], '', i_baguette, 5),
-			('SQUARE',   l['square'],   '', i_square,   6),
-		]
-
 	else:
-		items = [
-			('ROUND',    l['round'],    '', 0),
-			('OVAL',     l['oval'],     '', 1),
-			('EMERALD',  l['emerald'],  '', 2),
-			('MARQUISE', l['marquise'], '', 3),
-			('PEARL',    l['pearl'],    '', 4),
-			('BAGUETTE', l['baguette'], '', 5),
-			('SQUARE',   l['square'],   '', 6),
-		]
+		i_round = 'NONE'
+		i_oval = 'NONE'
+		i_emerald = 'NONE'
+		i_marquise = 'NONE'
+		i_pearl = 'NONE'
+		i_baguette = 'NONE'
+		i_square = 'NONE'
 
+
+	items = (
+		('ROUND',    l['round'],    '', i_round,    0),
+		('OVAL',     l['oval'],     '', i_oval,     1),
+		('EMERALD',  l['emerald'],  '', i_emerald,  2),
+		('MARQUISE', l['marquise'], '', i_marquise, 3),
+		('PEARL',    l['pearl'],    '', i_pearl,    4),
+		('BAGUETTE', l['baguette'], '', i_baguette, 5),
+		('SQUARE',   l['square'],   '', i_square,   6),
+	)
 	return items
+
+
 
 
 class JewelCraftProperties(PropertyGroup):
@@ -121,7 +123,7 @@ class JewelCraftProperties(PropertyGroup):
 	import_gem_type = EnumProperty(name="Type", items=ui_gems_type)
 	import_gem_cut = EnumProperty(name="Cut", items=ui_gems_cut)
 	import_gem_size = StringProperty(description="Set gemstone size", default="1")
-	import_prongs = BoolProperty(default=True)
+	import_prongs = BoolProperty()
 	import_cutter = BoolProperty()
 	
 	export_options = BoolProperty()
@@ -195,6 +197,8 @@ class JewelCraftProperties(PropertyGroup):
 	}
 
 
+
+
 classes = (
 	ui.JewelCraftLocalePanel,
 	ui.JewelCraftImportPanel,
@@ -215,7 +219,6 @@ classes = (
 
 
 
-
 def register():
 	ui.preview_collections
 
@@ -223,6 +226,7 @@ def register():
 		bpy.utils.register_class(cls)
 
 	bpy.types.Scene.jewelcraft = PointerProperty(type=JewelCraftProperties)
+
 
 def unregister():
 	pcoll_remove = bpy.utils.previews.remove
@@ -234,6 +238,7 @@ def unregister():
 		bpy.utils.unregister_class(cls)
 
 	del bpy.types.Scene.jewelcraft
+
 
 if __name__ == "__main__":
 	register()
