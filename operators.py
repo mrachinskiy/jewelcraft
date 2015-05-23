@@ -114,5 +114,5 @@ class EXPORT_STATS(Operator):
 	bl_idname = "jewelcraft.export_stats"
 
 	def execute(self, context):
-		helpers.Export()
+		helpers.Export().stats()
 		return {'FINISHED'}
