@@ -25,13 +25,12 @@
 bl_info = {
 	"name": "JewelCraft",
 	"author": "Mikhail Rachinskiy (jewelcourses.com)",
-	"version": (0,1,0),
+	"version": (1,0),
 	"blender": (2,7,4),
 	"location": "3D View → Tool Shelf",
-	"description": "",
-	"warning": "",
-	"wiki_url": "http://jewelcourses.com",
-	"tracker_url": "http://jewelcourses.com",
+	"description": "JewelCraft—is a Blender add-on for jewelry design, provides artists with asset tools, jeweling tools and statistics tools collecting valueble information about your jewelry products such as: gemstone settings, product dimensions and weight in different metals.",
+	"wiki_url": "https://github.com/mrachinskiy/blender-addon-jewelcraft",
+	"tracker_url": "https://github.com/mrachinskiy/blender-addon-jewelcraft/issues",
 	"category": "Object"}
 
 if "bpy" in locals():
@@ -45,6 +44,7 @@ else:
 	from bpy.props import (
 		EnumProperty,
 		BoolProperty,
+		FloatProperty,
 		StringProperty,
 		PointerProperty,
 	)
@@ -122,10 +122,8 @@ class JewelCraftProperties(PropertyGroup):
 
 	import_gem_type = EnumProperty(name="Type", items=ui_gems_type)
 	import_gem_cut = EnumProperty(name="Cut", items=ui_gems_cut)
-	import_gem_size = StringProperty(description="Set gemstone size", default="1")
-	import_prongs = BoolProperty()
-	import_cutter = BoolProperty()
-	
+	import_gem_size = FloatProperty(name="Size", description="Set gemstone size", default=1.0, min=0.1, step=10, precision=2)
+
 	export_options = BoolProperty()
 	export_size = StringProperty(description="Set object for ring’s size reference")
 	export_shank = StringProperty(description="Set object for ring’s shank reference")
@@ -145,7 +143,7 @@ class JewelCraftProperties(PropertyGroup):
 	metal_custom      = BoolProperty()
 
 	metal_custom_name    = StringProperty(description="Material name")
-	metal_custom_density = StringProperty(description="Custom density")
+	metal_custom_density = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
 
 	# g/mm³ (average)
 	metal_density = {
@@ -203,16 +201,19 @@ classes = (
 	ui.JewelCraftLocalePanel,
 	ui.JewelCraftImportPanel,
 	ui.JewelCraftExportPanel,
-	
+
 	operators.IMPORT_GEM,
-	operators.MAKE_DUPLIFACE,
 	operators.IMPORT_TYPE,
 	operators.IMPORT_CUT,
 	operators.IMPORT_PRONGS,
+	operators.IMPORT_SINGLE_PRONG,
 	operators.IMPORT_CUTTER,
-	
+	operators.IMPORT_CUTTER_SEAT_ONLY,
+	operators.IMPORT_IMITATION_3_PRONG,
+	operators.MAKE_DUPLIFACE,
+
 	operators.EXPORT_STATS,
-	
+
 	JewelCraftProperties,
 )
 

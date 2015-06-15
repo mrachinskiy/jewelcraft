@@ -28,13 +28,16 @@ from . import helpers
 
 
 
+
+
+
 class IMPORT_GEM(Operator):
-	'''Create selected gemstone'''
+	'''Create gemstone'''
 	bl_label = "Make Gemstone"
 	bl_idname = "jewelcraft.import_gem"
 
 	def execute(self, context):
-		helpers.Import().gem()
+		helpers.gem_import()
 		return {'FINISHED'}
 
 
@@ -48,13 +51,13 @@ class IMPORT_TYPE(Operator):
 		return context.selected_objects
 
 	def execute(self, context):
-		helpers.Import().type()
+		helpers.type_replace()
 		return {'FINISHED'}
 
 
 class IMPORT_CUT(Operator):
 	'''Change cut of selected gemstones'''
-	bl_label = "Change Cut and Size"
+	bl_label = "Change Cut"
 	bl_idname = "jewelcraft.import_cut"
 
 	@classmethod
@@ -62,8 +65,12 @@ class IMPORT_CUT(Operator):
 		return context.selected_objects
 
 	def execute(self, context):
-		helpers.Import().cut()
+		helpers.cut_replace()
 		return {'FINISHED'}
+
+
+
+
 
 
 class IMPORT_PRONGS(Operator):
@@ -76,13 +83,23 @@ class IMPORT_PRONGS(Operator):
 		return context.selected_objects
 
 	def execute(self, context):
-		helpers.Import().prongs()
+		helpers.prongs_import()
+		return {'FINISHED'}
+
+
+class IMPORT_SINGLE_PRONG(Operator):
+	'''Create single prong'''
+	bl_label = "Single Prong"
+	bl_idname = "jewelcraft.import_single_prong"
+
+	def execute(self, context):
+		helpers.single_prong_import()
 		return {'FINISHED'}
 
 
 class IMPORT_CUTTER(Operator):
 	'''Create cutters for selected gemstones'''
-	bl_label = "Change Cut and Size"
+	bl_label = "Cutter"
 	bl_idname = "jewelcraft.import_cutter"
 
 	@classmethod
@@ -90,8 +107,36 @@ class IMPORT_CUTTER(Operator):
 		return context.selected_objects
 
 	def execute(self, context):
-		helpers.Import().cutter()
+		helpers.cutter_import()
 		return {'FINISHED'}
+
+
+class IMPORT_CUTTER_SEAT_ONLY(Operator):
+	'''Create (seat only) cutters for selected gemstones'''
+	bl_label = "Cutter (Seat only)"
+	bl_idname = "jewelcraft.import_cutter_seat_only"
+
+	@classmethod
+	def poll(cls, context):
+		return context.selected_objects
+
+	def execute(self, context):
+		helpers.cutter_import(seat_only=True)
+		return {'FINISHED'}
+
+
+class IMPORT_IMITATION_3_PRONG(Operator):
+	'''Create imitation (3 prong)'''
+	bl_label = "Imitation (3 prong)"
+	bl_idname = "jewelcraft.import_imitation_3_prong"
+
+	def execute(self, context):
+		helpers.imitation_import()
+		return {'FINISHED'}
+
+
+
+
 
 
 class MAKE_DUPLIFACE(Operator):
@@ -104,8 +149,12 @@ class MAKE_DUPLIFACE(Operator):
 		return context.selected_objects
 
 	def execute(self, context):
-		helpers.Utils().make_dupliface()
+		helpers.make_dupliface()
 		return {'FINISHED'}
+
+
+
+
 
 
 class EXPORT_STATS(Operator):
@@ -114,5 +163,5 @@ class EXPORT_STATS(Operator):
 	bl_idname = "jewelcraft.export_stats"
 
 	def execute(self, context):
-		helpers.Export().stats()
+		helpers.export_stats()
 		return {'FINISHED'}

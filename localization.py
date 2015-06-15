@@ -26,6 +26,7 @@ locale = {
 	'EN' : {
 		'prongs'         : 'Prongs',
 		'cutter'         : 'Cutter',
+		'imitation'      : 'Imitation',
 		'make_gem'       : 'Make Gemstone',
 		'make_dupliface' : 'Make Dupli-face',
 		'export_options' : 'Export Options',
@@ -81,11 +82,11 @@ locale = {
 		'square'   : 'Square',
 
 		'error_file'  : 'First save your blend file',
-		'error_digit' : 'Value should be numeric',
 	},
 	'RU' : {
 		'prongs'         : 'Крапана',
 		'cutter'         : 'Выборка',
+		'imitation'      : 'Имитация',
 		'make_gem'       : 'Создать Камень',
 		'make_dupliface' : 'Создать Dupli-face',
 		'export_options' : 'Опции Экспорта',
@@ -141,6 +142,5 @@ locale = {
 		'square'   : 'Квадрат',
 
 		'error_file'  : 'Сначала сохраните ваш blend файл',
-		'error_digit' : 'Значение должно быть числовым',
 	}
 }

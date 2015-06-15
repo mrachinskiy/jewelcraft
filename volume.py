@@ -54,7 +54,7 @@ def bmesh_copy_from_object(obj, transform=True, triangulate=True, apply_modifier
 	return bm
 
 
-def volume_calculate(obj):
+def calculate(obj):
 	bm = bmesh_copy_from_object(obj, apply_modifiers=True)
 	volume = bm.calc_volume()
 	bm.free()

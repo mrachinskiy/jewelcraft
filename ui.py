@@ -47,8 +47,9 @@ if custom_icons:
 	load = pcoll.load
 	icon_path = path.join
 
-	load('cut',    icon_path(icons_path, 'cut.png'),    'IMAGE')
-	load('cutter', icon_path(icons_path, 'cutter.png'), 'IMAGE')
+	load('cut',      icon_path(icons_path, 'cut.png'),              'IMAGE')
+	load('cutter',   icon_path(icons_path, 'cutter.png'),           'IMAGE')
+	load('cutter_s', icon_path(icons_path, 'cutter_seat_only.png'), 'IMAGE')
 	
 	load('cut-round',    icon_path(icons_path, 'cut-round.png'),    'IMAGE')
 	load('cut-oval',     icon_path(icons_path, 'cut-oval.png'),     'IMAGE')
@@ -71,9 +72,12 @@ if custom_icons:
 	pcoll = preview_collections['main']
 	icon_cut = pcoll.get('cut').icon_id
 	icon_cutter = pcoll.get('cutter').icon_id
+	icon_cutter_s = pcoll.get('cutter_s').icon_id
 else:
-	icon_cut= False
-	icon_cutter= False
+	icon_cut = False
+	icon_cutter = False
+	icon_cutter_s = False
+
 
 def icon_support(icon, custom_icon):
 	if custom_icons:
@@ -84,8 +88,10 @@ def icon_support(icon, custom_icon):
 		i2 = 0
 	return [i1, i2]
 
+
 icon_cut = icon_support('MESH_ICOSPHERE', icon_cut)
-icon_cutter = icon_support('MESH_CONE', icon_cutter)
+icon_cutter = icon_support('MESH_CYLINDER', icon_cutter)
+icon_cutter_s = icon_support('MESH_CONE', icon_cutter_s)
 
 #######################################################################
 
@@ -101,7 +107,7 @@ def icon_tria(prop):
 
 
 class JewelCraftLocalePanel(Panel):
-	
+
 	bl_label = "Localization"
 	bl_idname = "JEWELCRAFT_LOCALE"
 	bl_space_type = "VIEW_3D"
@@ -120,7 +126,7 @@ class JewelCraftLocalePanel(Panel):
 
 
 class JewelCraftImportPanel(Panel):
-	
+
 	bl_label = "Jewels"
 	bl_idname = "JEWELCRAFT_IMPORT"
 	bl_space_type = "VIEW_3D"
@@ -144,19 +150,23 @@ class JewelCraftImportPanel(Panel):
 		row = col.row(align=True)
 		row.prop(props, 'import_gem_cut', text="")
 		row.operator("jewelcraft.import_cut", text="", icon=icon_cut[0], icon_value=icon_cut[1])
+		col.prop(props, 'import_gem_size', text=l['size'])
+		col.operator("jewelcraft.import_gem", text=l['make_gem'])
+
+		col.separator()
 		row = col.row(align=True)
-		row.prop(props, 'import_prongs', text=l['prongs'])
+		row.label(l['prongs'])
+		row.operator("jewelcraft.import_single_prong", text="", icon="ROTATE")
 		row.operator("jewelcraft.import_prongs", text="", icon="SURFACE_NCIRCLE")
 		row = col.row(align=True)
-		row.prop(props, 'import_cutter', text=l['cutter'])
+		row.label(l['cutter'])
+		row.operator("jewelcraft.import_cutter_seat_only", text="", icon=icon_cutter_s[0], icon_value=icon_cutter_s[1])
 		row.operator("jewelcraft.import_cutter", text="", icon=icon_cutter[0], icon_value=icon_cutter[1])
-
-		col.separator()
 		row = col.row(align=True)
-		row.prop(props, 'import_gem_size', text=l['size'])
+		row.label(l['imitation'])
+		row.operator("jewelcraft.import_imitation_3_prong", text="", icon="MOD_SKIN")
 
 		col.separator()
-		col.operator("jewelcraft.import_gem", text=l['make_gem'])
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])
 
 
