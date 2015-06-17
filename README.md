@@ -1,6 +1,6 @@
 JewelCraft Blender Add-on
 ==========================
-JewelCraft—is a Blender add-on for jewelry design that provides artists with asset tools, jeweling tools and statistics tools collecting valueble information about your jewelry products such as: gemstone settings, product dimensions and weight in different metals.
+JewelCraft—is a Blender add-on for jewelry design that provides tools for asset managment, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.
 
 
 #### Watch [Demo]
