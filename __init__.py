@@ -28,7 +28,7 @@ bl_info = {
 	"version": (1,0),
 	"blender": (2,7,4),
 	"location": "3D View → Tool Shelf",
-	"description": "JewelCraft—is a Blender add-on for jewelry design that provides artists with asset tools, jeweling tools and statistics tools collecting valueble information about your jewelry products such as: gemstone settings, product dimensions and weight in different metals.",
+	"description": "JewelCraft—add-on for jewelry design that provides tools for asset managment, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.",
 	"wiki_url": "https://github.com/mrachinskiy/blender-addon-jewelcraft",
 	"tracker_url": "https://github.com/mrachinskiy/blender-addon-jewelcraft/issues",
 	"category": "Object"}
