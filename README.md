@@ -12,12 +12,16 @@ How to install
 2. Go to Blender “User Preferences” → “Add-ons” category
 3. Use “[Install from File…]” feature to install add-on from downloaded zip archive
 
+\* Add-on is available for **Blender 2.74 and above**, versions below are not supported
+
 
 Установка
 --------------------------
 1. [Загрузите][master.zip] аддон
 2. Зайдите в настройки Blender «User Preferences» → «Add-ons»
 3. Воспользуйтесь функцией «[Install from File…]» чтобы установить аддон из загруженного архива
+
+\* Аддон доступен для **Blender 2.74 и новее**, ранние версии не поддерживаются
 
 
 
