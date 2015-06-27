@@ -160,6 +160,22 @@ def ct_round(ct):
 	return round(ct, rnd)
 
 
+def weight_display():
+	context = bpy.context
+	props = context.scene.jewelcraft
+	l = localization.locale[props.lang]
+	m = props.weighting_metals
+	vol = volume.calculate(context.active_object)
+
+	if m == 'VOL':
+		props.weighting_result = str(round(vol, 4)) + l['mm3']
+	elif m == 'CUSTOM':
+		dens = props.weighting_custom / 1000 # cm → mm
+		props.weighting_result = str(round(vol * dens, 2)) + l['g']
+	else:
+		props.weighting_result = str(round(vol * props.metal_density[m], 2)) + l['g']
+
+
 
 
 

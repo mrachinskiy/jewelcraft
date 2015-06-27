@@ -171,6 +171,44 @@ class JewelCraftImportPanel(Panel):
 
 
 
+class JewelCraftWeightingPanel(Panel):
+
+	bl_label = "Weighting"
+	bl_idname = "JEWELCRAFT_WEIGHTING"
+	bl_space_type = "VIEW_3D"
+	bl_region_type = "TOOLS"
+	bl_category = "JewelCraft"
+	bl_options = {'DEFAULT_CLOSED'}
+
+	@classmethod
+	def poll(cls, context):
+		return context.mode == 'OBJECT'
+
+	def draw(self, context):
+		props = context.scene.jewelcraft
+		l = localization.locale[props.lang]
+		m = props.weighting_metals
+
+		layout = self.layout
+
+		col = layout.column(align=True)
+		col.prop(props, "weighting_metals", text="")
+
+		col.separator()
+		if m == 'VOL':
+			col.label(text=props.weighting_result, icon='MATCUBE')
+		elif m == 'CUSTOM':
+			col.prop(props, "weighting_custom", text=l['g/cm'])
+			col.separator()
+			col.label(text=props.weighting_result, icon='MATCUBE')
+		else:
+			col.label(text=props.weighting_result, icon='MATCUBE')
+
+		col.separator()
+		col.operator("jewelcraft.weight_display", text=l['wt_calc'])
+
+
+
 class JewelCraftExportPanel(Panel):
 	
 	bl_label = "Export"
@@ -224,7 +262,7 @@ class JewelCraftExportPanel(Panel):
 					col.enabled = False
 				row = col.row()
 				row.label(l['custom_name'])
-				row.label(l['g/cm'])
+				row.label(l['g/cm']+':')
 				row = col.row()
 				row.prop(props, "metal_custom_name", text="")
 				row.prop(props, "metal_custom_density", text="")

@@ -51,9 +51,10 @@ locale = {
 
 		'items' : 'items',
 		'mm'    : 'mm',
+		'mm3'   : 'mm³',
 		'g'     : 'g',
 		'ct'    : 'ct',
-		'g/cm'  : 'g/cm³:',
+		'g/cm'  : 'g/cm³',
 
 		'24kt'        : '24kt Gold',
 		'22kt'        : '22kt Gold',
@@ -66,6 +67,10 @@ locale = {
 		'platinum'    : 'Platinum',
 		'custom'      : 'Custom density:',
 		'custom_name' : 'Material:',
+
+		'wt_vol'    : 'Volume (mm³)',
+		'wt_custom' : 'Custom density (g/cm³)',
+		'wt_calc'   : 'Calculate',
 
 		'diamond'  : 'Diamond',
 		'zircon'   : 'Zircon',
@@ -81,7 +86,7 @@ locale = {
 		'baguette' : 'Baguette',
 		'square'   : 'Square',
 
-		'error_file'  : 'First save your blend file',
+		'error_file' : 'First save your blend file',
 	},
 	'RU' : {
 		'prongs'         : 'Крапана',
@@ -111,9 +116,10 @@ locale = {
 
 		'items' : 'шт.',
 		'mm'    : 'мм',
+		'mm3'   : 'мм³',
 		'g'     : 'г',
 		'ct'    : 'кар',
-		'g/cm'  : 'г/см³:',
+		'g/cm'  : 'г/см³',
 
 		'24kt'        : '999 Золото',
 		'22kt'        : '916 Золото',
@@ -126,6 +132,10 @@ locale = {
 		'platinum'    : 'Платина',
 		'custom'      : 'Произвольная плотность:',
 		'custom_name' : 'Материал:',
+
+		'wt_vol'    : 'Объем (мм³)',
+		'wt_custom' : 'Произвольная плотность (г/см³)',
+		'wt_calc'   : 'Вычислить',
 
 		'diamond'  : 'Бриллиант',
 		'zircon'   : 'Фианит',
@@ -141,6 +151,6 @@ locale = {
 		'baguette' : 'Багет',
 		'square'   : 'Квадрат',
 
-		'error_file'  : 'Сначала сохраните ваш blend файл',
+		'error_file' : 'Сначала сохраните ваш blend файл',
 	}
 }
