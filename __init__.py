@@ -25,7 +25,7 @@
 bl_info = {
 	"name": "JewelCraft",
 	"author": "Mikhail Rachinskiy (jewelcourses.com)",
-	"version": (1,0),
+	"version": (1,1),
 	"blender": (2,7,4),
 	"location": "3D View → Tool Shelf",
 	"description": "JewelCraft—add-on for jewelry design that provides tools for asset managment, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.",
@@ -108,6 +108,25 @@ def ui_gems_cut(self, context):
 	return items
 
 
+def ui_volume_metal_list(self, context):
+	l = localization.locale[context.scene.jewelcraft.lang]
+
+	items = (
+		('VOL',         l['wt_vol'],         '', 10),
+		('CUSTOM',      l['wt_custom'],  '', 7 ),
+		('PLATINUM',    l['platinum'],    '', 6 ),
+		('PALLADIUM',   l['palladium'],   '', 5 ),
+		('SILVER',      l['silver'],      '', 4 ),
+		('14KT_YELLOW', l['14kt_yellow'], '', 3 ),
+		('18KT_YELLOW', l['18kt_yellow'], '', 2 ),
+		('14KT_WHITE',  l['14kt_white'],  '', 1 ),
+		('18KT_WHITE',  l['18kt_white'],  '', 0 ),
+		('22KT',        l['22kt'],        '', 8 ),
+		('24KT',        l['24kt'],        '', 9 ),
+	)
+	return items
+
+
 
 
 class JewelCraftProperties(PropertyGroup):
@@ -123,6 +142,10 @@ class JewelCraftProperties(PropertyGroup):
 	import_gem_type = EnumProperty(name="Type", items=ui_gems_type)
 	import_gem_cut = EnumProperty(name="Cut", items=ui_gems_cut)
 	import_gem_size = FloatProperty(name="Size", description="Set gemstone size", default=1.0, min=0.1, step=10, precision=2)
+
+	weighting_metals = EnumProperty(name="Metals" ,items=ui_volume_metal_list)
+	weighting_custom = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
+	weighting_result = StringProperty(default="0.0")
 
 	export_options = BoolProperty()
 	export_size = StringProperty(description="Set object for ring’s size reference")
@@ -157,6 +180,7 @@ class JewelCraftProperties(PropertyGroup):
 		'PALLADIUM'   : 0.012,
 		'PLATINUM'    : 0.0214,
 		'CUSTOM'      : None,
+		'VOL'         : None,
 	}
 
 	# ct/mm³ (average)
@@ -200,6 +224,7 @@ class JewelCraftProperties(PropertyGroup):
 classes = (
 	ui.JewelCraftLocalePanel,
 	ui.JewelCraftImportPanel,
+	ui.JewelCraftWeightingPanel,
 	ui.JewelCraftExportPanel,
 
 	operators.IMPORT_GEM,
@@ -211,6 +236,7 @@ classes = (
 	operators.IMPORT_CUTTER_SEAT_ONLY,
 	operators.IMPORT_IMITATION_3_PRONG,
 	operators.MAKE_DUPLIFACE,
+	operators.WEIGHT_DISPLAY,
 
 	operators.EXPORT_STATS,
 

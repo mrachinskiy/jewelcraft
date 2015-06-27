@@ -153,6 +153,21 @@ class MAKE_DUPLIFACE(Operator):
 		return {'FINISHED'}
 
 
+class WEIGHT_DISPLAY(Operator):
+	'''Display weight or volume of the active mesh object'''
+	bl_label = "Calculate"
+	bl_idname = "jewelcraft.weight_display"
+
+	@classmethod
+	def poll(cls, context):
+		obj = context.active_object
+		return (obj and obj.type == 'MESH')
+
+	def execute(self, context):
+		helpers.weight_display()
+		return {'FINISHED'}
+
+
 
 
 
