@@ -112,8 +112,8 @@ def ui_volume_metal_list(self, context):
 	l = localization.locale[context.scene.jewelcraft.lang]
 
 	items = (
-		('VOL',         l['wt_vol'],         '', 10),
-		('CUSTOM',      l['wt_custom'],  '', 7 ),
+		('VOL',         l['wt_vol'],      '', 10),
+		('CUSTOM',      l['wt_custom'],   '', 7 ),
 		('PLATINUM',    l['platinum'],    '', 6 ),
 		('PALLADIUM',   l['palladium'],   '', 5 ),
 		('SILVER',      l['silver'],      '', 4 ),
