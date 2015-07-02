@@ -32,18 +32,13 @@ locale = {
 		'export_options' : 'Export Options',
 		'metals'         : 'Metals',
 		'export_stats'   : 'Export Stats',
+		'locale'         : 'Localization',
+		'lang'           : 'Language',
 
 		'size'   : 'Size',
 		'shank'  : 'Shank',
 		'dim'    : 'Dimensions',
 		'weight' : 'Weight',
-
-		't_size'      : 'Size:',
-		't_width'     : 'Width:',
-		't_thickness' : 'Thickness:',
-		't_dim'       : 'Dimensions:',
-		't_weight'    : 'Weight:',
-		't_settings'  : 'Settings:',
 
 		'type' : 'Type',
 		'cut'  : 'Cut',
@@ -53,15 +48,15 @@ locale = {
 		'mm'    : 'mm',
 		'mm3'   : 'mm³',
 		'g'     : 'g',
-		'ct'    : 'ct',
+		'ct'    : 'ct.',
 		'g/cm'  : 'g/cm³',
 
-		'24kt'        : '24kt Gold',
-		'22kt'        : '22kt Gold',
-		'18kt_white'  : '18kt White gold',
-		'14kt_white'  : '14kt White gold',
-		'18kt_yellow' : '18kt Yellow gold',
-		'14kt_yellow' : '14kt Yellow gold',
+		'24kt'        : '24 kt. Gold',
+		'22kt'        : '22 kt. Gold',
+		'18kt_white'  : '18 kt. White gold',
+		'14kt_white'  : '14 kt. White gold',
+		'18kt_yellow' : '18 kt. Yellow gold',
+		'14kt_yellow' : '14 kt. Yellow gold',
 		'silver'      : 'Silver',
 		'palladium'   : 'Palladium',
 		'platinum'    : 'Platinum',
@@ -87,6 +82,14 @@ locale = {
 		'square'   : 'Square',
 
 		'error_file' : 'First save your blend file',
+
+		# Stats template locale_____________________
+		't_size'      : 'Size:',
+		't_width'     : 'Width:',
+		't_thickness' : 'Thickness:',
+		't_dim'       : 'Dimensions:',
+		't_weight'    : 'Weight:',
+		't_settings'  : 'Settings:',
 	},
 	'RU' : {
 		'prongs'         : 'Крапана',
@@ -97,18 +100,13 @@ locale = {
 		'export_options' : 'Опции Экспорта',
 		'metals'         : 'Металлы',
 		'export_stats'   : 'Экспорт Статистики',
+		'locale'         : 'Локализация',
+		'lang'           : 'Язык',
 
 		'size'   : 'Размер',
 		'shank'  : 'Шинка',
 		'dim'    : 'Габариты',
 		'weight' : 'Вес',
-
-		't_size'      : 'Размер:',
-		't_width'     : 'Ширина:',
-		't_thickness' : 'Толщина:',
-		't_dim'       : 'Габариты:',
-		't_weight'    : 'Вес:',
-		't_settings'  : 'Вставки:',
 
 		'type' : 'Тип',
 		'cut'  : 'Огранка',
@@ -152,5 +150,13 @@ locale = {
 		'square'   : 'Квадрат',
 
 		'error_file' : 'Сначала сохраните ваш blend файл',
+
+		# Локализация шаблона статистики__________________
+		't_size'      : 'Размер:',
+		't_width'     : 'Ширина:',
+		't_thickness' : 'Толщина:',
+		't_dim'       : 'Габариты:',
+		't_weight'    : 'Вес:',
+		't_settings'  : 'Вставки:',
 	}
 }

@@ -162,18 +162,37 @@ def ct_round(ct):
 
 def weight_display():
 	context = bpy.context
+	prefs = context.user_preferences.addons[__package__].preferences
 	props = context.scene.jewelcraft
-	l = localization.locale[props.lang]
+	l = localization.locale[prefs.lang]
 	m = props.weighting_metals
 	vol = volume.calculate(context.active_object)
+	mm3 = ' ' + l['mm3']
+	g = ' ' + l['g']
 
 	if m == 'VOL':
-		props.weighting_result = str(round(vol, 4)) + l['mm3']
+		result = str(round(vol, 4)) + mm3
 	elif m == 'CUSTOM':
 		dens = props.weighting_custom / 1000 # cm → mm
-		props.weighting_result = str(round(vol * dens, 2)) + l['g']
+		result = str(round(vol * dens, 2)) + g
 	else:
-		props.weighting_result = str(round(vol * props.metal_density[m], 2)) + l['g']
+		mdens = props.metal_density[m]
+		result = str(round(vol * mdens, 2)) + g
+
+	props.weighting_result = result
+
+
+def export_locale():
+	context = bpy.context
+	prefs = context.user_preferences.addons[__package__].preferences
+	props = context.scene.jewelcraft
+
+	if props.lang == 'AUTO':
+		l = prefs.lang
+	else:
+		l = props.lang
+
+	return localization.locale[l]
 
 
 
@@ -525,9 +544,9 @@ def stats_gems():
 
 
 def template(stats):
-	l = localization.locale[bpy.context.scene.jewelcraft.lang]
+	l = export_locale()
 	t = ''
-	mm = l['mm']
+	mm = ' ' + l['mm']
 
 
 	if 'SIZE' in stats:
@@ -574,11 +593,11 @@ def template(stats):
 
 def format_gems(tpe, cut, size, qty):
 	props = bpy.context.scene.jewelcraft
-	l = localization.locale[props.lang]
+	l = export_locale()
 	dt = props.diamonds_table
-	mm = l['mm']
-	ct = l['ct']
-	itms = l['items']
+	mm = ' ' + l['mm']
+	ct = ' ' + l['ct']
+	itms = ' ' + l['items']
 
 
 	if len(size) == 2:
@@ -599,7 +618,7 @@ def format_gems(tpe, cut, size, qty):
 	qty_ct = ct_round(qty*crt)
 
 
-	Qty = '{} {} ({})'.format(str(qty), itms, str(qty_ct)+ct)
+	Qty = '{} ({})'.format(str(qty)+itms, str(qty_ct)+ct)
 	Type = l[tpe.lower()]
 	Cut = l[cut.lower()]
 
@@ -608,8 +627,8 @@ def format_gems(tpe, cut, size, qty):
 
 def format_weight(vol, metal):
 	props = bpy.context.scene.jewelcraft
-	l = localization.locale[props.lang]
-	g = l['g']
+	l = export_locale()
+	g = ' ' + l['g']
 
 	if metal == 'CUSTOM':
 		dens = props.metal_custom_density / 1000 # cm → mm
@@ -618,7 +637,7 @@ def format_weight(vol, metal):
 		dens = props.metal_density[metal]
 		mat = l[metal.lower()]
 
-	return str(round(vol * dens, 2))+g+' ('+mat+')'
+	return str(round(vol * dens, 2)) + g + ' ('+mat+')'
 
 
 
@@ -647,5 +666,6 @@ def export_stats():
 		f.close()
 
 	else:
-		l = localization.locale[bpy.context.scene.jewelcraft.lang]
+		prefs = bpy.context.user_preferences.addons[__package__].preferences
+		l = localization.locale[prefs.lang]
 		return ShowErrorMessage(l['error_file'])

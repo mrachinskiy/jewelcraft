@@ -25,7 +25,7 @@
 bl_info = {
 	"name": "JewelCraft",
 	"author": "Mikhail Rachinskiy (jewelcourses.com)",
-	"version": (1,1),
+	"version": (1,2),
 	"blender": (2,7,4),
 	"location": "3D View → Tool Shelf",
 	"description": "JewelCraft—add-on for jewelry design that provides tools for asset managment, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.",
@@ -48,7 +48,10 @@ else:
 		StringProperty,
 		PointerProperty,
 	)
-	from bpy.types import PropertyGroup
+	from bpy.types import (
+		PropertyGroup,
+		AddonPreferences,
+	)
 	from . import operators
 	from . import ui
 
@@ -57,22 +60,24 @@ else:
 
 def ui_gems_type(self, context):
 	'''For enum translation'''
-	l = localization.locale[context.scene.jewelcraft.lang]
+	prefs = context.user_preferences.addons[__package__].preferences
+	l = localization.locale[prefs.lang]
 
 	items = (
-		('DIAMOND',  l['diamond'],  '', 0),
-		('ZIRCON',   l['zircon'],   '', 1),
-		('TOPAZ',    l['topaz'],    '', 2),
-		('EMERALD',  l['emerald'],  '', 3),
-		('RUBY',     l['ruby'],     '', 4),
-		('SAPPHIRE', l['sapphire'], '', 5),
+		('DIAMOND',  l['diamond'],  "", 0),
+		('ZIRCON',   l['zircon'],   "", 1),
+		('TOPAZ',    l['topaz'],    "", 2),
+		('EMERALD',  l['emerald'],  "", 3),
+		('RUBY',     l['ruby'],     "", 4),
+		('SAPPHIRE', l['sapphire'], "", 5),
 	)
 	return items
 
 
 def ui_gems_cut(self, context):
 	'''For enum translation'''
-	l = localization.locale[context.scene.jewelcraft.lang]
+	prefs = context.user_preferences.addons[__package__].preferences
+	l = localization.locale[prefs.lang]
 
 
 	if ui.custom_icons:
@@ -97,57 +102,75 @@ def ui_gems_cut(self, context):
 
 
 	items = (
-		('ROUND',    l['round'],    '', i_round,    0),
-		('OVAL',     l['oval'],     '', i_oval,     1),
-		('EMERALD',  l['emerald'],  '', i_emerald,  2),
-		('MARQUISE', l['marquise'], '', i_marquise, 3),
-		('PEARL',    l['pearl'],    '', i_pearl,    4),
-		('BAGUETTE', l['baguette'], '', i_baguette, 5),
-		('SQUARE',   l['square'],   '', i_square,   6),
+		('ROUND',    l['round'],    "", i_round,    0),
+		('OVAL',     l['oval'],     "", i_oval,     1),
+		('EMERALD',  l['emerald'],  "", i_emerald,  2),
+		('MARQUISE', l['marquise'], "", i_marquise, 3),
+		('PEARL',    l['pearl'],    "", i_pearl,    4),
+		('BAGUETTE', l['baguette'], "", i_baguette, 5),
+		('SQUARE',   l['square'],   "", i_square,   6),
 	)
 	return items
 
 
 def ui_volume_metal_list(self, context):
-	l = localization.locale[context.scene.jewelcraft.lang]
+	prefs = context.user_preferences.addons[__package__].preferences
+	l = localization.locale[prefs.lang]
 
 	items = (
-		('VOL',         l['wt_vol'],      '', 10),
-		('CUSTOM',      l['wt_custom'],   '', 7 ),
-		('PLATINUM',    l['platinum'],    '', 6 ),
-		('PALLADIUM',   l['palladium'],   '', 5 ),
-		('SILVER',      l['silver'],      '', 4 ),
-		('14KT_YELLOW', l['14kt_yellow'], '', 3 ),
-		('18KT_YELLOW', l['18kt_yellow'], '', 2 ),
-		('14KT_WHITE',  l['14kt_white'],  '', 1 ),
-		('18KT_WHITE',  l['18kt_white'],  '', 0 ),
-		('22KT',        l['22kt'],        '', 8 ),
-		('24KT',        l['24kt'],        '', 9 ),
+		('24KT',        l['24kt'],        "", 9),
+		('22KT',        l['22kt'],        "", 10),
+		('18KT_WHITE',  l['18kt_white'],  "", 0),
+		('14KT_WHITE',  l['14kt_white'],  "", 1),
+		('18KT_YELLOW', l['18kt_yellow'], "", 2),
+		('14KT_YELLOW', l['14kt_yellow'], "", 3),
+		('SILVER',      l['silver'],      "", 4),
+		('PALLADIUM',   l['palladium'],   "", 5),
+		('PLATINUM',    l['platinum'],    "", 6),
+		('CUSTOM',      l['wt_custom'],   "", 7),
+		('VOL',         l['wt_vol'],      "", 8),
 	)
 	return items
+
+
+
+
+class JewelCraftPreferences(AddonPreferences):
+
+	bl_idname = __package__
+
+	lang = EnumProperty(
+		name="UI language",
+		items=(
+			('RU', "Russian (Русский)", ""),
+			('EN', "English (English)", ""),
+		),
+		default="EN",
+		description="Add-on UI language")
+
+
+	def draw(self, context):
+		layout = self.layout
+		split = layout.split(percentage=.4)
+		split.prop(self, 'lang')
 
 
 
 
 class JewelCraftProperties(PropertyGroup):
 
-	lang = EnumProperty(
-		items=(
-			('EN', 'EN', ''),
-			('RU', 'RU', ''),
-		),
-		default="EN",
-		description="Localization")
-
 	import_gem_type = EnumProperty(name="Type", items=ui_gems_type)
 	import_gem_cut = EnumProperty(name="Cut", items=ui_gems_cut)
 	import_gem_size = FloatProperty(name="Size", description="Set gemstone size", default=1.0, min=0.1, step=10, precision=2)
 
-	weighting_metals = EnumProperty(name="Metals" ,items=ui_volume_metal_list)
+
+	weighting_metals = EnumProperty(name="Metals" , items=ui_volume_metal_list)
 	weighting_custom = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
-	weighting_result = StringProperty(default="0.0")
+	weighting_result = StringProperty(default="…")
+
 
 	export_options = BoolProperty()
+
 	export_size = StringProperty(description="Set object for ring’s size reference")
 	export_shank = StringProperty(description="Set object for ring’s shank reference")
 	export_dim = StringProperty(description="Set object for product dimensions reference")
@@ -163,10 +186,20 @@ class JewelCraftProperties(PropertyGroup):
 	metal_silver      = BoolProperty()
 	metal_palladium   = BoolProperty()
 	metal_platinum    = BoolProperty()
-	metal_custom      = BoolProperty()
-
+	metal_custom         = BoolProperty()
 	metal_custom_name    = StringProperty(description="Material name")
 	metal_custom_density = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
+
+	lang = EnumProperty(
+		name="Export stats language",
+		items=(
+			('RU',   "Russian (Русский)", ""),
+			('EN',   "English (English)", ""),
+			('AUTO', "Auto", "Inherit locale from add-on preferences"),
+		),
+		default="AUTO",
+		description="Statistics language")
+
 
 	# g/mm³ (average)
 	metal_density = {
@@ -222,7 +255,6 @@ class JewelCraftProperties(PropertyGroup):
 
 
 classes = (
-	ui.JewelCraftLocalePanel,
 	ui.JewelCraftImportPanel,
 	ui.JewelCraftWeightingPanel,
 	ui.JewelCraftExportPanel,
@@ -240,6 +272,7 @@ classes = (
 
 	operators.EXPORT_STATS,
 
+	JewelCraftPreferences,
 	JewelCraftProperties,
 )
 
