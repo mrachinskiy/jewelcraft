@@ -106,25 +106,6 @@ def icon_tria(prop):
 
 
 
-class JewelCraftLocalePanel(Panel):
-
-	bl_label = "Localization"
-	bl_idname = "JEWELCRAFT_LOCALE"
-	bl_space_type = "VIEW_3D"
-	bl_region_type = "TOOLS"
-	bl_category = "JewelCraft"
-
-	@classmethod
-	def poll(cls, context):
-		return context.mode == 'OBJECT'
-
-	def draw(self, context):
-		layout = self.layout
-		row = layout.row()
-		row.prop(context.scene.jewelcraft, 'lang', expand=True)
-
-
-
 class JewelCraftImportPanel(Panel):
 
 	bl_label = "Jewels"
@@ -139,8 +120,9 @@ class JewelCraftImportPanel(Panel):
 
 	def draw(self, context):
 		layout = self.layout
+		prefs = context.user_preferences.addons[__package__].preferences
 		props = context.scene.jewelcraft
-		l = localization.locale[props.lang]
+		l = localization.locale[prefs.lang]
 
 		col = layout.column(align=True)
 
@@ -185,8 +167,9 @@ class JewelCraftWeightingPanel(Panel):
 		return context.mode == 'OBJECT'
 
 	def draw(self, context):
+		prefs = context.user_preferences.addons[__package__].preferences
 		props = context.scene.jewelcraft
-		l = localization.locale[props.lang]
+		l = localization.locale[prefs.lang]
 		m = props.weighting_metals
 
 		layout = self.layout
@@ -195,17 +178,12 @@ class JewelCraftWeightingPanel(Panel):
 		col.prop(props, "weighting_metals", text="")
 
 		col.separator()
-		if m == 'VOL':
-			col.label(text=props.weighting_result, icon='MATCUBE')
-		elif m == 'CUSTOM':
+		if m == 'CUSTOM':
 			col.prop(props, "weighting_custom", text=l['g/cm'])
-			col.separator()
-			col.label(text=props.weighting_result, icon='MATCUBE')
-		else:
-			col.label(text=props.weighting_result, icon='MATCUBE')
-
-		col.separator()
 		col.operator("jewelcraft.weight_display", text=l['wt_calc'])
+
+		box = layout.box()
+		box.label(props.weighting_result)
 
 
 
@@ -224,8 +202,9 @@ class JewelCraftExportPanel(Panel):
 	def draw(self, context):
 		layout = self.layout
 		sce = context.scene
+		prefs = context.user_preferences.addons[__package__].preferences
 		props = sce.jewelcraft
-		l = localization.locale[props.lang]
+		l = localization.locale[prefs.lang]
 
 
 		box = layout.box()
@@ -266,6 +245,11 @@ class JewelCraftExportPanel(Panel):
 				row = col.row()
 				row.prop(props, "metal_custom_name", text="")
 				row.prop(props, "metal_custom_density", text="")
+
+
+			col = box.row(align=True)
+			col.label(l['lang']+":")
+			col.prop(props, 'lang', text="")
 
 
 		col = layout.column(align=True)

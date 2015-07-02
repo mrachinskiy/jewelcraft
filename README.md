@@ -24,8 +24,15 @@ How to install
 \* Аддон доступен для **Blender 2.74 и новее**, ранние версии не поддерживаются
 
 
+Русский язык
+--------------------------
+Настройки локализации интерфейса находятся в **настройках аддона** («User Preferences» → «Add-ons» → «JewelCraft»):
+![UI language settings]
+
+
 
 
 [Demo]: https://youtu.be/XZ6uIdNnrHk
 [master.zip]: https://github.com/mrachinskiy/blender-addon-jewelcraft/archive/master.zip
 [Install from File…]: http://www.blender.org/manual/extensions/python/add_ons.html#installation-of-a-3rd-party-add-on
+[UI language settings]: http://i.imgur.com/WaSR9c9.png
