@@ -24,6 +24,7 @@
 
 import bpy
 from mathutils import (Vector, Matrix)
+from math import pi
 from os import path
 from . import localization
 from . import volume
@@ -131,7 +132,6 @@ def ct_calc(tpe, cut, l, w, h):
 	props = bpy.context.scene.jewelcraft
 	dens = props.crystal_density[tpe]
 	corr = props.gems_volume_correction[cut]
-	pi = 3.141592
 
 	if cut == 'ROUND':
 		vol = (pi * ((l/2)**2) * h/3) * corr
