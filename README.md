@@ -13,6 +13,7 @@ How to install
 3. Use “[Install from File…]” feature to install add-on from downloaded zip archive
 
 \* Add-on is available for **Blender 2.74 and above**, versions below are not supported
+\* **Note for Mac users:** OSX will automatically unpack downloaded zip archive, so in order to install the add-on you should pack all files inside unpacked folder back into zip archive
 
 
 Установка
@@ -22,6 +23,7 @@ How to install
 3. Воспользуйтесь функцией «[Install from File…]» чтобы установить аддон из загруженного архива
 
 \* Аддон доступен для **Blender 2.74 и новее**, ранние версии не поддерживаются
+\* **Для пользователей Mac:** OSX автоматически распаковывает скачиваемые zip архивы, поэтому чтобы установить аддон вам необходимо запаковать все файлы внутри распакованной директории обратно в zip архив
 
 
 Русский язык
