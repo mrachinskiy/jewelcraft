@@ -1,73 +1,44 @@
 from bpy.types import Panel
-from . import (localization, report)
+from bpy.utils import previews
+from os import path
+from . import (
+	localization,
+	report,
+)
+
 
 
 # Custom icons
 #######################################################################
 
-from bpy.app import version
-if version >= (2,74,5):
-	custom_icons = True
-else:
-	custom_icons = False
-
-
 preview_collections = {}
-if custom_icons:
-	from os import path
-	from bpy.utils import previews
-
-	pcoll = previews.new()
-	icons_path = path.join(path.dirname(__file__), 'icons')
-
-	load = pcoll.load
-	icon_path = path.join
-
-	load('cut',      icon_path(icons_path, 'cut.png'),              'IMAGE')
-	load('cutter',   icon_path(icons_path, 'cutter.png'),           'IMAGE')
-	load('cutter_s', icon_path(icons_path, 'cutter_seat_only.png'), 'IMAGE')
-	
-	load('cut-round',    icon_path(icons_path, 'cut-round.png'),    'IMAGE')
-	load('cut-oval',     icon_path(icons_path, 'cut-oval.png'),     'IMAGE')
-	load('cut-emerald',  icon_path(icons_path, 'cut-emerald.png'),  'IMAGE')
-	load('cut-marquise', icon_path(icons_path, 'cut-marquise.png'), 'IMAGE')
-	load('cut-pearl',    icon_path(icons_path, 'cut-pearl.png'),    'IMAGE')
-	load('cut-baguette', icon_path(icons_path, 'cut-baguette.png'), 'IMAGE')
-	load('cut-square',   icon_path(icons_path, 'cut-square.png'),   'IMAGE')
-
-	preview_collections['main'] = pcoll
-
-#######################################################################
 
 
+pcoll = previews.new()
+icons_path = path.join(path.dirname(__file__), 'icons')
 
-# Custom icons UI support
-#######################################################################
+load = pcoll.load
+icon_path = path.join
 
-if custom_icons:
-	pcoll = preview_collections['main']
-	icon_cut = pcoll.get('cut').icon_id
-	icon_cutter = pcoll.get('cutter').icon_id
-	icon_cutter_s = pcoll.get('cutter_s').icon_id
-else:
-	icon_cut = False
-	icon_cutter = False
-	icon_cutter_s = False
+load('cut',      icon_path(icons_path, 'cut.png'),              'IMAGE')
+load('cutter',   icon_path(icons_path, 'cutter.png'),           'IMAGE')
+load('cutter_s', icon_path(icons_path, 'cutter_seat_only.png'), 'IMAGE')
 
+load('cut-round',    icon_path(icons_path, 'cut-round.png'),    'IMAGE')
+load('cut-oval',     icon_path(icons_path, 'cut-oval.png'),     'IMAGE')
+load('cut-emerald',  icon_path(icons_path, 'cut-emerald.png'),  'IMAGE')
+load('cut-marquise', icon_path(icons_path, 'cut-marquise.png'), 'IMAGE')
+load('cut-pearl',    icon_path(icons_path, 'cut-pearl.png'),    'IMAGE')
+load('cut-baguette', icon_path(icons_path, 'cut-baguette.png'), 'IMAGE')
+load('cut-square',   icon_path(icons_path, 'cut-square.png'),   'IMAGE')
 
-def icon_support(icon, custom_icon):
-	if custom_icons:
-		i1 = 'NONE'
-		i2 = custom_icon
-	else:
-		i1 = icon
-		i2 = 0
-	return [i1, i2]
+preview_collections['main'] = pcoll
 
 
-icon_cut = icon_support('MESH_ICOSPHERE', icon_cut)
-icon_cutter = icon_support('MESH_CYLINDER', icon_cutter)
-icon_cutter_s = icon_support('MESH_CONE', icon_cutter_s)
+pcoll = preview_collections['main']
+icon_cut = pcoll.get('cut').icon_id
+icon_cutter = pcoll.get('cutter').icon_id
+icon_cutter_s = pcoll.get('cutter_s').icon_id
 
 #######################################################################
 
@@ -107,7 +78,7 @@ class JewelCraftImportPanel(Panel):
 		row.operator("jewelcraft.import_type", text="", icon="COLOR")
 		row = col.row(align=True)
 		row.prop(props, 'import_gem_cut', text="")
-		row.operator("jewelcraft.import_cut", text="", icon=icon_cut[0], icon_value=icon_cut[1])
+		row.operator("jewelcraft.import_cut", text="", icon_value=icon_cut)
 		col.prop(props, 'import_gem_size', text=l['size'])
 		col.operator("jewelcraft.import_gem", text=l['make_gem'])
 
@@ -118,8 +89,8 @@ class JewelCraftImportPanel(Panel):
 		row.operator("jewelcraft.import_prongs", text="", icon="SURFACE_NCIRCLE")
 		row = col.row(align=True)
 		row.label(l['cutter'])
-		row.operator("jewelcraft.import_cutter_seat_only", text="", icon=icon_cutter_s[0], icon_value=icon_cutter_s[1])
-		row.operator("jewelcraft.import_cutter", text="", icon=icon_cutter[0], icon_value=icon_cutter[1])
+		row.operator("jewelcraft.import_cutter_seat_only", text="", icon_value=icon_cutter_s)
+		row.operator("jewelcraft.import_cutter", text="", icon_value=icon_cutter)
 		row = col.row(align=True)
 		row.label(l['imitation'])
 		row.operator("jewelcraft.import_imitation_3_prong", text="", icon="MOD_SKIN")

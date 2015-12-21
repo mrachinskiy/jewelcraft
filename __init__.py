@@ -1,8 +1,8 @@
 bl_info = {
 	"name": "JewelCraft",
 	"author": "Mikhail Rachinskiy (jewelcourses.com)",
-	"version": (1,2),
-	"blender": (2,7,4),
+	"version": (1,3),
+	"blender": (2,7,5),
 	"location": "3D View → Tool Shelf",
 	"description": "JewelCraft—add-on for jewelry design that provides tools for asset managment, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.",
 	"wiki_url": "https://github.com/mrachinskiy/blender-addon-jewelcraft",
@@ -13,6 +13,8 @@ if "bpy" in locals():
 	import importlib
 	importlib.reload(localization)
 	importlib.reload(helpers)
+	importlib.reload(assets)
+	importlib.reload(stats)
 	importlib.reload(operators)
 	importlib.reload(ui)
 else:
@@ -28,8 +30,10 @@ else:
 		PropertyGroup,
 		AddonPreferences,
 	)
-	from . import operators
-	from . import ui
+	from . import (
+		operators,
+		ui,
+	)
 
 
 
@@ -56,25 +60,16 @@ def ui_gems_cut(self, context):
 	l = localization.locale[prefs.lang]
 
 
-	if ui.custom_icons:
-		pcoll = ui.preview_collections['main']
-		icon_get = pcoll.get
+	pcoll = ui.preview_collections['main']
+	icon_get = pcoll.get
 
-		i_round = icon_get('cut-round').icon_id
-		i_oval = icon_get('cut-oval').icon_id
-		i_emerald = icon_get('cut-emerald').icon_id
-		i_marquise = icon_get('cut-marquise').icon_id
-		i_pearl = icon_get('cut-pearl').icon_id
-		i_baguette = icon_get('cut-baguette').icon_id
-		i_square = icon_get('cut-square').icon_id
-	else:
-		i_round = 'NONE'
-		i_oval = 'NONE'
-		i_emerald = 'NONE'
-		i_marquise = 'NONE'
-		i_pearl = 'NONE'
-		i_baguette = 'NONE'
-		i_square = 'NONE'
+	i_round = icon_get('cut-round').icon_id
+	i_oval = icon_get('cut-oval').icon_id
+	i_emerald = icon_get('cut-emerald').icon_id
+	i_marquise = icon_get('cut-marquise').icon_id
+	i_pearl = icon_get('cut-pearl').icon_id
+	i_baguette = icon_get('cut-baguette').icon_id
+	i_square = icon_get('cut-square').icon_id
 
 
 	items = (
