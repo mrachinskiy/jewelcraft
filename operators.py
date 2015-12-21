@@ -50,7 +50,7 @@ class IMPORT_CUT(Operator):
 
 class IMPORT_PRONGS(Operator):
 	'''Create prongs for selected gemstones'''
-	bl_label = "JewelCraft: Change Cut and Size"
+	bl_label = "JewelCraft: Add Prongs"
 	bl_idname = "jewelcraft.import_prongs"
 
 	@classmethod
@@ -64,7 +64,7 @@ class IMPORT_PRONGS(Operator):
 
 class IMPORT_SINGLE_PRONG(Operator):
 	'''Create single prong'''
-	bl_label = "JewelCraft: Single Prong"
+	bl_label = "JewelCraft: Make Single Prong"
 	bl_idname = "jewelcraft.import_single_prong"
 
 	def execute(self, context):
@@ -74,7 +74,7 @@ class IMPORT_SINGLE_PRONG(Operator):
 
 class IMPORT_CUTTER(Operator):
 	'''Create cutters for selected gemstones'''
-	bl_label = "JewelCraft: Cutter"
+	bl_label = "JewelCraft: Add Cutter"
 	bl_idname = "jewelcraft.import_cutter"
 
 	@classmethod
@@ -88,7 +88,7 @@ class IMPORT_CUTTER(Operator):
 
 class IMPORT_CUTTER_SEAT_ONLY(Operator):
 	'''Create (seat only) cutters for selected gemstones'''
-	bl_label = "JewelCraft: Cutter (Seat only)"
+	bl_label = "JewelCraft: Add Cutter (Seat only)"
 	bl_idname = "jewelcraft.import_cutter_seat_only"
 
 	@classmethod
@@ -102,7 +102,7 @@ class IMPORT_CUTTER_SEAT_ONLY(Operator):
 
 class IMPORT_IMITATION_3_PRONG(Operator):
 	'''Create imitation (3 prong)'''
-	bl_label = "JewelCraft: Imitation (3 prong)"
+	bl_label = "JewelCraft: Make Imitation (3 prong)"
 	bl_idname = "jewelcraft.import_imitation_3_prong"
 
 	def execute(self, context):
@@ -130,7 +130,7 @@ class MAKE_DUPLIFACE(Operator):
 
 class WEIGHT_DISPLAY(Operator):
 	'''Display weight or volume of the active mesh object'''
-	bl_label = "JewelCraft: Calculate"
+	bl_label = "JewelCraft: Weighting"
 	bl_idname = "jewelcraft.weight_display"
 
 	@classmethod
