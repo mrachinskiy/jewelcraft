@@ -28,7 +28,8 @@ How to install
 
 Русский язык
 --------------------------
-Настройки локализации интерфейса находятся в **настройках аддона** («User Preferences» → «Add-ons» → «JewelCraft»):
+Настройки локализации интерфейса находятся в **настройках аддона**:  
+_(User Preferences → Add-ons → JewelCraft)_
 
 ![UI language settings]
 
