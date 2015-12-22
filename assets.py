@@ -52,18 +52,6 @@ def type_replace():
 			type_set(ob, tpe, data_to.materials)
 
 
-def type_set(ob, tpe, materials):
-	ob.data['gem']['TYPE'] = tpe
-	material_assign(ob, tpe.title(), materials)
-
-
-def type_copy(ob, obj):
-	ob.data['gem']['TYPE'] = obj.data['gem']['TYPE']
-	append = ob.data.materials.append
-	for mat in obj.data.materials:
-		append(mat)
-
-
 
 
 
@@ -181,6 +169,18 @@ def asset_import(ob_name=False, mat_name=False):
 	return data_to
 
 
+def type_set(ob, tpe, materials):
+	ob.data['gem']['TYPE'] = tpe
+	material_assign(ob, tpe.title(), materials)
+
+
+def type_copy(ob, obj):
+	ob.data['gem']['TYPE'] = obj.data['gem']['TYPE']
+	append = ob.data.materials.append
+	for mat in obj.data.materials:
+		append(mat)
+
+
 def append_to(ob, obj):
 	if obj.parent:
 		ob.location = [0,0,0]
@@ -188,15 +188,6 @@ def append_to(ob, obj):
 	else:
 		ob.location = obj.location
 	ob.rotation_euler = obj.rotation_euler
-
-
-def sce_link(ob, active=False):
-	sce = bpy.context.scene
-	sce.objects.link(ob)
-	if active:
-		sce.objects.active = ob
-	ob.select = True
-	apply_transforms(ob)
 
 
 def material_assign(ob, name, materials):
@@ -214,6 +205,15 @@ def material_assign(ob, name, materials):
 		ob.data.materials.append(material)
 	else:
 		ob.material_slots[0].material = material
+
+
+def sce_link(ob, active=False):
+	sce = bpy.context.scene
+	sce.objects.link(ob)
+	if active:
+		sce.objects.active = ob
+	ob.select = True
+	apply_transforms(ob)
 
 
 

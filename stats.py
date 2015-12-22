@@ -9,6 +9,32 @@ from . import (
 )
 
 
+def weight_display():
+	context = bpy.context
+	prefs = context.user_preferences.addons[__package__].preferences
+	props = context.scene.jewelcraft
+	l = localization.locale[prefs.lang]
+	m = props.weighting_metals
+	vol = volume.calculate(context.active_object)
+	mm3 = ' ' + l['mm3']
+	g = ' ' + l['g']
+
+	if m == 'VOL':
+		result = str(round(vol, 4)) + mm3
+	elif m == 'CUSTOM':
+		dens = props.weighting_custom / 1000 # cm → mm
+		result = str(round(vol * dens, 2)) + g
+	else:
+		mdens = props.metal_density[m]
+		result = str(round(vol * mdens, 2)) + g
+
+	report.data = result
+
+
+
+
+
+
 def stats():
 	sce = bpy.context.scene
 	obs = sce.objects
@@ -298,29 +324,3 @@ def ct_round(ct):
 		rnd = 2
 
 	return round(ct, rnd)
-
-
-
-
-
-
-def weight_display():
-	context = bpy.context
-	prefs = context.user_preferences.addons[__package__].preferences
-	props = context.scene.jewelcraft
-	l = localization.locale[prefs.lang]
-	m = props.weighting_metals
-	vol = volume.calculate(context.active_object)
-	mm3 = ' ' + l['mm3']
-	g = ' ' + l['g']
-
-	if m == 'VOL':
-		result = str(round(vol, 4)) + mm3
-	elif m == 'CUSTOM':
-		dens = props.weighting_custom / 1000 # cm → mm
-		result = str(round(vol * dens, 2)) + g
-	else:
-		mdens = props.metal_density[m]
-		result = str(round(vol * mdens, 2)) + g
-
-	report.data = result
