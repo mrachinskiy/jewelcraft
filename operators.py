@@ -1,6 +1,6 @@
 import bpy
 from bpy.types import Operator
-from . import (
+from .modules import (
 	assets,
 	stats,
 )

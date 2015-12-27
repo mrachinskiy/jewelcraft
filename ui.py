@@ -1,46 +1,10 @@
 from bpy.types import Panel
-from bpy.utils import previews
-from os import path
 from . import (
+	var,
 	localization,
-	report,
 )
-
-
-
-# Custom icons
-#######################################################################
-
-preview_collections = {}
-
-
-pcoll = previews.new()
-icons_path = path.join(path.dirname(__file__), 'icons')
-
-load = pcoll.load
-icon_path = path.join
-
-load('cut',      icon_path(icons_path, 'cut.png'),              'IMAGE')
-load('cutter',   icon_path(icons_path, 'cutter.png'),           'IMAGE')
-load('cutter_s', icon_path(icons_path, 'cutter_seat_only.png'), 'IMAGE')
-
-load('cut-round',    icon_path(icons_path, 'cut-round.png'),    'IMAGE')
-load('cut-oval',     icon_path(icons_path, 'cut-oval.png'),     'IMAGE')
-load('cut-emerald',  icon_path(icons_path, 'cut-emerald.png'),  'IMAGE')
-load('cut-marquise', icon_path(icons_path, 'cut-marquise.png'), 'IMAGE')
-load('cut-pearl',    icon_path(icons_path, 'cut-pearl.png'),    'IMAGE')
-load('cut-baguette', icon_path(icons_path, 'cut-baguette.png'), 'IMAGE')
-load('cut-square',   icon_path(icons_path, 'cut-square.png'),   'IMAGE')
-
-preview_collections['main'] = pcoll
-
-
-pcoll = preview_collections['main']
-icon_cut = pcoll.get('cut').icon_id
-icon_cutter = pcoll.get('cutter').icon_id
-icon_cutter_s = pcoll.get('cutter_s').icon_id
-
-#######################################################################
+from .modules import report
+from .modules.icons import preview_collections
 
 
 
@@ -67,9 +31,10 @@ class JewelCraftImportPanel(Panel):
 
 	def draw(self, context):
 		layout = self.layout
-		prefs = context.user_preferences.addons[__package__].preferences
+		prefs = context.user_preferences.addons[var.addon_id].preferences
 		props = context.scene.jewelcraft
 		l = localization.locale[prefs.lang]
+		pcoll = preview_collections['main']
 
 		col = layout.column(align=True)
 
@@ -78,7 +43,7 @@ class JewelCraftImportPanel(Panel):
 		row.operator("jewelcraft.import_type", text="", icon="COLOR")
 		row = col.row(align=True)
 		row.prop(props, 'import_gem_cut', text="")
-		row.operator("jewelcraft.import_cut", text="", icon_value=icon_cut)
+		row.operator("jewelcraft.import_cut", text="", icon_value=pcoll['cut'].icon_id)
 		col.prop(props, 'import_gem_size', text=l['size'])
 		col.operator("jewelcraft.import_gem", text=l['make_gem'])
 
@@ -89,8 +54,8 @@ class JewelCraftImportPanel(Panel):
 		row.operator("jewelcraft.import_prongs", text="", icon="SURFACE_NCIRCLE")
 		row = col.row(align=True)
 		row.label(l['cutter'])
-		row.operator("jewelcraft.import_cutter_seat_only", text="", icon_value=icon_cutter_s)
-		row.operator("jewelcraft.import_cutter", text="", icon_value=icon_cutter)
+		row.operator("jewelcraft.import_cutter_seat_only", text="", icon_value=pcoll['cutter_s'].icon_id)
+		row.operator("jewelcraft.import_cutter", text="", icon_value=pcoll['cutter'].icon_id)
 		row = col.row(align=True)
 		row.label(l['imitation'])
 		row.operator("jewelcraft.import_imitation_3_prong", text="", icon="MOD_SKIN")
@@ -114,7 +79,7 @@ class JewelCraftWeightingPanel(Panel):
 		return context.mode == 'OBJECT'
 
 	def draw(self, context):
-		prefs = context.user_preferences.addons[__package__].preferences
+		prefs = context.user_preferences.addons[var.addon_id].preferences
 		props = context.scene.jewelcraft
 		l = localization.locale[prefs.lang]
 		m = props.weighting_metals
@@ -151,7 +116,7 @@ class JewelCraftExportPanel(Panel):
 	def draw(self, context):
 		layout = self.layout
 		sce = context.scene
-		prefs = context.user_preferences.addons[__package__].preferences
+		prefs = context.user_preferences.addons[var.addon_id].preferences
 		props = sce.jewelcraft
 		l = localization.locale[prefs.lang]
 
