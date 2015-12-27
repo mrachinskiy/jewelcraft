@@ -11,12 +11,14 @@ bl_info = {
 
 if "bpy" in locals():
 	import importlib
+	importlib.reload(var)
 	importlib.reload(localization)
-	importlib.reload(helpers)
-	importlib.reload(assets)
-	importlib.reload(stats)
 	importlib.reload(operators)
 	importlib.reload(ui)
+	importlib.reload(modules.icons)
+	importlib.reload(modules.helpers)
+	importlib.reload(modules.assets)
+	importlib.reload(modules.stats)
 else:
 	import bpy
 	from bpy.props import (
@@ -31,84 +33,19 @@ else:
 		AddonPreferences,
 	)
 	from . import (
+		var,
 		operators,
 		ui,
 	)
-
-
-
-
-def ui_gems_type(self, context):
-	'''For enum translation'''
-	prefs = context.user_preferences.addons[__package__].preferences
-	l = localization.locale[prefs.lang]
-
-	items = (
-		('DIAMOND',  l['diamond'],  "", 0),
-		('ZIRCON',   l['zircon'],   "", 1),
-		('TOPAZ',    l['topaz'],    "", 2),
-		('EMERALD',  l['emerald'],  "", 3),
-		('RUBY',     l['ruby'],     "", 4),
-		('SAPPHIRE', l['sapphire'], "", 5),
-	)
-	return items
-
-
-def ui_gems_cut(self, context):
-	'''For enum translation'''
-	prefs = context.user_preferences.addons[__package__].preferences
-	l = localization.locale[prefs.lang]
-
-
-	pcoll = ui.preview_collections['main']
-	icon_get = pcoll.get
-
-	i_round = icon_get('cut-round').icon_id
-	i_oval = icon_get('cut-oval').icon_id
-	i_emerald = icon_get('cut-emerald').icon_id
-	i_marquise = icon_get('cut-marquise').icon_id
-	i_pearl = icon_get('cut-pearl').icon_id
-	i_baguette = icon_get('cut-baguette').icon_id
-	i_square = icon_get('cut-square').icon_id
-
-
-	items = (
-		('ROUND',    l['round'],    "", i_round,    0),
-		('OVAL',     l['oval'],     "", i_oval,     1),
-		('EMERALD',  l['emerald'],  "", i_emerald,  2),
-		('MARQUISE', l['marquise'], "", i_marquise, 3),
-		('PEARL',    l['pearl'],    "", i_pearl,    4),
-		('BAGUETTE', l['baguette'], "", i_baguette, 5),
-		('SQUARE',   l['square'],   "", i_square,   6),
-	)
-	return items
-
-
-def ui_volume_metal_list(self, context):
-	prefs = context.user_preferences.addons[__package__].preferences
-	l = localization.locale[prefs.lang]
-
-	items = (
-		('24KT',        l['24kt'],        "", 9),
-		('22KT',        l['22kt'],        "", 10),
-		('18KT_WHITE',  l['18kt_white'],  "", 0),
-		('14KT_WHITE',  l['14kt_white'],  "", 1),
-		('18KT_YELLOW', l['18kt_yellow'], "", 2),
-		('14KT_YELLOW', l['14kt_yellow'], "", 3),
-		('SILVER',      l['silver'],      "", 4),
-		('PALLADIUM',   l['palladium'],   "", 5),
-		('PLATINUM',    l['platinum'],    "", 6),
-		('CUSTOM',      l['wt_custom'],   "", 7),
-		('VOL',         l['wt_vol'],      "", 8),
-	)
-	return items
+	from .modules import props_helpers
+	from .modules.icons import preview_collections
 
 
 
 
 class JewelCraftPreferences(AddonPreferences):
 
-	bl_idname = __package__
+	bl_idname = var.addon_id
 
 	lang = EnumProperty(
 		name="UI language",
@@ -130,12 +67,12 @@ class JewelCraftPreferences(AddonPreferences):
 
 class JewelCraftProperties(PropertyGroup):
 
-	import_gem_type = EnumProperty(name="Type", items=ui_gems_type)
-	import_gem_cut = EnumProperty(name="Cut", items=ui_gems_cut)
+	import_gem_type = EnumProperty(name="Type", items=props_helpers.gems_type)
+	import_gem_cut = EnumProperty(name="Cut", items=props_helpers.gems_cut)
 	import_gem_size = FloatProperty(name="Size", description="Set gemstone size", default=1.0, min=0.1, step=10, precision=2)
 
 
-	weighting_metals = EnumProperty(name="Metals" , items=ui_volume_metal_list)
+	weighting_metals = EnumProperty(name="Metals" , items=props_helpers.volume_metal_list)
 	weighting_custom = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
 
 
@@ -250,8 +187,6 @@ classes = (
 
 
 def register():
-	ui.preview_collections
-
 	for cls in classes:
 		bpy.utils.register_class(cls)
 
@@ -260,9 +195,9 @@ def register():
 
 def unregister():
 	pcoll_remove = bpy.utils.previews.remove
-	for pcoll in ui.preview_collections.values():
+	for pcoll in preview_collections.values():
 		pcoll_remove(pcoll)
-	ui.preview_collections.clear()
+	preview_collections.clear()
 
 	for cls in classes:
 		bpy.utils.unregister_class(cls)

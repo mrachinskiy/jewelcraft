@@ -1,8 +1,11 @@
 import bpy
 from os import path
 from math import pi
-from . import (
+from .. import (
+	var,
 	localization,
+)
+from . import (
 	helpers,
 	volume,
 	report,
@@ -11,7 +14,7 @@ from . import (
 
 def weight_display():
 	context = bpy.context
-	prefs = context.user_preferences.addons[__package__].preferences
+	prefs = context.user_preferences.addons[var.addon_id].preferences
 	props = context.scene.jewelcraft
 	l = localization.locale[prefs.lang]
 	m = props.weighting_metals
@@ -261,7 +264,7 @@ def export():
 		f.close()
 
 	else:
-		prefs = bpy.context.user_preferences.addons[__package__].preferences
+		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
 		l = localization.locale[prefs.lang]
 		return helpers.show_error_message(l['error_file'])
 
@@ -272,7 +275,7 @@ def export():
 
 def export_locale():
 	context = bpy.context
-	prefs = context.user_preferences.addons[__package__].preferences
+	prefs = context.user_preferences.addons[var.addon_id].preferences
 	props = context.scene.jewelcraft
 
 	if props.lang == 'AUTO':

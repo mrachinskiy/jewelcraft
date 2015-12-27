@@ -1,6 +1,6 @@
 import bpy
 from mathutils import Matrix
-from os import path
+from .. import var
 
 
 def gem_import():
@@ -158,9 +158,8 @@ def make_dupliface():
 
 def asset_import(ob_name=False, mat_name=False):
 	data = bpy.data
-	filepath = path.join(path.dirname(__file__), 'assets', 'gems.blend')
 
-	with data.libraries.load(filepath) as (data_from, data_to):
+	with data.libraries.load(var.asset_filepath) as (data_from, data_to):
 		if ob_name:
 			data_to.objects = [ob_name]
 		if (mat_name and mat_name not in data.materials):
