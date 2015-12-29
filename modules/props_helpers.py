@@ -5,8 +5,7 @@ from .. import (
 from .icons import preview_collections
 
 
-def gems_type(self, context):
-	'''For enum translation'''
+def gem_type(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
 	l = localization.locale[prefs.lang]
 
@@ -21,8 +20,7 @@ def gems_type(self, context):
 	return items
 
 
-def gems_cut(self, context):
-	'''For enum translation'''
+def gem_cut(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
 	l = localization.locale[prefs.lang]
 	pcoll = preview_collections['main']
@@ -39,7 +37,7 @@ def gems_cut(self, context):
 	return items
 
 
-def volume_metal_list(self, context):
+def weighting_metals(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
 	l = localization.locale[prefs.lang]
 
