@@ -147,6 +147,54 @@ class WEIGHT_DISPLAY(Operator):
 
 
 
+class EXPORT_PICK_SIZE(Operator):
+	'''Pick active object'''
+	bl_label = "JewelCraft: Pick Size"
+	bl_idname = "jewelcraft.export_pick_size"
+	bl_options = {'INTERNAL'}
+
+	def execute(self, context):
+		props = bpy.context.scene.jewelcraft
+		props.export_size = bpy.context.active_object.name
+		return {'FINISHED'}
+
+
+class EXPORT_PICK_SHANK(Operator):
+	'''Pick active object'''
+	bl_label = "JewelCraft: Pick Shank"
+	bl_idname = "jewelcraft.export_pick_shank"
+	bl_options = {'INTERNAL'}
+
+	def execute(self, context):
+		props = bpy.context.scene.jewelcraft
+		props.export_shank = bpy.context.active_object.name
+		return {'FINISHED'}
+
+
+class EXPORT_PICK_DIM(Operator):
+	'''Pick active object'''
+	bl_label = "JewelCraft: Pick Dim"
+	bl_idname = "jewelcraft.export_pick_dim"
+	bl_options = {'INTERNAL'}
+
+	def execute(self, context):
+		props = bpy.context.scene.jewelcraft
+		props.export_dim = bpy.context.active_object.name
+		return {'FINISHED'}
+
+
+class EXPORT_PICK_WEIGHT(Operator):
+	'''Pick active object'''
+	bl_label = "JewelCraft: Pick Weight"
+	bl_idname = "jewelcraft.export_pick_weight"
+	bl_options = {'INTERNAL'}
+
+	def execute(self, context):
+		props = bpy.context.scene.jewelcraft
+		props.export_weight = bpy.context.active_object.name
+		return {'FINISHED'}
+
+
 class EXPORT_STATS(Operator):
 	'''Export statistics for the project'''
 	bl_label = "JewelCraft: Export Stats"

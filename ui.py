@@ -129,10 +129,18 @@ class JewelCraftExportPanel(Panel):
 		row.label(l['export_options'])
 		if props.export_options:
 			col = box.column()
-			col.prop_search(props, "export_size", sce, "objects", text=l['size'])
-			col.prop_search(props, "export_shank", sce, "objects", text=l['shank'])
-			col.prop_search(props, "export_dim", sce, "objects", text=l['dim'])
-			col.prop_search(props, "export_weight", sce, "objects", text=l['weight'])
+			row = col.row(align=True)
+			row.prop_search(props, "export_size", sce, "objects", text=l['size'])
+			row.operator("jewelcraft.export_pick_size", text="", icon="EYEDROPPER")
+			row = col.row(align=True)
+			row.prop_search(props, "export_shank", sce, "objects", text=l['shank'])
+			row.operator("jewelcraft.export_pick_shank", text="", icon="EYEDROPPER")
+			row = col.row(align=True)
+			row.prop_search(props, "export_dim", sce, "objects", text=l['dim'])
+			row.operator("jewelcraft.export_pick_dim", text="", icon="EYEDROPPER")
+			row = col.row(align=True)
+			row.prop_search(props, "export_weight", sce, "objects", text=l['weight'])
+			row.operator("jewelcraft.export_pick_weight", text="", icon="EYEDROPPER")
 
 
 			row = box.row(align=True)
@@ -161,9 +169,9 @@ class JewelCraftExportPanel(Panel):
 				row.prop(props, "metal_custom_density", text="")
 
 
-			col = box.row(align=True)
-			col.label(l['lang']+":")
-			col.prop(props, 'lang', text="")
+			row = box.row(align=True)
+			row.label(l['lang']+":")
+			row.prop(props, 'lang', text="")
 
 
 		col = layout.column(align=True)

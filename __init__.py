@@ -19,6 +19,7 @@ if "bpy" in locals():
 	importlib.reload(modules.helpers)
 	importlib.reload(modules.assets)
 	importlib.reload(modules.stats)
+	importlib.reload(modules.props_helpers)
 else:
 	import bpy
 	from bpy.props import (
@@ -67,21 +68,21 @@ class JewelCraftPreferences(AddonPreferences):
 
 class JewelCraftProperties(PropertyGroup):
 
-	import_gem_type = EnumProperty(name="Type", items=props_helpers.gems_type)
-	import_gem_cut = EnumProperty(name="Cut", items=props_helpers.gems_cut)
+	import_gem_type = EnumProperty(name="Type", items=props_helpers.gem_type)
+	import_gem_cut = EnumProperty(name="Cut", items=props_helpers.gem_cut)
 	import_gem_size = FloatProperty(name="Size", description="Set gemstone size", default=1.0, min=0.1, step=10, precision=2)
 
 
-	weighting_metals = EnumProperty(name="Metals" , items=props_helpers.volume_metal_list)
+	weighting_metals = EnumProperty(name="Metals" , items=props_helpers.weighting_metals)
 	weighting_custom = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
 
 
 	export_options = BoolProperty()
 
-	export_size = StringProperty(description="Set object for ring’s size reference")
-	export_shank = StringProperty(description="Set object for ring’s shank reference")
-	export_dim = StringProperty(description="Set object for product dimensions reference")
-	export_weight = StringProperty(description="Set object for product weight calculation reference")
+	export_size = StringProperty(description="Set object for size reference")
+	export_shank = StringProperty(description="Set object for shank reference")
+	export_dim = StringProperty(description="Set object for dimensions reference")
+	export_weight = StringProperty(description="Set object for weight reference")
 
 	export_metals     = BoolProperty()
 	metal_24kt        = BoolProperty()
@@ -177,6 +178,10 @@ classes = (
 	operators.MAKE_DUPLIFACE,
 	operators.WEIGHT_DISPLAY,
 
+	operators.EXPORT_PICK_SIZE,
+	operators.EXPORT_PICK_SHANK,
+	operators.EXPORT_PICK_DIM,
+	operators.EXPORT_PICK_WEIGHT,
 	operators.EXPORT_STATS,
 
 	JewelCraftPreferences,
