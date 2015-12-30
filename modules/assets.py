@@ -9,7 +9,7 @@ def gem_import():
 	cut = props.import_gem_cut
 	size = props.import_gem_size
 
-	data_to = asset_import(ob_name=cut.title(), mat_name=tpe.title())
+	data_to = asset_import(ob_name=cut.title(), mat_name=tpe.replace('_', ' ').title())
 	bpy.ops.object.select_all(action='DESELECT')
 
 	ob = data_to.objects[0]
@@ -46,7 +46,7 @@ def type_replace():
 	context = bpy.context
 	tpe = context.scene.jewelcraft.import_gem_type
 
-	data_to = asset_import(mat_name=tpe.title())
+	data_to = asset_import(mat_name=tpe.replace('_', ' ').title())
 	for ob in context.selected_objects:
 		if ob.data.get('gem'):
 			type_set(ob, tpe, data_to.materials)
@@ -170,7 +170,7 @@ def asset_import(ob_name=False, mat_name=False):
 
 def type_set(ob, tpe, materials):
 	ob.data['gem']['TYPE'] = tpe
-	material_assign(ob, tpe.title(), materials)
+	material_assign(ob, tpe.replace('_', ' ').title(), materials)
 
 
 def type_copy(ob, obj):

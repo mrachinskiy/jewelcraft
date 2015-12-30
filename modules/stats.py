@@ -25,10 +25,10 @@ def weight_display():
 	if m == 'VOL':
 		result = str(round(vol, 4)) + mm3
 	elif m == 'CUSTOM':
-		dens = props.weighting_custom / 1000 # cm → mm
+		dens = props.weighting_custom / 1000 # cm→mm
 		result = str(round(vol * dens, 2)) + g
 	else:
-		mdens = props.metal_density[m]
+		mdens = props.metal_density[m] / 1000 # cm→mm
 		result = str(round(vol * mdens, 2)) + g
 
 	report.data = result
@@ -232,10 +232,10 @@ def format_weight(vol, metal):
 	g = ' ' + l['g']
 
 	if metal == 'CUSTOM':
-		dens = props.metal_custom_density / 1000 # cm → mm
+		dens = props.metal_custom_density / 1000 # cm→mm
 		mat = props.metal_custom_name
 	else:
-		dens = props.metal_density[metal]
+		dens = props.metal_density[metal] / 1000 # cm→mm
 		mat = l[metal.lower()]
 
 	return str(round(vol * dens, 2)) + g + ' ('+mat+')'
@@ -299,8 +299,8 @@ def polycount(obj):
 
 def ct_calc(tpe, cut, l, w, h):
 	props = bpy.context.scene.jewelcraft
-	dens = props.crystal_density[tpe]
-	corr = props.gems_volume_correction[cut]
+	dens = props.stone_density[tpe] / 1000 # cm→mm
+	corr = props.gem_volume_correction[cut]
 
 	if cut == 'ROUND':
 		vol = (pi * ((l/2)**2) * h/3) * corr
@@ -311,7 +311,7 @@ def ct_calc(tpe, cut, l, w, h):
 	elif cut in ['SQUARE', 'BAGUETTE', 'EMERALD']:
 		vol = ((l*w*h) / 3) * corr
 
-	ct = vol * dens
+	ct = vol * dens * 5
 
 	return ct_round(ct)
 

@@ -10,12 +10,12 @@ def gem_type(self, context):
 	l = localization.locale[prefs.lang]
 
 	items = (
-		('DIAMOND',  l['diamond'],  "", 0),
-		('ZIRCON',   l['zircon'],   "", 1),
-		('TOPAZ',    l['topaz'],    "", 2),
-		('EMERALD',  l['emerald'],  "", 3),
-		('RUBY',     l['ruby'],     "", 4),
-		('SAPPHIRE', l['sapphire'], "", 5),
+		('DIAMOND',        l['diamond'],        "", 0),
+		('CUBIC_ZIRCONIA', l['cubic_zirconia'], "", 1),
+		('TOPAZ',          l['topaz'],          "", 2),
+		('EMERALD',        l['emerald'],        "", 3),
+		('RUBY',           l['ruby'],           "", 4),
+		('SAPPHIRE',       l['sapphire'],       "", 5),
 	)
 	return items
 
