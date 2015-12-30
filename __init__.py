@@ -109,32 +109,30 @@ class JewelCraftProperties(PropertyGroup):
 		description="Statistics language")
 
 
-	# g/mm³ (average)
+	# g/cm³
 	metal_density = {
-		'24KT'        : 0.0193,
-		'22KT'        : 0.0178,
-		'18KT_WHITE'  : 0.0158,
-		'14KT_WHITE'  : 0.0146,
-		'18KT_YELLOW' : 0.0155,
-		'14KT_YELLOW' : 0.0138,
-		'SILVER'      : 0.0105,
-		'PALLADIUM'   : 0.012,
-		'PLATINUM'    : 0.0214,
-		'CUSTOM'      : None,
-		'VOL'         : None,
+		'24KT'        : 19.3,
+		'22KT'        : 17.8,
+		'18KT_WHITE'  : 15.8,
+		'14KT_WHITE'  : 14.6,
+		'18KT_YELLOW' : 15.5,
+		'14KT_YELLOW' : 13.8,
+		'SILVER'      : 10.5,
+		'PALLADIUM'   : 12.0,
+		'PLATINUM'    : 21.4,
 	}
 
-	# ct/mm³ (average)
-	crystal_density = {
-		'DIAMOND'  : 0.0182,
-		'ZIRCON'   : 0.0241,
-		'TOPAZ'    : 0.0183,
-		'EMERALD'  : 0.014,
-		'RUBY'     : 0.0205,
-		'SAPPHIRE' : 0.0205,
+	# g/cm³
+	stone_density = {
+		'DIAMOND'        : 3.53,
+		'CUBIC_ZIRCONIA' : 5.9,
+		'TOPAZ'          : 3.57,
+		'EMERALD'        : 2.76,
+		'RUBY'           : 4.1,
+		'SAPPHIRE'       : 4.1,
 	}
 
-	gems_volume_correction = {
+	gem_volume_correction = {
 		'ROUND'    : 1.3056,
 		'OVAL'     : 1.34455,
 		'PEARL'    : 1.24936,
@@ -144,7 +142,7 @@ class JewelCraftProperties(PropertyGroup):
 		'EMERALD'  : 1.45,
 	}
 
-	# mm:ct (from MSU)
+	# mm:ct (MSU)
 	diamonds_table = {
 		 0.8:0.0025,
 		 1.0:0.004, 1.1:0.005, 1.2:0.006, 1.3:0.008, 1.4:0.010, 1.5:0.012, 1.6:0.015, 1.7:0.018, 1.8:0.021, 1.9:0.025,
@@ -154,9 +152,6 @@ class JewelCraftProperties(PropertyGroup):
 		 5.0:0.460, 5.1:0.490, 5.2:0.520, 5.3:0.540, 5.4:0.570, 5.5:0.620, 5.6:0.660, 5.7:0.690, 5.8:0.720, 5.9:0.740,
 		 6.0:0.800, 6.1:0.840, 6.2:0.880, 6.3:0.900, 6.4:0.960, 6.5:1.010, 6.6:1.050, 6.7:1.080, 6.8:1.150, 6.9:1.190,
 		 7.0:1.240,
-		 8.0:1.900,
-		 9.0:2.650,
-		10.0:3.500,
 	}
 
 

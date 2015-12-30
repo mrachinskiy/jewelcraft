@@ -90,13 +90,15 @@ class JewelCraftWeightingPanel(Panel):
 		col = layout.column(align=True)
 		col.prop(props, "weighting_metals", text="")
 
-		col.separator()
 		if m == 'CUSTOM':
 			col.prop(props, "weighting_custom", text=l['g/cm'])
+
+		col.separator()
 		col.operator("jewelcraft.weight_display", text=l['wt_calc'])
 
 		if weight:
-			box = layout.box()
+			col.separator()
+			box = col.box()
 			box.label(weight)
 
 
