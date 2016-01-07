@@ -16,10 +16,9 @@ if "bpy" in locals():
 	importlib.reload(operators)
 	importlib.reload(ui)
 	importlib.reload(modules.icons)
-	importlib.reload(modules.helpers)
 	importlib.reload(modules.assets)
 	importlib.reload(modules.stats)
-	importlib.reload(modules.props_helpers)
+	importlib.reload(modules.props_utility)
 else:
 	import bpy
 	from bpy.props import (
@@ -38,7 +37,7 @@ else:
 		operators,
 		ui,
 	)
-	from .modules import props_helpers
+	from .modules import props_utility
 	from .modules.icons import preview_collections
 
 
@@ -68,12 +67,12 @@ class JewelCraftPreferences(AddonPreferences):
 
 class JewelCraftProperties(PropertyGroup):
 
-	import_gem_type = EnumProperty(name="Type", items=props_helpers.gem_type)
-	import_gem_cut = EnumProperty(name="Cut", items=props_helpers.gem_cut)
+	import_gem_type = EnumProperty(name="Type", items=props_utility.gem_type)
+	import_gem_cut = EnumProperty(name="Cut", items=props_utility.gem_cut)
 	import_gem_size = FloatProperty(name="Size", description="Set gemstone size", default=1.0, min=0.1, step=10, precision=2)
 
 
-	weighting_metals = EnumProperty(name="Metals" , items=props_helpers.weighting_metals)
+	weighting_metals = EnumProperty(name="Metals" , items=props_utility.weighting_metals)
 	weighting_custom = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
 
 
