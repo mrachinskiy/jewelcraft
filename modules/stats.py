@@ -6,7 +6,7 @@ from .. import (
 	localization,
 )
 from . import (
-	helpers,
+	utility,
 	volume,
 	report,
 )
@@ -76,6 +76,94 @@ def stats():
 	return stats
 
 
+
+
+
+
+def template(stats):
+	l = export_locale()
+	t = ''
+	mm = ' ' + l['mm']
+
+	if 'SIZE' in stats:
+		t += '{}\n    {}\n\n'.format(l['t_size'], stats['SIZE']+mm)
+
+	if 'SHANK' in stats:
+		t += '{}\n    {}\n\n'.format(l['t_width'], stats['SHANK'][0]+mm)
+		t += '{}\n    {}\n\n'.format(l['t_thickness'], stats['SHANK'][1]+mm)
+
+	if 'DIM' in stats:
+		dim = stats['DIM']
+		t += '{}\n    {} × {} × {}\n\n'.format(l['t_dim'], dim[0], dim[1], dim[2]+mm)
+
+	if ('WEIGHT' in stats and stats['METALS']):
+		t += l['t_weight'] + '\n    '
+		for metal in stats['METALS']:
+			t += format_weight(stats['WEIGHT'], metal) + '\n    '
+		t += '\n'
+
+	if stats['GEMS']:
+		col_len = [len(l['type']), len(l['cut']), len(l['size']), len(l['qty'])]
+		rows = []
+		append = rows.append
+		for tpe in sorted(stats['GEMS']):
+			for cut in sorted(stats['GEMS'][tpe]):
+				for size in sorted(stats['GEMS'][tpe][cut]):
+					row = format_gems(tpe, cut, size, stats['GEMS'][tpe][cut][size])
+					append(row)
+					for i in range(len(col_len)):
+						if len(row[i]) > col_len[i]:
+							col_len[i] = len(row[i])
+
+		table_columns = '{:'+str(col_len[0])+'} | {:'+str(col_len[1])+'} | {:'+str(col_len[2])+'} | {}\n    '
+		underline_len = col_len[0]+col_len[1]+col_len[2]+col_len[3]+10
+
+		t += l['t_settings']+'\n    '
+		t += table_columns.format(l['type'], l['cut'], l['size'], l['qty'])
+		t += '—'*underline_len+'\n    '
+		for gem in rows:
+			t += table_columns.format(gem[0], gem[1], gem[2], gem[3])
+
+	return t
+
+
+
+
+
+
+def export():
+	filepath = bpy.data.filepath
+
+	if filepath:
+		t = template(stats())
+
+		if filepath.rfind('\\') != -1:
+			last_slash = filepath.rfind('\\')
+		else:
+			last_slash = filepath.rfind('/')
+
+		filename = bpy.path.display_name_from_filepath(filepath)
+		save_path = path.join(filepath[:last_slash], filename+'_stats.txt')
+
+		f = open(save_path, 'w', encoding='utf-8')
+		f.write(t)
+		f.close()
+
+	else:
+		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
+		l = localization.locale[prefs.lang]
+		return utility.show_error_message(l['error_file'])
+
+
+
+
+
+
+#############################################################################
+# Stats utility #############################################################
+#############################################################################
+
+
 def stats_shank(ob):
 	mos = []
 	for mo in ob.modifiers:
@@ -141,55 +229,20 @@ def stats_gems():
 	return stats
 
 
+def polycount(obj):
+	bm = volume.bmesh_copy_from_object(obj, triangulate=False, apply_modifiers=True)
+	polycount = len(bm.faces)
+	bm.free()
+	return polycount
 
 
 
 
-def template(stats):
-	l = export_locale()
-	t = ''
-	mm = ' ' + l['mm']
 
-	if 'SIZE' in stats:
-		t += '{}\n    {}\n\n'.format(l['t_size'], stats['SIZE']+mm)
 
-	if 'SHANK' in stats:
-		t += '{}\n    {}\n\n'.format(l['t_width'], stats['SHANK'][0]+mm)
-		t += '{}\n    {}\n\n'.format(l['t_thickness'], stats['SHANK'][1]+mm)
-
-	if 'DIM' in stats:
-		dim = stats['DIM']
-		t += '{}\n    {} × {} × {}\n\n'.format(l['t_dim'], dim[0], dim[1], dim[2]+mm)
-
-	if ('WEIGHT' in stats and stats['METALS']):
-		t += l['t_weight'] + '\n    '
-		for metal in stats['METALS']:
-			t += format_weight(stats['WEIGHT'], metal) + '\n    '
-		t += '\n'
-
-	if stats['GEMS']:
-		col_len = [len(l['type']), len(l['cut']), len(l['size']), len(l['qty'])]
-		rows = []
-		append = rows.append
-		for tpe in sorted(stats['GEMS']):
-			for cut in sorted(stats['GEMS'][tpe]):
-				for size in sorted(stats['GEMS'][tpe][cut]):
-					row = format_gems(tpe, cut, size, stats['GEMS'][tpe][cut][size])
-					append(row)
-					for i in range(len(col_len)):
-						if len(row[i]) > col_len[i]:
-							col_len[i] = len(row[i])
-
-		table_columns = '{:'+str(col_len[0])+'} | {:'+str(col_len[1])+'} | {:'+str(col_len[2])+'} | {}\n    '
-		underline_len = col_len[0]+col_len[1]+col_len[2]+col_len[3]+10
-
-		t += l['t_settings']+'\n    '
-		t += table_columns.format(l['type'], l['cut'], l['size'], l['qty'])
-		t += '—'*underline_len+'\n    '
-		for gem in rows:
-			t += table_columns.format(gem[0], gem[1], gem[2], gem[3])
-
-	return t
+#############################################################################
+# Template utility ##########################################################
+#############################################################################
 
 
 def format_gems(tpe, cut, size, qty):
@@ -241,62 +294,6 @@ def format_weight(vol, metal):
 	return str(round(vol * dens, 2)) + g + ' ('+mat+')'
 
 
-
-
-
-
-def export():
-	filepath = bpy.data.filepath
-
-	if filepath:
-		t = template(stats())
-
-		if filepath.rfind('\\') != -1:
-			last_slash = filepath.rfind('\\')
-		else:
-			last_slash = filepath.rfind('/')
-
-		filename = bpy.path.display_name_from_filepath(filepath)
-		save_path = path.join(filepath[:last_slash], filename+'_stats.txt')
-
-		f = open(save_path, 'w', encoding='utf-8')
-		f.write(t)
-		f.close()
-
-	else:
-		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
-		l = localization.locale[prefs.lang]
-		return helpers.show_error_message(l['error_file'])
-
-
-
-
-
-
-def export_locale():
-	context = bpy.context
-	prefs = context.user_preferences.addons[var.addon_id].preferences
-	props = context.scene.jewelcraft
-
-	if props.lang == 'AUTO':
-		l = prefs.lang
-	else:
-		l = props.lang
-
-	return localization.locale[l]
-
-
-
-
-
-
-def polycount(obj):
-	bm = volume.bmesh_copy_from_object(obj, triangulate=False, apply_modifiers=True)
-	polycount = len(bm.faces)
-	bm.free()
-	return polycount
-
-
 def ct_calc(tpe, cut, l, w, h):
 	props = bpy.context.scene.jewelcraft
 	dens = var.stone_density[tpe] / 1000 # cm→mm
@@ -327,3 +324,25 @@ def ct_round(ct):
 		rnd = 2
 
 	return round(ct, rnd)
+
+
+
+
+
+
+#############################################################################
+# Export utility ############################################################
+#############################################################################
+
+
+def export_locale():
+	context = bpy.context
+	prefs = context.user_preferences.addons[var.addon_id].preferences
+	props = context.scene.jewelcraft
+
+	if props.lang == 'AUTO':
+		l = prefs.lang
+	else:
+		l = props.lang
+
+	return localization.locale[l]
