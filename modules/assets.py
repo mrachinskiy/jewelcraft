@@ -185,15 +185,6 @@ def type_copy(ob, obj):
 		append(mat)
 
 
-def append_to(ob, obj):
-	if obj.parent:
-		ob.location = [0,0,0]
-		ob.parent = obj.parent
-	else:
-		ob.location = obj.location
-	ob.rotation_euler = obj.rotation_euler
-
-
 def material_assign(ob, name, materials):
 	material = False
 	for mat in materials:
@@ -209,6 +200,15 @@ def material_assign(ob, name, materials):
 		ob.data.materials.append(material)
 	else:
 		ob.material_slots[0].material = material
+
+
+def append_to(ob, obj):
+	if obj.parent:
+		ob.location = [0,0,0]
+		ob.parent = obj.parent
+	else:
+		ob.location = obj.location
+	ob.rotation_euler = obj.rotation_euler
 
 
 def sce_link(ob, active=False):

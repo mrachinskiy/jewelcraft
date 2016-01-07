@@ -255,21 +255,14 @@ def format_gems(tpe, cut, size, qty):
 
 
 	if len(size) == 2:
-
-		if (tpe == 'DIAMOND' and cut == 'ROUND' and dt.get(size[0])):
-			crt = dt[size[0]]
-		else:
-			crt = ct_calc(tpe, cut, size[0], size[0], size[1])
-
+		crt = ct_calc(tpe, cut, size[0], size[0], size[1])
 		Size = '{} ({})'.format(str(size[0])+mm, str(crt)+ct)
 
 	else:
-
 		crt = ct_calc(tpe, cut, size[0], size[1], size[2])
-
 		Size = '{} × {} ({})'.format(str(size[0]), str(size[1])+mm, str(crt)+ct)
 
-	qty_ct = ct_round(qty*crt)
+	qty_ct = qty*crt
 
 
 	Qty = '{} ({})'.format(str(qty)+itms, str(qty_ct)+ct)
@@ -310,20 +303,7 @@ def ct_calc(tpe, cut, l, w, h):
 
 	ct = vol * dens * 5
 
-	return ct_round(ct)
-
-
-def ct_round(ct):
-	if ct < 0.004:
-		rnd = 4
-
-	elif ct < 0.1:
-		rnd = 3
-
-	else:
-		rnd = 2
-
-	return round(ct, rnd)
+	return round(ct, 3)
 
 
 
