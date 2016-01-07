@@ -83,21 +83,21 @@ class JewelCraftProperties(PropertyGroup):
 	export_dim = StringProperty(description="Set object for dimensions reference")
 	export_weight = StringProperty(description="Set object for weight reference")
 
-	export_metals     = BoolProperty()
-	metal_24kt        = BoolProperty()
-	metal_22kt        = BoolProperty()
-	metal_18kt_white  = BoolProperty(default=True)
-	metal_14kt_white  = BoolProperty(default=True)
-	metal_18kt_yellow = BoolProperty()
-	metal_14kt_yellow = BoolProperty()
-	metal_silver      = BoolProperty()
-	metal_palladium   = BoolProperty()
-	metal_platinum    = BoolProperty()
-	metal_custom         = BoolProperty()
-	metal_custom_name    = StringProperty(description="Material name")
-	metal_custom_density = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
+	export_metals = BoolProperty()
+	export_m_24kt        = BoolProperty()
+	export_m_22kt        = BoolProperty()
+	export_m_18kt_white  = BoolProperty(default=True)
+	export_m_14kt_white  = BoolProperty(default=True)
+	export_m_18kt_yellow = BoolProperty()
+	export_m_14kt_yellow = BoolProperty()
+	export_m_silver      = BoolProperty()
+	export_m_palladium   = BoolProperty()
+	export_m_platinum    = BoolProperty()
+	export_m_custom         = BoolProperty()
+	export_m_custom_name    = StringProperty(description="Material name")
+	export_m_custom_density = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
 
-	lang = EnumProperty(
+	export_lang = EnumProperty(
 		name="Export stats language",
 		items=(
 			('RU',   "Russian (Русский)", ""),

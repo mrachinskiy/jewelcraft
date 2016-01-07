@@ -150,30 +150,30 @@ class JewelCraftExportPanel(Panel):
 			row.label(l['metals'])
 			if props.export_metals:
 				col = box.column(align=True)
-				col.prop(props, 'metal_24kt', text=l['24kt'])
-				col.prop(props, 'metal_22kt', text=l['22kt'])
-				col.prop(props, 'metal_18kt_white', text=l['18kt_white'])
-				col.prop(props, 'metal_14kt_white', text=l['14kt_white'])
-				col.prop(props, 'metal_18kt_yellow', text=l['18kt_yellow'])
-				col.prop(props, 'metal_14kt_yellow', text=l['14kt_yellow'])
-				col.prop(props, 'metal_silver', text=l['silver'])
-				col.prop(props, 'metal_palladium', text=l['palladium'])
-				col.prop(props, 'metal_platinum', text=l['platinum'])
-				col.prop(props, 'metal_custom', text=l['custom'])
+				col.prop(props, 'export_m_24kt',        text=l['24kt'])
+				col.prop(props, 'export_m_22kt',        text=l['22kt'])
+				col.prop(props, 'export_m_18kt_white',  text=l['18kt_white'])
+				col.prop(props, 'export_m_14kt_white',  text=l['14kt_white'])
+				col.prop(props, 'export_m_18kt_yellow', text=l['18kt_yellow'])
+				col.prop(props, 'export_m_14kt_yellow', text=l['14kt_yellow'])
+				col.prop(props, 'export_m_silver',      text=l['silver'])
+				col.prop(props, 'export_m_palladium',   text=l['palladium'])
+				col.prop(props, 'export_m_platinum',    text=l['platinum'])
+				col.prop(props, 'export_m_custom',      text=l['custom'])
 				col = col.column(align=True)
-				if not props.metal_custom:
+				if not props.export_m_custom:
 					col.enabled = False
 				row = col.row()
 				row.label(l['custom_name'])
 				row.label(l['g/cm']+':')
 				row = col.row()
-				row.prop(props, "metal_custom_name", text="")
-				row.prop(props, "metal_custom_density", text="")
+				row.prop(props, "export_m_custom_name",    text="")
+				row.prop(props, "export_m_custom_density", text="")
 
 
 			row = box.row(align=True)
 			row.label(l['lang']+":")
-			row.prop(props, 'lang', text="")
+			row.prop(props, 'export_lang', text="")
 
 
 		col = layout.column(align=True)

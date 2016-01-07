@@ -23,15 +23,15 @@ def weight_display():
 	g = ' ' + l['g']
 
 	if m == 'VOL':
-		result = str(round(vol, 4)) + mm3
+		report.data = str(round(vol, 4)) + mm3
+
 	elif m == 'CUSTOM':
 		dens = props.weighting_custom / 1000 # cm→mm
-		result = str(round(vol * dens, 2)) + g
+		report.data = str(round(vol * dens, 2)) + g
+
 	else:
 		mdens = var.metal_density[m] / 1000 # cm→mm
-		result = str(round(vol * mdens, 2)) + g
-
-	report.data = result
+		report.data = str(round(vol * mdens, 2)) + g
 
 
 
@@ -46,16 +46,16 @@ def stats():
 
 	stats['METALS'] = []
 	append = stats['METALS'].append
-	if props.metal_24kt        : append('24KT')
-	if props.metal_22kt        : append('22KT')
-	if props.metal_18kt_white  : append('18KT_WHITE')
-	if props.metal_14kt_white  : append('14KT_WHITE')
-	if props.metal_18kt_yellow : append('18KT_YELLOW')
-	if props.metal_14kt_yellow : append('14KT_YELLOW')
-	if props.metal_silver      : append('SILVER')
-	if props.metal_palladium   : append('PALLADIUM')
-	if props.metal_platinum    : append('PLATINUM')
-	if props.metal_custom      : append('CUSTOM')
+	if props.export_m_24kt        : append('24KT')
+	if props.export_m_22kt        : append('22KT')
+	if props.export_m_18kt_white  : append('18KT_WHITE')
+	if props.export_m_14kt_white  : append('14KT_WHITE')
+	if props.export_m_18kt_yellow : append('18KT_YELLOW')
+	if props.export_m_14kt_yellow : append('14KT_YELLOW')
+	if props.export_m_silver      : append('SILVER')
+	if props.export_m_palladium   : append('PALLADIUM')
+	if props.export_m_platinum    : append('PLATINUM')
+	if props.export_m_custom      : append('CUSTOM')
 
 	if (props.export_size and obs.get(props.export_size)):
 		stats['SIZE'] = str(round(obs[props.export_size].dimensions[0], 2))
@@ -99,7 +99,7 @@ def template(stats):
 	if ('WEIGHT' in stats and stats['METALS']):
 		t += l['t_weight'] + '\n    '
 		for metal in stats['METALS']:
-			t += format_weight(stats['WEIGHT'], metal) + '\n    '
+			t += format_weight(stats['WEIGHT'], metal, l) + '\n    '
 		t += '\n'
 
 	if stats['GEMS']:
@@ -109,7 +109,7 @@ def template(stats):
 		for tpe in sorted(stats['GEMS']):
 			for cut in sorted(stats['GEMS'][tpe]):
 				for size in sorted(stats['GEMS'][tpe][cut]):
-					row = format_gems(tpe, cut, size, stats['GEMS'][tpe][cut][size])
+					row = format_gems(tpe, cut, size, stats['GEMS'][tpe][cut][size], l)
 					append(row)
 					for i in range(len(col_len)):
 						if len(row[i]) > col_len[i]:
@@ -245,24 +245,48 @@ def polycount(obj):
 #############################################################################
 
 
-def format_gems(tpe, cut, size, qty):
+def export_locale():
+	context = bpy.context
+	prefs = context.user_preferences.addons[var.addon_id].preferences
+	props = context.scene.jewelcraft
+
+	if props.export_lang == 'AUTO':
+		l = prefs.lang
+	else:
+		l = props.lang
+
+	return localization.locale[l]
+
+
+def format_weight(vol, metal, l):
 	props = bpy.context.scene.jewelcraft
-	l = export_locale()
-	dt = var.diamonds_table
+
+	if metal == 'CUSTOM':
+		dens = props.export_m_custom_density / 1000 # cm→mm
+		mat = props.export_m_custom_name
+	else:
+		dens = var.metal_density[metal] / 1000 # cm→mm
+		mat = l[metal.lower()]
+
+	return '{} {} ({})'.format(str(round(vol*dens, 2)), l['g'], mat)
+
+
+def format_gems(tpe, cut, size, qty, l):
+	props = bpy.context.scene.jewelcraft
 	mm = ' ' + l['mm']
 	ct = ' ' + l['ct']
 	itms = ' ' + l['items']
 
 
 	if len(size) == 2:
-		crt = ct_calc(tpe, cut, size[0], size[0], size[1])
+		crt = ct_calc(tpe, cut, l=size[0], h=size[1])
 		Size = '{} ({})'.format(str(size[0])+mm, str(crt)+ct)
 
 	else:
-		crt = ct_calc(tpe, cut, size[0], size[1], size[2])
+		crt = ct_calc(tpe, cut, l=size[0], w=size[1], h=size[2])
 		Size = '{} × {} ({})'.format(str(size[0]), str(size[1])+mm, str(crt)+ct)
 
-	qty_ct = qty*crt
+	qty_ct = qty * crt
 
 
 	Qty = '{} ({})'.format(str(qty)+itms, str(qty_ct)+ct)
@@ -272,25 +296,11 @@ def format_gems(tpe, cut, size, qty):
 	return (Type, Cut, Size, Qty)
 
 
-def format_weight(vol, metal):
-	props = bpy.context.scene.jewelcraft
-	l = export_locale()
-	g = ' ' + l['g']
-
-	if metal == 'CUSTOM':
-		dens = props.metal_custom_density / 1000 # cm→mm
-		mat = props.metal_custom_name
-	else:
-		dens = var.metal_density[metal] / 1000 # cm→mm
-		mat = l[metal.lower()]
-
-	return str(round(vol * dens, 2)) + g + ' ('+mat+')'
-
-
-def ct_calc(tpe, cut, l, w, h):
+def ct_calc(tpe, cut, l=None, w=None, h=None):
 	props = bpy.context.scene.jewelcraft
 	dens = var.stone_density[tpe] / 1000 # cm→mm
 	corr = var.gem_volume_correction[cut]
+	mul = 5 # g→ct
 
 	if cut == 'ROUND':
 		vol = (pi * ((l/2)**2) * h/3) * corr
@@ -301,28 +311,6 @@ def ct_calc(tpe, cut, l, w, h):
 	elif cut in ['SQUARE', 'BAGUETTE', 'EMERALD']:
 		vol = ((l*w*h) / 3) * corr
 
-	ct = vol * dens * 5
+	ct = vol * dens * mul
 
 	return round(ct, 3)
-
-
-
-
-
-
-#############################################################################
-# Export utility ############################################################
-#############################################################################
-
-
-def export_locale():
-	context = bpy.context
-	prefs = context.user_preferences.addons[var.addon_id].preferences
-	props = context.scene.jewelcraft
-
-	if props.lang == 'AUTO':
-		l = prefs.lang
-	else:
-		l = props.lang
-
-	return localization.locale[l]
