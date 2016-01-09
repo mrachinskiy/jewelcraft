@@ -38,7 +38,7 @@ def weight_display():
 
 
 
-def stats():
+def stats_get():
 	sce = bpy.context.scene
 	obs = sce.objects
 	props = sce.jewelcraft
@@ -80,7 +80,8 @@ def stats():
 
 
 
-def template(stats):
+def template():
+	stats = stats_get()
 	l = export_locale()
 	t = ''
 	mm = ' ' + l['mm']
@@ -115,12 +116,12 @@ def template(stats):
 						if len(row[i]) > col_len[i]:
 							col_len[i] = len(row[i])
 
-		table_columns = '{:'+str(col_len[0])+'} | {:'+str(col_len[1])+'} | {:'+str(col_len[2])+'} | {}\n    '
-		underline_len = col_len[0]+col_len[1]+col_len[2]+col_len[3]+10
+		table_columns = '{{:{}}} | {{:{}}} | {{:{}}} | {{}}\n    '.format(str(col_len[0]), str(col_len[1]), str(col_len[2]))
+		underline_len = col_len[0] + col_len[1] + col_len[2] + col_len[3] + 10
 
-		t += l['t_settings']+'\n    '
+		t += l['t_settings'] + '\n    '
 		t += table_columns.format(l['type'], l['cut'], l['size'], l['qty'])
-		t += '—'*underline_len+'\n    '
+		t += '—' * underline_len + '\n    '
 		for gem in rows:
 			t += table_columns.format(gem[0], gem[1], gem[2], gem[3])
 
@@ -135,18 +136,12 @@ def export():
 	filepath = bpy.data.filepath
 
 	if filepath:
-		t = template(stats())
-
-		if filepath.rfind('\\') != -1:
-			last_slash = filepath.rfind('\\')
-		else:
-			last_slash = filepath.rfind('/')
-
+		stats = template()
 		filename = bpy.path.display_name_from_filepath(filepath)
-		save_path = path.join(filepath[:last_slash], filename+'_stats.txt')
+		save_path = path.join(path.dirname(filepath), filename + '_stats.txt')
 
 		f = open(save_path, 'w', encoding='utf-8')
-		f.write(t)
+		f.write(stats)
 		f.close()
 
 	else:
@@ -277,7 +272,6 @@ def format_gems(tpe, cut, size, qty, l):
 	ct = ' ' + l['ct']
 	itms = ' ' + l['items']
 
-
 	if len(size) == 2:
 		crt = ct_calc(tpe, cut, l=size[0], h=size[1])
 		Size = '{} ({})'.format(str(size[0])+mm, str(crt)+ct)
@@ -287,7 +281,6 @@ def format_gems(tpe, cut, size, qty, l):
 		Size = '{} × {} ({})'.format(str(size[0]), str(size[1])+mm, str(crt)+ct)
 
 	qty_ct = qty * crt
-
 
 	Qty = '{} ({})'.format(str(qty)+itms, str(qty_ct)+ct)
 	Type = l[tpe.lower()]
