@@ -78,10 +78,10 @@ class JewelCraftProperties(PropertyGroup):
 
 	export_options = BoolProperty()
 
-	export_size = StringProperty(description="Set object for size reference")
-	export_shank = StringProperty(description="Set object for shank reference")
-	export_dim = StringProperty(description="Set object for dimensions reference")
-	export_weight = StringProperty(description="Set object for weight reference")
+	export_size = StringProperty(description="Object for size reference")
+	export_shank = StringProperty(description="Object for shank width and height reference")
+	export_dim = StringProperty(description="Object for dimensions reference")
+	export_weight = StringProperty(description="Object for weight reference")
 
 	export_metals = BoolProperty()
 	export_m_24kt        = BoolProperty()

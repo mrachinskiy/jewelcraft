@@ -201,15 +201,15 @@ def stats_gems():
 				length = round( (ob.dimensions[0] + ob.dimensions[1]) / 2, 2)
 				depth = round(ob.dimensions[2], 2)
 				if length.is_integer(): length = int(length)
-				if depth.is_integer(): depth = int(depth)
+				if depth.is_integer():  depth  = int(depth)
 				size = (length, depth)
 			else:
 				length = round(ob.dimensions[1], 2)
 				width = round(ob.dimensions[0], 2)
 				depth = round(ob.dimensions[2], 2)
 				if length.is_integer(): length = int(length)
-				if width.is_integer(): width = int(width)
-				if depth.is_integer(): depth = int(depth)
+				if width.is_integer():  width  = int(width)
+				if depth.is_integer():  depth  = int(depth)
 				size = (length, width, depth)
 
 			if (stats.get(tpe) and stats[tpe].get(cut) and stats[tpe][cut].get(size)):
@@ -248,7 +248,7 @@ def export_locale():
 	if props.export_lang == 'AUTO':
 		l = prefs.lang
 	else:
-		l = props.lang
+		l = props.export_lang
 
 	return localization.locale[l]
 
