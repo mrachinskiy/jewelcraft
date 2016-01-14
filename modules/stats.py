@@ -52,7 +52,7 @@ def stats_get():
 	if props.export_m_14kt_white  : append('14KT_WHITE')
 	if props.export_m_18kt_yellow : append('18KT_YELLOW')
 	if props.export_m_14kt_yellow : append('14KT_YELLOW')
-	if props.export_m_silver      : append('SILVER')
+	if props.export_m_sterling    : append('STERLING')
 	if props.export_m_palladium   : append('PALLADIUM')
 	if props.export_m_platinum    : append('PLATINUM')
 	if props.export_m_custom      : append('CUSTOM')
@@ -301,8 +301,11 @@ def ct_calc(tpe, cut, l=None, w=None, h=None):
 	elif cut in ['OVAL', 'PEARL', 'MARQUISE']:
 		vol = (pi * (l/2) * (w/2) * h/3) * corr
 
-	elif cut in ['SQUARE', 'BAGUETTE', 'EMERALD']:
-		vol = ((l*w*h) / 3) * corr
+	elif cut in ['SQUARE', 'BAGUETTE', 'EMERALD', 'ASSCHER', 'PRINCESS', 'CUSHION']:
+		vol = (l*w*h / 3) * corr
+
+	elif cut in ['TRILLION']:
+		vol = (l*w*h / 6) * corr
 
 	ct = vol * dens * mul
 
