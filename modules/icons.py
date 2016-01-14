@@ -19,5 +19,9 @@ load('cut-marquise', icon_path(var.icons_path, 'cut-marquise.png'), 'IMAGE')
 load('cut-pearl',    icon_path(var.icons_path, 'cut-pearl.png'),    'IMAGE')
 load('cut-baguette', icon_path(var.icons_path, 'cut-baguette.png'), 'IMAGE')
 load('cut-square',   icon_path(var.icons_path, 'cut-square.png'),   'IMAGE')
+load('cut-asscher',  icon_path(var.icons_path, 'cut-asscher.png'),  'IMAGE')
+load('cut-cushion',  icon_path(var.icons_path, 'cut-cushion.png'),  'IMAGE')
+load('cut-princess', icon_path(var.icons_path, 'cut-princess.png'), 'IMAGE')
+load('cut-trillion', icon_path(var.icons_path, 'cut-trillion.png'), 'IMAGE')
 
 preview_collections['main'] = pcoll

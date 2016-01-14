@@ -33,7 +33,7 @@ locale = {
 		'14kt_white'  : '14 kt. White gold',
 		'18kt_yellow' : '18 kt. Yellow gold',
 		'14kt_yellow' : '14 kt. Yellow gold',
-		'silver'      : 'Silver',
+		'sterling'    : 'Sterling Silver',
 		'palladium'   : 'Palladium',
 		'platinum'    : 'Platinum',
 		'custom'      : 'Custom density:',
@@ -44,11 +44,19 @@ locale = {
 		'wt_calc'   : 'Calculate',
 
 		'diamond'        : 'Diamond',
+		'amethyst'       : 'Amethyst',
+		'aquamarine'     : 'Aquamarine',
+		'citrine'        : 'Citrine',
 		'cubic_zirconia' : 'Cubic Zirconia',
-		'topaz'          : 'Topaz',
 		'emerald'        : 'Emerald',
+		'garnet'         : 'Garnet',
+		'quartz'         : 'Quartz',
 		'ruby'           : 'Ruby',
 		'sapphire'       : 'Sapphire',
+		'spinel'         : 'Spinel',
+		'tanzanite'      : 'Tanzanite',
+		'topaz'          : 'Topaz',
+		'tourmaline'     : 'Tourmaline',
 
 		'round'    : 'Round',
 		'oval'     : 'Oval',
@@ -56,10 +64,14 @@ locale = {
 		'marquise' : 'Marquise',
 		'baguette' : 'Baguette',
 		'square'   : 'Square',
+		'cushion'  : 'Cushion',
+		'asscher'  : 'Asscher',
+		'princess' : 'Princess',
+		'trillion' : 'Trillion',
 
 		'error_file' : 'First save your blend file',
 
-		# Stats template locale_____________________
+		# Stats template locale
 		't_size'      : 'Size:',
 		't_width'     : 'Width:',
 		't_thickness' : 'Thickness:',
@@ -101,7 +113,7 @@ locale = {
 		'14kt_white'  : '585 Белое золото',
 		'18kt_yellow' : '750 Жёлтое золото',
 		'14kt_yellow' : '585 Жёлтое золото',
-		'silver'      : 'Cеребро',
+		'sterling'    : 'Стерлинг серебро',
 		'palladium'   : 'Палладий',
 		'platinum'    : 'Платина',
 		'custom'      : 'Произвольная плотность:',
@@ -112,11 +124,19 @@ locale = {
 		'wt_calc'   : 'Вычислить',
 
 		'diamond'        : 'Бриллиант',
+		'amethyst'       : 'Аметист',
+		'aquamarine'     : 'Аквамарин',
+		'citrine'        : 'Цитрин',
 		'cubic_zirconia' : 'Фианит',
-		'topaz'          : 'Топаз',
 		'emerald'        : 'Изумруд',
+		'garnet'         : 'Гранат',
+		'quartz'         : 'Кварц',
 		'ruby'           : 'Рубин',
 		'sapphire'       : 'Сапфир',
+		'spinel'         : 'Шпинель',
+		'tanzanite'      : 'Танзанит',
+		'topaz'          : 'Топаз',
+		'tourmaline'     : 'Турмалин',
 
 		'round'    : 'Кр-57',
 		'oval'     : 'Овал',
@@ -124,10 +144,14 @@ locale = {
 		'marquise' : 'Маркиз',
 		'baguette' : 'Багет',
 		'square'   : 'Квадрат',
+		'cushion'  : 'Кушон',
+		'asscher'  : 'Ашер',
+		'princess' : 'Принцесса',
+		'trillion' : 'Триллион',
 
 		'error_file' : 'Сначала сохраните ваш blend файл',
 
-		# Локализация шаблона статистики__________________
+		# Локализация шаблона статистики
 		't_size'      : 'Размер:',
 		't_width'     : 'Ширина:',
 		't_thickness' : 'Толщина:',

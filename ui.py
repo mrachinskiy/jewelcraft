@@ -156,7 +156,7 @@ class JewelCraftExportPanel(Panel):
 				col.prop(props, 'export_m_14kt_white',  text=l['14kt_white'])
 				col.prop(props, 'export_m_18kt_yellow', text=l['18kt_yellow'])
 				col.prop(props, 'export_m_14kt_yellow', text=l['14kt_yellow'])
-				col.prop(props, 'export_m_silver',      text=l['silver'])
+				col.prop(props, 'export_m_sterling',    text=l['sterling'])
 				col.prop(props, 'export_m_palladium',   text=l['palladium'])
 				col.prop(props, 'export_m_platinum',    text=l['platinum'])
 				col.prop(props, 'export_m_custom',      text=l['custom'])
