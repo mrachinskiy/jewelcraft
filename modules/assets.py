@@ -240,7 +240,7 @@ def to_dimensions(ob, obj):
 	else:
 		width = size
 
-	ctr = 0.01 * size # Make cutter sligtly bigger than gemstone
+	ctr = 0.01 * size # Make cutter sligtly bigger than gem
 	ob.dimensions = [width+ctr, size+ctr, ob.dimensions[2]*size+ctr]
 
 

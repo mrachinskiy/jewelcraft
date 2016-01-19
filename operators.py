@@ -3,12 +3,36 @@ from bpy.types import Operator
 from .modules import (
 	assets,
 	stats,
+	props_utility,
 )
 
 
+class SEARCH_TYPE(Operator):
+	'''Search stone type'''
+	bl_label = "Search Type"
+	bl_idname = "jewelcraft.search_type"
+	bl_property = "prop"
+	bl_options = {'INTERNAL'}
+
+	prop = bpy.props.EnumProperty(items=props_utility.gem_type)
+
+	def execute(self, context):
+		context.scene.jewelcraft.import_gem_type = self.prop
+		context.area.tag_redraw()
+		return {'FINISHED'}
+
+	def invoke(self, context, event):
+		context.window_manager.invoke_search_popup(self)
+		return {'FINISHED'}
+
+
+
+
+
+
 class IMPORT_GEM(Operator):
-	'''Create gemstone'''
-	bl_label = "JewelCraft: Make Gemstone"
+	'''Create gem'''
+	bl_label = "JewelCraft: Make Gem"
 	bl_idname = "jewelcraft.import_gem"
 
 	def execute(self, context):
@@ -17,7 +41,7 @@ class IMPORT_GEM(Operator):
 
 
 class IMPORT_TYPE(Operator):
-	'''Change type of selected gemstones'''
+	'''Change type of selected gems'''
 	bl_label = "JewelCraft: Change Type"
 	bl_idname = "jewelcraft.import_type"
 
@@ -31,7 +55,7 @@ class IMPORT_TYPE(Operator):
 
 
 class IMPORT_CUT(Operator):
-	'''Change cut of selected gemstones'''
+	'''Change cut of selected gems'''
 	bl_label = "JewelCraft: Change Cut"
 	bl_idname = "jewelcraft.import_cut"
 
@@ -49,7 +73,7 @@ class IMPORT_CUT(Operator):
 
 
 class IMPORT_PRONGS(Operator):
-	'''Create prongs for selected gemstones'''
+	'''Create prongs for selected gems'''
 	bl_label = "JewelCraft: Add Prongs"
 	bl_idname = "jewelcraft.import_prongs"
 
@@ -73,7 +97,7 @@ class IMPORT_SINGLE_PRONG(Operator):
 
 
 class IMPORT_CUTTER(Operator):
-	'''Create cutters for selected gemstones'''
+	'''Create cutter for selected gems'''
 	bl_label = "JewelCraft: Add Cutter"
 	bl_idname = "jewelcraft.import_cutter"
 
@@ -86,10 +110,10 @@ class IMPORT_CUTTER(Operator):
 		return {'FINISHED'}
 
 
-class IMPORT_CUTTER_SEAT_ONLY(Operator):
-	'''Create (seat only) cutters for selected gemstones'''
+class IMPORT_CUTTER_SEAT(Operator):
+	'''Create (seat only) cutter for selected gems'''
 	bl_label = "JewelCraft: Add Cutter (Seat only)"
-	bl_idname = "jewelcraft.import_cutter_seat_only"
+	bl_idname = "jewelcraft.import_cutter_seat"
 
 	@classmethod
 	def poll(cls, context):
@@ -154,8 +178,7 @@ class EXPORT_PICK_SIZE(Operator):
 	bl_options = {'INTERNAL'}
 
 	def execute(self, context):
-		props = bpy.context.scene.jewelcraft
-		props.export_size = bpy.context.active_object.name
+		context.scene.jewelcraft.export_size = context.active_object.name
 		return {'FINISHED'}
 
 
@@ -166,8 +189,7 @@ class EXPORT_PICK_SHANK(Operator):
 	bl_options = {'INTERNAL'}
 
 	def execute(self, context):
-		props = bpy.context.scene.jewelcraft
-		props.export_shank = bpy.context.active_object.name
+		context.scene.jewelcraft.export_shank = context.active_object.name
 		return {'FINISHED'}
 
 
@@ -178,8 +200,7 @@ class EXPORT_PICK_DIM(Operator):
 	bl_options = {'INTERNAL'}
 
 	def execute(self, context):
-		props = bpy.context.scene.jewelcraft
-		props.export_dim = bpy.context.active_object.name
+		context.scene.jewelcraft.export_dim = context.active_object.name
 		return {'FINISHED'}
 
 
@@ -190,13 +211,12 @@ class EXPORT_PICK_WEIGHT(Operator):
 	bl_options = {'INTERNAL'}
 
 	def execute(self, context):
-		props = bpy.context.scene.jewelcraft
-		props.export_weight = bpy.context.active_object.name
+		context.scene.jewelcraft.export_weight = context.active_object.name
 		return {'FINISHED'}
 
 
 class EXPORT_STATS(Operator):
-	'''Export statistics for the project'''
+	'''Export project statistics'''
 	bl_label = "JewelCraft: Export Stats"
 	bl_idname = "jewelcraft.export_stats"
 

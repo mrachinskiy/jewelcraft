@@ -38,27 +38,31 @@ class JewelCraftImportPanel(Panel):
 
 		col = layout.column(align=True)
 
+		col.template_icon_view(props, "import_gem_cut", show_labels=True)
+
+		col.separator()
 		row = col.row(align=True)
-		row.prop(props, 'import_gem_type', text="")
-		row.operator("jewelcraft.import_type", text="", icon="COLOR")
-		row = col.row(align=True)
-		row.prop(props, 'import_gem_cut', text="")
-		row.operator("jewelcraft.import_cut", text="", icon_value=pcoll['cut'].icon_id)
-		col.prop(props, 'import_gem_size', text=l['size'])
+		row.prop(props, "import_gem_type", text="")
+		row.operator("jewelcraft.search_type", text="", icon="VIEWZOOM")
+		col.prop(props, "import_gem_size", text=l['size'])
 		col.operator("jewelcraft.import_gem", text=l['make_gem'])
 
 		col.separator()
 		row = col.row(align=True)
+		row.label(l['gem'])
+		row.operator("jewelcraft.import_type", text="", icon="COLOR")
+		row.operator("jewelcraft.import_cut", text="", icon_value=pcoll['TOOL-CUT'].icon_id)
+		row = col.row(align=True)
 		row.label(l['prongs'])
-		row.operator("jewelcraft.import_single_prong", text="", icon="ROTATE")
+		row.operator("jewelcraft.import_single_prong", text="", icon_value=pcoll['TOOL-SINGLE_PRONG'].icon_id)
 		row.operator("jewelcraft.import_prongs", text="", icon="SURFACE_NCIRCLE")
 		row = col.row(align=True)
 		row.label(l['cutter'])
-		row.operator("jewelcraft.import_cutter_seat_only", text="", icon_value=pcoll['cutter_s'].icon_id)
-		row.operator("jewelcraft.import_cutter", text="", icon_value=pcoll['cutter'].icon_id)
+		row.operator("jewelcraft.import_cutter_seat", text="", icon_value=pcoll['TOOL-CUTTER_SEAT'].icon_id)
+		row.operator("jewelcraft.import_cutter", text="", icon_value=pcoll['TOOL-CUTTER'].icon_id)
 		row = col.row(align=True)
 		row.label(l['imitation'])
-		row.operator("jewelcraft.import_imitation_3_prong", text="", icon="MOD_SKIN")
+		row.operator("jewelcraft.import_imitation_3_prong", text="", icon_value=pcoll['TOOL-IMITATION_3_PRONG'].icon_id)
 
 		col.separator()
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])
@@ -79,15 +83,15 @@ class JewelCraftWeightingPanel(Panel):
 		return context.mode == 'OBJECT'
 
 	def draw(self, context):
+		layout = self.layout
 		prefs = context.user_preferences.addons[var.addon_id].preferences
 		props = context.scene.jewelcraft
 		l = localization.locale[prefs.lang]
 		m = props.weighting_metals
 		weight = report.data
 
-		layout = self.layout
-
 		col = layout.column(align=True)
+
 		col.prop(props, "weighting_metals", text="")
 
 		if m == 'CUSTOM':
