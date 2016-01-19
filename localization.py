@@ -3,7 +3,8 @@ locale = {
 		'prongs'         : 'Prongs',
 		'cutter'         : 'Cutter',
 		'imitation'      : 'Imitation',
-		'make_gem'       : 'Make Gemstone',
+		'make_gem'       : 'Make Gem',
+		'gem'            : 'Gem',
 		'make_dupliface' : 'Make Dupli-face',
 		'export_options' : 'Export Options',
 		'metals'         : 'Metals',
@@ -60,7 +61,7 @@ locale = {
 
 		'round'    : 'Round',
 		'oval'     : 'Oval',
-		'pearl'    : 'Pearl',
+		'pear'     : 'Pear',
 		'marquise' : 'Marquise',
 		'baguette' : 'Baguette',
 		'square'   : 'Square',
@@ -71,7 +72,7 @@ locale = {
 
 		'error_file' : 'First save your blend file',
 
-		# Stats template locale
+		# Statsistics template locale
 		't_size'      : 'Size:',
 		't_width'     : 'Width:',
 		't_thickness' : 'Thickness:',
@@ -84,6 +85,7 @@ locale = {
 		'cutter'         : 'Выборка',
 		'imitation'      : 'Имитация',
 		'make_gem'       : 'Создать Камень',
+		'gem'            : 'Камень',
 		'make_dupliface' : 'Создать Dupli-face',
 		'export_options' : 'Опции Экспорта',
 		'metals'         : 'Металлы',
@@ -140,7 +142,7 @@ locale = {
 
 		'round'    : 'Кр-57',
 		'oval'     : 'Овал',
-		'pearl'    : 'Груша',
+		'pear'     : 'Груша',
 		'marquise' : 'Маркиз',
 		'baguette' : 'Багет',
 		'square'   : 'Квадрат',

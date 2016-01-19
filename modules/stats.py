@@ -298,7 +298,7 @@ def ct_calc(tpe, cut, l=None, w=None, h=None):
 	if cut == 'ROUND':
 		vol = (pi * ((l/2)**2) * h/3) * corr
 
-	elif cut in ['OVAL', 'PEARL', 'MARQUISE']:
+	elif cut in ['OVAL', 'PEAR', 'MARQUISE']:
 		vol = (pi * (l/2) * (w/2) * h/3) * corr
 
 	elif cut in ['SQUARE', 'BAGUETTE', 'EMERALD', 'ASSCHER', 'PRINCESS', 'CUSHION']:

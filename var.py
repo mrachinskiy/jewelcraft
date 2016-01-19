@@ -47,7 +47,7 @@ gem_volume_correction = {
 	'ROUND'    : 1.3056,
 	'OVAL'     : 1.34455,
 
-	'PEARL'    : 1.24936,
+	'PEAR'     : 1.24936,
 	'MARQUISE' : 1.20412,
 
 	'SQUARE'   : 1.4,

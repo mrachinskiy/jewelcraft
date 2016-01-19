@@ -1,7 +1,7 @@
 bl_info = {
 	"name": "JewelCraft",
 	"author": "Mikhail Rachinskiy (jewelcourses.com)",
-	"version": (1,3),
+	"version": (1,4),
 	"blender": (2,7,5),
 	"location": "3D View → Tool Shelf",
 	"description": "JewelCraft—add-on for jewelry design that provides tools for asset management, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.",
@@ -67,9 +67,9 @@ class JewelCraftPreferences(AddonPreferences):
 
 class JewelCraftProperties(PropertyGroup):
 
-	import_gem_type = EnumProperty(name="Type", items=props_utility.gem_type)
 	import_gem_cut = EnumProperty(name="Cut", items=props_utility.gem_cut)
-	import_gem_size = FloatProperty(name="Size", description="Set gemstone size", default=1.0, min=0.1, step=10, precision=2)
+	import_gem_type = EnumProperty(name="Type", items=props_utility.gem_type)
+	import_gem_size = FloatProperty(name="Size", description="Gem size", default=1.0, min=0.1, step=10, precision=2)
 
 
 	weighting_metals = EnumProperty(name="Metals" , items=props_utility.weighting_metals)
@@ -115,13 +115,15 @@ classes = (
 	ui.JewelCraftWeightingPanel,
 	ui.JewelCraftExportPanel,
 
+	operators.SEARCH_TYPE,
+
 	operators.IMPORT_GEM,
 	operators.IMPORT_TYPE,
 	operators.IMPORT_CUT,
 	operators.IMPORT_PRONGS,
 	operators.IMPORT_SINGLE_PRONG,
 	operators.IMPORT_CUTTER,
-	operators.IMPORT_CUTTER_SEAT_ONLY,
+	operators.IMPORT_CUTTER_SEAT,
 	operators.IMPORT_IMITATION_3_PRONG,
 	operators.MAKE_DUPLIFACE,
 	operators.WEIGHT_DISPLAY,
