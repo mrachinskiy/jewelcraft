@@ -52,6 +52,8 @@ class JewelCraftImportPanel(Panel):
 		row.label(l['gem'])
 		row.operator("jewelcraft.import_type", text="", icon="COLOR")
 		row.operator("jewelcraft.import_cut", text="", icon_value=pcoll['TOOL-CUT'].icon_id)
+
+		col.separator()
 		row = col.row(align=True)
 		row.label(l['prongs'])
 		row.operator("jewelcraft.import_single_prong", text="", icon_value=pcoll['TOOL-SINGLE_PRONG'].icon_id)
@@ -66,6 +68,9 @@ class JewelCraftImportPanel(Panel):
 
 		col.separator()
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])
+
+		col.separator()
+		col.operator("jewelcraft.select_dupli", text=l['select_dupli'])
 
 
 

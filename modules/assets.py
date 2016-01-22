@@ -1,6 +1,8 @@
 import bpy
 from mathutils import Matrix
+from collections import Counter
 from .. import var
+from . import units
 
 
 def gem_import():
@@ -150,6 +152,29 @@ def make_dupliface():
 		ob.parent = df
 		ob.location = [0,0,0]
 		apply_transforms(ob)
+
+
+def select_dupli():
+	context = bpy.context
+	sce = context.scene
+	gems_loc = []
+	gems_name = []
+
+	bpy.ops.object.select_all(action='DESELECT')
+
+	loc_app = gems_loc.append
+	name_app = gems_name.append
+	for ob in context.visible_objects:
+		if (ob.type == 'MESH' and ob.data.get('gem')):
+			loc_app(ob.location.freeze())
+			name_app(ob.name)
+
+	dupli = [i for key in (k for k,v in Counter(gems_loc).items() if v>1) for i,x in enumerate(gems_loc) if x==key]
+
+	if dupli:
+		for i in dupli:
+			sce.objects[gems_name[i]].select = True
+		return True
 
 
 
