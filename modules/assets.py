@@ -1,6 +1,6 @@
 import bpy
 from mathutils import Matrix
-from collections import Counter
+from collections import defaultdict
 from .. import var
 from . import units
 
@@ -154,6 +154,7 @@ def make_dupliface():
 		apply_transforms(ob)
 
 
+
 def select_dupli():
 	context = bpy.context
 	sce = context.scene
@@ -169,11 +170,16 @@ def select_dupli():
 			loc_app(ob.location.freeze())
 			name_app(ob.name)
 
-	dupli = [i for key in (k for k,v in Counter(gems_loc).items() if v>1) for i,x in enumerate(gems_loc) if x==key]
+	dupli = defaultdict(list)
+	for i,item in enumerate(gems_loc):
+		dupli[item].append(i)
+	dupli = {k:v for k,v in dupli.items() if len(v)>1}
 
 	if dupli:
-		for i in dupli:
-			sce.objects[gems_name[i]].select = True
+		for i in dupli.items():
+			for p in range(len(i[1])):
+				if p != 0:
+					sce.objects[gems_name[i[1][p]]].select = True
 		return True
 
 

@@ -100,6 +100,7 @@ class JewelCraftWeightingPanel(Panel):
 		col.prop(props, "weighting_metals", text="")
 
 		if m == 'CUSTOM':
+			col.separator()
 			col.prop(props, "weighting_custom", text=l['g/cm'])
 
 		col.separator()
