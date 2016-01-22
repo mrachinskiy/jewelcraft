@@ -1,7 +1,7 @@
 bl_info = {
 	"name": "JewelCraft",
 	"author": "Mikhail Rachinskiy (jewelcourses.com)",
-	"version": (1,4),
+	"version": (1,5),
 	"blender": (2,7,5),
 	"location": "3D View → Tool Shelf",
 	"description": "JewelCraft—add-on for jewelry design that provides tools for asset management, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.",
@@ -16,6 +16,7 @@ if "bpy" in locals():
 	importlib.reload(operators)
 	importlib.reload(ui)
 	importlib.reload(modules.icons)
+	importlib.reload(modules.units)
 	importlib.reload(modules.assets)
 	importlib.reload(modules.stats)
 	importlib.reload(modules.props_utility)
@@ -69,7 +70,7 @@ class JewelCraftProperties(PropertyGroup):
 
 	import_gem_cut = EnumProperty(name="Cut", items=props_utility.gem_cut)
 	import_gem_type = EnumProperty(name="Type", items=props_utility.gem_type)
-	import_gem_size = FloatProperty(name="Size", description="Gem size", default=1.0, min=0.1, step=10, precision=2)
+	import_gem_size = FloatProperty(name="Size", description="Gem size", default=1.0, min=0.0, step=10, precision=2, unit='LENGTH')
 
 
 	weighting_metals = EnumProperty(name="Metals" , items=props_utility.weighting_metals)
@@ -127,6 +128,8 @@ classes = (
 	operators.IMPORT_IMITATION_3_PRONG,
 	operators.MAKE_DUPLIFACE,
 	operators.WEIGHT_DISPLAY,
+
+	operators.SELECT_DUPLI,
 
 	operators.EXPORT_PICK_SIZE,
 	operators.EXPORT_PICK_SHANK,

@@ -1,5 +1,9 @@
 import bpy
 from bpy.types import Operator
+from . import (
+	var,
+	localization,
+)
 from .modules import (
 	assets,
 	stats,
@@ -164,6 +168,27 @@ class WEIGHT_DISPLAY(Operator):
 
 	def execute(self, context):
 		stats.weight_display()
+		return {'FINISHED'}
+
+
+
+
+
+
+class SELECT_DUPLI(Operator):
+	'''Select duplicated gems (have same location); WARNING: it does not work with dupli-faces, objects only'''
+	bl_label = "JewelCraft: Select duplicated gems"
+	bl_idname = "jewelcraft.select_dupli"
+
+	def execute(self, context):
+		prefs = context.user_preferences.addons[var.addon_id].preferences
+		l = localization.locale[prefs.lang]
+
+		if assets.select_dupli() == True:
+			self.report({'WARNING'}, l['report_dupli'])
+		else:
+			self.report({'INFO'}, l['report_no_dupli'])
+
 		return {'FINISHED'}
 
 

@@ -20,10 +20,9 @@ metal_density = {
 }
 
 stone_density = {
-	'DIAMOND'        : 3.53, # g/cm³
 
 	# Corundum group
-	'RUBY'           : 4.1,
+	'RUBY'           : 4.1, # g/cm³
 	'SAPPHIRE'       : 4.1,
 
 	# Beryl group
@@ -35,29 +34,35 @@ stone_density = {
 	'AMETHYST'       : 2.65,
 	'CITRINE'        : 2.65,
 
+	'DIAMOND'        : 3.53,
 	'CUBIC_ZIRCONIA' : 5.9,
 	'GARNET'         : 4.3,
 	'SPINEL'         : 3.8,
 	'TANZANITE'      : 3.38,
 	'TOPAZ'          : 3.57,
 	'TOURMALINE'     : 3.22,
+	'PERIDOT'        : 3.34,
 }
 
 gem_volume_correction = {
-	'ROUND'    : 1.3056,
-	'OVAL'     : 1.34455,
+	'ROUND'     : 1.3056,
+	'OCTAGON'   : 1.4191,
 
-	'PEAR'     : 1.24936,
-	'MARQUISE' : 1.20412,
+	'OVAL'      : 1.34455,
+	'PEAR'      : 1.24936,
+	'MARQUISE'  : 1.20412,
+	'HEART'     : 1.2294,
 
-	'SQUARE'   : 1.4,
-	'PRINCESS' : 1.43301,
+	'SQUARE'    : 1.684,
+	'PRINCESS'  : 1.43301,
+	'ASSCHER'   : 1.2557,
+	'CUSHION'   : 1.1674,
+	'RADIANT'   : 1.3494,
+	'FLANDERS'  : 1.2726,
 
-	'EMERALD'  : 1.45,
-	'BAGUETTE' : 1.555,
+	'EMERALD'   : 0.9849,
+	'BAGUETTE'  : 1.16507,
 
-	'ASSCHER'  : 1.2557,
-	'CUSHION'  : 1.1674,
-
-	'TRILLION' : 1.68325,
+	'TRILLION'  : 1.68325,
+	'TRILLIANT' : 1.5615,
 }
