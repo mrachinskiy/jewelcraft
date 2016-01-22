@@ -138,10 +138,6 @@ class IMPORT_IMITATION_3_PRONG(Operator):
 		return {'FINISHED'}
 
 
-
-
-
-
 class MAKE_DUPLIFACE(Operator):
 	'''Create dupliface for selected objects'''
 	bl_label = "JewelCraft: Make Dupli-face"
@@ -154,25 +150,6 @@ class MAKE_DUPLIFACE(Operator):
 	def execute(self, context):
 		assets.make_dupliface()
 		return {'FINISHED'}
-
-
-class WEIGHT_DISPLAY(Operator):
-	'''Display weight or volume of the active mesh object'''
-	bl_label = "JewelCraft: Weighting"
-	bl_idname = "jewelcraft.weight_display"
-
-	@classmethod
-	def poll(cls, context):
-		obj = context.active_object
-		return (obj and obj.type == 'MESH')
-
-	def execute(self, context):
-		stats.weight_display()
-		return {'FINISHED'}
-
-
-
-
 
 
 class SELECT_DUPLI(Operator):
@@ -189,6 +166,25 @@ class SELECT_DUPLI(Operator):
 		else:
 			self.report({'INFO'}, l['report_no_dupli'])
 
+		return {'FINISHED'}
+
+
+
+
+
+
+class WEIGHT_DISPLAY(Operator):
+	'''Display weight or volume of the active mesh object'''
+	bl_label = "JewelCraft: Weighting"
+	bl_idname = "jewelcraft.weight_display"
+
+	@classmethod
+	def poll(cls, context):
+		obj = context.active_object
+		return (obj and obj.type == 'MESH')
+
+	def execute(self, context):
+		stats.weight_display()
 		return {'FINISHED'}
 
 
