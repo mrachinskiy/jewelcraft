@@ -68,8 +68,6 @@ class JewelCraftImportPanel(Panel):
 
 		col.separator()
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])
-
-		col.separator()
 		col.operator("jewelcraft.select_dupli", text=l['select_dupli'])
 
 
