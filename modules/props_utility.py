@@ -84,17 +84,17 @@ def weighting_metals(self, context):
 	enum_items['LANG_WEIGHTING_METALS'] = l
 
 	enum_items['WEIGHTING_METALS'] = (
-		('24KT',        l['24kt'],        "", 9),
-		('22KT',        l['22kt'],        "", 10),
-		('18KT_WHITE',  l['18kt_white'],  "", 0),
-		('14KT_WHITE',  l['14kt_white'],  "", 1),
-		('18KT_YELLOW', l['18kt_yellow'], "", 2),
-		('14KT_YELLOW', l['14kt_yellow'], "", 3),
-		('STERLING',    l['sterling'],    "", 4),
-		('PALLADIUM',   l['palladium'],   "", 5),
-		('PLATINUM',    l['platinum'],    "", 6),
-		('CUSTOM',      l['wt_custom'],   "", 7),
-		('VOL',         l['wt_vol'],      "", 8),
+		('24G',    l['24g'],       "", 9),
+		('22G',    l['22g'],       "", 10),
+		('18WG',   l['18wg'],      "", 0),
+		('14WG',   l['14wg'],      "", 1),
+		('18YG',   l['18yg'],      "", 2),
+		('14YG',   l['14yg'],      "", 3),
+		('STER',   l['ster'],      "", 4),
+		('PD',     l['pd'],        "", 5),
+		('PL',     l['pl'],        "", 6),
+		('CUSTOM', l['wt_custom'], "", 7),
+		('VOL',    l['wt_vol'],    "", 8),
 	)
 
 	return enum_items['WEIGHTING_METALS']

@@ -8,15 +8,15 @@ icons_path = path.join(addon_path, 'icons')
 
 
 metal_density = {
-	'24KT'        : 19.3, # g/cm³
-	'22KT'        : 17.8,
-	'18KT_WHITE'  : 15.8,
-	'14KT_WHITE'  : 14.6,
-	'18KT_YELLOW' : 15.5,
-	'14KT_YELLOW' : 13.8,
-	'STERLING'    : 10.36,
-	'PALLADIUM'   : 12.0,
-	'PLATINUM'    : 21.4,
+	'24G'  : 19.3, # g/cm³
+	'22G'  : 17.8,
+	'18WG' : 15.8,
+	'14WG' : 14.6,
+	'18YG' : 15.5,
+	'14YG' : 13.8,
+	'STER' : 10.36,
+	'PD'   : 12.0,
+	'PL'   : 21.4,
 }
 
 stone_density = {
