@@ -45,16 +45,16 @@ def stats_get():
 
 	stats['METALS'] = []
 	append = stats['METALS'].append
-	if props.export_m_24kt        : append('24KT')
-	if props.export_m_22kt        : append('22KT')
-	if props.export_m_18kt_white  : append('18KT_WHITE')
-	if props.export_m_14kt_white  : append('14KT_WHITE')
-	if props.export_m_18kt_yellow : append('18KT_YELLOW')
-	if props.export_m_14kt_yellow : append('14KT_YELLOW')
-	if props.export_m_sterling    : append('STERLING')
-	if props.export_m_palladium   : append('PALLADIUM')
-	if props.export_m_platinum    : append('PLATINUM')
-	if props.export_m_custom      : append('CUSTOM')
+	if props.export_m_24g    : append('24G')
+	if props.export_m_22g    : append('22G')
+	if props.export_m_18wg   : append('18WG')
+	if props.export_m_14wg   : append('14WG')
+	if props.export_m_18yg   : append('18YG')
+	if props.export_m_14yg   : append('14YG')
+	if props.export_m_ster   : append('STER')
+	if props.export_m_pd     : append('PD')
+	if props.export_m_pl     : append('PL')
+	if props.export_m_custom : append('CUSTOM')
 
 	if (props.export_size and obs.get(props.export_size)):
 		stats['SIZE'] = units.system(obs[props.export_size].dimensions[0])
@@ -255,7 +255,7 @@ def export_locale():
 def format_weight(vol, metal, l):
 	if metal == 'CUSTOM':
 		props = bpy.context.scene.jewelcraft
-		dens = units.convert(props.export_m_custom_density, 'CM_MM')
+		dens = units.convert(props.export_m_custom_dens, 'CM_MM')
 		mat = props.export_m_custom_name
 	else:
 		dens = units.convert(var.metal_density[metal], 'CM_MM')
