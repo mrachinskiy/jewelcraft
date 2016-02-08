@@ -242,5 +242,10 @@ class EXPORT_STATS(Operator):
 	bl_idname = "jewelcraft.export_stats"
 
 	def execute(self, context):
-		stats.export()
+		prefs = context.user_preferences.addons[var.addon_id].preferences
+		l = localization.locale[prefs.lang]
+
+		if stats.export() == True:
+			self.report({'INFO'}, l['report_stats'])
+
 		return {'FINISHED'}

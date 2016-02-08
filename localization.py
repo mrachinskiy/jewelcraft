@@ -52,14 +52,16 @@ locale = {
 		'cubic_zirconia' : 'Cubic Zirconia',
 		'emerald'        : 'Emerald',
 		'garnet'         : 'Garnet',
-		'quartz'         : 'Quartz',
+		'morganite'      : 'Morganite',
 		'peridot'        : 'Peridot',
+		'quartz'         : 'Quartz',
 		'ruby'           : 'Ruby',
 		'sapphire'       : 'Sapphire',
 		'spinel'         : 'Spinel',
 		'tanzanite'      : 'Tanzanite',
 		'topaz'          : 'Topaz',
 		'tourmaline'     : 'Tourmaline',
+		'zircon'         : 'Zircon',
 
 		'round'     : 'Round',
 		'oval'      : 'Oval',
@@ -76,9 +78,11 @@ locale = {
 		'radiant'   : 'Radiant',
 		'flanders'  : 'Flanders',
 		'trilliant' : 'Trilliant',
+		'triangle'  : 'Triangle',
 
 		'report_dupli'    : 'Duplicated gems found',
 		'report_no_dupli' : 'No duplicates found',
+		'report_stats'    : 'stats.txt successfully created in the project folder',
 
 		'error_file' : 'First save your blend file',
 
@@ -143,14 +147,16 @@ locale = {
 		'cubic_zirconia' : 'Фианит',
 		'emerald'        : 'Изумруд',
 		'garnet'         : 'Гранат',
-		'quartz'         : 'Кварц',
+		'morganite'      : 'Морганит',
 		'peridot'        : 'Хризолит',
+		'quartz'         : 'Кварц',
 		'ruby'           : 'Рубин',
 		'sapphire'       : 'Сапфир',
 		'spinel'         : 'Шпинель',
 		'tanzanite'      : 'Танзанит',
 		'topaz'          : 'Топаз',
 		'tourmaline'     : 'Турмалин',
+		'zircon'         : 'Циркон',
 
 		'round'     : 'Кр-57',
 		'oval'      : 'Овал',
@@ -167,9 +173,11 @@ locale = {
 		'radiant'   : 'Радиант',
 		'flanders'  : 'Фландерс',
 		'trilliant' : 'Триллиант',
+		'triangle'  : 'Треугольник',
 
 		'report_dupli'    : 'Обнаружены дублированные камни',
 		'report_no_dupli' : 'Дубликаты не обнаружены',
+		'report_stats'    : 'stats.txt успешно создан в каталоге проекта',
 
 		'error_file' : 'Сначала сохраните ваш blend файл',
 

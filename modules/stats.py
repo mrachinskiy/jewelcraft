@@ -142,11 +142,13 @@ def export():
 		f = open(save_path, 'w', encoding='utf-8')
 		f.write(stats)
 		f.close()
+		return True
 
 	else:
 		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
 		l = localization.locale[prefs.lang]
-		return utility.show_error_message(l['error_file'])
+		utility.show_error_message(l['error_file'])
+		return False
 
 
 
@@ -196,20 +198,13 @@ def stats_gems():
 			else:
 				count = 1
 
-			if cut in ['ROUND', 'SQUARE', 'CUSHION', 'ASSCHER', 'PRINCESS', 'OCTAGON', 'RADIANT', 'FLANDERS']:
-				length = round(units.system( (ob.dimensions[0] + ob.dimensions[1]) / 2 ), 2)
-				depth  = round(units.system(ob.dimensions[2]), 2)
-				if length.is_integer(): length = int(length)
-				if depth.is_integer():  depth  = int(depth)
-				size = (length, depth)
-			else:
-				length = round(units.system(ob.dimensions[1]), 2)
-				width  = round(units.system(ob.dimensions[0]), 2)
-				depth  = round(units.system(ob.dimensions[2]), 2)
-				if length.is_integer(): length = int(length)
-				if width.is_integer():  width  = int(width)
-				if depth.is_integer():  depth  = int(depth)
-				size = (length, width, depth)
+			length = round(units.system(ob.dimensions[1]), 2)
+			width  = round(units.system(ob.dimensions[0]), 2)
+			depth  = round(units.system(ob.dimensions[2]), 2)
+			if length.is_integer(): length = int(length)
+			if width.is_integer():  width  = int(width)
+			if depth.is_integer():  depth  = int(depth)
+			size = (length, width, depth)
 
 			if (stats.get(tpe) and stats[tpe].get(cut) and stats[tpe][cut].get(size)):
 				stats[tpe][cut][size] = stats[tpe][cut][size] + count
@@ -265,15 +260,14 @@ def format_weight(vol, metal, l):
 
 
 def format_gems(tpe, cut, size, qty, l):
-	if len(size) == 2:
-		crt = ct_calc(tpe, cut, l=size[0], h=size[1])
-		Size = '{} {} ({} {})'.format(size[0], l['mm'], crt, l['ct'])
 
-	else:
-		crt = ct_calc(tpe, cut, l=size[0], w=size[1], h=size[2])
-		Size = '{} × {} {} ({} {})'.format(size[0], size[1], l['mm'], crt, l['ct'])
-
+	crt = ct_calc(tpe, cut, l=size[0], w=size[1], h=size[2])
 	qty_ct = qty * crt
+
+	if cut in ['ROUND', 'SQUARE', 'ASSCHER', 'OCTAGON', 'FLANDERS']:
+		Size = '{} {} ({} {})'.format(size[0], l['mm'], crt, l['ct'])
+	else:
+		Size = '{} × {} {} ({} {})'.format(size[0], size[1], l['mm'], crt, l['ct'])
 
 	Qty = '{} {} ({} {})'.format(qty, l['items'], qty_ct, l['ct'])
 	Type = l[tpe.lower()]
@@ -288,20 +282,22 @@ def ct_calc(tpe, cut, l=None, w=None, h=None):
 	corr = var.gem_volume_correction[cut]
 
 	if cut in ['ROUND', 'OCTAGON']:
-		vol = (pi * ((l/2)**2) * (h/3)) * corr
+		l = (l + w) / 2
+		vol = pi * ((l/2)**2) * (h/3) # Cone
 
 	elif cut in ['OVAL', 'PEAR', 'MARQUISE', 'HEART']:
-		vol = (pi * (l/2) * (w/2) * (h/3)) * corr
+		vol = pi * (l/2) * (w/2) * (h/3) # Cone rectangular
 
 	elif cut in ['SQUARE', 'ASSCHER', 'PRINCESS', 'CUSHION', 'RADIANT', 'FLANDERS']:
-		vol = (l*w*h / 3) * corr
+		vol = l*w*h / 3 # Pyramid
 
 	elif cut in ['BAGUETTE', 'EMERALD']:
-		vol = (l*w * (h/2)) * corr
+		vol = l*w * (h/2) # Prism
 
-	elif cut in ['TRILLION', 'TRILLIANT']:
-		vol = (l*w*h / 6) * corr
+	elif cut in ['TRILLION', 'TRILLIANT', 'TRIANGLE']:
+		vol = l*w*h / 6 # Tetrahedron
 
-	ct = units.convert(vol * dens, 'G_CT')
+	g = (vol * corr) * dens
+	ct = units.convert(g, 'G_CT')
 
 	return round(ct, 3)
