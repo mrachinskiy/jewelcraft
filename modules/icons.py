@@ -24,6 +24,7 @@ load('CUT-HEART',     icon_path(var.icons_path, 'cut-heart.png'),     'IMAGE')
 load('CUT-RADIANT',   icon_path(var.icons_path, 'cut-radiant.png'),   'IMAGE')
 load('CUT-FLANDERS',  icon_path(var.icons_path, 'cut-flanders.png'),  'IMAGE')
 load('CUT-TRILLIANT', icon_path(var.icons_path, 'cut-trilliant.png'), 'IMAGE')
+load('CUT-TRIANGLE',  icon_path(var.icons_path, 'cut-triangle.png'),  'IMAGE')
 
 load('TOOL-CUT',               icon_path(var.icons_path, 'tool-cut.png'),               'IMAGE')
 load('TOOL-SINGLE_PRONG',      icon_path(var.icons_path, 'tool-single_prong.png'),      'IMAGE')
