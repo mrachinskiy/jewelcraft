@@ -52,7 +52,7 @@ gem_volume_correction = {
 
 	# Cone
 	'ROUND'     : 1.3056,
-	'OCTAGON'   : 1.405,
+	'OCTAGON'   : 1.35,
 
 	# Cone rectangular
 	'OVAL'      : 1.34455,
@@ -61,19 +61,19 @@ gem_volume_correction = {
 	'HEART'     : 1.29,
 
 	# Pyramid
-	'SQUARE'    : 1.684,
+	'SQUARE'    : 1.6,
 	'PRINCESS'  : 1.43301,
-	'ASSCHER'   : 1.2557,
+	'ASSCHER'   : 1.379,
 	'CUSHION'   : 1.2852,
 	'RADIANT'   : 1.3494,
-	'FLANDERS'  : 1.245,
+	'FLANDERS'  : 1.2407,
 
 	# Prism
-	'EMERALD'   : 0.9849,
-	'BAGUETTE'  : 1.16507,
+	'EMERALD'   : 1.025,
+	'BAGUETTE'  : 1.197,
 
 	# Tetrahedron
-	'TRILLION'  : 1.67,
+	'TRILLION'  : 1.669,
 	'TRILLIANT' : 1.91,
-	'TRIANGLE'  : 1.5213,
+	'TRIANGLE'  : 1.522,
 }
