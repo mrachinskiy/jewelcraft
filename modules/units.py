@@ -3,23 +3,23 @@ import bpy
 
 def convert(value, units):
 
-	if units == 'CM_MM':
+	if units == 'cm->mm':
 		return value / 1000
 
-	elif units == 'G_CT':
+	elif units == 'g->ct':
 		return value * 5
 
 
 def system(value, volume=False):
 
-	us = bpy.context.scene.unit_settings.system
+	unit = bpy.context.scene.unit_settings
 
-	if us == 'METRIC':
+	if unit.system == 'METRIC':
 
-		scale = bpy.context.scene.unit_settings.scale_length
+		scale = unit.scale_length
 
 		if volume:
-			return value * (1000 * 1000 * 1000) * (scale * scale * scale)
+			return value * 1000**3 * scale**3
 		else:
 			return value * 1000 * scale
 
