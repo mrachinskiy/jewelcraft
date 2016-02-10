@@ -6,10 +6,10 @@ from .. import (
 	localization,
 )
 from . import (
-	utility,
 	units,
 	volume,
 	report,
+	utility,
 )
 
 
@@ -188,12 +188,9 @@ def stats_gems():
 
 		if (ob.type == 'MESH' and ob.data.get('gem')):
 
-			if ob.data['gem'].get('TYPE'):
-				tpe = ob.data['gem']['TYPE']
-				cut = ob.data['gem']['CUT']
-			else:
-				tpe = ob.data['gem']['type']
-				cut = ob.data['gem']['cut']
+			utility.ob_prop_style_convert(ob)
+			tpe = ob.data['gem']['type']
+			cut = ob.data['gem']['cut']
 
 			if (ob.parent and ob.parent.dupli_type == 'FACES'):
 				count = polycount(ob.parent)

@@ -2,7 +2,10 @@ import bpy
 from mathutils import Matrix
 from collections import defaultdict
 from .. import var
-from . import units
+from . import (
+	units,
+	utility,
+)
 
 
 def gem_import():
@@ -61,10 +64,8 @@ def type_replace():
 def prongs_import():
 	for obj in bpy.context.selected_objects:
 		if obj.data.get('gem'):
-			if obj.data['gem'].get('CUT'):
-				cut = obj.data['gem']['CUT']
-			else:
-				cut = obj.data['gem']['cut']
+			utility.ob_prop_style_convert(obj)
+			cut = obj.data['gem']['cut']
 			data_to = asset_import(ob_name=cut.title()+' Prongs', mat_name='Prongs')
 
 			ob = data_to.objects[0]
@@ -91,10 +92,8 @@ def cutter_import(seat_only=False):
 
 	for obj in bpy.context.selected_objects:
 		if obj.data.get('gem'):
-			if obj.data['gem'].get('CUT'):
-				cut = obj.data['gem']['CUT']
-			else:
-				cut = obj.data['gem']['cut']
+			utility.ob_prop_style_convert(obj)
+			cut = obj.data['gem']['cut']
 			data_to = asset_import(ob_name=cut.title()+' Cutter'+suffix, mat_name='Cutter')
 
 			ob = data_to.objects[0]
@@ -173,6 +172,7 @@ def select_dupli():
 	name_app = gems_name.append
 	for ob in context.visible_objects:
 		if (ob.type == 'MESH' and ob.data.get('gem')):
+			utility.ob_prop_style_convert(ob)
 			loc_app(ob.location.freeze())
 			name_app(ob.name)
 
@@ -211,15 +211,14 @@ def asset_import(ob_name=False, mat_name=False):
 
 
 def type_set(ob, tpe, materials):
+	utility.ob_prop_style_convert(ob)
 	ob.data['gem']['type'] = tpe
 	material_assign(ob, tpe.replace('_', ' ').title(), materials)
 
 
 def type_copy(ob, obj):
-	if obj.data['gem'].get('TYPE'):
-		ob.data['gem']['type'] = obj.data['gem']['TYPE']
-	else:
-		ob.data['gem']['type'] = obj.data['gem']['type']
+	utility.ob_prop_style_convert(obj)
+	ob.data['gem']['type'] = obj.data['gem']['type']
 	append = ob.data.materials.append
 	for mat in obj.data.materials:
 		append(mat)
