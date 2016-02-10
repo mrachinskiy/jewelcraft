@@ -25,11 +25,11 @@ def weight_display():
 		report.data = '{} {}'.format(round(vol, 4), l['mm3'])
 
 	elif m == 'CUSTOM':
-		dens = units.convert(props.weighting_custom, 'CM_MM')
+		dens = units.convert(props.weighting_custom, 'cm->mm')
 		report.data = '{} {}'.format(round(vol * dens, 2), l['g'])
 
 	else:
-		mdens = units.convert(var.metal_density[m], 'CM_MM')
+		mdens = units.convert(var.metal_density[m], 'cm->mm')
 		report.data = '{} {}'.format(round(vol * mdens, 2), l['g'])
 
 
@@ -250,10 +250,10 @@ def export_locale():
 def format_weight(vol, metal, l):
 	if metal == 'CUSTOM':
 		props = bpy.context.scene.jewelcraft
-		dens = units.convert(props.export_m_custom_dens, 'CM_MM')
+		dens = units.convert(props.export_m_custom_dens, 'cm->mm')
 		mat = props.export_m_custom_name
 	else:
-		dens = units.convert(var.metal_density[metal], 'CM_MM')
+		dens = units.convert(var.metal_density[metal], 'cm->mm')
 		mat = l[metal.lower()]
 
 	return '{} {} ({})'.format(round(vol * dens, 2), l['g'], mat)
@@ -278,12 +278,12 @@ def format_gems(tpe, cut, size, qty, l):
 
 def ct_calc(tpe, cut, l=None, w=None, h=None):
 	props = bpy.context.scene.jewelcraft
-	dens = units.convert(var.stone_density[tpe], 'CM_MM')
+	dens = units.convert(var.stone_density[tpe], 'cm->mm')
 	corr = var.gem_volume_correction[cut]
 
 	if cut in ['ROUND', 'OCTAGON']:
 		l = (l + w) / 2
-		vol = pi * ((l/2)**2) * (h/3) # Cone
+		vol = pi * (l/2)**2 * (h/3) # Cone
 
 	elif cut in ['OVAL', 'PEAR', 'MARQUISE', 'HEART']:
 		vol = pi * (l/2) * (w/2) * (h/3) # Cone rectangular
@@ -298,6 +298,6 @@ def ct_calc(tpe, cut, l=None, w=None, h=None):
 		vol = l*w*h / 6 # Tetrahedron
 
 	g = (vol * corr) * dens
-	ct = units.convert(g, 'G_CT')
+	ct = units.convert(g, 'g->ct')
 
 	return round(ct, 3)
