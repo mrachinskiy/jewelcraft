@@ -15,7 +15,7 @@ def gem_import():
 	bpy.ops.object.select_all(action='DESELECT')
 
 	ob = data_to.objects[0]
-	ob.data['gem'] = {'CUT': cut}
+	ob.data['gem'] = {'cut': cut}
 
 	ob.location = bpy.context.scene.cursor_location
 	to_size(ob, size)
@@ -33,7 +33,7 @@ def cut_replace():
 			data_to = asset_import(ob_name=cut.title())
 
 			ob = data_to.objects[0]
-			ob.data['gem'] = {'CUT': cut}
+			ob.data['gem'] = {'cut': cut}
 
 			append_to(ob, obj)
 			to_size(ob, obj.dimensions[1])
@@ -61,7 +61,10 @@ def type_replace():
 def prongs_import():
 	for obj in bpy.context.selected_objects:
 		if obj.data.get('gem'):
-			cut = obj.data['gem']['CUT']
+			if obj.data['gem'].get('CUT'):
+				cut = obj.data['gem']['CUT']
+			else:
+				cut = obj.data['gem']['cut']
 			data_to = asset_import(ob_name=cut.title()+' Prongs', mat_name='Prongs')
 
 			ob = data_to.objects[0]
@@ -88,7 +91,10 @@ def cutter_import(seat_only=False):
 
 	for obj in bpy.context.selected_objects:
 		if obj.data.get('gem'):
-			cut = obj.data['gem']['CUT']
+			if obj.data['gem'].get('CUT'):
+				cut = obj.data['gem']['CUT']
+			else:
+				cut = obj.data['gem']['cut']
 			data_to = asset_import(ob_name=cut.title()+' Cutter'+suffix, mat_name='Cutter')
 
 			ob = data_to.objects[0]
@@ -205,12 +211,15 @@ def asset_import(ob_name=False, mat_name=False):
 
 
 def type_set(ob, tpe, materials):
-	ob.data['gem']['TYPE'] = tpe
+	ob.data['gem']['type'] = tpe
 	material_assign(ob, tpe.replace('_', ' ').title(), materials)
 
 
 def type_copy(ob, obj):
-	ob.data['gem']['TYPE'] = obj.data['gem']['TYPE']
+	if obj.data['gem'].get('TYPE'):
+		ob.data['gem']['type'] = obj.data['gem']['TYPE']
+	else:
+		ob.data['gem']['type'] = obj.data['gem']['type']
 	append = ob.data.materials.append
 	for mat in obj.data.materials:
 		append(mat)
