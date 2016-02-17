@@ -129,7 +129,7 @@ def make_dupliface():
 
 	if gem:
 		ob = gem
-		name = ob.name+' '
+		name = ob.name + ' '
 	else:
 		ob = obs[0]
 		name = ''
@@ -155,9 +155,8 @@ def make_dupliface():
 
 	for ob in obs:
 		ob.parent = df
-		ob.location = [0,0,0]
 		apply_transforms(ob)
-
+	bpy.ops.object.origin_clear()
 
 
 def select_dupli():
