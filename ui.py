@@ -10,10 +10,9 @@ from .modules.icons import preview_collections
 
 def icon_tria(prop):
 	if prop:
-		icon = 'TRIA_DOWN'
+		return 'TRIA_DOWN'
 	else:
-		icon = 'TRIA_RIGHT'
-	return icon
+		return 'TRIA_RIGHT'
 
 
 
@@ -168,9 +167,9 @@ class JewelCraftExportPanel(Panel):
 				col.prop(props, 'export_m_pd',     text=l['pd'])
 				col.prop(props, 'export_m_pl',     text=l['pl'])
 				col.prop(props, 'export_m_custom', text=l['custom'])
+
 				col = col.column(align=True)
-				if not props.export_m_custom:
-					col.enabled = False
+				col.enabled = props.export_m_custom
 				row = col.row()
 				row.label(l['custom_name'])
 				row.label(l['g/cm']+':')
