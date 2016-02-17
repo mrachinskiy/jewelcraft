@@ -263,7 +263,7 @@ def format_weight(vol, metal, l):
 def format_gems(tpe, cut, size, qty, l):
 
 	crt = ct_calc(tpe, cut, l=size[0], w=size[1], h=size[2])
-	qty_ct = qty * crt
+	qty_ct = round(qty * crt, 3)
 
 	if cut in ['ROUND', 'SQUARE', 'ASSCHER', 'OCTAGON', 'FLANDERS']:
 		Size = '{} {} ({} {})'.format(size[0], l['mm'], crt, l['ct'])
