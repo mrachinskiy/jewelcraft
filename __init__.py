@@ -10,16 +10,17 @@ bl_info = {
 	"category": "Object"}
 
 if "bpy" in locals():
-	import importlib
-	importlib.reload(var)
-	importlib.reload(localization)
-	importlib.reload(operators)
-	importlib.reload(ui)
-	importlib.reload(modules.icons)
-	importlib.reload(modules.units)
-	importlib.reload(modules.assets)
-	importlib.reload(modules.stats)
-	importlib.reload(modules.props_utility)
+	from importlib import reload
+	reload(var)
+	reload(localization)
+	reload(operators)
+	reload(ui)
+	reload(modules.icons)
+	reload(modules.units)
+	reload(modules.assets)
+	reload(modules.stats)
+	reload(modules.props_utility)
+	del reload
 else:
 	import bpy
 	from bpy.props import (
@@ -44,7 +45,7 @@ else:
 
 
 
-class JewelCraftPreferences(AddonPreferences):
+class Preferences(AddonPreferences):
 
 	bl_idname = var.addon_id
 
@@ -66,7 +67,7 @@ class JewelCraftPreferences(AddonPreferences):
 
 
 
-class JewelCraftProperties(PropertyGroup):
+class Properties(PropertyGroup):
 
 	import_gem_cut = EnumProperty(name="Cut", items=props_utility.gem_cut)
 	import_gem_type = EnumProperty(name="Type", items=props_utility.gem_type)
@@ -112,9 +113,9 @@ class JewelCraftProperties(PropertyGroup):
 
 
 classes = (
-	ui.JewelCraftImportPanel,
-	ui.JewelCraftWeightingPanel,
-	ui.JewelCraftExportPanel,
+	ui.ImportPanel,
+	ui.WeightingPanel,
+	ui.ExportPanel,
 
 	operators.SEARCH_TYPE,
 
@@ -126,10 +127,10 @@ classes = (
 	operators.IMPORT_CUTTER,
 	operators.IMPORT_CUTTER_SEAT,
 	operators.IMPORT_IMITATION_3_PRONG,
-	operators.MAKE_DUPLIFACE,
-	operators.WEIGHT_DISPLAY,
 
+	operators.MAKE_DUPLIFACE,
 	operators.SELECT_DUPLI,
+	operators.WEIGHT_DISPLAY,
 
 	operators.EXPORT_PICK_SIZE,
 	operators.EXPORT_PICK_SHANK,
@@ -137,8 +138,8 @@ classes = (
 	operators.EXPORT_PICK_WEIGHT,
 	operators.EXPORT_STATS,
 
-	JewelCraftPreferences,
-	JewelCraftProperties,
+	Preferences,
+	Properties,
 )
 
 
@@ -148,7 +149,7 @@ def register():
 	for cls in classes:
 		bpy.utils.register_class(cls)
 
-	bpy.types.Scene.jewelcraft = PointerProperty(type=JewelCraftProperties)
+	bpy.types.Scene.jewelcraft = PointerProperty(type=Properties)
 
 
 def unregister():
