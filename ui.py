@@ -16,9 +16,9 @@ def icon_tria(prop):
 
 
 
-class JewelCraftImportPanel(Panel):
+class ImportPanel(Panel):
 
-	bl_label = "Jewels"
+	bl_label = "Gems"
 	bl_idname = "JEWELCRAFT_IMPORT"
 	bl_space_type = "VIEW_3D"
 	bl_region_type = "TOOLS"
@@ -71,7 +71,7 @@ class JewelCraftImportPanel(Panel):
 
 
 
-class JewelCraftWeightingPanel(Panel):
+class WeightingPanel(Panel):
 
 	bl_label = "Weighting"
 	bl_idname = "JEWELCRAFT_WEIGHTING"
@@ -110,7 +110,7 @@ class JewelCraftWeightingPanel(Panel):
 
 
 
-class JewelCraftExportPanel(Panel):
+class ExportPanel(Panel):
 	
 	bl_label = "Export"
 	bl_idname = "JEWELCRAFT_EXPORT"
