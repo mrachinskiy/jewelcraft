@@ -157,22 +157,22 @@ class ExportPanel(Panel):
 			row.label(l['metals'])
 			if props.export_metals:
 				col = box.column(align=True)
-				col.prop(props, 'export_m_24g',    text=l['24g'])
-				col.prop(props, 'export_m_22g',    text=l['22g'])
-				col.prop(props, 'export_m_18wg',   text=l['18wg'])
-				col.prop(props, 'export_m_14wg',   text=l['14wg'])
-				col.prop(props, 'export_m_18yg',   text=l['18yg'])
-				col.prop(props, 'export_m_14yg',   text=l['14yg'])
-				col.prop(props, 'export_m_ster',   text=l['ster'])
-				col.prop(props, 'export_m_pd',     text=l['pd'])
-				col.prop(props, 'export_m_pl',     text=l['pl'])
-				col.prop(props, 'export_m_custom', text=l['custom'])
+				col.prop(props, "export_m_24g",    text=l['24g'])
+				col.prop(props, "export_m_22g",    text=l['22g'])
+				col.prop(props, "export_m_18wg",   text=l['18wg'])
+				col.prop(props, "export_m_18yg",   text=l['18yg'])
+				col.prop(props, "export_m_14wg",   text=l['14wg'])
+				col.prop(props, "export_m_14yg",   text=l['14yg'])
+				col.prop(props, "export_m_ster",   text=l['ster'])
+				col.prop(props, "export_m_pd",     text=l['pd'])
+				col.prop(props, "export_m_pl",     text=l['pl'])
+				col.prop(props, "export_m_custom", text=l['custom'])
 
 				col = col.column(align=True)
 				col.enabled = props.export_m_custom
 				row = col.row()
 				row.label(l['custom_name'])
-				row.label(l['g/cm']+':')
+				row.label(l['g/cm']+":")
 				row = col.row()
 				row.prop(props, "export_m_custom_name", text="")
 				row.prop(props, "export_m_custom_dens", text="")
@@ -180,7 +180,7 @@ class ExportPanel(Panel):
 
 			row = box.row(align=True)
 			row.label(l['lang']+":")
-			row.prop(props, 'export_lang', text="")
+			row.prop(props, "export_lang", text="")
 
 
 		col = layout.column(align=True)
