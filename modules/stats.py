@@ -139,10 +139,9 @@ def export():
 		filename = bpy.path.display_name_from_filepath(filepath)
 		save_path = path.join(path.dirname(filepath), filename + '_stats.txt')
 
-		f = open(save_path, 'w', encoding='utf-8')
-		f.write(stats)
-		f.close()
-		return True
+		with open(save_path, 'w', encoding='utf-8') as file:
+			file.write(stats)
+			return True
 
 	else:
 		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
