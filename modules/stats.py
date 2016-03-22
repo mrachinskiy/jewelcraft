@@ -116,7 +116,7 @@ def template():
 							col_len[i] = len(row[i])
 
 		table_columns = '{{:{}}} | {{:{}}} | {{:{}}} | {{}}\n    '.format(col_len[0], col_len[1], col_len[2])
-		underline_len = col_len[0] + col_len[1] + col_len[2] + col_len[3] + 10
+		underline_len = sum(col_len) + 10
 
 		t += l['t_settings'] + '\n    '
 		t += table_columns.format(l['type'], l['cut'], l['size'], l['qty'])
