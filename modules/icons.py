@@ -2,11 +2,9 @@ from bpy.utils import previews
 from os import path
 from .. import var
 
-preview_collections = {}
-pcoll = previews.new()
 
-load = pcoll.load
-icon_path = path.join
+preview_collections = {}
+
 
 icon_names = (
 	'cut-round',
@@ -34,7 +32,11 @@ icon_names = (
 	'tool-imitation_3_prong',
 )
 
-for name in icon_names:
-	load(name.upper(), icon_path(var.icons_path, name + '.png'), 'IMAGE')
+pcoll = previews.new()
+load = pcoll.load
 
-preview_collections['main'] = pcoll
+for name in icon_names:
+	load(name.upper(), path.join(var.icons_path, name + '.png'), 'IMAGE')
+
+
+preview_collections['icons'] = pcoll

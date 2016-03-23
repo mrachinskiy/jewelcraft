@@ -33,7 +33,7 @@ class ImportPanel(Panel):
 		prefs = context.user_preferences.addons[var.addon_id].preferences
 		props = context.scene.jewelcraft
 		l = localization.locale[prefs.lang]
-		pcoll = preview_collections['main']
+		pcoll = preview_collections['icons']
 
 		col = layout.column(align=True)
 
