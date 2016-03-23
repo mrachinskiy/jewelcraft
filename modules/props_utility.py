@@ -14,7 +14,7 @@ def gem_cut(self, context):
 	if (enum_items.get('LANG_GEM_CUT') and enum_items['LANG_GEM_CUT'] == l and enum_items.get('GEM_CUT')):
 		return enum_items['GEM_CUT']
 
-	pcoll = preview_collections['main']
+	pcoll = preview_collections['icons']
 	enum_items['LANG_GEM_CUT'] = l
 
 	enum_items['GEM_CUT'] = (
