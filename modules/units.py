@@ -3,7 +3,7 @@ import bpy
 
 def convert(value, units):
 
-	if units == 'cm->mm':
+	if units == 'cm3->mm3':
 		return value / 1000
 
 	elif units == 'g->ct':
