@@ -32,7 +32,7 @@ def cut_replace():
 	cut = props.import_gem_cut
 
 	for obj in context.selected_objects:
-		if obj.data.get('gem'):
+		if 'gem' in obj.data:
 			data_to = asset_import(ob_name=cut.title())
 
 			ob = data_to.objects[0]
@@ -53,7 +53,7 @@ def type_replace():
 
 	data_to = asset_import(mat_name=tpe.replace('_', ' ').title())
 	for ob in context.selected_objects:
-		if ob.data.get('gem'):
+		if 'gem' in ob.data:
 			type_set(ob, tpe, data_to.materials)
 
 
@@ -63,7 +63,7 @@ def type_replace():
 
 def prongs_import():
 	for obj in bpy.context.selected_objects:
-		if obj.data.get('gem'):
+		if 'gem' in obj.data:
 			utility.ob_prop_style_convert(obj)
 			cut = obj.data['gem']['cut']
 			data_to = asset_import(ob_name=cut.title()+' Prongs', mat_name='Prongs')
@@ -91,7 +91,7 @@ def cutter_import(seat_only=False):
 		suffix = ' (Seat only)'
 
 	for obj in bpy.context.selected_objects:
-		if obj.data.get('gem'):
+		if 'gem' in obj.data:
 			utility.ob_prop_style_convert(obj)
 			cut = obj.data['gem']['cut']
 			data_to = asset_import(ob_name=cut.title()+' Cutter'+suffix, mat_name='Cutter')
@@ -121,7 +121,7 @@ def make_dupliface():
 	obs = []
 	obs_app = obs.append
 	for ob in context.selected_objects:
-		if (ob.data and ob.data.get('gem')):
+		if (ob.type == 'MESH' and 'gem' in ob.data):
 			gem = ob
 			obs_app(ob)
 		else:
@@ -139,16 +139,16 @@ def make_dupliface():
 	faces = [(3,2,1,0)]
 
 
-	offset = (ob.dimensions[0]+1, 0, 0)
+	offset = (ob.dimensions[0] + 1, 0, 0)
 	for i in range(len(verts)):
 		verts[i] = tuple(x+y for x,y in zip(verts[i], offset))
 
 
-	me = data.meshes.new(name+'Duplifaces')
+	me = data.meshes.new(name + 'Duplifaces')
 	me.from_pydata(verts, [], faces)
 	me.update()
 
-	df = data.objects.new(name+'Duplifaces', me)
+	df = data.objects.new(name + 'Duplifaces', me)
 	df.location = ob.location
 	df.dupli_type = 'FACES'
 	context.scene.objects.link(df)
@@ -170,7 +170,7 @@ def select_dupli():
 	loc_app = gems_loc.append
 	name_app = gems_name.append
 	for ob in context.visible_objects:
-		if (ob.type == 'MESH' and ob.data.get('gem')):
+		if (ob.type == 'MESH' and 'gem' in ob.data):
 			utility.ob_prop_style_convert(ob)
 			loc_app(ob.location.freeze())
 			name_app(ob.name)

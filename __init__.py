@@ -103,7 +103,7 @@ class Properties(PropertyGroup):
 		name="Export stats language",
 		items=(
 			('RU',   "Russian (Русский)", ""),
-			('EN',   "English (English)", ""),
+			('EN',   "English",           ""),
 			('AUTO', "Auto", "Inherit locale from add-on preferences"),
 		),
 		default="AUTO",
@@ -153,15 +153,15 @@ def register():
 
 
 def unregister():
-	pcoll_remove = bpy.utils.previews.remove
-	for pcoll in preview_collections.values():
-		pcoll_remove(pcoll)
-	preview_collections.clear()
-
 	for cls in classes:
 		bpy.utils.unregister_class(cls)
 
 	del bpy.types.Scene.jewelcraft
+
+	pcoll_remove = bpy.utils.previews.remove
+	for pcoll in preview_collections.values():
+		pcoll_remove(pcoll)
+	preview_collections.clear()
 
 
 if __name__ == "__main__":

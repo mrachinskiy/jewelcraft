@@ -25,11 +25,11 @@ def weight_display():
 		report.data = '{} {}'.format(round(vol, 4), l['mm3'])
 
 	elif m == 'CUSTOM':
-		dens = units.convert(props.weighting_custom, 'cm->mm')
+		dens = units.convert(props.weighting_custom, 'cm3->mm3')
 		report.data = '{} {}'.format(round(vol * dens, 2), l['g'])
 
 	else:
-		mdens = units.convert(var.metal_density[m], 'cm->mm')
+		mdens = units.convert(var.metal_density[m], 'cm3->mm3')
 		report.data = '{} {}'.format(round(vol * mdens, 2), l['g'])
 
 
@@ -39,12 +39,13 @@ def weight_display():
 
 def stats_get():
 	sce = bpy.context.scene
-	obs = sce.objects
 	props = sce.jewelcraft
+	obs = sce.objects
+
 	stats = {}
 
-	stats['METALS'] = []
-	append = stats['METALS'].append
+	stats['metals'] = []
+	append = stats['metals'].append
 	if props.export_m_24g    : append('24G')
 	if props.export_m_22g    : append('22G')
 	if props.export_m_18wg   : append('18WG')
@@ -56,21 +57,23 @@ def stats_get():
 	if props.export_m_pl     : append('PL')
 	if props.export_m_custom : append('CUSTOM')
 
-	if (props.export_size and obs.get(props.export_size)):
-		stats['SIZE'] = units.system(obs[props.export_size].dimensions[0])
+	if (props.export_size and props.export_size in obs):
+		stats['size'] = units.system(obs[props.export_size].dimensions[0])
 
-	if (props.export_shank and obs.get(props.export_shank)):
-		stats['SHANK'] = stats_shank(obs[props.export_shank])
+	if (props.export_shank and props.export_shank in obs):
+		stats['shank'] = stats_shank(obs[props.export_shank])
 
-	if (props.export_dim and obs.get(props.export_dim)):
-		stats['DIM'] = [units.system(obs[props.export_dim].dimensions[0]),
-		                units.system(obs[props.export_dim].dimensions[1]),
-		                units.system(obs[props.export_dim].dimensions[2])]
+	if (props.export_dim and props.export_dim in obs):
+		stats['dim'] = (
+			units.system(obs[props.export_dim].dimensions[0]),
+			units.system(obs[props.export_dim].dimensions[1]),
+			units.system(obs[props.export_dim].dimensions[2])
+		)
 
-	if (props.export_weight and obs.get(props.export_weight)):
-		stats['WEIGHT'] = units.system(volume.calculate(obs[props.export_weight]), volume=True)
+	if (props.export_weight and props.export_weight in obs):
+		stats['weight'] = units.system(volume.calculate(obs[props.export_weight]), volume=True)
 
-	stats['GEMS'] = stats_gems()
+	stats['gems'] = stats_gems()
 
 	return stats
 
@@ -82,47 +85,48 @@ def stats_get():
 def template():
 	stats = stats_get()
 	l = export_locale()
-	t = ''
 	mm = l['mm']
 
-	if 'SIZE' in stats:
-		t += '{}\n    {} {}\n\n'.format(l['t_size'], round(stats['SIZE'], 2), mm)
+	t = ''
 
-	if 'SHANK' in stats:
-		t += '{}\n    {:.1f} {}\n\n'.format(l['t_width'], stats['SHANK'][0], mm)
-		t += '{}\n    {:.1f} {}\n\n'.format(l['t_thickness'], stats['SHANK'][1], mm)
+	if 'size' in stats:
+		t += '{}\n    {} {}\n\n'.format(l['t_size'], round(stats['size'], 2), mm)
 
-	if 'DIM' in stats:
-		dim = stats['DIM']
+	if 'shank' in stats:
+		t += '{}\n    {:.1f} {}\n\n'.format(l['t_width'], stats['shank'][0], mm)
+		t += '{}\n    {:.1f} {}\n\n'.format(l['t_thickness'], stats['shank'][1], mm)
+
+	if 'dim' in stats:
+		dim = stats['dim']
 		t += '{}\n    {:.1f} × {:.1f} × {:.1f} {}\n\n'.format(l['t_dim'], dim[0], dim[1], dim[2], mm)
 
-	if ('WEIGHT' in stats and stats['METALS']):
+	if ('weight' in stats and stats['metals']):
 		t += l['t_weight'] + '\n    '
-		for metal in stats['METALS']:
-			t += format_weight(stats['WEIGHT'], metal, l) + '\n    '
+		for metal in stats['metals']:
+			t += format_weight(stats['weight'], metal, l) + '\n    '
 		t += '\n'
 
-	if stats['GEMS']:
+	if stats['gems']:
 		col_len = [len(l['type']), len(l['cut']), len(l['size']), len(l['qty'])]
 		rows = []
 		append = rows.append
-		for tpe in sorted(stats['GEMS']):
-			for cut in sorted(stats['GEMS'][tpe]):
-				for size in sorted(stats['GEMS'][tpe][cut]):
-					row = format_gems(tpe, cut, size, stats['GEMS'][tpe][cut][size], l)
+		for tpe in sorted(stats['gems']):
+			for cut in sorted(stats['gems'][tpe]):
+				for size in sorted(stats['gems'][tpe][cut]):
+					row = format_gems(tpe, cut, size, stats['gems'][tpe][cut][size], l)
 					append(row)
 					for i in range(len(col_len)):
 						if len(row[i]) > col_len[i]:
 							col_len[i] = len(row[i])
 
-		table_columns = '{{:{}}} | {{:{}}} | {{:{}}} | {{}}\n    '.format(col_len[0], col_len[1], col_len[2])
-		underline_len = sum(col_len) + 10
+		col = '{{:{}}} | {{:{}}} | {{:{}}} | {{}}\n    '.format(col_len[0], col_len[1], col_len[2])
 
 		t += l['t_settings'] + '\n    '
-		t += table_columns.format(l['type'], l['cut'], l['size'], l['qty'])
-		t += '—' * underline_len + '\n    '
+		t += col.format(l['type'], l['cut'], l['size'], l['qty'])
+		t += '—' * (sum(col_len) + 10) + '\n    '
+
 		for gem in rows:
-			t += table_columns.format(gem[0], gem[1], gem[2], gem[3])
+			t += col.format(gem[0], gem[1], gem[2], gem[3])
 
 	return t
 
@@ -168,12 +172,16 @@ def stats_shank(ob):
 		save_state = mo.show_viewport
 		mo.show_viewport = False
 		bpy.context.scene.update()
-		stats = [units.system(ob.dimensions[1]),
-		         units.system(ob.dimensions[2])]
+		stats = (
+			units.system(ob.dimensions[1]),
+			units.system(ob.dimensions[2])
+		)
 		mo.show_viewport = save_state
 	else:
-		stats = [units.system(ob.dimensions[1]),
-		         units.system(ob.dimensions[2])]
+		stats = (
+			units.system(ob.dimensions[1]),
+			units.system(ob.dimensions[2])
+		)
 
 	return stats
 
@@ -183,7 +191,7 @@ def stats_gems():
 
 	for ob in bpy.context.scene.objects:
 
-		if (ob.type == 'MESH' and ob.data.get('gem')):
+		if (ob.type == 'MESH' and 'gem' in ob.data):
 
 			utility.ob_prop_style_convert(ob)
 			tpe = ob.data['gem']['type']
@@ -199,16 +207,16 @@ def stats_gems():
 			length = round(units.system(ob.dimensions[1]), 2)
 			width  = round(units.system(ob.dimensions[0]), 2)
 			depth  = round(units.system(ob.dimensions[2]), 2)
-			if length.is_integer(): length = int(length)
-			if width.is_integer():  width  = int(width)
-			if depth.is_integer():  depth  = int(depth)
+			if length.is_integer() : length = int(length)
+			if width.is_integer()  : width  = int(width)
+			if depth.is_integer()  : depth  = int(depth)
 			size = (length, width, depth)
 
-			if (stats.get(tpe) and stats[tpe].get(cut) and stats[tpe][cut].get(size)):
+			if (tpe in stats and cut in stats[tpe] and size in stats[tpe][cut]):
 				stats[tpe][cut][size] = stats[tpe][cut][size] + count
-			elif (stats.get(tpe) and stats[tpe].get(cut)):
+			elif (tpe in stats and cut in stats[tpe]):
 				stats[tpe][cut][size] = count
-			elif stats.get(tpe):
+			elif tpe in stats:
 				stats[tpe][cut] = {size : count}
 			else:
 				stats[tpe] = {cut : {size : count}}
@@ -248,10 +256,10 @@ def export_locale():
 def format_weight(vol, metal, l):
 	if metal == 'CUSTOM':
 		props = bpy.context.scene.jewelcraft
-		dens = units.convert(props.export_m_custom_dens, 'cm->mm')
+		dens = units.convert(props.export_m_custom_dens, 'cm3->mm3')
 		mat = props.export_m_custom_name
 	else:
-		dens = units.convert(var.metal_density[metal], 'cm->mm')
+		dens = units.convert(var.metal_density[metal], 'cm3->mm3')
 		mat = l[metal.lower()]
 
 	return '{} {} ({})'.format(round(vol * dens, 2), l['g'], mat)
@@ -276,7 +284,7 @@ def format_gems(tpe, cut, size, qty, l):
 
 def ct_calc(tpe, cut, l=None, w=None, h=None):
 	props = bpy.context.scene.jewelcraft
-	dens = units.convert(var.stone_density[tpe], 'cm->mm')
+	dens = units.convert(var.stone_density[tpe], 'cm3->mm3')
 	corr = var.gem_volume_correction[cut]
 
 	if cut in ('ROUND', 'OCTAGON'):

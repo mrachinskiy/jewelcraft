@@ -3,6 +3,9 @@ from .. import (
 	localization,
 )
 from .icons import preview_collections
+
+
+
 enum_items = {}
 
 
@@ -11,33 +14,33 @@ def gem_cut(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
 	l = localization.locale[prefs.lang]
 
-	if (enum_items.get('LANG_GEM_CUT') and enum_items['LANG_GEM_CUT'] == l and enum_items.get('GEM_CUT')):
-		return enum_items['GEM_CUT']
+	if enum_items.get('gem_cut_lang') == l:
+		return enum_items['gem_cut']
 
-	pcoll = preview_collections['icons']
-	enum_items['LANG_GEM_CUT'] = l
+	icons = preview_collections['icons']
+	enum_items['gem_cut_lang'] = l
 
-	enum_items['GEM_CUT'] = (
-		('ROUND',     l['round'],     "", pcoll['CUT-ROUND'].icon_id,     0),
-		('OVAL',      l['oval'],      "", pcoll['CUT-OVAL'].icon_id,      1),
-		('CUSHION',   l['cushion'],   "", pcoll['CUT-CUSHION'].icon_id,   2),
-		('PEAR',      l['pear'],      "", pcoll['CUT-PEAR'].icon_id,      3),
-		('MARQUISE',  l['marquise'],  "", pcoll['CUT-MARQUISE'].icon_id,  4),
-		('PRINCESS',  l['princess'],  "", pcoll['CUT-PRINCESS'].icon_id,  5),
-		('BAGUETTE',  l['baguette'],  "", pcoll['CUT-BAGUETTE'].icon_id,  6),
-		('SQUARE',    l['square'],    "", pcoll['CUT-SQUARE'].icon_id,    7),
-		('EMERALD',   l['emerald'],   "", pcoll['CUT-EMERALD'].icon_id,   8),
-		('ASSCHER',   l['asscher'],   "", pcoll['CUT-ASSCHER'].icon_id,   9),
-		('RADIANT',   l['radiant'],   "", pcoll['CUT-RADIANT'].icon_id,   10),
-		('FLANDERS',  l['flanders'],  "", pcoll['CUT-FLANDERS'].icon_id,  11),
-		('OCTAGON',   l['octagon'],   "", pcoll['CUT-OCTAGON'].icon_id,   12),
-		('HEART',     l['heart'],     "", pcoll['CUT-HEART'].icon_id,     13),
-		('TRILLION',  l['trillion'],  "", pcoll['CUT-TRILLION'].icon_id,  14),
-		('TRILLIANT', l['trilliant'], "", pcoll['CUT-TRILLIANT'].icon_id, 15),
-		('TRIANGLE',  l['triangle'],  "", pcoll['CUT-TRIANGLE'].icon_id,  16),
+	enum_items['gem_cut'] = (
+		('ROUND',     l['round'],     "", icons['CUT-ROUND'].icon_id,     0),
+		('OVAL',      l['oval'],      "", icons['CUT-OVAL'].icon_id,      1),
+		('CUSHION',   l['cushion'],   "", icons['CUT-CUSHION'].icon_id,   2),
+		('PEAR',      l['pear'],      "", icons['CUT-PEAR'].icon_id,      3),
+		('MARQUISE',  l['marquise'],  "", icons['CUT-MARQUISE'].icon_id,  4),
+		('PRINCESS',  l['princess'],  "", icons['CUT-PRINCESS'].icon_id,  5),
+		('BAGUETTE',  l['baguette'],  "", icons['CUT-BAGUETTE'].icon_id,  6),
+		('SQUARE',    l['square'],    "", icons['CUT-SQUARE'].icon_id,    7),
+		('EMERALD',   l['emerald'],   "", icons['CUT-EMERALD'].icon_id,   8),
+		('ASSCHER',   l['asscher'],   "", icons['CUT-ASSCHER'].icon_id,   9),
+		('RADIANT',   l['radiant'],   "", icons['CUT-RADIANT'].icon_id,   10),
+		('FLANDERS',  l['flanders'],  "", icons['CUT-FLANDERS'].icon_id,  11),
+		('OCTAGON',   l['octagon'],   "", icons['CUT-OCTAGON'].icon_id,   12),
+		('HEART',     l['heart'],     "", icons['CUT-HEART'].icon_id,     13),
+		('TRILLION',  l['trillion'],  "", icons['CUT-TRILLION'].icon_id,  14),
+		('TRILLIANT', l['trilliant'], "", icons['CUT-TRILLIANT'].icon_id, 15),
+		('TRIANGLE',  l['triangle'],  "", icons['CUT-TRIANGLE'].icon_id,  16),
 	)
 
-	return enum_items['GEM_CUT']
+	return enum_items['gem_cut']
 
 
 
@@ -45,10 +48,10 @@ def gem_type(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
 	l = localization.locale[prefs.lang]
 
-	if (enum_items.get('LANG_GEM_TYPE') and enum_items['LANG_GEM_TYPE'] == l and enum_items.get('GEM_TYPE')):
-		return enum_items['GEM_TYPE']
+	if enum_items.get('gem_type_lang') == l:
+		return enum_items['gem_type']
 
-	enum_items['LANG_GEM_TYPE'] = l
+	enum_items['gem_type_lang'] = l
 
 	items = [
 		('DIAMOND',        l['diamond'],        "", 0),
@@ -70,9 +73,9 @@ def gem_type(self, context):
 		('ZIRCON',         l['zircon'],         "", 16),
 	]
 
-	enum_items['GEM_TYPE'] = sorted(items, key=lambda x: x[1])
+	enum_items['gem_type'] = sorted(items, key=lambda x: x[1])
 
-	return enum_items['GEM_TYPE']
+	return enum_items['gem_type']
 
 
 
@@ -80,12 +83,12 @@ def weighting_metals(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
 	l = localization.locale[prefs.lang]
 
-	if (enum_items.get('LANG_WEIGHTING_METALS') and enum_items['LANG_WEIGHTING_METALS'] == l and enum_items.get('WEIGHTING_METALS')):
-		return enum_items['WEIGHTING_METALS']
+	if enum_items.get('weighting_metals_lang') == l:
+		return enum_items['weighting_metals']
 
-	enum_items['LANG_WEIGHTING_METALS'] = l
+	enum_items['weighting_metals_lang'] = l
 
-	enum_items['WEIGHTING_METALS'] = (
+	enum_items['weighting_metals'] = (
 		('24G',    l['24g'],       "", 9),
 		('22G',    l['22g'],       "", 10),
 		('18WG',   l['18wg'],      "", 0),
@@ -99,4 +102,4 @@ def weighting_metals(self, context):
 		('VOL',    l['wt_vol'],    "", 8),
 	)
 
-	return enum_items['WEIGHTING_METALS']
+	return enum_items['weighting_metals']
