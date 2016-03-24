@@ -53,7 +53,7 @@ class Preferences(AddonPreferences):
 		name="UI language",
 		items=(
 			('RU', "Russian (Русский)", ""),
-			('EN', "English (English)", ""),
+			('EN', "English",           ""),
 		),
 		default="EN",
 		description="Add-on UI language")
