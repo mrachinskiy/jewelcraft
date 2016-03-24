@@ -33,7 +33,7 @@ class ImportPanel(Panel):
 		prefs = context.user_preferences.addons[var.addon_id].preferences
 		props = context.scene.jewelcraft
 		l = localization.locale[prefs.lang]
-		pcoll = preview_collections['icons']
+		icons = preview_collections['icons']
 
 		col = layout.column(align=True)
 
@@ -50,20 +50,20 @@ class ImportPanel(Panel):
 		row = col.row(align=True)
 		row.label(l['gem'])
 		row.operator("jewelcraft.import_type", text="", icon="COLOR")
-		row.operator("jewelcraft.import_cut", text="", icon_value=pcoll['TOOL-CUT'].icon_id)
+		row.operator("jewelcraft.import_cut", text="", icon_value=icons['TOOL-CUT'].icon_id)
 
 		col.separator()
 		row = col.row(align=True)
 		row.label(l['prongs'])
-		row.operator("jewelcraft.import_single_prong", text="", icon_value=pcoll['TOOL-SINGLE_PRONG'].icon_id)
+		row.operator("jewelcraft.import_single_prong", text="", icon_value=icons['TOOL-SINGLE_PRONG'].icon_id)
 		row.operator("jewelcraft.import_prongs", text="", icon="SURFACE_NCIRCLE")
 		row = col.row(align=True)
 		row.label(l['cutter'])
-		row.operator("jewelcraft.import_cutter_seat", text="", icon_value=pcoll['TOOL-CUTTER_SEAT'].icon_id)
-		row.operator("jewelcraft.import_cutter", text="", icon_value=pcoll['TOOL-CUTTER'].icon_id)
+		row.operator("jewelcraft.import_cutter_seat", text="", icon_value=icons['TOOL-CUTTER_SEAT'].icon_id)
+		row.operator("jewelcraft.import_cutter", text="", icon_value=icons['TOOL-CUTTER'].icon_id)
 		row = col.row(align=True)
 		row.label(l['imitation'])
-		row.operator("jewelcraft.import_imitation_3_prong", text="", icon_value=pcoll['TOOL-IMITATION_3_PRONG'].icon_id)
+		row.operator("jewelcraft.import_imitation_3_prong", text="", icon_value=icons['TOOL-IMITATION_3_PRONG'].icon_id)
 
 		col.separator()
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])

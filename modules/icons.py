@@ -32,11 +32,11 @@ icon_names = (
 	'tool-imitation_3_prong',
 )
 
-pcoll = previews.new()
-load = pcoll.load
+icons = previews.new()
+load = icons.load
 
 for name in icon_names:
 	load(name.upper(), path.join(var.icons_path, name + '.png'), 'IMAGE')
 
 
-preview_collections['icons'] = pcoll
+preview_collections['icons'] = icons
