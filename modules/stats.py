@@ -141,12 +141,10 @@ def export():
 
 		with open(save_path, 'w', encoding='utf-8') as file:
 			file.write(stats)
-			return True
+
+		return True
 
 	else:
-		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
-		l = localization.locale[prefs.lang]
-		utility.show_error_message(l['error_file'])
 		return False
 
 

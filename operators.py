@@ -8,6 +8,7 @@ from .modules import (
 	assets,
 	stats,
 	props_utility,
+	utility,
 )
 
 
@@ -247,5 +248,7 @@ class EXPORT_STATS(Operator):
 
 		if stats.export() == True:
 			self.report({'INFO'}, l['report_stats'])
+		else:
+			utility.show_error_message(l['error_file'])
 
 		return {'FINISHED'}
