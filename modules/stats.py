@@ -44,19 +44,6 @@ def stats_get():
 
 	stats = {}
 
-	stats['metals'] = []
-	append = stats['metals'].append
-	if props.export_m_24g    : append('24G')
-	if props.export_m_22g    : append('22G')
-	if props.export_m_18wg   : append('18WG')
-	if props.export_m_18yg   : append('18YG')
-	if props.export_m_14wg   : append('14WG')
-	if props.export_m_14yg   : append('14YG')
-	if props.export_m_ster   : append('STER')
-	if props.export_m_pd     : append('PD')
-	if props.export_m_pl     : append('PL')
-	if props.export_m_custom : append('CUSTOM')
-
 	if (props.export_size and props.export_size in obs):
 		stats['size'] = units.system(obs[props.export_size].dimensions[0])
 
@@ -73,6 +60,19 @@ def stats_get():
 	if (props.export_weight and props.export_weight in obs):
 		stats['weight'] = units.system(volume.calculate(obs[props.export_weight]), volume=True)
 
+	stats['metals'] = []
+	append = stats['metals'].append
+	if props.export_m_24g    : append('24G')
+	if props.export_m_22g    : append('22G')
+	if props.export_m_18wg   : append('18WG')
+	if props.export_m_18yg   : append('18YG')
+	if props.export_m_14wg   : append('14WG')
+	if props.export_m_14yg   : append('14YG')
+	if props.export_m_ster   : append('STER')
+	if props.export_m_pd     : append('PD')
+	if props.export_m_pl     : append('PL')
+	if props.export_m_custom : append('CUSTOM')
+
 	stats['gems'] = stats_gems()
 
 	return stats
@@ -83,22 +83,21 @@ def stats_get():
 
 
 def template():
-	stats = stats_get()
 	l = export_locale()
-	mm = l['mm']
+	stats = stats_get()
 
 	t = ''
 
 	if 'size' in stats:
-		t += '{}\n    {} {}\n\n'.format(l['t_size'], round(stats['size'], 2), mm)
+		t += '{}\n    {} {}\n\n'.format(l['t_size'], round(stats['size'], 2), l['mm'])
 
 	if 'shank' in stats:
-		t += '{}\n    {:.1f} {}\n\n'.format(l['t_width'], stats['shank'][0], mm)
-		t += '{}\n    {:.1f} {}\n\n'.format(l['t_thickness'], stats['shank'][1], mm)
+		t += '{}\n    {:.1f} {}\n\n'.format(l['t_width'], stats['shank'][0], l['mm'])
+		t += '{}\n    {:.1f} {}\n\n'.format(l['t_thickness'], stats['shank'][1], l['mm'])
 
 	if 'dim' in stats:
 		dim = stats['dim']
-		t += '{}\n    {:.1f} × {:.1f} × {:.1f} {}\n\n'.format(l['t_dim'], dim[0], dim[1], dim[2], mm)
+		t += '{}\n    {:.1f} × {:.1f} × {:.1f} {}\n\n'.format(l['t_dim'], dim[0], dim[1], dim[2], l['mm'])
 
 	if ('weight' in stats and stats['metals']):
 		t += l['t_weight'] + '\n    '
@@ -136,10 +135,12 @@ def template():
 
 
 def export():
-	filepath = bpy.data.filepath
 
-	if filepath:
+	if bpy.data.is_saved:
+
 		stats = template()
+
+		filepath = bpy.data.filepath
 		filename = bpy.path.display_name_from_filepath(filepath)
 		save_path = path.join(path.dirname(filepath), filename + '_stats.txt')
 
@@ -147,9 +148,6 @@ def export():
 			file.write(stats)
 
 		return True
-
-	else:
-		return False
 
 
 
@@ -194,6 +192,7 @@ def stats_gems():
 		if (ob.type == 'MESH' and 'gem' in ob.data):
 
 			utility.ob_prop_style_convert(ob)
+
 			tpe = ob.data['gem']['type']
 			cut = ob.data['gem']['cut']
 

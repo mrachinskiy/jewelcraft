@@ -17,8 +17,9 @@ def gem_cut(self, context):
 	if enum_items.get('gem_cut_lang') == l:
 		return enum_items['gem_cut']
 
-	icons = preview_collections['icons']
 	enum_items['gem_cut_lang'] = l
+
+	icons = preview_collections['icons']
 
 	enum_items['gem_cut'] = (
 		('ROUND',     l['round'],     "", icons['CUT-ROUND'].icon_id,     0),
