@@ -162,7 +162,9 @@ class SELECT_DUPLI(Operator):
 		prefs = context.user_preferences.addons[var.addon_id].preferences
 		l = localization.locale[prefs.lang]
 
-		if assets.select_dupli() == True:
+		duplicates = assets.select_dupli()
+
+		if duplicates is True:
 			self.report({'WARNING'}, l['report_dupli'])
 		else:
 			self.report({'INFO'}, l['report_no_dupli'])
@@ -246,7 +248,9 @@ class EXPORT_STATS(Operator):
 		prefs = context.user_preferences.addons[var.addon_id].preferences
 		l = localization.locale[prefs.lang]
 
-		if stats.export() == True:
+		export = stats.export()
+
+		if export is True:
 			self.report({'INFO'}, l['report_stats'])
 		else:
 			utility.show_error_message(l['error_file'])
