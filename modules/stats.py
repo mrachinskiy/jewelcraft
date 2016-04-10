@@ -196,19 +196,20 @@ def stats_gems():
 			tpe = ob.data['gem']['type']
 			cut = ob.data['gem']['cut']
 
-			if (ob.parent and ob.parent.dupli_type == 'FACES'):
-				count = polycount(ob.parent)
-			elif (ob.parent and ob.parent.dupli_type == 'NONE'):
-				count = 0
+			if (ob.parent and ob.parent.type == 'MESH'):
+				if ob.parent.dupli_type == 'FACES':
+					count = polycount(ob.parent)
+				elif ob.parent.dupli_type == 'NONE':
+					count = 0
 			else:
 				count = 1
 
 			length = round(units.system(ob.dimensions[1]), 2)
 			width  = round(units.system(ob.dimensions[0]), 2)
 			depth  = round(units.system(ob.dimensions[2]), 2)
-			if length.is_integer() : length = int(length)
-			if width.is_integer()  : width  = int(width)
-			if depth.is_integer()  : depth  = int(depth)
+			if length.is_integer(): length = int(length)
+			if width.is_integer():  width  = int(width)
+			if depth.is_integer():  depth  = int(depth)
 			size = (length, width, depth)
 
 			if (tpe in stats and cut in stats[tpe] and size in stats[tpe][cut]):
@@ -216,9 +217,9 @@ def stats_gems():
 			elif (tpe in stats and cut in stats[tpe]):
 				stats[tpe][cut][size] = count
 			elif tpe in stats:
-				stats[tpe][cut] = {size : count}
+				stats[tpe][cut] = {size: count}
 			else:
-				stats[tpe] = {cut : {size : count}}
+				stats[tpe] = {cut: {size: count}}
 
 	return stats
 
@@ -270,15 +271,15 @@ def format_gems(tpe, cut, size, qty, l):
 	qty_ct = round(qty * crt, 3)
 
 	if cut in ('ROUND', 'SQUARE', 'ASSCHER', 'OCTAGON', 'FLANDERS'):
-		Size = '{} {} ({} {})'.format(size[0], l['mm'], crt, l['ct'])
+		fmt_size = '{} {} ({} {})'.format(size[0], l['mm'], crt, l['ct'])
 	else:
-		Size = '{} × {} {} ({} {})'.format(size[0], size[1], l['mm'], crt, l['ct'])
+		fmt_size = '{} × {} {} ({} {})'.format(size[0], size[1], l['mm'], crt, l['ct'])
 
-	Qty = '{} {} ({} {})'.format(qty, l['items'], qty_ct, l['ct'])
-	Type = l[tpe.lower()]
-	Cut = l[cut.lower()]
+	fmt_qty = '{} {} ({} {})'.format(qty, l['items'], qty_ct, l['ct'])
+	fmt_type = l[tpe.lower()]
+	fmt_cut = l[cut.lower()]
 
-	return (Type, Cut, Size, Qty)
+	return (fmt_type, fmt_cut, fmt_size, fmt_qty)
 
 
 def ct_calc(tpe, cut, l=None, w=None, h=None):
