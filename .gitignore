@@ -1,4 +1,14 @@
-# Windows image file caches
+# Python cache
+__pycache__
+
+# =========================
+# Operating System Files
+# =========================
+
+# Windows
+# =========================
+
+# Image file caches
 Thumbs.db
 ehthumbs.db
 
@@ -14,12 +24,8 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-# Windows shortcuts
+# Shortcuts
 *.lnk
-
-# =========================
-# Operating System Files
-# =========================
 
 # OSX
 # =========================
