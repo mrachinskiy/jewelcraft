@@ -60,7 +60,9 @@ def stats_collect():
 	stats = {}
 
 	if (props.export_size and props.export_size in obs):
-		stats['size'] = units.system(obs[props.export_size].dimensions[0])
+		dim = list(obs[props.export_size].dimensions)
+		dim.remove(min(dim))
+		stats['size'] = units.system(dim[1])
 
 	if (props.export_shank and props.export_shank in obs):
 
@@ -82,7 +84,7 @@ def stats_collect():
 			dim = list(ob.dimensions)
 			dim.remove(max(dim))
 
-		stats['shank'] = dim
+		stats['shank'] = (units.system(dim[0]), units.system(dim[1]))
 
 	if (props.export_dim and props.export_dim in obs):
 		stats['dim'] = (
