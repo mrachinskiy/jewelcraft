@@ -37,37 +37,37 @@ class ImportPanel(Panel):
 
 		col = layout.column(align=True)
 
-		col.template_icon_view(props, "import_gem_cut", show_labels=True)
+		col.template_icon_view(props, "make_gem_cut", show_labels=True)
 
 		col.separator()
 		row = col.row(align=True)
-		row.prop(props, "import_gem_type", text="")
-		row.operator("jewelcraft.search_type", text="", icon="VIEWZOOM")
-		col.prop(props, "import_gem_size", text=l['size'])
-		col.operator("jewelcraft.import_gem", text=l['make_gem'])
+		row.prop(props, "make_gem_stone", text="")
+		row.operator("jewelcraft.search_stone", text="", icon="VIEWZOOM")
+		col.prop(props, "make_gem_size", text=l['size'])
+		col.operator("jewelcraft.make_gem", text=l['make_gem'])
 
 		col.separator()
 		row = col.row(align=True)
 		row.label(l['gem'])
-		row.operator("jewelcraft.import_type", text="", icon="COLOR")
-		row.operator("jewelcraft.import_cut", text="", icon_value=icons['TOOL-CUT'].icon_id)
+		row.operator("jewelcraft.replace_stone", text="", icon="COLOR")
+		row.operator("jewelcraft.replace_cut", text="", icon_value=icons['TOOL-CUT'].icon_id)
 
 		col.separator()
 		row = col.row(align=True)
 		row.label(l['prongs'])
-		row.operator("jewelcraft.import_single_prong", text="", icon_value=icons['TOOL-SINGLE_PRONG'].icon_id)
-		row.operator("jewelcraft.import_prongs", text="", icon="SURFACE_NCIRCLE")
+		row.operator("jewelcraft.make_single_prong", text="", icon_value=icons['TOOL-SINGLE_PRONG'].icon_id)
+		row.operator("jewelcraft.make_prongs", text="", icon="SURFACE_NCIRCLE")
 		row = col.row(align=True)
 		row.label(l['cutter'])
-		row.operator("jewelcraft.import_cutter_seat", text="", icon_value=icons['TOOL-CUTTER_SEAT'].icon_id)
-		row.operator("jewelcraft.import_cutter", text="", icon_value=icons['TOOL-CUTTER'].icon_id)
+		row.operator("jewelcraft.make_cutter_seat", text="", icon_value=icons['TOOL-CUTTER_SEAT'].icon_id)
+		row.operator("jewelcraft.make_cutter", text="", icon_value=icons['TOOL-CUTTER'].icon_id)
 		row = col.row(align=True)
 		row.label(l['imitation'])
-		row.operator("jewelcraft.import_imitation_3_prong", text="", icon_value=icons['TOOL-IMITATION_3_PRONG'].icon_id)
+		row.operator("jewelcraft.make_imitation", text="", icon_value=icons['TOOL-IMITATION'].icon_id)
 
 		col.separator()
 		col.operator("jewelcraft.make_dupliface", text=l['make_dupliface'])
-		col.operator("jewelcraft.select_dupli", text=l['select_dupli'])
+		col.operator("jewelcraft.select_doubles", text=l['select_doubles'])
 
 
 
@@ -124,9 +124,9 @@ class ExportPanel(Panel):
 
 	def draw(self, context):
 		layout = self.layout
-		sce = context.scene
+		scene = context.scene
 		prefs = context.user_preferences.addons[var.addon_id].preferences
-		props = sce.jewelcraft
+		props = scene.jewelcraft
 		l = localization.locale[prefs.lang]
 
 
@@ -139,16 +139,16 @@ class ExportPanel(Panel):
 		if props.export_options:
 			col = box.column()
 			row = col.row(align=True)
-			row.prop_search(props, "export_size", sce, "objects", text=l['size'])
+			row.prop_search(props, "export_size", scene, "objects", text=l['size'])
 			row.operator("jewelcraft.export_pick_size", text="", icon="EYEDROPPER")
 			row = col.row(align=True)
-			row.prop_search(props, "export_shank", sce, "objects", text=l['shank'])
+			row.prop_search(props, "export_shank", scene, "objects", text=l['shank'])
 			row.operator("jewelcraft.export_pick_shank", text="", icon="EYEDROPPER")
 			row = col.row(align=True)
-			row.prop_search(props, "export_dim", sce, "objects", text=l['dim'])
+			row.prop_search(props, "export_dim", scene, "objects", text=l['dim'])
 			row.operator("jewelcraft.export_pick_dim", text="", icon="EYEDROPPER")
 			row = col.row(align=True)
-			row.prop_search(props, "export_weight", sce, "objects", text=l['weight'])
+			row.prop_search(props, "export_weight", scene, "objects", text=l['weight'])
 			row.operator("jewelcraft.export_pick_weight", text="", icon="EYEDROPPER")
 
 

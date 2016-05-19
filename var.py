@@ -77,3 +77,22 @@ gem_volume_correction = {
 	'TRILLIANT' : 1.91,
 	'TRIANGLE'  : 1.522,
 }
+
+default_color = {
+	'DIAMOND'        : [1.0, 1.0, 1.0],
+	'CUBIC_ZIRCONIA' : [1.0, 1.0, 1.0],
+	'RUBY'           : [0.57, 0.011, 0.005],
+	'SPINEL'         : [0.57, 0.011, 0.005],
+	'GARNET'         : [0.319, 0.0, 0.0],
+	'MORGANITE'      : [0.41, 0.21, 0.09],
+	'CITRINE'        : [1.0, 0.355, 0.0],
+	'PERIDOT'        : [0.201, 0.748, 0.026],
+	'EMERALD'        : [0.062, 0.748, 0.057],
+	'AQUAMARINE'     : [0.0, 0.748, 1.0],
+	'SAPPHIRE'       : [0.004, 0.019, 0.214],
+	'TANZANITE'      : [0.004, 0.019, 0.214],
+	'AMETHYST'       : [0.415, 0.041, 0.523],
+
+	'PRONGS' : [0.8, 0.8, 0.8],
+	'CUTTER' : [1.0, 1.0, 1.0],
+}
