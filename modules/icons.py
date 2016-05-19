@@ -1,42 +1,15 @@
 from bpy.utils import previews
-from os import path
+from os import scandir
+from os.path import splitext
 from .. import var
 
 
 preview_collections = {}
 
 
-icon_names = (
-	'cut-round',
-	'cut-oval',
-	'cut-emerald',
-	'cut-marquise',
-	'cut-pear',
-	'cut-baguette',
-	'cut-square',
-	'cut-asscher',
-	'cut-cushion',
-	'cut-princess',
-	'cut-trillion',
-	'cut-octagon',
-	'cut-heart',
-	'cut-radiant',
-	'cut-flanders',
-	'cut-trilliant',
-	'cut-triangle',
+icon_previews = previews.new()
+load = icon_previews.load
+for entry in scandir(var.icons_path):
+	load(splitext(entry.name)[0].upper(), entry.path, 'IMAGE')
 
-	'tool-cut',
-	'tool-single_prong',
-	'tool-cutter',
-	'tool-cutter_seat',
-	'tool-imitation_3_prong',
-)
-
-icons = previews.new()
-load = icons.load
-
-for name in icon_names:
-	load(name.upper(), path.join(var.icons_path, name + '.png'), 'IMAGE')
-
-
-preview_collections['icons'] = icons
+preview_collections['icons'] = icon_previews

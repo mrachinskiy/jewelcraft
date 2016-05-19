@@ -9,13 +9,24 @@ def show_error_message(message):
 	bpy.context.window_manager.popup_menu(draw, title="Error", icon="ERROR")
 
 
-def ob_prop_style_convert(ob):
-	# Forward compatibility function, should be removed somewhere in 2.x release
+def ob_id_compatibility(ob):
+	# Forward compatibility function, should be removed at some point
 
-	if 'TYPE' in ob.data['gem']:
-		ob.data['gem']['type'] = ob.data['gem']['TYPE']
-		del ob.data['gem']['TYPE']
+	if (ob.type == 'MESH' and 'gem' in ob.data):
 
-	if 'CUT' in ob.data['gem']:
-		ob.data['gem']['cut'] = ob.data['gem']['CUT']
-		del ob.data['gem']['CUT']
+		if 'gem' not in ob:
+			ob['gem'] = {}
+
+		if 'TYPE' in ob.data['gem']:
+			ob['gem']['stone'] = ob.data['gem']['TYPE']
+
+		if 'CUT' in ob.data['gem']:
+			ob['gem']['cut'] = ob.data['gem']['CUT']
+
+		if 'type' in ob.data['gem']:
+			ob['gem']['stone'] = ob.data['gem']['type']
+
+		if 'cut' in ob.data['gem']:
+			ob['gem']['cut'] = ob.data['gem']['cut']
+
+		del ob.data['gem']

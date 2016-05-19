@@ -12,17 +12,17 @@ from .modules import (
 )
 
 
-class SEARCH_TYPE(Operator):
-	'''Search stone type'''
-	bl_label = "Search Type"
-	bl_idname = "jewelcraft.search_type"
+class SEARCH_STONE(Operator):
+	"""Search stone by name"""
+	bl_label = "Search Stone"
+	bl_idname = "jewelcraft.search_stone"
 	bl_property = "prop"
 	bl_options = {'INTERNAL'}
 
-	prop = bpy.props.EnumProperty(items=props_utility.gem_type)
+	prop = bpy.props.EnumProperty(items=props_utility.stones)
 
 	def execute(self, context):
-		context.scene.jewelcraft.import_gem_type = self.prop
+		context.scene.jewelcraft.make_gem_stone = self.prop
 		context.area.tag_redraw()
 		return {'FINISHED'}
 
@@ -35,41 +35,41 @@ class SEARCH_TYPE(Operator):
 
 
 
-class IMPORT_GEM(Operator):
-	'''Create gem'''
+class MAKE_GEM(Operator):
+	"""Create gemstone"""
 	bl_label = "JewelCraft: Make Gem"
-	bl_idname = "jewelcraft.import_gem"
+	bl_idname = "jewelcraft.make_gem"
 
 	def execute(self, context):
-		assets.gem_import()
+		assets.make_gem()
 		return {'FINISHED'}
 
 
-class IMPORT_TYPE(Operator):
-	'''Change type of selected gems'''
-	bl_label = "JewelCraft: Change Type"
-	bl_idname = "jewelcraft.import_type"
+class REPLACE_STONE(Operator):
+	"""Replace selected gems"""
+	bl_label = "JewelCraft: Replace Stone"
+	bl_idname = "jewelcraft.replace_stone"
 
 	@classmethod
 	def poll(cls, context):
 		return context.selected_objects
 
 	def execute(self, context):
-		assets.type_replace()
+		assets.replace_stone()
 		return {'FINISHED'}
 
 
-class IMPORT_CUT(Operator):
-	'''Change cut of selected gems'''
-	bl_label = "JewelCraft: Change Cut"
-	bl_idname = "jewelcraft.import_cut"
+class REPLACE_CUT(Operator):
+	"""Replace cut for selected gems"""
+	bl_label = "JewelCraft: Replace Cut"
+	bl_idname = "jewelcraft.replace_cut"
 
 	@classmethod
 	def poll(cls, context):
 		return context.selected_objects
 
 	def execute(self, context):
-		assets.cut_replace()
+		assets.replace_cut()
 		return {'FINISHED'}
 
 
@@ -77,70 +77,74 @@ class IMPORT_CUT(Operator):
 
 
 
-class IMPORT_PRONGS(Operator):
-	'''Create prongs for selected gems'''
-	bl_label = "JewelCraft: Add Prongs"
-	bl_idname = "jewelcraft.import_prongs"
+class MAKE_PRONGS(Operator):
+	"""Create prongs for selected gems"""
+	bl_label = "JewelCraft: Make Prongs"
+	bl_idname = "jewelcraft.make_prongs"
 
 	@classmethod
 	def poll(cls, context):
 		return context.selected_objects
 
 	def execute(self, context):
-		assets.prongs_import()
+		assets.make_gem_suppl('PRONGS')
 		return {'FINISHED'}
 
 
-class IMPORT_SINGLE_PRONG(Operator):
-	'''Create single prong'''
+class MAKE_CUTTER(Operator):
+	"""Create cutter for selected gems"""
+	bl_label = "JewelCraft: Make Cutter"
+	bl_idname = "jewelcraft.make_cutter"
+
+	@classmethod
+	def poll(cls, context):
+		return context.selected_objects
+
+	def execute(self, context):
+		assets.make_gem_suppl('CUTTER')
+		return {'FINISHED'}
+
+
+class MAKE_CUTTER_SEAT(Operator):
+	"""Create (seat only) cutter for selected gems"""
+	bl_label = "JewelCraft: Make Cutter (Seat only)"
+	bl_idname = "jewelcraft.make_cutter_seat"
+
+	@classmethod
+	def poll(cls, context):
+		return context.selected_objects
+
+	def execute(self, context):
+		assets.make_gem_suppl('CUTTER', seat_only=True)
+		return {'FINISHED'}
+
+
+class MAKE_SINGLE_PRONG(Operator):
+	"""Create single prong"""
 	bl_label = "JewelCraft: Make Single Prong"
-	bl_idname = "jewelcraft.import_single_prong"
+	bl_idname = "jewelcraft.make_single_prong"
 
 	def execute(self, context):
-		assets.single_prong_import()
+		assets.make_setting_suppl('Single Prong')
 		return {'FINISHED'}
 
 
-class IMPORT_CUTTER(Operator):
-	'''Create cutter for selected gems'''
-	bl_label = "JewelCraft: Add Cutter"
-	bl_idname = "jewelcraft.import_cutter"
-
-	@classmethod
-	def poll(cls, context):
-		return context.selected_objects
+class MAKE_IMITATION(Operator):
+	"""Create imitation (3 prong)"""
+	bl_label = "JewelCraft: Make Imitation"
+	bl_idname = "jewelcraft.make_imitation"
 
 	def execute(self, context):
-		assets.cutter_import()
+		assets.make_setting_suppl('Imitation (3 prong)')
 		return {'FINISHED'}
 
 
-class IMPORT_CUTTER_SEAT(Operator):
-	'''Create (seat only) cutter for selected gems'''
-	bl_label = "JewelCraft: Add Cutter (Seat only)"
-	bl_idname = "jewelcraft.import_cutter_seat"
-
-	@classmethod
-	def poll(cls, context):
-		return context.selected_objects
-
-	def execute(self, context):
-		assets.cutter_import(seat_only=True)
-		return {'FINISHED'}
 
 
-class IMPORT_IMITATION_3_PRONG(Operator):
-	'''Create imitation (3 prong)'''
-	bl_label = "JewelCraft: Make Imitation (3 prong)"
-	bl_idname = "jewelcraft.import_imitation_3_prong"
-
-	def execute(self, context):
-		assets.imitation_import()
-		return {'FINISHED'}
 
 
 class MAKE_DUPLIFACE(Operator):
-	'''Create dupliface for selected objects'''
+	"""Create dupli-face for selected objects"""
 	bl_label = "JewelCraft: Make Dupli-face"
 	bl_idname = "jewelcraft.make_dupliface"
 
@@ -153,21 +157,21 @@ class MAKE_DUPLIFACE(Operator):
 		return {'FINISHED'}
 
 
-class SELECT_DUPLI(Operator):
-	'''Select duplicated gems (have same location); WARNING: it does not work with dupli-faces, objects only'''
-	bl_label = "JewelCraft: Select duplicated gems"
-	bl_idname = "jewelcraft.select_dupli"
+class SELECT_DOUBLES(Operator):
+	"""Select duplicated gems (share same location); WARNING: it does not work with dupli-faces, objects only"""
+	bl_label = "JewelCraft: Select Doubles"
+	bl_idname = "jewelcraft.select_doubles"
 
 	def execute(self, context):
 		prefs = context.user_preferences.addons[var.addon_id].preferences
 		l = localization.locale[prefs.lang]
 
-		duplicates = assets.select_dupli()
+		doubles = assets.select_doubles()
 
-		if duplicates is True:
-			self.report({'WARNING'}, l['report_dupli'])
+		if doubles is not False:
+			self.report({'WARNING'}, l['report_doubles'] % doubles)
 		else:
-			self.report({'INFO'}, l['report_no_dupli'])
+			self.report({'INFO'}, l['report_no_doubles'])
 
 		return {'FINISHED'}
 
@@ -177,7 +181,7 @@ class SELECT_DUPLI(Operator):
 
 
 class WEIGHT_DISPLAY(Operator):
-	'''Display weight or volume of the active mesh object'''
+	"""Display weight or volume for active mesh object"""
 	bl_label = "JewelCraft: Weighting"
 	bl_idname = "jewelcraft.weight_display"
 
@@ -196,8 +200,8 @@ class WEIGHT_DISPLAY(Operator):
 
 
 class EXPORT_PICK_SIZE(Operator):
-	'''Pick active object'''
-	bl_label = "JewelCraft: Pick Size"
+	"""Pick active object"""
+	bl_label = "Pick Size"
 	bl_idname = "jewelcraft.export_pick_size"
 	bl_options = {'INTERNAL'}
 
@@ -207,8 +211,8 @@ class EXPORT_PICK_SIZE(Operator):
 
 
 class EXPORT_PICK_SHANK(Operator):
-	'''Pick active object'''
-	bl_label = "JewelCraft: Pick Shank"
+	"""Pick active object"""
+	bl_label = "Pick Shank"
 	bl_idname = "jewelcraft.export_pick_shank"
 	bl_options = {'INTERNAL'}
 
@@ -218,8 +222,8 @@ class EXPORT_PICK_SHANK(Operator):
 
 
 class EXPORT_PICK_DIM(Operator):
-	'''Pick active object'''
-	bl_label = "JewelCraft: Pick Dim"
+	"""Pick active object"""
+	bl_label = "Pick Dim"
 	bl_idname = "jewelcraft.export_pick_dim"
 	bl_options = {'INTERNAL'}
 
@@ -229,8 +233,8 @@ class EXPORT_PICK_DIM(Operator):
 
 
 class EXPORT_PICK_WEIGHT(Operator):
-	'''Pick active object'''
-	bl_label = "JewelCraft: Pick Weight"
+	"""Pick active object"""
+	bl_label = "Pick Weight"
 	bl_idname = "jewelcraft.export_pick_weight"
 	bl_options = {'INTERNAL'}
 
@@ -240,7 +244,7 @@ class EXPORT_PICK_WEIGHT(Operator):
 
 
 class EXPORT_STATS(Operator):
-	'''Export project statistics'''
+	"""Export project statistics"""
 	bl_label = "JewelCraft: Export Stats"
 	bl_idname = "jewelcraft.export_stats"
 
@@ -248,7 +252,7 @@ class EXPORT_STATS(Operator):
 		prefs = context.user_preferences.addons[var.addon_id].preferences
 		l = localization.locale[prefs.lang]
 
-		export = stats.export()
+		export = stats.stats_export_to_file()
 
 		if export is True:
 			self.report({'INFO'}, l['report_stats'])

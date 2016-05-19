@@ -3,25 +3,20 @@ from .. import (
 	localization,
 )
 from .icons import preview_collections
-
-
-
 enum_items = {}
 
 
-
-def gem_cut(self, context):
+def cuts(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
+
+	if enum_items.get('1_lang') == prefs.lang:
+		return enum_items['1_items']
+
+	enum_items['1_lang'] = prefs.lang
+
 	l = localization.locale[prefs.lang]
-
-	if enum_items.get('gem_cut_lang') == l:
-		return enum_items['gem_cut']
-
-	enum_items['gem_cut_lang'] = l
-
 	icons = preview_collections['icons']
-
-	enum_items['gem_cut'] = (
+	enum_items['1_items'] = (
 		('ROUND',     l['round'],     "", icons['CUT-ROUND'].icon_id,     0),
 		('OVAL',      l['oval'],      "", icons['CUT-OVAL'].icon_id,      1),
 		('CUSHION',   l['cushion'],   "", icons['CUT-CUSHION'].icon_id,   2),
@@ -41,19 +36,18 @@ def gem_cut(self, context):
 		('TRIANGLE',  l['triangle'],  "", icons['CUT-TRIANGLE'].icon_id,  16),
 	)
 
-	return enum_items['gem_cut']
+	return enum_items['1_items']
 
 
-
-def gem_type(self, context):
+def stones(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
+
+	if enum_items.get('2_lang') == prefs.lang:
+		return enum_items['2_items']
+
+	enum_items['2_lang'] = prefs.lang
+
 	l = localization.locale[prefs.lang]
-
-	if enum_items.get('gem_type_lang') == l:
-		return enum_items['gem_type']
-
-	enum_items['gem_type_lang'] = l
-
 	items = [
 		('DIAMOND',        l['diamond'],        "", 0),
 		('AMETHYST',       l['amethyst'],       "", 1),
@@ -74,22 +68,21 @@ def gem_type(self, context):
 		('ZIRCON',         l['zircon'],         "", 16),
 	]
 
-	enum_items['gem_type'] = sorted(items, key=lambda x: x[1])
+	enum_items['2_items'] = sorted(items, key=lambda x: x[1])
 
-	return enum_items['gem_type']
+	return enum_items['2_items']
 
 
-
-def weighting_metals(self, context):
+def metals(self, context):
 	prefs = context.user_preferences.addons[var.addon_id].preferences
+
+	if enum_items.get('3_lang') == prefs.lang:
+		return enum_items['3_items']
+
+	enum_items['3_lang'] = prefs.lang
+
 	l = localization.locale[prefs.lang]
-
-	if enum_items.get('weighting_metals_lang') == l:
-		return enum_items['weighting_metals']
-
-	enum_items['weighting_metals_lang'] = l
-
-	enum_items['weighting_metals'] = (
+	enum_items['3_items'] = (
 		('24G',    l['24g'],       "", 9),
 		('22G',    l['22g'],       "", 10),
 		('18WG',   l['18wg'],      "", 0),
@@ -103,4 +96,4 @@ def weighting_metals(self, context):
 		('VOL',    l['wt_vol'],    "", 8),
 	)
 
-	return enum_items['weighting_metals']
+	return enum_items['3_items']

@@ -1,7 +1,7 @@
 bl_info = {
 	"name": "JewelCraft",
 	"author": "Mikhail Rachinskiy (jewelcourses.com)",
-	"version": (1,5),
+	"version": (1,6),
 	"blender": (2,75,0),
 	"location": "3D View → Tool Shelf",
 	"description": "JewelCraft—add-on for jewelry design that provides tools for asset management, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.",
@@ -69,12 +69,12 @@ class Preferences(AddonPreferences):
 
 class Properties(PropertyGroup):
 
-	import_gem_cut = EnumProperty(name="Cut", items=props_utility.gem_cut)
-	import_gem_type = EnumProperty(name="Type", items=props_utility.gem_type)
-	import_gem_size = FloatProperty(name="Size", description="Gem size", default=1.0, min=0.0, step=10, precision=2, unit='LENGTH')
+	make_gem_cut = EnumProperty(name="Cut", items=props_utility.cuts)
+	make_gem_stone = EnumProperty(name="Stone", items=props_utility.stones)
+	make_gem_size = FloatProperty(name="Size", description="Gem size", default=1.0, min=0.0, step=10, precision=2, unit='LENGTH')
 
 
-	weighting_metals = EnumProperty(name="Metals" , items=props_utility.weighting_metals)
+	weighting_metals = EnumProperty(name="Metals" , items=props_utility.metals)
 	weighting_custom = FloatProperty(description="Custom density (g/cm³)", default=1.0, min=0.01, step=1, precision=2)
 
 
@@ -117,19 +117,21 @@ classes = (
 	ui.WeightingPanel,
 	ui.ExportPanel,
 
-	operators.SEARCH_TYPE,
+	operators.SEARCH_STONE,
 
-	operators.IMPORT_GEM,
-	operators.IMPORT_TYPE,
-	operators.IMPORT_CUT,
-	operators.IMPORT_PRONGS,
-	operators.IMPORT_SINGLE_PRONG,
-	operators.IMPORT_CUTTER,
-	operators.IMPORT_CUTTER_SEAT,
-	operators.IMPORT_IMITATION_3_PRONG,
+	operators.MAKE_GEM,
+	operators.REPLACE_STONE,
+	operators.REPLACE_CUT,
+
+	operators.MAKE_PRONGS,
+	operators.MAKE_SINGLE_PRONG,
+	operators.MAKE_CUTTER,
+	operators.MAKE_CUTTER_SEAT,
+	operators.MAKE_IMITATION,
 
 	operators.MAKE_DUPLIFACE,
-	operators.SELECT_DUPLI,
+	operators.SELECT_DOUBLES,
+
 	operators.WEIGHT_DISPLAY,
 
 	operators.EXPORT_PICK_SIZE,
