@@ -7,15 +7,6 @@ from .modules import report
 from .modules.icons import preview_collections
 
 
-
-def icon_tria(prop):
-	if prop:
-		return 'TRIA_DOWN'
-	else:
-		return 'TRIA_RIGHT'
-
-
-
 class ImportPanel(Panel):
 
 	bl_label = "Gems"
@@ -71,6 +62,9 @@ class ImportPanel(Panel):
 
 
 
+
+
+
 class WeightingPanel(Panel):
 
 	bl_label = "Weighting"
@@ -107,6 +101,9 @@ class WeightingPanel(Panel):
 			col.separator()
 			box = col.box()
 			box.label(weight)
+
+
+
 
 
 
@@ -172,16 +169,30 @@ class ExportPanel(Panel):
 				col.enabled = props.export_m_custom
 				row = col.row()
 				row.label(l['custom_name'])
-				row.label(l['g/cm']+":")
+				row.label(l['g/cm'] + ":")
 				row = col.row()
 				row.prop(props, "export_m_custom_name", text="")
 				row.prop(props, "export_m_custom_dens", text="")
 
 
 			row = box.row(align=True)
-			row.label(l['lang']+":")
+			row.label(l['lang'] + ":")
 			row.prop(props, "export_lang", text="")
 
 
 		col = layout.column(align=True)
 		col.operator("jewelcraft.export_stats", text=l['export_stats'])
+
+
+
+
+
+
+# Utility
+
+
+def icon_tria(prop):
+	if prop:
+		return 'TRIA_DOWN'
+	else:
+		return 'TRIA_RIGHT'

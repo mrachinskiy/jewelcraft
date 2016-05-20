@@ -145,7 +145,7 @@ def make_dupliface():
 	df_name = '%s Duplifaces' % ob.name
 
 	verts = [(-0.15, 0.15, 0.0), (0.15, 0.15, 0.0), (0.15, -0.15, 0.0), (-0.15, -0.15, 0.0)]
-	faces = [(3,2,1,0)]
+	faces = [(3, 2, 1, 0)]
 	offset = (ob.dimensions[0] + 1.0, 0.0, 0.0)
 
 	for i in range(4):
