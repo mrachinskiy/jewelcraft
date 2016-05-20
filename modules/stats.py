@@ -60,26 +60,24 @@ def stats_collect():
 	stats = {}
 
 	if (props.export_size and props.export_size in obs):
-		dim = list(obs[props.export_size].dimensions)
-		dim.remove(min(dim))
-		stats['size'] = units.system(dim[1])
+		stats['size'] = units.system(max(obs[props.export_size].dimensions))
 
 	if (props.export_shank and props.export_shank in obs):
 
 		ob = obs[props.export_shank]
-		mos = []
-		for mo in ob.modifiers:
-			if mo.type == 'CURVE':
-				mos.append(mo.name)
+		mods = []
+		for mod in ob.modifiers:
+			if mod.type == 'CURVE':
+				mods.append(mod.name)
 
-		if mos:
-			mo = ob.modifiers[mos[-1]]
-			save_state = mo.show_viewport
-			mo.show_viewport = False
+		if mods:
+			mod = ob.modifiers[mods[-1]]
+			save_state = mod.show_viewport
+			mod.show_viewport = False
 			scene.update()
 			dim = list(ob.dimensions)
 			dim.remove(max(dim))
-			mo.show_viewport = save_state
+			mod.show_viewport = save_state
 		else:
 			dim = list(ob.dimensions)
 			dim.remove(max(dim))
