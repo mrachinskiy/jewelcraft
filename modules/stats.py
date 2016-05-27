@@ -109,8 +109,11 @@ def stats_collect():
 
 	sg = {}
 	for ob in obs:
+
 		utility.ob_id_compatibility(ob)
+
 		if 'gem' in ob:
+
 			stone = ob['gem']['stone']
 			cut = ob['gem']['cut']
 
@@ -131,7 +134,7 @@ def stats_collect():
 			size = (length, width, depth)
 
 			if (stone in sg and cut in sg[stone] and size in sg[stone][cut]):
-				sg[stone][cut][size] = sg[stone][cut][size] + count
+				sg[stone][cut][size] += count
 			elif (stone in sg and cut in sg[stone]):
 				sg[stone][cut][size] = count
 			elif stone in sg:
@@ -245,12 +248,8 @@ def ct_calc(stone, cut, l, w, h):
 	dens = units.convert(var.stone_density[stone], 'cm3->mm3')
 	corr = var.gem_volume_correction[cut]
 
-	if cut in ('ROUND', 'OCTAGON'):
-		l = (l + w) / 2
-		vol = pi * (l/2)**2 * (h/3) # Cone
-
-	elif cut in ('OVAL', 'PEAR', 'MARQUISE', 'HEART'):
-		vol = pi * (l/2) * (w/2) * (h/3) # Cone rectangular
+	if cut in ('ROUND', 'OVAL', 'PEAR', 'MARQUISE', 'OCTAGON', 'HEART'):
+		vol = pi * (l/2) * (w/2) * (h/3) # Cone
 
 	elif cut in ('SQUARE', 'ASSCHER', 'PRINCESS', 'CUSHION', 'RADIANT', 'FLANDERS'):
 		vol = l*w*h / 3 # Pyramid
