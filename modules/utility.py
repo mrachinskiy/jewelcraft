@@ -9,6 +9,13 @@ def show_error_message(message):
 	bpy.context.window_manager.popup_menu(draw, title='Error', icon='ERROR')
 
 
+def icon_tria(prop):
+	if prop:
+		return 'TRIA_DOWN'
+	else:
+		return 'TRIA_RIGHT'
+
+
 def ob_id_compatibility(ob):
 	# Forward compatibility function, should be removed at some point
 

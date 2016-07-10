@@ -5,8 +5,8 @@ bl_info = {
 	'blender': (2, 77, 0),
 	'location': '3D View > Tool Shelf',
 	'description': 'Jewelry design toolkit.',
-	'wiki_url': 'https://github.com/mrachinskiy/blender-addon-jewelcraft#readme',
-	'tracker_url': 'https://github.com/mrachinskiy/blender-addon-jewelcraft/issues',
+	'wiki_url': 'https://github.com/mrachinskiy/jewelcraft#readme',
+	'tracker_url': 'https://github.com/mrachinskiy/jewelcraft/issues',
 	'category': 'Object'}
 
 
@@ -74,6 +74,7 @@ class Preferences(AddonPreferences):
 
 class Properties(PropertyGroup):
 
+
 	make_gem_cut = EnumProperty(name='Cut', items=props_utility.cuts)
 	make_gem_stone = EnumProperty(name='Stone', items=props_utility.stones)
 	make_gem_size = FloatProperty(name='Size', description='Gem size', default=1.0, min=0.0, step=10, precision=2, unit='LENGTH')
@@ -120,6 +121,9 @@ class Properties(PropertyGroup):
 
 
 classes = (
+	Preferences,
+	Properties,
+
 	ui.ImportPanel,
 	ui.WeightingPanel,
 	ui.ExportPanel,
@@ -146,9 +150,6 @@ classes = (
 	operators.EXPORT_PICK_DIM,
 	operators.EXPORT_PICK_WEIGHT,
 	operators.EXPORT_STATS,
-
-	Preferences,
-	Properties,
 )
 
 
