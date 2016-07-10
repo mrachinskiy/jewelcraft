@@ -5,6 +5,7 @@ from . import (
 )
 from .modules import report
 from .modules.icons import preview_collections
+from .modules.utility import icon_tria
 
 
 class ImportPanel(Panel):
@@ -170,17 +171,3 @@ class ExportPanel(Panel):
 
 		col = layout.column(align=True)
 		col.operator('jewelcraft.export_stats', text=l['export_stats'])
-
-
-
-
-
-
-# Utility
-
-
-def icon_tria(prop):
-	if prop:
-		return 'TRIA_DOWN'
-	else:
-		return 'TRIA_RIGHT'
