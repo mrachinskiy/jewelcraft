@@ -1,4 +1,5 @@
 locale = {
+
 	'EN' : {
 		'gem'            : 'Gem',
 		'prongs'         : 'Prongs',
@@ -7,9 +8,9 @@ locale = {
 		'make_gem'       : 'Make Gem',
 		'make_dupliface' : 'Make Dupli-face',
 		'select_doubles' : 'Select Doubles',
-		'export_options' : 'Export Options',
 		'metals'         : 'Metals',
-		'export_stats'   : 'Export Stats',
+		'stats_options'  : 'Export Options',
+		'stats_export'   : 'Export Stats',
 		'locale'         : 'Localization',
 		'lang'           : 'Language',
 		'size'           : 'Size',
@@ -67,7 +68,7 @@ locale = {
 		'custom'      : 'Custom density:',
 		'custom_name' : 'Material:',
 
-		'wt_vol'    : 'Volume (mm³)',
+		'wt_volume' : 'Volume (mm³)',
 		'wt_custom' : 'Custom density (g/cm³)',
 		'wt_calc'   : 'Calculate',
 
@@ -78,18 +79,21 @@ locale = {
 		'ct'    : 'ct.',
 		'g/cm'  : 'g/cm³',
 
-		'f_size'      : 'Size:',
-		'f_shank'     : 'Shank:',
-		'f_dim'       : 'Dimensions:',
-		'f_weight'    : 'Weight:',
-		'f_settings'  : 'Settings:',
+		'st_size'      : 'Size:',
+		'st_shank'     : 'Shank:',
+		'st_dim'       : 'Dimensions:',
+		'st_weight'    : 'Weight:',
+		'st_settings'  : 'Settings:',
 
 		'report_doubles'    : 'Found %d dplicates',
 		'report_no_doubles' : 'No duplicates found',
 		'report_stats'      : 'stats.txt successfully created in the project folder',
 
-		'error_file' : 'First save your blend file',
-	},
+		'error_file'        : 'First save your blend file',
+		'error_zero_gem'    : 'Gem cannot be 0 mm',
+		'error_no_selected' : 'No selected objects',
+		},
+
 	'RU' : {
 		'gem'            : 'Камень',
 		'prongs'         : 'Крапана',
@@ -98,9 +102,9 @@ locale = {
 		'make_gem'       : 'Создать Камень',
 		'make_dupliface' : 'Создать Dupli-face',
 		'select_doubles' : 'Выделить Дубликаты',
-		'export_options' : 'Опции Экспорта',
 		'metals'         : 'Металлы',
-		'export_stats'   : 'Экспорт Статистики',
+		'stats_options'  : 'Опции Экспорта',
+		'stats_export'   : 'Экспорт Статистики',
 		'locale'         : 'Локализация',
 		'lang'           : 'Язык',
 		'size'           : 'Размер',
@@ -158,7 +162,7 @@ locale = {
 		'custom'      : 'Произвольная плотность:',
 		'custom_name' : 'Материал:',
 
-		'wt_vol'    : 'Объем (мм³)',
+		'wt_volume' : 'Объем (мм³)',
 		'wt_custom' : 'Произвольная плотность (г/см³)',
 		'wt_calc'   : 'Вычислить',
 
@@ -169,16 +173,19 @@ locale = {
 		'ct'    : 'кар',
 		'g/cm'  : 'г/см³',
 
-		'f_size'      : 'Размер:',
-		'f_shank'     : 'Шинка:',
-		'f_dim'       : 'Габариты:',
-		'f_weight'    : 'Вес:',
-		'f_settings'  : 'Вставки:',
+		'st_size'      : 'Размер:',
+		'st_shank'     : 'Шинка:',
+		'st_dim'       : 'Габариты:',
+		'st_weight'    : 'Вес:',
+		'st_settings'  : 'Вставки:',
 
 		'report_doubles'    : 'Обнаружено %d дубликатов',
 		'report_no_doubles' : 'Дубликаты не обнаружены',
 		'report_stats'      : 'stats.txt успешно создан в каталоге проекта',
 
-		'error_file' : 'Сначала сохраните ваш blend файл',
+		'error_file'        : 'Сначала сохраните ваш blend файл',
+		'error_zero_gem'    : 'Камень не может быть 0 мм',
+		'error_no_selected' : 'Нет выделенных объектов',
+		}
+
 	}
-}
