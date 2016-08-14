@@ -1,13 +1,13 @@
-from bpy.utils import previews
+import bpy.utils.previews
 from os import scandir
 from os.path import splitext
-from .. import var
+from . import var
 
 
 preview_collections = {}
 
 
-icon_previews = previews.new()
+icon_previews = bpy.utils.previews.new()
 load = icon_previews.load
 for entry in scandir(var.icons_path):
 	load(splitext(entry.name)[0].upper(), entry.path, 'IMAGE')

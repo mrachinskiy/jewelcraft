@@ -11,7 +11,6 @@ def convert(value, units):
 
 
 def system(value, volume=False):
-
 	unit = bpy.context.scene.unit_settings
 
 	if unit.system == 'METRIC':

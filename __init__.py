@@ -13,148 +13,120 @@ bl_info = {
 if 'bpy' in locals():
 	from importlib import reload
 	reload(var)
-	reload(localization)
-	reload(operators)
+	reload(locale)
 	reload(ui)
-	reload(modules.icons)
-	reload(modules.units)
-	reload(modules.assets)
-	reload(modules.stats)
-	reload(modules.props_utility)
+	reload(operators)
+	reload(previews)
+	reload(prop_items)
+	reload(stats)
 	del reload
 else:
 	import bpy
+	import bpy.utils.previews
+	from bpy.types import (
+		PropertyGroup,
+		AddonPreferences,
+		)
 	from bpy.props import (
 		EnumProperty,
 		BoolProperty,
 		FloatProperty,
 		StringProperty,
 		PointerProperty,
-	)
-	from bpy.types import (
-		PropertyGroup,
-		AddonPreferences,
-	)
+		)
 	from . import (
 		var,
-		operators,
 		ui,
-	)
-	from .modules import props_utility
-	from .modules.icons import preview_collections
-
-
-
-
+		operators,
+		prop_items,
+		previews,
+		)
 
 
 class Preferences(AddonPreferences):
-
 	bl_idname = var.addon_id
 
 	lang = EnumProperty(
 		name='UI language',
-		items=(
-			('RU', 'Russian (Русский)', ''),
-			('EN', 'English',           ''),
-		),
+		items=(('RU', 'Russian (Русский)', ''),
+		       ('EN', 'English',           '')),
 		default='EN',
 		description='Add-on UI language')
 
-
 	def draw(self, context):
 		layout = self.layout
-		split = layout.split(percentage=.4)
-		split.prop(self, 'lang')
+		split = layout.split(percentage=0.15)
 
+		col = split.column()
+		col.label('Unit Scale:')
+		col.label('UI Language:')
 
-
-
+		col = split.column()
+		col.label('1 Blender Unit = 1 mm')
+		colrow = col.row()
+		colrow.alignment = 'LEFT'
+		colrow.prop(self, 'lang', text='')
 
 
 class Properties(PropertyGroup):
+	gem_cut = EnumProperty(name='Cut', items=prop_items.cuts)
+	gem_stone = EnumProperty(name='Stone', items=prop_items.stones)
+	gem_size = FloatProperty(name='Size', description='Gem size', default=1.0, min=0.0, step=10, precision=2, unit='LENGTH')
 
-
-	make_gem_cut = EnumProperty(name='Cut', items=props_utility.cuts)
-	make_gem_stone = EnumProperty(name='Stone', items=props_utility.stones)
-	make_gem_size = FloatProperty(name='Size', description='Gem size', default=1.0, min=0.0, step=10, precision=2, unit='LENGTH')
-
-
-	weighting_metals = EnumProperty(name='Metals' , items=props_utility.metals)
+	weighting_metals = EnumProperty(name='Metals', items=prop_items.metals)
 	weighting_custom = FloatProperty(description='Custom density (g/cm³)', default=1.0, min=0.01, step=1, precision=2)
 
-
-	export_options = BoolProperty()
-
-	export_size = StringProperty(description='Object for size reference')
-	export_shank = StringProperty(description='Object for shank width and height reference')
-	export_dim = StringProperty(description='Object for dimensions reference')
-	export_weight = StringProperty(description='Object for weight reference')
-
-	export_metals        = BoolProperty()
-	export_m_24g         = BoolProperty()
-	export_m_22g         = BoolProperty()
-	export_m_18wg        = BoolProperty(default=True)
-	export_m_18yg        = BoolProperty()
-	export_m_14wg        = BoolProperty(default=True)
-	export_m_14yg        = BoolProperty()
-	export_m_ster        = BoolProperty()
-	export_m_pd          = BoolProperty()
-	export_m_pl          = BoolProperty()
-	export_m_custom      = BoolProperty()
-	export_m_custom_name = StringProperty(description='Material name')
-	export_m_custom_dens = FloatProperty(description='Custom density (g/cm³)', default=1.0, min=0.01, step=1, precision=2)
-
-	export_lang = EnumProperty(
+	stats_options = BoolProperty()
+	stats_size = StringProperty(description='Object for size reference')
+	stats_shank = StringProperty(description='Object for shank width and height reference')
+	stats_dim = StringProperty(description='Object for dimensions reference')
+	stats_weight = StringProperty(description='Object for weight reference')
+	stats_metals = BoolProperty()
+	stats_24g  = BoolProperty()
+	stats_22g  = BoolProperty()
+	stats_18wg = BoolProperty(default=True)
+	stats_18yg = BoolProperty()
+	stats_14wg = BoolProperty(default=True)
+	stats_14yg = BoolProperty()
+	stats_ster = BoolProperty()
+	stats_pd   = BoolProperty()
+	stats_pl   = BoolProperty()
+	stats_custom = BoolProperty()
+	stats_custom_name = StringProperty(description='Material name')
+	stats_custom_dens = weighting_custom
+	stats_lang = EnumProperty(
 		name='Export stats language',
-		items=(
-			('RU',   'Russian (Русский)', ''),
-			('EN',   'English',           ''),
-			('AUTO', 'Auto',              'Inherit locale from add-on preferences'),
-		),
+		items=(('RU',   'Russian (Русский)', ''),
+		       ('EN',   'English',           ''),
+		       ('AUTO', 'Auto',              'Inherit locale from add-on preferences')),
 		default='AUTO',
 		description='Statistics language')
-
-
-
-
 
 
 classes = (
 	Preferences,
 	Properties,
 
-	ui.ImportPanel,
-	ui.WeightingPanel,
-	ui.ExportPanel,
+	ui.Gems,
+	ui.Weighting,
+	ui.Stats,
 
 	operators.SEARCH_STONE,
-
 	operators.MAKE_GEM,
 	operators.REPLACE_STONE,
 	operators.REPLACE_CUT,
-
 	operators.MAKE_PRONGS,
-	operators.MAKE_SINGLE_PRONG,
 	operators.MAKE_CUTTER,
-	operators.MAKE_CUTTER_SEAT,
+	operators.MAKE_SINGLE_PRONG,
 	operators.MAKE_IMITATION,
-
 	operators.MAKE_DUPLIFACE,
 	operators.SELECT_DOUBLES,
 
 	operators.WEIGHT_DISPLAY,
 
-	operators.EXPORT_PICK_SIZE,
-	operators.EXPORT_PICK_SHANK,
-	operators.EXPORT_PICK_DIM,
-	operators.EXPORT_PICK_WEIGHT,
-	operators.EXPORT_STATS,
-)
-
-
-
-
+	operators.STATS_EXPORT,
+	operators.STATS_PICK,
+	)
 
 
 def register():
@@ -171,9 +143,9 @@ def unregister():
 	del bpy.types.Scene.jewelcraft
 
 	pcoll_remove = bpy.utils.previews.remove
-	for pcoll in preview_collections.values():
+	for pcoll in previews.preview_collections.values():
 		pcoll_remove(pcoll)
-	preview_collections.clear()
+	previews.preview_collections.clear()
 
 
 if __name__ == '__main__':

@@ -1,8 +1,10 @@
-from .. import (
+from . import (
 	var,
-	localization,
-)
-from .icons import preview_collections
+	locale,
+	previews,
+	)
+
+
 enum_items = {}
 
 
@@ -12,10 +14,10 @@ def cuts(self, context):
 	if enum_items.get('1_lang') == prefs.lang:
 		return enum_items['1_items']
 
-	enum_items['1_lang'] = prefs.lang
+	l = locale.locale[prefs.lang]
+	icons = previews.preview_collections['icons']
 
-	l = localization.locale[prefs.lang]
-	icons = preview_collections['icons']
+	enum_items['1_lang'] = prefs.lang
 	enum_items['1_items'] = (
 		('ROUND',     l['round'],     '', icons['CUT-ROUND'].icon_id,     0),
 		('OVAL',      l['oval'],      '', icons['CUT-OVAL'].icon_id,      1),
@@ -34,7 +36,7 @@ def cuts(self, context):
 		('TRILLION',  l['trillion'],  '', icons['CUT-TRILLION'].icon_id,  14),
 		('TRILLIANT', l['trilliant'], '', icons['CUT-TRILLIANT'].icon_id, 15),
 		('TRIANGLE',  l['triangle'],  '', icons['CUT-TRIANGLE'].icon_id,  16),
-	)
+		)
 
 	return enum_items['1_items']
 
@@ -45,9 +47,8 @@ def stones(self, context):
 	if enum_items.get('2_lang') == prefs.lang:
 		return enum_items['2_items']
 
-	enum_items['2_lang'] = prefs.lang
+	l = locale.locale[prefs.lang]
 
-	l = localization.locale[prefs.lang]
 	items = [
 		('DIAMOND',        l['diamond'],        '', 0),
 		('AMETHYST',       l['amethyst'],       '', 1),
@@ -66,8 +67,9 @@ def stones(self, context):
 		('TOPAZ',          l['topaz'],          '', 14),
 		('TOURMALINE',     l['tourmaline'],     '', 15),
 		('ZIRCON',         l['zircon'],         '', 16),
-	]
+		]
 
+	enum_items['2_lang'] = prefs.lang
 	enum_items['2_items'] = sorted(items, key=lambda x: x[1])
 
 	return enum_items['2_items']
@@ -79,9 +81,9 @@ def metals(self, context):
 	if enum_items.get('3_lang') == prefs.lang:
 		return enum_items['3_items']
 
-	enum_items['3_lang'] = prefs.lang
+	l = locale.locale[prefs.lang]
 
-	l = localization.locale[prefs.lang]
+	enum_items['3_lang'] = prefs.lang
 	enum_items['3_items'] = (
 		('24G',    l['24g'],       '', 9),
 		('22G',    l['22g'],       '', 10),
@@ -93,7 +95,7 @@ def metals(self, context):
 		('PD',     l['pd'],        '', 5),
 		('PL',     l['pl'],        '', 6),
 		('CUSTOM', l['wt_custom'], '', 7),
-		('VOL',    l['wt_vol'],    '', 8),
-	)
+		('VOLUME', l['wt_volume'], '', 8),
+		)
 
 	return enum_items['3_items']

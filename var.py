@@ -1,23 +1,24 @@
-from os import path
+import os
 
 
 addon_id = __package__
-addon_path = path.dirname(__file__)
-asset_filepath = path.join(addon_path, 'assets', 'gems.blend')
-icons_path = path.join(addon_path, 'icons')
+addon_path = os.path.dirname(__file__)
+asset_filepath = os.path.join(addon_path, 'assets', 'gems.blend')
+icons_path = os.path.join(addon_path, 'icons')
 
 
 metal_density = {
 	'24G'  : 19.3, # g/cm³
 	'22G'  : 17.8,
 	'18WG' : 15.8,
-	'14WG' : 14.6,
 	'18YG' : 15.5,
+	'14WG' : 14.6,
 	'14YG' : 13.8,
 	'STER' : 10.36,
 	'PD'   : 12.0,
 	'PL'   : 21.4,
-}
+	}
+
 
 stone_density = {
 
@@ -44,7 +45,8 @@ stone_density = {
 	'TOURMALINE'     : 3.22,
 	'PERIDOT'        : 3.34,
 	'ZIRCON'         : 4.73,
-}
+	}
+
 
 gem_volume_correction = {
 
@@ -53,8 +55,6 @@ gem_volume_correction = {
 	# Cone
 	'ROUND'     : 1.3056,
 	'OCTAGON'   : 1.35,
-
-	# Cone rectangular
 	'OVAL'      : 1.34455,
 	'PEAR'      : 1.24936,
 	'MARQUISE'  : 1.20412,
@@ -76,7 +76,8 @@ gem_volume_correction = {
 	'TRILLION'  : 1.669,
 	'TRILLIANT' : 1.91,
 	'TRIANGLE'  : 1.522,
-}
+	}
+
 
 default_color = {
 	'DIAMOND'        : [1.0, 1.0, 1.0],
@@ -95,4 +96,4 @@ default_color = {
 
 	'PRONGS' : [0.8, 0.8, 0.8],
 	'CUTTER' : [1.0, 1.0, 1.0],
-}
+	}
