@@ -58,11 +58,9 @@ class Preferences(AddonPreferences):
 		split = layout.split(percentage=0.15)
 
 		col = split.column()
-		col.label('Unit Scale:')
 		col.label('UI Language:')
 
 		col = split.column()
-		col.label('1 Blender Unit = 1 mm')
 		colrow = col.row()
 		colrow.alignment = 'LEFT'
 		colrow.prop(self, 'lang', text='')
