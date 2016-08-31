@@ -23,14 +23,18 @@ import bmesh
 
 def bmesh_copy_from_object(ob, transform=True, triangulate=True, apply_modifiers=True):
 
-	assert(obj.type == 'MESH')
+	assert(ob.type == 'MESH')
 
+	if apply_modifiers and ob.modifiers:
 		import bpy
+		me = ob.to_mesh(bpy.context.scene, True, 'PREVIEW', calc_tessface=False)
 		bm = bmesh.new()
 		bm.from_mesh(me)
 		bpy.data.meshes.remove(me)
 		del bpy
 	else:
+		me = ob.data
+		if ob.mode == 'EDIT':
 			bm_orig = bmesh.from_edit_mesh(me)
 			bm = bm_orig.copy()
 		else:
@@ -38,6 +42,7 @@ def bmesh_copy_from_object(ob, transform=True, triangulate=True, apply_modifiers
 			bm.from_mesh(me)
 
 	if transform:
+		bm.transform(ob.matrix_world)
 
 	if triangulate:
 		bmesh.ops.triangulate(bm, faces=bm.faces)
@@ -45,6 +50,8 @@ def bmesh_copy_from_object(ob, transform=True, triangulate=True, apply_modifiers
 	return bm
 
 
+def calculate(ob):
+	bm = bmesh_copy_from_object(ob)
 	volume = bm.calc_volume()
 	bm.free()
 	return volume
