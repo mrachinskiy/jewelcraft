@@ -5,7 +5,6 @@ from . import (
 	locale,
 	units,
 	volume,
-	utils,
 	)
 
 
@@ -61,7 +60,7 @@ def collect():
 	sg = {}
 	for ob in obs:
 
-		utils.ob_id_compatibility(ob)
+		ob_id_compatibility(ob)
 
 		if 'gem' in ob:
 
@@ -205,3 +204,24 @@ def ct_calc(stone, cut, l, w, h):
 	ct = units.convert(g, 'g->ct')
 
 	return round(ct, 3)
+
+
+def ob_id_compatibility(ob):
+	# Forward compatibility function, should be removed at some point
+
+	if (ob.type == 'MESH' and 'gem' in ob.data):
+
+		if 'gem' not in ob:
+			ob['gem'] = {}
+
+		if 'TYPE' in ob.data['gem']:
+			ob['gem']['stone'] = ob.data['gem']['TYPE']
+		if 'CUT' in ob.data['gem']:
+			ob['gem']['cut'] = ob.data['gem']['CUT']
+
+		if 'type' in ob.data['gem']:
+			ob['gem']['stone'] = ob.data['gem']['type']
+		if 'cut' in ob.data['gem']:
+			ob['gem']['cut'] = ob.data['gem']['cut']
+
+		del ob.data['gem']

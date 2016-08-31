@@ -2,9 +2,12 @@ import os
 
 
 addon_id = __package__
+
 addon_path = os.path.dirname(__file__)
-asset_filepath = os.path.join(addon_path, 'assets', 'gems.blend')
 icons_path = os.path.join(addon_path, 'icons')
+asset_filepath = os.path.join(addon_path, 'assets', 'gems.blend')
+
+weighting_report = ''
 
 
 metal_density = {

@@ -12,9 +12,7 @@ from . import (
 	locale,
 	asset,
 	stats,
-	report,
 	prop_items,
-	utils,
 	units,
 	volume,
 	)
@@ -93,7 +91,7 @@ class REPLACE_STONE(Gem, Operator):
 			return {'FINISHED'}
 
 		for ob in obs:
-			utils.ob_id_compatibility(ob)
+			stats.ob_id_compatibility(ob)
 			if ('gem' in ob and ob['gem']['stone'] != self.stone):
 				ob['gem']['stone'] = self.stone
 				asset.material_assign(ob, self.stone, self.stone_name)
@@ -117,7 +115,7 @@ class REPLACE_CUT(Gem, Operator):
 
 		for ob in obs:
 
-			utils.ob_id_compatibility(ob)
+			stats.ob_id_compatibility(ob)
 
 			if ('gem' in ob and ob['gem']['cut'] != self.cut):
 
@@ -152,7 +150,7 @@ class GemSuppl(Locale):
 
 		for obj in context.selected_objects:
 
-			utils.ob_id_compatibility(obj)
+			stats.ob_id_compatibility(obj)
 
 			if 'gem' in obj:
 				cut_name = obj['gem']['cut'].title()
@@ -265,7 +263,7 @@ class MAKE_DUPLIFACE(Locale, Operator):
 			return {'FINISHED'}
 
 		for ob in reversed(obs):
-			utils.ob_id_compatibility(ob)
+			stats.ob_id_compatibility(ob)
 			if 'gem' in ob:
 				break
 		else:
@@ -313,7 +311,7 @@ class SELECT_DOUBLES(Locale, Operator):
 		loc_app = gems_loc.append
 		name_app = gems_name.append
 		for ob in context.visible_objects:
-			utils.ob_id_compatibility(ob)
+			stats.ob_id_compatibility(ob)
 			if 'gem' in ob:
 				loc_app(ob.location.freeze())
 				name_app(ob.name)
@@ -355,15 +353,15 @@ class WEIGHT_DISPLAY(Locale, Operator):
 		ob_volume = units.system(volume.calculate(context.active_object), volume=True)
 
 		if metal == 'VOLUME':
-			report.data = '{} {}'.format(round(ob_volume, 4), self.l['mm3'])
+			var.weighting_report = '{} {}'.format(round(ob_volume, 4), self.l['mm3'])
 
 		elif metal == 'CUSTOM':
 			dens = units.convert(props.weighting_custom, 'cm3->mm3')
-			report.data = '{} {}'.format(round(ob_volume * dens, 2), self.l['g'])
+			var.weighting_report = '{} {}'.format(round(ob_volume * dens, 2), self.l['g'])
 
 		else:
 			mdens = units.convert(var.metal_density[metal], 'cm3->mm3')
-			report.data = '{} {}'.format(round(ob_volume * mdens, 2), self.l['g'])
+			var.weighting_report = '{} {}'.format(round(ob_volume * mdens, 2), self.l['g'])
 
 		return {'FINISHED'}
 
@@ -401,6 +399,6 @@ class STATS_EXPORT(Locale, Operator):
 			self.report({'INFO'}, self.l['report_stats'])
 
 		else:
-			utils.show_error_message(self.l['error_file'])
+			self.report({'ERROR'}, self.l['error_file'])
 
 		return {'FINISHED'}

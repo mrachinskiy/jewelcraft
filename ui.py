@@ -3,7 +3,6 @@ from bpy.types import Panel
 from . import (
 	var,
 	locale,
-	report,
 	previews,
 	)
 
@@ -77,7 +76,7 @@ class Weighting(UI, Panel):
 	def draw(self, context):
 		layout = self.layout
 		l = self.l
-		weight = report.data
+		weight = var.weighting_report
 
 		layout.prop(self.props, 'weighting_metals', text='')
 
