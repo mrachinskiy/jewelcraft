@@ -6,7 +6,6 @@ from . import var
 
 preview_collections = {}
 
-
 icon_previews = bpy.utils.previews.new()
 load = icon_previews.load
 for entry in scandir(var.icons_path):

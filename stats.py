@@ -178,7 +178,7 @@ def stats_locale():
 
 
 def polycount(ob):
-	bm = volume.bmesh_copy_from_object(ob, triangulate=False, apply_modifiers=True)
+	bm = volume.bmesh_copy_from_object(ob, triangulate=False)
 	polycount = len(bm.faces)
 	bm.free()
 	return polycount
