@@ -120,6 +120,10 @@ class Stats(UI, Panel):
 			colrow.operator('jewelcraft.stats_pick', text='', icon='EYEDROPPER').prop = 'stats_weight'
 
 			boxrow = box.row(align=True)
+			boxrow.label(l['lang'] + ':')
+			boxrow.prop(props, 'stats_lang', text='')
+
+			boxrow = box.row(align=True)
 			boxrow.prop(props, 'stats_metals', icon=icon_tria(props.stats_metals), icon_only=True)
 			boxrow.label(l['metals'])
 			if props.stats_metals:
@@ -135,18 +139,14 @@ class Stats(UI, Panel):
 				col.prop(props, 'stats_pl',     text=l['pl'])
 				col.prop(props, 'stats_custom', text=l['custom'])
 
-				sub = col.column(align=True)
+				sub = col.column()
 				sub.enabled = props.stats_custom
-				subrow = sub.row()
+				subrow = sub.row(align=True)
 				subrow.label(l['custom_name'])
-				subrow.label(l['g/cm'] + ':')
-				subrow = sub.row()
 				subrow.prop(props, 'stats_custom_name', text='')
+				subrow = sub.row(align=True)
+				subrow.label(l['g/cm'] + ':')
 				subrow.prop(props, 'stats_custom_dens', text='')
-
-			boxrow = box.row(align=True)
-			boxrow.label(l['lang'] + ':')
-			boxrow.prop(props, 'stats_lang', text='')
 
 		col = layout.column(align=True)
 		col.operator('jewelcraft.stats_export', text=l['stats_export'])
