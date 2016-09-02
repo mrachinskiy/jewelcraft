@@ -7,7 +7,8 @@ bl_info = {
 	'description': 'Jewelry design toolkit.',
 	'wiki_url': 'https://github.com/mrachinskiy/jewelcraft#readme',
 	'tracker_url': 'https://github.com/mrachinskiy/jewelcraft/issues',
-	'category': 'Object'}
+	'category': 'Object',
+	}
 
 
 if 'bpy' in locals():
@@ -51,7 +52,8 @@ class Preferences(AddonPreferences):
 		items=(('RU', 'Russian (Русский)', ''),
 		       ('EN', 'English',           '')),
 		default='EN',
-		description='Add-on UI language')
+		description='Add-on UI language',
+		)
 
 	def draw(self, context):
 		layout = self.layout
@@ -98,7 +100,8 @@ class Properties(PropertyGroup):
 		       ('EN',   'English',           ''),
 		       ('AUTO', 'Auto',              'Inherit locale from add-on preferences')),
 		default='AUTO',
-		description='Statistics language')
+		description='Statistics language',
+		)
 
 
 classes = (

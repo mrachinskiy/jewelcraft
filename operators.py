@@ -29,12 +29,13 @@ class SEARCH_STONE(Operator):
 	"""Search stone by name"""
 	bl_label = 'Search Stone'
 	bl_idname = 'jewelcraft.search_stone'
+	bl_property = 'stone'
 	bl_options = {'INTERNAL'}
 
-	prop = EnumProperty(items=prop_items.stones)
+	stone = EnumProperty(items=prop_items.stones)
 
 	def execute(self, context):
-		context.scene.jewelcraft.gem_stone = self.prop
+		context.scene.jewelcraft.gem_stone = self.stone
 		context.area.tag_redraw()
 		return {'FINISHED'}
 
