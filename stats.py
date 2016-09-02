@@ -41,11 +41,9 @@ def collect():
 		stats['shank'] = (units.system(dim[0]), units.system(dim[1]))
 
 	if (props.stats_dim and props.stats_dim in obs):
-		stats['dim'] = (
-			units.system(obs[props.stats_dim].dimensions[0]),
-			units.system(obs[props.stats_dim].dimensions[1]),
-			units.system(obs[props.stats_dim].dimensions[2])
-		)
+		stats['dim'] = (units.system(obs[props.stats_dim].dimensions[0]),
+		                units.system(obs[props.stats_dim].dimensions[1]),
+		                units.system(obs[props.stats_dim].dimensions[2]))
 
 	if (props.stats_weight and props.stats_weight in obs):
 		stats['weight'] = units.system(volume.calculate(obs[props.stats_weight]), volume=True)
