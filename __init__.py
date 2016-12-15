@@ -12,15 +12,14 @@ bl_info = {
 
 
 if 'bpy' in locals():
-	from importlib import reload
-	reload(var)
-	reload(locale)
-	reload(ui)
-	reload(operators)
-	reload(previews)
-	reload(prop_items)
-	reload(stats)
-	del reload
+	import importlib
+	importlib.reload(var)
+	importlib.reload(locale)
+	importlib.reload(ui)
+	importlib.reload(operators)
+	importlib.reload(previews)
+	importlib.reload(prop_items)
+	importlib.reload(stats)
 else:
 	import bpy
 	import bpy.utils.previews
