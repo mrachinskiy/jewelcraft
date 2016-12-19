@@ -9,7 +9,7 @@ JewelCraft—is a Blender add-on for jewelry design that provides tools for asse
 How to install
 --------------------------
 
-1. Blender 2.74 is a minimum required version.
+1. Blender 2.77 is a minimum required version.
 2. [Download][addon] the add-on.
 3. Go to Blender `User Preferences` → `Add-ons` category.
 4. Use `Install from File…` to install add-on from downloaded zip archive.
@@ -22,7 +22,7 @@ Note for mac users:
 Установка
 --------------------------
 
-1. Blender 2.74 минимально требуемая версия.
+1. Blender 2.77 минимально требуемая версия.
 2. [Загрузите][addon] аддон.
 3. Зайдите в настройки Blender `User Preferences` → `Add-ons`.
 4. Воспользуйтесь `Install from File…` чтобы установить аддон из загруженного архива.
