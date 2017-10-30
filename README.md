@@ -1,46 +1,45 @@
-JewelCraft Blender Add-on
-==========================
+JewelCraft—jewelry design toolkit add-on for Blender.
 
-JewelCraft—is a Blender add-on for jewelry design that provides tools for asset management, jeweling and statistics gathering to easily get all valuable information about your jewelry product such as: gemstone settings, product dimensions and weight in different metals.
+Features:
 
-#### Watch [Demo]
+* Create and customize gems, prongs and cutters.
+* Organize library of components using in add-on asset manager.
+* Additional modeling tools to help jeweling process.
+* Calculate weight in a variety of precious alloys.
+* Generate and export statistics for your product.
+
+Watch:
+
+* [v1 Demo][2]
+* [v2 Камни][3]
+* [v2 Инструменты закрепки][4]
+* [v2 Ассет менеджмент][5]
 
 
 How to install
---------------------------
+==========================
 
-1. Blender 2.77 is a minimum required version.
-2. [Download][addon] the add-on.
+1. Blender 2.79 or newer is required to install the add-on.
+2. [Download the add-on.][1]<sup>1</sup>
 3. Go to Blender `User Preferences` → `Add-ons` category.
-4. Use `Install from File…` to install add-on from downloaded zip archive.
+4. Use `Install Add-on from File` to install add-on from downloaded zip archive.
 
-Note for mac users:
-
-* Safari browser will automatically unpack downloaded zip archive, so in order to install the add-on, you have to pack folder with add-on files back into zip archive. Or use a different browser to download add-on.
+<sup>1</sup> Note for mac users: Safari browser will automatically unpack downloaded zip archive, so in order to install the add-on, you have to pack folder with add-on files back into zip archive. Or use a different browser to download add-on.
 
 
 Установка
---------------------------
+==========================
 
-1. Blender 2.77 минимально требуемая версия.
-2. [Загрузите][addon] аддон.
+1. Для установки аддона требуется Blender 2.79 или новее.
+2. [Загрузите аддон.][1]<sup>1</sup>
 3. Зайдите в настройки Blender `User Preferences` → `Add-ons`.
-4. Воспользуйтесь `Install from File…` чтобы установить аддон из загруженного архива.
+4. Воспользуйтесь `Install Add-on from File` чтобы установить аддон из загруженного архива.
 
-Примечание для пользователей mac:
-
-* Браузер Safari автоматически распаковывает скачиваемые zip архивы, поэтому, чтобы установить аддон, необходимо запаковать директорию с файлами аддона обратно в zip архив. Или используйте другой браузер для скачивания аддона.
+<sup>1</sup> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, поэтому, чтобы установить аддон, необходимо запаковать папку с файлами аддона обратно в zip архив. Или используйте другой браузер для скачивания аддона.
 
 
-Язык интерфейса
---------------------------
-
-Настройки локализации интерфейса находятся в **настройках аддона:**  
-`User Preferences` → `Add-ons` → `JewelCraft`
-
-![UI language settings]
-
-
-[addon]: https://github.com/mrachinskiy/jewelcraft/archive/master.zip
-[Demo]: https://youtu.be/XZ6uIdNnrHk
-[UI language settings]: http://i.imgur.com/YOcpYki.png
+[1]: https://github.com/mrachinskiy/jewelcraft/archive/master.zip
+[2]: https://youtu.be/XZ6uIdNnrHk
+[3]: https://youtu.be/DqzDK7dSlUM
+[4]: https://youtu.be/VVooIV8u1JI
+[5]: https://youtu.be/S_SkB3dn4co

@@ -1,8 +1,8 @@
 bl_info = {
 	'name': 'JewelCraft',
 	'author': 'Mikhail Rachinskiy (jewelcourses.com)',
-	'version': (1, 6),
-	'blender': (2, 77, 0),
+	'version': (2, 0, 0),
+	'blender': (2, 79, 0),
 	'location': '3D View > Tool Shelf',
 	'description': 'Jewelry design toolkit.',
 	'wiki_url': 'https://github.com/mrachinskiy/jewelcraft#readme',
@@ -13,139 +13,141 @@ bl_info = {
 
 if 'bpy' in locals():
 	import importlib
-	importlib.reload(var)
-	importlib.reload(locale)
-	importlib.reload(ui)
-	importlib.reload(operators)
-	importlib.reload(previews)
-	importlib.reload(prop_items)
-	importlib.reload(stats)
+	import os
+
+	for entry in os.scandir(var.addon_dir):
+
+		if entry.is_file() and entry.name.endswith('.py') and not entry.name.startswith('__'):
+			_module = entry.name[:-3]
+			importlib.reload(eval(_module))
+
+		elif entry.is_dir() and not entry.name.startswith(('.', '__')) and not entry.name.endswith('updater'):
+
+			for subentry in os.scandir(entry.path):
+
+				if subentry.name.endswith('.py'):
+					_module = '{}.{}'.format(entry.name, subentry.name[:-3])
+					importlib.reload(eval(_module))
 else:
 	import bpy
 	import bpy.utils.previews
-	from bpy.types import (
-		PropertyGroup,
-		AddonPreferences,
-		)
-	from bpy.props import (
-		EnumProperty,
-		BoolProperty,
-		FloatProperty,
-		StringProperty,
-		PointerProperty,
-		)
-	from . import (
-		var,
-		ui,
-		operators,
-		prop_items,
-		previews,
-		)
+	from bpy.props import PointerProperty
 
+	from . import var, ui, locale, preferences, dynamic_lists
+	from .op_cutter import cutter_op
+	from .op_prongs import prongs_op
+	from .op_scatter import scatter_op
+	from .op_product_report import product_report_op
+	from .ops_asset import asset_ops, folder_ops
+	from .ops_curve import curve_ops
+	from .ops_gem import gem_ops, gem_select_ops
+	from .ops_jeweling import jeweling_ops
+	from .ops_object import object_ops
+	from .ops_utils import presets_ops, search_ops
 
-class Preferences(AddonPreferences):
-	bl_idname = var.addon_id
-
-	lang = EnumProperty(
-		name='UI language',
-		items=(('RU', 'Russian (Русский)', ''),
-		       ('EN', 'English',           '')),
-		default='EN',
-		description='Add-on UI language',
-		)
-
-	def draw(self, context):
-		layout = self.layout
-		split = layout.split(percentage=0.15)
-
-		col = split.column()
-		col.label('UI Language:')
-
-		col = split.column()
-		colrow = col.row()
-		colrow.alignment = 'LEFT'
-		colrow.prop(self, 'lang', text='')
-
-
-class Properties(PropertyGroup):
-	gem_cut = EnumProperty(name='Cut', items=prop_items.cuts)
-	gem_stone = EnumProperty(name='Stone', items=prop_items.stones)
-	gem_size = FloatProperty(name='Size', description='Gem size', default=1.0, min=0.0, step=10, precision=2, unit='LENGTH')
-
-	weighting_metals = EnumProperty(name='Metals', items=prop_items.metals)
-	weighting_custom = FloatProperty(description='Custom density (g/cm³)', default=1.0, min=0.01, step=1, precision=2)
-
-	stats_options = BoolProperty()
-	stats_size = StringProperty(description='Object for size reference')
-	stats_shank = StringProperty(description='Object for shank width and height reference')
-	stats_dim = StringProperty(description='Object for dimensions reference')
-	stats_weight = StringProperty(description='Object for weight reference')
-	stats_metals = BoolProperty()
-	stats_24g  = BoolProperty()
-	stats_22g  = BoolProperty()
-	stats_18wg = BoolProperty(default=True)
-	stats_18yg = BoolProperty()
-	stats_14wg = BoolProperty(default=True)
-	stats_14yg = BoolProperty()
-	stats_ster = BoolProperty()
-	stats_pd   = BoolProperty()
-	stats_pl   = BoolProperty()
-	stats_custom = BoolProperty()
-	stats_custom_name = StringProperty(description='Material name')
-	stats_custom_dens = weighting_custom
-	stats_lang = EnumProperty(
-		name='Export stats language',
-		items=(('RU',   'Russian (Русский)', ''),
-		       ('EN',   'English',           ''),
-		       ('AUTO', 'Auto',              'Inherit locale from add-on preferences')),
-		default='AUTO',
-		description='Statistics language',
-		)
+	# Extern
+	from . import addon_updater_ops
 
 
 classes = (
-	Preferences,
-	Properties,
+	preferences.PREFS_JewelCraft_Props,
+	preferences.WM_JewelCraft_Props,
+	preferences.SCENE_JewelCraft_Props,
 
-	ui.Gems,
-	ui.Weighting,
-	ui.Stats,
+	ui.VIEW3D_MT_JewelCraft_Weighting_Presets,
+	ui.VIEW3D_MT_JewelCraft_Select_Gem_By,
+	ui.VIEW3D_MT_JewelCraft_Folder_Tools,
+	ui.VIEW3D_MT_JewelCraft_Asset_Tools,
+	ui.VIEW3D_MT_JewelCraft_Alloy_Tools,
+	ui.VIEW3D_MT_JewelCraft_Product_Report_Tools,
 
-	operators.SEARCH_STONE,
-	operators.MAKE_GEM,
-	operators.REPLACE_STONE,
-	operators.REPLACE_CUT,
-	operators.MAKE_PRONGS,
-	operators.MAKE_CUTTER,
-	operators.MAKE_SINGLE_PRONG,
-	operators.MAKE_IMITATION,
-	operators.MAKE_DUPLIFACE,
-	operators.SELECT_DOUBLES,
+	ui.VIEW3D_PT_JewelCraft_Gems,
+	ui.VIEW3D_PT_JewelCraft_Assets,
+	ui.VIEW3D_PT_JewelCraft_Jeweling,
+	ui.VIEW3D_PT_JewelCraft_Curve,
+	ui.VIEW3D_PT_JewelCraft_Curve_Editmesh,
+	ui.VIEW3D_PT_JewelCraft_Object,
+	ui.VIEW3D_PT_JewelCraft_Weighting,
+	ui.VIEW3D_PT_JewelCraft_Product_Report,
 
-	operators.WEIGHT_DISPLAY,
+	prongs_op.OBJECT_OT_JewelCraft_Prongs_Add,
+	cutter_op.OBJECT_OT_JewelCraft_Cutter_Add,
+	scatter_op.OBJECT_OT_JewelCraft_Scatter_Along_Curve,
+	scatter_op.OBJECT_OT_JewelCraft_Redistribute_Along_Curve,
+	product_report_op.WM_OT_JewelCraft_Product_Report,
 
-	operators.STATS_EXPORT,
-	operators.STATS_PICK,
+	gem_ops.OBJECT_OT_JewelCraft_Gem_Add,
+	gem_ops.OBJECT_OT_JewelCraft_Stone_Replace,
+	gem_ops.OBJECT_OT_JewelCraft_Cut_Replace,
+	gem_ops.OBJECT_OT_JewelCraft_Gem_ID_Add,
+
+	gem_select_ops.OBJECT_OT_JewelCraft_Select_Gems_By_Trait,
+	gem_select_ops.OBJECT_OT_JewelCraft_Select_Doubles,
+
+	folder_ops.WM_OT_JewelCraft_Asset_Library_Open,
+	folder_ops.WM_OT_JewelCraft_Asset_Folder_Create,
+	folder_ops.WM_OT_JewelCraft_Asset_Folder_Rename,
+	folder_ops.WM_OT_JewelCraft_Asset_UI_Refresh,
+
+	asset_ops.WM_OT_JewelCraft_Asset_Add_To_Library,
+	asset_ops.WM_OT_JewelCraft_Asset_Remove_From_Library,
+	asset_ops.WM_OT_JewelCraft_Asset_Rename,
+	asset_ops.WM_OT_JewelCraft_Asset_Replace,
+	asset_ops.WM_OT_JewelCraft_Asset_Preview_Replace,
+	asset_ops.WM_OT_JewelCraft_Asset_Import,
+
+	jeweling_ops.OBJECT_OT_JewelCraft_Make_Dupliface,
+	jeweling_ops.OBJECT_OT_JewelCraft_Dist_Helper_Add,
+
+	curve_ops.CURVE_OT_JewelCraft_Size_Curve_Add,
+	curve_ops.CURVE_OT_JewelCraft_Length_Display,
+	curve_ops.OBJECT_OT_JewelCraft_Stretch_Along_Curve,
+	curve_ops.OBJECT_OT_JewelCraft_Move_Over_Under,
+
+	object_ops.OBJECT_OT_JewelCraft_Object_Mirror,
+	object_ops.OBJECT_OT_JewelCraft_Lattice_Project,
+	object_ops.OBJECT_OT_JewelCraft_Lattice_Profile,
+	object_ops.MESH_OT_JewelCraft_Weight_Display,
+
+	presets_ops.VIEW3D_OT_JewelCraft_Add_Preset_Weighting,
+
+	search_ops.VIEW3D_OT_JewelCraft_Search_Stone,
+	search_ops.VIEW3D_OT_JewelCraft_Search_Alloy,
+	search_ops.VIEW3D_OT_JewelCraft_Search_Asset,
 	)
 
 
 def register():
+	addon_updater_ops.register(bl_info)
+
 	for cls in classes:
 		bpy.utils.register_class(cls)
 
-	bpy.types.Scene.jewelcraft = PointerProperty(type=Properties)
+	bpy.types.WindowManager.jewelcraft = PointerProperty(type=preferences.WM_JewelCraft_Props)
+	bpy.types.Scene.jewelcraft = PointerProperty(type=preferences.SCENE_JewelCraft_Props)
+
+	bpy.app.translations.register(__name__, locale.lc_reg)
 
 
 def unregister():
+	addon_updater_ops.unregister()
+
 	for cls in classes:
 		bpy.utils.unregister_class(cls)
 
+	del bpy.types.WindowManager.jewelcraft
 	del bpy.types.Scene.jewelcraft
 
-	pcoll_remove = bpy.utils.previews.remove
-	for pcoll in previews.preview_collections.values():
-		pcoll_remove(pcoll)
-	previews.preview_collections.clear()
+	bpy.app.translations.unregister(__name__)
+
+	# Previews
+	# ---------------------------
+
+	for pcoll in ui.preview_collections.values():
+		bpy.utils.previews.remove(pcoll)
+
+	ui.preview_collections.clear()
+	dynamic_lists._cache.clear()
 
 
 if __name__ == '__main__':
