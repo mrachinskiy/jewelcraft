@@ -34,17 +34,18 @@ class WM_OT_JewelCraft_Asset_Folder_Create(Operator, Setup):
 	bl_options = {'INTERNAL'}
 
 	get_name_skip = True
-	name = StringProperty(name='Category Name', description='Category name', options={'SKIP_SAVE'})
+	folder_name = StringProperty(name='Category Name', description='Category name', options={'SKIP_SAVE'})
 
 	def draw(self, context):
 		layout = self.layout
 		layout.separator()
-		layout.prop(self, 'name')
+		layout.prop(self, 'folder_name')
 		layout.separator()
 
 	def execute(self, context):
 
 		folder = os.path.join(user_asset_library_folder(), self.folder_name)
+		print(folder)
 
 		if not os.path.exists(folder):
 			os.makedirs(folder)
@@ -64,12 +65,12 @@ class WM_OT_JewelCraft_Asset_Folder_Rename(Operator, Setup):
 	bl_idname = 'wm.jewelcraft_asset_folder_rename'
 	bl_options = {'INTERNAL'}
 
-	name = StringProperty(name='Category Name', description='Category name', options={'SKIP_SAVE'})
+	folder_name = StringProperty(name='Category Name', description='Category name', options={'SKIP_SAVE'})
 
 	def draw(self, context):
 		layout = self.layout
 		layout.separator()
-		layout.prop(self, 'name')
+		layout.prop(self, 'folder_name')
 		layout.separator()
 
 	def execute(self, context):
