@@ -12,8 +12,8 @@ class Setup:
 
 	def __init__(self):
 		self.props = bpy.context.window_manager.jewelcraft
-		self.name = self.props.asset_folder
-		self.folder = os.path.join(user_asset_library_folder(), self.name)
+		self.folder_name = self.props.asset_folder
+		self.folder = os.path.join(user_asset_library_folder(), self.folder_name)
 
 
 class WM_OT_JewelCraft_Asset_Library_Open(Operator):
@@ -44,12 +44,12 @@ class WM_OT_JewelCraft_Asset_Folder_Create(Operator, Setup):
 
 	def execute(self, context):
 
-		folder = os.path.join(user_asset_library_folder(), self.name)
+		folder = os.path.join(user_asset_library_folder(), self.folder_name)
 
 		if not os.path.exists(folder):
 			os.makedirs(folder)
 			dynamic_lists.asset_folder_list_refresh()
-			self.props.asset_folder = self.name
+			self.props.asset_folder = self.folder_name
 
 		return {'FINISHED'}
 
@@ -74,12 +74,12 @@ class WM_OT_JewelCraft_Asset_Folder_Rename(Operator, Setup):
 
 	def execute(self, context):
 
-		folder_new = os.path.join(user_asset_library_folder(), self.name)
+		folder_new = os.path.join(user_asset_library_folder(), self.folder_name)
 
 		if os.path.exists(self.folder):
 			os.rename(self.folder, folder_new)
 			dynamic_lists.asset_folder_list_refresh()
-			self.props.asset_folder = self.name
+			self.props.asset_folder = self.folder_name
 
 		return {'FINISHED'}
 
