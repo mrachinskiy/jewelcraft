@@ -19,7 +19,8 @@ class Setup:
 
 	def __init__(self):
 		self.props = bpy.context.window_manager.jewelcraft
-		self.folder = os.path.join(user_asset_library_folder(), self.props.asset_folder)
+		self.folder_name = self.props.asset_folder
+		self.folder = os.path.join(user_asset_library_folder(), self.folder_name)
 
 		if not getattr(self, 'get_name_skip', False):
 			self.asset_name = self.props.asset_list
@@ -83,7 +84,7 @@ class WM_OT_JewelCraft_Asset_Remove_From_Library(Operator, Setup):
 		os.remove(self.filepath + '.blend')
 		os.remove(self.filepath + '.png')
 
-		dynamic_lists.asset_list_refresh(asset_name=self.asset_name)
+		dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
 
 		if last_item:
 			try:
@@ -172,7 +173,7 @@ class WM_OT_JewelCraft_Asset_Preview_Replace(Operator, Setup):
 
 	def execute(self, context):
 		render_preview(filepath=self.filepath + '.png')
-		dynamic_lists.asset_list_refresh(asset_name=self.asset_name)
+		dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
 		return {'FINISHED'}
 
 	def invoke(self, context, event):

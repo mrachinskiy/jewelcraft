@@ -6,7 +6,6 @@ Features:
 * Organize library of components using in add-on asset manager.
 * Additional modeling tools to help jeweling process.
 * Calculate weight in a variety of precious alloys.
-* Generate and export statistics for your product.
 
 Watch:
 

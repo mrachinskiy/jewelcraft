@@ -207,11 +207,12 @@ def assets(self, context):
 			filename = os.path.splitext(entry.name)[0]
 			id_ = filename
 			name_ = filename + ' '  # Add trailing space so UI translation won't apply
+			preview_id = category + filename
 
-			if id_ not in pcoll:
-				pcoll.load(id_, entry.path, 'IMAGE')
+			if preview_id not in pcoll:
+				pcoll.load(preview_id, entry.path, 'IMAGE')
 
-			list_.append((id_, name_, '', pcoll[id_].icon_id, i))
+			list_.append((id_, name_, '', pcoll[preview_id].icon_id, i))
 			i += 1
 
 	ui.preview_collections['assets'] = pcoll
@@ -231,11 +232,11 @@ def asset_folder_list_refresh():
 		pass
 
 
-def asset_list_refresh(asset_name=False, hard=False):
+def asset_list_refresh(preview_id=False, hard=False):
 	try:
 
-		if asset_name:
-			del ui.preview_collections['assets'][asset_name]
+		if preview_id:
+			del ui.preview_collections['assets'][preview_id]
 		elif hard:
 			bpy.utils.previews.remove(ui.preview_collections['assets'])
 			del ui.preview_collections['assets']
