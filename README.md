@@ -6,14 +6,16 @@ Features:
 * Organize library of components using in add-on asset manager.
 * Additional modeling tools to help jeweling process.
 * Calculate weight in a variety of precious alloys.
-* Generate complete product report for your project.
+* Present summary information about your design with product report.
 
 Watch:
 
 * [v1 Demo][2]
 * [v2 Камни][3]
 * [v2 Инструменты закрепки][4]
-* [v2 Ассет менеджмент][5]
+* [v2 Менеджер ассетов][5]
+* [v2 Отчёт изделия][6]
+* [v2 Оценка веса][7]
 
 
 How to install
@@ -43,3 +45,5 @@ How to install
 [3]: https://youtu.be/DqzDK7dSlUM
 [4]: https://youtu.be/VVooIV8u1JI
 [5]: https://youtu.be/S_SkB3dn4co
+[6]: https://youtu.be/lOt1wpfUQT8
+[7]: https://youtu.be/qb4OriNIRQg
