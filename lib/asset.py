@@ -130,8 +130,9 @@ def bm_to_scene(bm, name='New Object', color=None):
 		ob.parent = obj
 		ob.matrix_parent_inverse = obj.matrix_basis.inverted()
 
-		scene.objects.link(ob)
 		add_material(ob, mat_name=name, color_rnd=color)
+
+		scene.objects.link(ob)
 
 
 def dist_helper(ob, ofst):
@@ -299,22 +300,6 @@ def add_material(ob, mat_name='New Material', mat_type=None, is_gem=False, color
 		ob.data.materials.append(mat)
 	else:
 		ob.material_slots[0].material = mat
-
-
-def curve_len(ob):
-	me = ob.to_mesh(bpy.context.scene, True, 'PREVIEW', calc_tessface=False)
-	me.transform(ob.matrix_world)
-
-	length = 0.0
-
-	for edge in me.edges:
-		v1 = me.vertices[edge.vertices[0]].co
-		v2 = me.vertices[edge.vertices[1]].co
-		length += (v1 - v2).length
-
-	bpy.data.meshes.remove(me)
-
-	return length
 
 
 def apply_scale(ob):

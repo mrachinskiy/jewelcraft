@@ -1,6 +1,7 @@
 from mathutils import Matrix
 
-from ..lib.asset import apply_scale, dist_helper, curve_len
+from ..lib import mesh
+from ..lib.asset import apply_scale, dist_helper
 
 
 class Scatter:
@@ -38,9 +39,9 @@ class Scatter:
 
 		if self.absolute_ofst:
 
-			clength = curve_len(curve)
+			curve_length = mesh.edges_length(curve)
 			ob_size = ob.dimensions[1]
-			base_unit = 100.0 / clength
+			base_unit = 100.0 / curve_length
 
 			ofst = base_unit * (ob_size + self.spacing)
 

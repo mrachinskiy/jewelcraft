@@ -48,7 +48,7 @@ def make_circle(size):
 
 def to_bmesh(ob, apply_modifiers=True, apply_transforms=True, triangulate=True):
 
-	if apply_modifiers and ob.modifiers:
+	if (apply_modifiers and ob.modifiers) or (ob.type != 'MESH'):
 		me = ob.to_mesh(bpy.context.scene, True, 'PREVIEW', calc_tessface=False)
 		bm = bmesh.new()
 		bm.from_mesh(me)
@@ -83,6 +83,17 @@ def polycount(ob):
 	count = len(bm.faces)
 	bm.free()
 	return count
+
+
+def edges_length(ob):
+	bm = to_bmesh(ob, triangulate=False)
+	length = 0.0
+
+	for edge in bm.edges:
+		length += edge.calc_length()
+
+	bm.free()
+	return length
 
 
 def make_edges(bm, verts):
