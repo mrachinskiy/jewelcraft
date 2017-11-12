@@ -6,8 +6,7 @@ from bpy.props import FloatProperty, BoolProperty
 from bpy.app.translations import pgettext_iface as _
 import bmesh
 
-from ..lib import unit
-from ..lib.asset import curve_len
+from ..lib import unit, mesh
 from ..lib.ui import popup_report
 
 
@@ -74,7 +73,7 @@ class CURVE_OT_JewelCraft_Length_Display(Operator):
 			bv_ob = obj.data.bevel_object
 			obj.data.bevel_object = None
 
-		length = unit.to_metric(curve_len(obj))
+		length = unit.to_metric(mesh.edges_length(obj))
 		curve_length = '{:.2f} {}'.format(length, _('mm'))
 		popup_report(self, curve_length, title=_('Curve Length'), icon='IPO_QUAD')
 
@@ -108,7 +107,7 @@ class OBJECT_OT_JewelCraft_Stretch_Along_Curve(Operator):
 			if obj.modifiers:
 				for mod in obj.modifiers:
 					if mod.type == 'CURVE' and mod.object:
-						length = curve_len(mod.object)
+						length = mesh.edges_length(mod.object)
 						half_len = length / 2 / obj.scale[0]
 
 						bm = bmesh.from_edit_mesh(me)
@@ -131,7 +130,7 @@ class OBJECT_OT_JewelCraft_Stretch_Along_Curve(Operator):
 				if ob.modifiers:
 					for mod in ob.modifiers:
 						if mod.type == 'CURVE' and mod.object:
-							length = curve_len(mod.object)
+							length = mesh.edges_length(mod.object)
 
 							mod.show_viewport = False
 							context.scene.update()
