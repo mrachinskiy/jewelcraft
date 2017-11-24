@@ -178,9 +178,12 @@ class VIEW3D_PT_JewelCraft_Assets(Panel, Setup):
 		row.menu('VIEW3D_MT_JewelCraft_Folder_Tools', icon='SCRIPTWIN')
 
 		row = layout.row()
+
 		col = row.column()
 		col.enabled = bool(props.asset_list)
 		col.template_icon_view(props, 'asset_list', show_labels=True)
+		if self.prefs.display_asset_name:
+			col.label(props.asset_list)
 
 		col = row.column(align=True)
 		col.operator('wm.jewelcraft_asset_add_to_library', text='', icon='ZOOMIN')

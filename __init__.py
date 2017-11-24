@@ -1,5 +1,5 @@
 bl_info = {
-	'name': 'JewelCraft RC 2',
+	'name': 'JewelCraft',
 	'author': 'Mikhail Rachinskiy (jewelcourses.com)',
 	'version': (2, 0, 0),
 	'blender': (2, 79, 0),

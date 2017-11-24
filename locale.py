@@ -4,6 +4,7 @@ import bpy
 lc_main = {
 	# Interface
 	'Asset Manager': 'Менеджер ассетов',
+	'Display asset name': 'Показывать название ассета',
 	'Alloys Set': 'Набор сплавов',
 	'Alloys Set:': 'Набор сплавов:',
 	'Product Report': 'Отчёт изделия',
@@ -25,7 +26,6 @@ lc_main = {
 	'Report:': 'Отчёт:',
 	'Prongs': 'Крапана',
 	'Cutter': 'Выборка',
-	'Default Material Colors': 'Цвет материалов по умолчанию',
 	'Library Folder Path': 'Путь к каталогу библиотеки',
 
 	# Popup dialogs
@@ -116,6 +116,7 @@ lc_main = {
 	'Asset tools': 'Инструменты ассетов',
 	'Set custom asset library folder, if disabled the default library folder will be used': 'Указать пользовательский каталог библиотеки ассетов, если отключено, то используется стандартный каталог',
 	'Custom library folder path': 'Путь к пользовательскому каталогу библиотеки',
+	'Display asset name in Tool Shelf': 'Показывать название ассета в панели инструментов',
 
 	# Reports
 	'WARNING': 'ПРЕДУПРЕЖДЕНИЕ',
