@@ -27,8 +27,18 @@ def update_asset_refresh(self, context):
 class PREFS_JewelCraft_Props(AddonPreferences):
 	bl_idname = __package__
 
+	active_section = EnumProperty(
+		items=(('ASSET_MANAGER',  'Asset Manager',  ''),
+		       ('WEIGHTING',      'Weighting',      ''),
+		       ('PRODUCT_REPORT', 'Product Report', ''),
+		       ('THEMES',         'Themes',         ''),
+		       ('UPDATER',        'Updater',        '')),
+		options={'SKIP_SAVE'},
+		)
+
 	use_custom_asset_dir = BoolProperty(name='Use custom library folder', description='Set custom asset library folder, if disabled the default library folder will be used', update=update_asset_refresh)
 	custom_asset_dir = StringProperty(name='Library Folder Path', description='Custom library folder path', subtype='DIR_PATH', update=update_asset_refresh)
+	display_asset_name = BoolProperty(name='Display asset name', description='Display asset name in Tool Shelf')
 
 	alloys_set = EnumProperty(
 		name='Alloys Set',
@@ -43,7 +53,7 @@ class PREFS_JewelCraft_Props(AddonPreferences):
 		description='Product report language',
 		items=(('ru_RU', 'Russian (Русский)', ''),
 		       ('en_US', 'English (English)', ''),
-		       ('AUTO', 'Auto (Auto)', 'Use user preferences language setting')),
+		       ('AUTO',  'Auto (Auto)',       'Use user preferences language setting')),
 		default='AUTO',
 		)
 	product_report_display = BoolProperty(name='Display in a new window', description='Display product report in new window', default=True)
@@ -90,34 +100,34 @@ class PREFS_JewelCraft_Props(AddonPreferences):
 	def draw(self, context):
 		layout = self.layout
 
-		box = layout.box()
-		box.label('Asset Manager')
-		col = box.column()
-		col.prop(self, 'use_custom_asset_dir')
-		sub = col.row()
-		sub.enabled = self.use_custom_asset_dir
-		sub.prop(self, 'custom_asset_dir')
+		col = layout.column()
+		col.row().prop(self, 'active_section', expand=True)
+		col.separator()
 
-		box = layout.box()
-		box.label('Weighting')
-		box.prop(self, 'alloys_set')
+		if self.active_section == 'ASSET_MANAGER':
+			col = layout.column()
+			col.prop(self, 'display_asset_name')
+			col.prop(self, 'use_custom_asset_dir')
+			sub = col.row()
+			sub.enabled = self.use_custom_asset_dir
+			sub.prop(self, 'custom_asset_dir')
 
-		box = layout.box()
-		box.label('Product Report')
-		col = box.column()
-		col.prop(self, 'product_report_display')
-		col.prop(self, 'product_report_save')
-		col.prop(self, 'product_report_lang')
+		elif self.active_section == 'WEIGHTING':
+			layout.prop(self, 'alloys_set')
 
-		box = layout.box()
-		box.label('Default Material Colors')
-		col = box.column_flow(3)
-		col.prop(self, 'color_prongs')
-		col.prop(self, 'color_cutter')
+		elif self.active_section == 'PRODUCT_REPORT':
+			col = layout.column()
+			col.prop(self, 'product_report_display')
+			col.prop(self, 'product_report_save')
+			col.prop(self, 'product_report_lang')
 
-		layout.separator()
+		elif self.active_section == 'THEMES':
+			col = layout.column_flow(3)
+			col.prop(self, 'color_prongs')
+			col.prop(self, 'color_cutter')
 
-		addon_updater_ops.update_settings_ui(self, context)
+		elif self.active_section == 'UPDATER':
+			addon_updater_ops.update_settings_ui(self, context)
 
 
 # Window manager properties
