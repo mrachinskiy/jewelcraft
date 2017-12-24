@@ -36,6 +36,7 @@ class PREFS_JewelCraft_Props(AddonPreferences):
 		options={'SKIP_SAVE'},
 		)
 
+	asset_name_from_obj = BoolProperty(name='New asset name from active object', description='Use active object name when creating new asset')
 	use_custom_asset_dir = BoolProperty(name='Use custom library folder', description='Set custom asset library folder, if disabled the default library folder will be used', update=update_asset_refresh)
 	custom_asset_dir = StringProperty(name='Library Folder Path', description='Custom library folder path', subtype='DIR_PATH', update=update_asset_refresh)
 	display_asset_name = BoolProperty(name='Display asset name', description='Display asset name in Tool Shelf')
@@ -106,6 +107,7 @@ class PREFS_JewelCraft_Props(AddonPreferences):
 
 		if self.active_section == 'ASSET_MANAGER':
 			col = layout.column()
+			col.prop(self, 'asset_name_from_obj')
 			col.prop(self, 'display_asset_name')
 			col.prop(self, 'use_custom_asset_dir')
 			sub = col.row()
