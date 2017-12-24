@@ -5,7 +5,7 @@ from bpy.types import Operator
 from bpy.props import StringProperty
 import bpy.utils.previews
 
-from .. import dynamic_lists
+from .. import var, dynamic_lists
 from ..lib.asset import (
 	asset_export,
 	asset_import_batch,
@@ -19,12 +19,12 @@ class Setup:
 
 	def __init__(self):
 		self.props = bpy.context.window_manager.jewelcraft
+
 		self.folder_name = self.props.asset_folder
 		self.folder = os.path.join(user_asset_library_folder(), self.folder_name)
 
-		if not getattr(self, 'get_name_skip', False):
-			self.asset_name = self.props.asset_list
-			self.filepath = os.path.join(self.folder, self.asset_name)
+		self.asset_name = self.props.asset_list
+		self.filepath = os.path.join(self.folder, self.asset_name)
 
 
 class WM_OT_JewelCraft_Asset_Add_To_Library(Operator, Setup):
@@ -33,12 +33,20 @@ class WM_OT_JewelCraft_Asset_Add_To_Library(Operator, Setup):
 	bl_idname = 'wm.jewelcraft_asset_add_to_library'
 	bl_options = {'INTERNAL'}
 
-	get_name_skip = True
 	asset_name = StringProperty(name='Asset Name', description='Asset name', options={'SKIP_SAVE'})
 
 	@classmethod
 	def poll(cls, context):
 		return bool(context.window_manager.jewelcraft.asset_folder)
+
+	def __init__(self):
+		super().__init__()
+		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
+
+		self.asset_name = ''
+
+		if prefs.asset_name_from_obj:
+			self.asset_name = bpy.context.active_object.name
 
 	def draw(self, context):
 		layout = self.layout

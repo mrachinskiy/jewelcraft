@@ -4,6 +4,7 @@ import bpy
 lc_main = {
 	# Interface
 	'Asset Manager': 'Менеджер ассетов',
+	'New asset name from active object': 'Использовать имя активного объекта для нового ассета',
 	'Display asset name': 'Показывать название ассета',
 	'Alloys Set': 'Набор сплавов',
 	'Alloys Set:': 'Набор сплавов:',
@@ -117,6 +118,7 @@ lc_main = {
 	'Set custom asset library folder, if disabled the default library folder will be used': 'Указать пользовательский каталог библиотеки ассетов, если отключено, то используется стандартный каталог',
 	'Custom library folder path': 'Путь к пользовательскому каталогу библиотеки',
 	'Display asset name in Tool Shelf': 'Показывать название ассета в панели инструментов',
+	'Use active object name when creating new asset': 'Использовать имя активного объекта при создании нового ассета',
 
 	# Reports
 	'WARNING': 'ПРЕДУПРЕЖДЕНИЕ',

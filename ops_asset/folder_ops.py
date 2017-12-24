@@ -33,7 +33,6 @@ class WM_OT_JewelCraft_Asset_Folder_Create(Operator, Setup):
 	bl_idname = 'wm.jewelcraft_asset_folder_create'
 	bl_options = {'INTERNAL'}
 
-	get_name_skip = True
 	folder_name = StringProperty(name='Category Name', description='Category name', options={'SKIP_SAVE'})
 
 	def draw(self, context):
@@ -45,7 +44,6 @@ class WM_OT_JewelCraft_Asset_Folder_Create(Operator, Setup):
 	def execute(self, context):
 
 		folder = os.path.join(user_asset_library_folder(), self.folder_name)
-		print(folder)
 
 		if not os.path.exists(folder):
 			os.makedirs(folder)
