@@ -8,15 +8,34 @@ Features:
 * Calculate weight in a variety of precious alloys.
 * Present summary information about your design with product report.
 
-Watch:
+Video:
+
+v1.0
 
 * [Demo v1.0][2]
-* [Камни][3]
-* [Инструменты закрепки][4]
-* [Менеджер ассетов][5]
-* [Отчёт изделия][6]
-* [Оценка веса][7]
-* [Инструменты кривых и объектов][8]
+
+v2.0
+
+* [Gems][3]
+* [Jeweling][4]
+* [Asset Manager][5]
+* [Curve & Object tools][6]
+
+Видео:
+
+v2.0
+
+* [Камни][7]
+* [Инструменты закрепки][8]
+* [Менеджер ассетов][9]
+* [Отчёт изделия][10]
+* [Оценка веса][11]
+* [Инструменты кривых и объектов][12]
+
+v2.1
+
+* [Оценка веса][13]
+* [Виджеты][14]
 
 
 How to install
@@ -42,10 +61,18 @@ How to install
 
 
 [1]: https://github.com/mrachinskiy/jewelcraft/archive/master.zip
+
 [2]: https://youtu.be/XZ6uIdNnrHk
-[3]: https://youtu.be/DqzDK7dSlUM
-[4]: https://youtu.be/VVooIV8u1JI
-[5]: https://youtu.be/S_SkB3dn4co
-[6]: https://youtu.be/lOt1wpfUQT8
-[7]: https://youtu.be/qb4OriNIRQg
-[8]: https://youtu.be/RoeWbrNPGPU
+[3]: https://youtu.be/SdoJWLVSyuQ
+[4]: https://youtu.be/mAqSwtdHwxw
+[5]: https://youtu.be/G3B259jEN74
+[6]: https://youtu.be/czpxIUfnxBM
+
+[7]: https://youtu.be/DqzDK7dSlUM
+[8]: https://youtu.be/VVooIV8u1JI
+[9]: https://youtu.be/S_SkB3dn4co
+[10]: https://youtu.be/lOt1wpfUQT8
+[11]: https://youtu.be/qb4OriNIRQg
+[12]: https://youtu.be/RoeWbrNPGPU
+[13]: https://youtu.be/w2VWn8UlmPM
+[14]: https://youtu.be/Ck26lgKQ64Y

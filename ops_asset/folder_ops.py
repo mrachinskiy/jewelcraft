@@ -1,3 +1,24 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  JewelCraft jewelry design toolkit for Blender.
+#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# ##### END GPL LICENSE BLOCK #####
+
+
 import os
 
 import bpy
@@ -5,95 +26,86 @@ from bpy.types import Operator
 from bpy.props import StringProperty
 
 from .. import dynamic_lists
-from ..lib.asset import open_folder, user_asset_library_folder
+from ..lib import asset
 
 
 class Setup:
 
-	def __init__(self):
-		self.props = bpy.context.window_manager.jewelcraft
-		self.folder_name = self.props.asset_folder
-		self.folder = os.path.join(user_asset_library_folder(), self.folder_name)
+    def __init__(self):
+        self.props = bpy.context.window_manager.jewelcraft
+        self.folder_name = self.props.asset_folder
+        self.folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
 
 
-class WM_OT_JewelCraft_Asset_Library_Open(Operator):
-	"""Open asset library folder"""
-	bl_label = 'Open Library Folder'
-	bl_idname = 'wm.jewelcraft_asset_library_open'
-	bl_options = {'INTERNAL'}
+class WM_OT_jewelcraft_asset_folder_create(Operator, Setup):
+    bl_label = "Create Category"
+    bl_description = "Create category"
+    bl_idname = "wm.jewelcraft_asset_folder_create"
+    bl_options = {"INTERNAL"}
 
-	def execute(self, context):
-		open_folder(user_asset_library_folder())
-		return {'FINISHED'}
+    folder_name = StringProperty(name="Category Name", description="Category name", options={"SKIP_SAVE"})
 
+    def draw(self, context):
+        layout = self.layout
+        layout.separator()
+        row = layout.row()
+        row.label("Category Name")
+        row.prop(self, "folder_name", text="")
+        layout.separator()
 
-class WM_OT_JewelCraft_Asset_Folder_Create(Operator, Setup):
-	"""Create category"""
-	bl_label = 'Create Category'
-	bl_idname = 'wm.jewelcraft_asset_folder_create'
-	bl_options = {'INTERNAL'}
+    def execute(self, context):
+        folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
 
-	folder_name = StringProperty(name='Category Name', description='Category name', options={'SKIP_SAVE'})
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+            dynamic_lists.asset_folder_list_refresh()
+            self.props.asset_folder = self.folder_name
 
-	def draw(self, context):
-		layout = self.layout
-		layout.separator()
-		layout.prop(self, 'folder_name')
-		layout.separator()
+        return {"FINISHED"}
 
-	def execute(self, context):
-
-		folder = os.path.join(user_asset_library_folder(), self.folder_name)
-
-		if not os.path.exists(folder):
-			os.makedirs(folder)
-			dynamic_lists.asset_folder_list_refresh()
-			self.props.asset_folder = self.folder_name
-
-		return {'FINISHED'}
-
-	def invoke(self, context, event):
-		wm = context.window_manager
-		return wm.invoke_props_dialog(self)
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
 
 
-class WM_OT_JewelCraft_Asset_Folder_Rename(Operator, Setup):
-	"""Rename category"""
-	bl_label = 'Rename'
-	bl_idname = 'wm.jewelcraft_asset_folder_rename'
-	bl_options = {'INTERNAL'}
+class WM_OT_jewelcraft_asset_folder_rename(Operator, Setup):
+    bl_label = "Rename Category"
+    bl_description = "Rename category"
+    bl_idname = "wm.jewelcraft_asset_folder_rename"
+    bl_options = {"INTERNAL"}
 
-	folder_name = StringProperty(name='Category Name', description='Category name', options={'SKIP_SAVE'})
+    folder_name = StringProperty(name="Category Name", description="Category name", options={"SKIP_SAVE"})
 
-	def draw(self, context):
-		layout = self.layout
-		layout.separator()
-		layout.prop(self, 'folder_name')
-		layout.separator()
+    def draw(self, context):
+        layout = self.layout
+        layout.separator()
+        row = layout.row()
+        row.label("Category Name")
+        row.prop(self, "folder_name", text="")
+        layout.separator()
 
-	def execute(self, context):
+    def execute(self, context):
+        folder_new = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
 
-		folder_new = os.path.join(user_asset_library_folder(), self.folder_name)
+        if os.path.exists(self.folder):
+            os.rename(self.folder, folder_new)
+            dynamic_lists.asset_folder_list_refresh()
+            self.props.asset_folder = self.folder_name
 
-		if os.path.exists(self.folder):
-			os.rename(self.folder, folder_new)
-			dynamic_lists.asset_folder_list_refresh()
-			self.props.asset_folder = self.folder_name
+        return {"FINISHED"}
 
-		return {'FINISHED'}
-
-	def invoke(self, context, event):
-		wm = context.window_manager
-		return wm.invoke_props_dialog(self)
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
 
 
-class WM_OT_JewelCraft_Asset_UI_Refresh(Operator):
-	"""Refresh asset UI"""
-	bl_label = 'Refresh'
-	bl_idname = 'wm.jewelcraft_asset_ui_refresh'
-	bl_options = {'INTERNAL'}
+class WM_OT_jewelcraft_asset_ui_refresh(Operator):
+    bl_label = "Refresh"
+    bl_description = "Refresh asset UI"
+    bl_idname = "wm.jewelcraft_asset_ui_refresh"
+    bl_options = {"INTERNAL"}
 
-	def execute(self, context):
-		dynamic_lists.asset_folder_list_refresh()
-		dynamic_lists.asset_list_refresh(hard=True)
-		return {'FINISHED'}
+    def execute(self, context):
+        dynamic_lists.asset_folder_list_refresh()
+        dynamic_lists.asset_list_refresh(hard=True)
+        return {"FINISHED"}

@@ -19,36 +19,28 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-class Draw:
+import bpy
+
+
+def popup_report(self, info, title="", icon="NONE"):
 
     def draw(self, context):
-        layout = self.layout
+        self.layout.label(info)
 
-        if self.is_scatter:
-            split = layout.split()
-            split.label("Object Number")
-            split.prop(self, "number", text="")
+    self.report({"INFO"}, "{}: {}".format(title, info))
 
-            layout.separator()
+    bpy.context.window_manager.popup_menu(draw, title, icon)
 
-        split = layout.split()
-        split.label("Transforms")
-        col = split.column(align=True)
-        col.prop(self, "rot_y")
-        col.prop(self, "rot_z")
-        col.prop(self, "loc_z")
 
-        layout.separator()
+def popup_report_batch(self, info, title="", icon="NONE"):
 
-        split = layout.split()
-        split.label("Scatter (%)")
-        col = split.column(align=True)
-        col.prop(self, "start")
-        col.prop(self, "end")
+    def draw(self_local, context):
+        layout = self_local.layout
 
-        layout.separator()
+        for x in info:
+            layout.label(x)
+            self.report({"INFO"}, x)
 
-        split = layout.split()
-        split.prop(self, "absolute_ofst")
-        col = split.column(align=True)
-        col.prop(self, "spacing")
+    self.report({"INFO"}, "{}:\n".format(title))
+
+    bpy.context.window_manager.popup_menu(draw, title, icon)

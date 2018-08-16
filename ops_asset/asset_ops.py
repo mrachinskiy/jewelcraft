@@ -1,3 +1,24 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  JewelCraft jewelry design toolkit for Blender.
+#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# ##### END GPL LICENSE BLOCK #####
+
+
 import os
 
 import bpy
@@ -6,219 +27,213 @@ from bpy.props import StringProperty
 import bpy.utils.previews
 
 from .. import var, dynamic_lists
-from ..lib.asset import (
-	asset_export,
-	asset_import_batch,
-	render_preview,
-	face_pos,
-	user_asset_library_folder,
-	)
+from ..lib import asset
 
 
 class Setup:
 
-	def __init__(self):
-		self.props = bpy.context.window_manager.jewelcraft
-
-		self.folder_name = self.props.asset_folder
-		self.folder = os.path.join(user_asset_library_folder(), self.folder_name)
-
-		self.asset_name = self.props.asset_list
-		self.filepath = os.path.join(self.folder, self.asset_name)
+    def __init__(self):
+        self.props = bpy.context.window_manager.jewelcraft
+        self.folder_name = self.props.asset_folder
+        self.folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
+        self.asset_name = self.props.asset_list
+        self.filepath = os.path.join(self.folder, self.asset_name)
 
 
-class WM_OT_JewelCraft_Asset_Add_To_Library(Operator, Setup):
-	"""Add selected objects to asset library"""
-	bl_label = 'Add To Library'
-	bl_idname = 'wm.jewelcraft_asset_add_to_library'
-	bl_options = {'INTERNAL'}
+class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
+    bl_label = "Add To Library"
+    bl_description = "Add selected objects to asset library"
+    bl_idname = "wm.jewelcraft_asset_add_to_library"
+    bl_options = {"INTERNAL"}
 
-	asset_name = StringProperty(name='Asset Name', description='Asset name', options={'SKIP_SAVE'})
+    asset_name = StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
 
-	@classmethod
-	def poll(cls, context):
-		return bool(context.window_manager.jewelcraft.asset_folder)
+    @classmethod
+    def poll(cls, context):
+        return bool(context.window_manager.jewelcraft.asset_folder)
 
-	def __init__(self):
-		super().__init__()
-		prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
+    def __init__(self):
+        super().__init__()
+        prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
 
-		self.asset_name = ''
+        if prefs.asset_name_from_obj:
+            self.asset_name = bpy.context.active_object.name
+        else:
+            self.asset_name = ""
 
-		if prefs.asset_name_from_obj:
-			self.asset_name = bpy.context.active_object.name
+    def draw(self, context):
+        layout = self.layout
+        layout.separator()
+        row = layout.row()
+        row.label("Asset Name")
+        row.prop(self, "asset_name", text="")
+        layout.separator()
 
-	def draw(self, context):
-		layout = self.layout
-		layout.separator()
-		layout.prop(self, 'asset_name')
-		layout.separator()
+    def execute(self, context):
+        filepath = os.path.join(self.folder, self.asset_name)
 
-	def execute(self, context):
-		filepath = os.path.join(self.folder, self.asset_name)
+        asset.asset_export(folder=self.folder, filename=self.asset_name + ".blend")
+        asset.render_preview(filepath=filepath + ".png")
+        dynamic_lists.asset_list_refresh()
+        self.props.asset_list = self.asset_name
 
-		asset_export(folder=self.folder, filename=self.asset_name + '.blend')
-		render_preview(filepath=filepath + '.png')
-		dynamic_lists.asset_list_refresh()
-		self.props.asset_list = self.asset_name
+        return {"FINISHED"}
 
-		return {'FINISHED'}
-
-	def invoke(self, context, event):
-		wm = context.window_manager
-		return wm.invoke_props_dialog(self)
-
-
-class WM_OT_JewelCraft_Asset_Remove_From_Library(Operator, Setup):
-	"""Remove asset from library"""
-	bl_label = 'Remove Asset'
-	bl_idname = 'wm.jewelcraft_asset_remove_from_library'
-	bl_options = {'INTERNAL'}
-
-	@classmethod
-	def poll(cls, context):
-		return bool(context.window_manager.jewelcraft.asset_list)
-
-	def execute(self, context):
-		asset_list = dynamic_lists.assets(self, context)
-		prev_item = ''
-		last_item = self.asset_name == asset_list[-1][0]
-
-		for ast in asset_list:
-			if ast[0] == self.asset_name:
-				break
-			prev_item = ast[0]
-
-		os.remove(self.filepath + '.blend')
-		os.remove(self.filepath + '.png')
-
-		dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
-
-		if last_item:
-			try:
-				self.props.asset_list = prev_item
-			except:
-				pass
-
-		return {'FINISHED'}
-
-	def invoke(self, context, event):
-		wm = context.window_manager
-		return wm.invoke_confirm(self, event)
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
 
 
-class WM_OT_JewelCraft_Asset_Rename(Operator, Setup):
-	"""Rename asset"""
-	bl_label = 'Rename Asset'
-	bl_idname = 'wm.jewelcraft_asset_rename'
-	bl_options = {'INTERNAL'}
+class WM_OT_jewelcraft_asset_remove_from_library(Operator, Setup):
+    bl_label = "Remove Asset"
+    bl_description = "Remove asset from library"
+    bl_idname = "wm.jewelcraft_asset_remove_from_library"
+    bl_options = {"INTERNAL"}
 
-	asset_name = StringProperty(name='Asset Name', description='Asset name', options={'SKIP_SAVE'})
+    @classmethod
+    def poll(cls, context):
+        return bool(context.window_manager.jewelcraft.asset_list)
 
-	@classmethod
-	def poll(cls, context):
-		return bool(context.window_manager.jewelcraft.asset_list)
+    def execute(self, context):
+        asset_list = dynamic_lists.assets(self, context)
+        last = self.asset_name == asset_list[-1][0]
+        iterable = len(asset_list) > 1
 
-	def draw(self, context):
-		layout = self.layout
-		layout.separator()
-		layout.prop(self, 'asset_name')
-		layout.separator()
+        if os.path.exists(self.filepath + ".blend"):
+            os.remove(self.filepath + ".blend")
 
-	def execute(self, context):
-		name_current = self.props.asset_list
+        if os.path.exists(self.filepath + ".png"):
+            os.remove(self.filepath + ".png")
 
-		file_current = os.path.join(self.folder, name_current + '.blend')
-		file_preview_current = os.path.join(self.folder, name_current + '.png')
+        dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
 
-		file_new = os.path.join(self.folder, self.asset_name + '.blend')
-		file_preview_new = os.path.join(self.folder, self.asset_name + '.png')
+        if last and iterable:
+            self.props.asset_list = asset_list[-2][0]
 
-		if not os.path.exists(self.folder):
-			return {'FINISHED'}
+        return {"FINISHED"}
 
-		os.rename(file_current, file_new)
-		os.rename(file_preview_current, file_preview_new)
-
-		dynamic_lists.asset_list_refresh()
-		self.props.asset_list = self.asset_name
-
-		return {'FINISHED'}
-
-	def invoke(self, context, event):
-		wm = context.window_manager
-		return wm.invoke_props_dialog(self)
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_confirm(self, event)
 
 
-class WM_OT_JewelCraft_Asset_Replace(Operator, Setup):
-	"""Replace current asset with selected objects"""
-	bl_label = 'Replace Asset'
-	bl_idname = 'wm.jewelcraft_asset_replace'
-	bl_options = {'INTERNAL'}
+class WM_OT_jewelcraft_asset_rename(Operator, Setup):
+    bl_label = "Rename Asset"
+    bl_description = "Rename asset"
+    bl_idname = "wm.jewelcraft_asset_rename"
+    bl_options = {"INTERNAL"}
 
-	@classmethod
-	def poll(cls, context):
-		return bool(context.window_manager.jewelcraft.asset_list)
+    asset_name = StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
 
-	def execute(self, context):
-		asset_export(folder=self.folder, filename=self.asset_name + '.blend')
-		return {'FINISHED'}
+    @classmethod
+    def poll(cls, context):
+        return bool(context.window_manager.jewelcraft.asset_list)
 
-	def invoke(self, context, event):
-		wm = context.window_manager
-		return wm.invoke_confirm(self, event)
+    def draw(self, context):
+        layout = self.layout
+        layout.separator()
+        row = layout.row()
+        row.label("Asset Name")
+        row.prop(self, "asset_name", text="")
+        layout.separator()
+
+    def execute(self, context):
+        name_current = self.props.asset_list
+
+        file_current = os.path.join(self.folder, name_current + ".blend")
+        file_preview_current = os.path.join(self.folder, name_current + ".png")
+
+        file_new = os.path.join(self.folder, self.asset_name + ".blend")
+        file_preview_new = os.path.join(self.folder, self.asset_name + ".png")
+
+        if not os.path.exists(file_current):
+            self.report({"ERROR"}, "File not found")
+            return {"CANCELLED"}
+
+        os.rename(file_current, file_new)
+
+        if os.path.exists(file_preview_current):
+            os.rename(file_preview_current, file_preview_new)
+
+        dynamic_lists.asset_list_refresh()
+        self.props.asset_list = self.asset_name
+
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
 
 
-class WM_OT_JewelCraft_Asset_Preview_Replace(Operator, Setup):
-	"""Replace asset preview image"""
-	bl_label = 'Replace Asset Preview'
-	bl_idname = 'wm.jewelcraft_asset_preview_replace'
-	bl_options = {'INTERNAL'}
+class WM_OT_jewelcraft_asset_replace(Operator, Setup):
+    bl_label = "Replace Asset"
+    bl_description = "Replace current asset with selected objects"
+    bl_idname = "wm.jewelcraft_asset_replace"
+    bl_options = {"INTERNAL"}
 
-	@classmethod
-	def poll(cls, context):
-		return bool(context.window_manager.jewelcraft.asset_list)
+    @classmethod
+    def poll(cls, context):
+        return bool(context.window_manager.jewelcraft.asset_list)
 
-	def execute(self, context):
-		render_preview(filepath=self.filepath + '.png')
-		dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
-		return {'FINISHED'}
+    def execute(self, context):
+        asset.asset_export(folder=self.folder, filename=self.asset_name + ".blend")
+        return {"FINISHED"}
 
-	def invoke(self, context, event):
-		wm = context.window_manager
-		return wm.invoke_confirm(self, event)
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_confirm(self, event)
 
 
-class WM_OT_JewelCraft_Asset_Import(Operator, Setup):
-	"""Import selected asset"""
-	bl_label = 'JewelCraft Import Asset'
-	bl_idname = 'wm.jewelcraft_asset_import'
-	bl_options = {'REGISTER', 'UNDO'}
+class WM_OT_jewelcraft_asset_preview_replace(Operator, Setup):
+    bl_label = "Replace Asset Preview"
+    bl_description = "Replace asset preview image"
+    bl_idname = "wm.jewelcraft_asset_preview_replace"
+    bl_options = {"INTERNAL"}
 
-	@classmethod
-	def poll(cls, context):
-		return bool(context.window_manager.jewelcraft.asset_list)
+    @classmethod
+    def poll(cls, context):
+        return bool(context.window_manager.jewelcraft.asset_list)
 
-	def execute(self, context):
-		scene = context.scene
+    def execute(self, context):
+        asset.render_preview(filepath=self.filepath + ".png")
+        dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
+        return {"FINISHED"}
 
-		for ob in scene.objects:
-			ob.select = False
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_confirm(self, event)
 
-		imported = asset_import_batch(filepath=self.filepath + '.blend')
-		obs = imported.objects
 
-		for ob in obs:
-			scene.objects.link(ob)
-			ob.select = True
+class WM_OT_jewelcraft_asset_import(Operator, Setup):
+    bl_label = "JewelCraft Import Asset"
+    bl_description = "Import selected asset"
+    bl_idname = "wm.jewelcraft_asset_import"
+    bl_options = {"REGISTER", "UNDO"}
 
-		if len(obs) == 1:
-			ob.location = scene.cursor_location
+    @classmethod
+    def poll(cls, context):
+        return bool(context.window_manager.jewelcraft.asset_list)
 
-			if context.mode == 'EDIT_MESH':
-				face_pos(ob)
-				bpy.ops.object.mode_set(mode='OBJECT')
+    def execute(self, context):
+        scene = context.scene
 
-		scene.objects.active = ob
+        for ob in scene.objects:
+            ob.select = False
 
-		return {'FINISHED'}
+        imported = asset.asset_import_batch(filepath=self.filepath + ".blend")
+        obs = imported.objects
+
+        for ob in obs:
+            scene.objects.link(ob)
+            ob.select = True
+
+        if len(obs) == 1:
+            ob.location = scene.cursor_location
+
+            if context.mode == "EDIT_MESH":
+                asset.ob_copy_to_pos(ob)
+                bpy.ops.object.mode_set(mode="OBJECT")
+
+        scene.objects.active = ob
+
+        return {"FINISHED"}
