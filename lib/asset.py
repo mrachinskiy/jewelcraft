@@ -1,7 +1,26 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  JewelCraft jewelry design toolkit for Blender.
+#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# ##### END GPL LICENSE BLOCK #####
+
+
 import os
 import random
-import sys
-import subprocess
 
 import bpy
 from mathutils import Matrix
@@ -10,307 +29,244 @@ from . import mesh
 from .. import var
 
 
-def face_pos(ob):
-	scene = bpy.context.scene
-	obj = bpy.context.active_object
+# Gem
+# ------------------------------------
 
-	# Update mesh
-	bpy.ops.object.mode_set(mode='OBJECT')
-	bpy.ops.object.mode_set(mode='EDIT')
 
-	mods_ignore = [(x, x.show_viewport) for x in obj.modifiers if x.type == 'SUBSURF']
+def get_gem(self, context):
+    ob = context.active_object
 
-	if mods_ignore:
-		for mod in mods_ignore:
-			mod[0].show_viewport = False
-		scene.update()
+    self.gem_w = ob.dimensions[0]
+    self.gem_l = ob.dimensions[1]
+    self.gem_h = ob.dimensions[2]
 
-	bm = mesh.to_bmesh(obj, triangulate=False)
-	bm.normal_update()
+    self.cut = ob["gem"]["cut"] if "gem" in ob else ""
 
-	if mods_ignore:
-		for mod in mods_ignore:
-			mod[0].show_viewport = mod[1]
+    self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
 
-	faces = [x for x in bm.faces if x.select]
+    if self.cut in {"SQUARE", "ASSCHER", "PRINCESS", "CUSHION", "RADIANT", "FLANDERS", "OCTAGON"}:
+        self.shape_sq = True
+    elif self.cut in {"BAGUETTE", "EMERALD"}:
+        self.shape_rect = True
+    elif self.cut in {"TRILLION", "TRILLIANT", "TRIANGLE"}:
+        self.shape_tri = True
+    elif self.cut in {"PEAR", "MARQUISE", "HEART", "OVAL"}:
+        self.shape_fant = True
+    else:
+        self.shape_rnd = True
 
-	if faces:
 
-		if len(faces) > 1:
-			for f in faces[:-1]:
-				ob_copy = ob.copy()
-				scene.objects.link(ob_copy)
+def get_name(x):
+    return x.replace("_", " ").title()
 
-				loc = Matrix.Translation(f.calc_center_median())
-				quat = f.normal.to_track_quat('Z', 'Y').to_matrix().to_4x4()
 
-				ob_copy.matrix_world = loc * quat
+# Material
+# ------------------------------------
 
-		f = faces[-1]
 
-		loc = Matrix.Translation(f.calc_center_median())
-		quat = f.normal.to_track_quat('Z', 'Y').to_matrix().to_4x4()
+def color_rnd():
+    seq = (0.0, 0.5, 1.0)
+    return random.choice(seq), random.choice(seq), random.choice(seq)
 
-		ob.matrix_world = loc * quat
 
-	bm.free()
+def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8), is_gem=False):
+    mat = bpy.data.materials.get(mat_name)
 
+    if not mat:
+        mat = bpy.data.materials.new(mat_name)
+        mat.diffuse_color = color
 
-def open_folder(path):
-	if os.path.exists(path):
-		if sys.platform == 'win32':
-			os.startfile(path)
-		elif sys.platform == 'darwin':
-			subprocess.Popen(["open", path])
-		else:
-			subprocess.Popen(["xdg-open", path])
+        if not is_gem:
+            mat.specular_color = (0.0, 0.0, 0.0)
 
+        if bpy.context.scene.render.engine == "CYCLES":
+            mat.use_nodes = True
+            nodes = mat.node_tree.nodes
 
-def init_gem(self):
-	props = bpy.context.window_manager.jewelcraft
+            for node in nodes:
+                nodes.remove(node)
 
-	self.stone = props.gem_stone
-	self.cut = props.gem_cut
-	self.color = gen_color(contrast=True)
+            if is_gem:
+                node = nodes.new("ShaderNodeBsdfGlass")
+            else:
+                node = nodes.new("ShaderNodeBsdfGlossy")
 
+            node.inputs["Color"].default_value = color + (1.0,)
+            node.location = (0.0, 200.0)
 
-def get_gem(self):
-	obj = bpy.context.active_object
+            node_out = nodes.new("ShaderNodeOutputMaterial")
+            node_out.location = (200.0, 200.0)
 
-	self.gem_l = obj.dimensions[1]
-	self.gem_w = obj.dimensions[0]
-	self.gem_h = obj.dimensions[2]
+            mat.node_tree.links.new(node.outputs["BSDF"], node_out.inputs["Surface"])
 
-	self.cut = obj['gem']['cut'] if 'gem' in obj else ''
+    if ob.material_slots:
+        ob.material_slots[0].material = mat
+    else:
+        ob.data.materials.append(mat)
 
-	self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
 
-	if self.cut == 'ROUND':
-		self.shape_rnd = True
-	elif self.cut in {'SQUARE', 'ASSCHER', 'PRINCESS', 'CUSHION', 'RADIANT', 'FLANDERS', 'OCTAGON'}:
-		self.shape_sq = True
-	elif self.cut in {'BAGUETTE', 'EMERALD'}:
-		self.shape_rect = True
-	elif self.cut in {'TRILLION', 'TRILLIANT', 'TRIANGLE'}:
-		self.shape_tri = True
-	elif self.cut in {'PEAR', 'MARQUISE', 'HEART', 'OVAL'}:
-		self.shape_fant = True
+# Asset
+# ------------------------------------
 
 
-def get_stone_name(stone):
-	return stone.replace('_', ' ').title()
+def user_asset_library_folder_object():
+    prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
 
+    if prefs.use_custom_asset_dir:
+        return bpy.path.abspath(prefs.custom_asset_dir)
 
-def get_cut_name(cut):
-	return cut.title()
+    return var.USER_ASSET_DIR_OBJECT
 
 
-def set_stone_name(self):
-	self.stone_name = self.stone.replace('_', ' ').title()
+def user_asset_library_folder_weighting():
+    prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
 
+    if prefs.weighting_set_use_custom_dir:
+        return bpy.path.abspath(prefs.weighting_set_custom_dir)
 
-def set_cut_name(self):
-	self.cut_name = self.cut.title()
+    return var.USER_ASSET_DIR_WEIGHTING
 
 
-def bm_to_scene(bm, name='New Object', color=None):
-	me = bpy.data.meshes.new(name)
-	bm.to_mesh(me)
-	bm.free()
+def asset_import(filepath="", ob_name=False, me_name=False):
 
-	scene = bpy.context.scene
+    with bpy.data.libraries.load(filepath) as (data_from, data_to):
 
-	for obj in bpy.context.selected_objects:
+        if ob_name:
+            data_to.objects = [ob_name]
 
-		ob = bpy.data.objects.new(name, me)
-		ob.show_all_edges = True
-		ob.location = obj.location
-		ob.rotation_euler = obj.rotation_euler
+        if me_name:
+            data_to.meshes = [me_name]
 
-		ob.parent = obj
-		ob.matrix_parent_inverse = obj.matrix_basis.inverted()
+    return data_to
 
-		add_material(ob, mat_name=name, color_rnd=color)
 
-		scene.objects.link(ob)
+def asset_import_batch(filepath=""):
 
+    with bpy.data.libraries.load(filepath) as (data_from, data_to):
+        data_to.objects = data_from.objects
 
-def dist_helper(ob, ofst):
-	size = max(ob.dimensions[:2]) + ofst * 2
-	bm = mesh.make_circle(size)
+    return data_to
 
-	me = bpy.data.meshes.new('Helper')
-	bm.to_mesh(me)
-	bm.free()
 
-	scene = bpy.context.scene
+def asset_export(folder="", filename=""):
+    filepath = os.path.join(folder, filename)
+    data_blocks = set(bpy.context.selected_objects)
 
-	for obj in bpy.context.selected_objects:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
-		ob = bpy.data.objects.new('Helper', me)
-		ob.show_all_edges = True
-		ob.location = obj.location
-		ob.rotation_euler = obj.rotation_euler
+    bpy.data.libraries.write(filepath, data_blocks, compress=True)
 
-		ob.parent = obj
-		ob.matrix_parent_inverse = obj.matrix_basis.inverted()
 
-		scene.objects.link(ob)
+def render_preview(filepath="//"):
+    render = bpy.context.scene.render
+    image = render.image_settings
 
-		ob['helper'] = True
-		ob.hide_select = True
-		ob.hide_render = True
+    # Apply settings
+    # ---------------------------
 
+    settings_render = {
+        "filepath": filepath,
+        "resolution_x": 256,
+        "resolution_y": 256,
+        "resolution_percentage": 100,
+        "alpha_mode": "TRANSPARENT",
+    }
 
-def gen_color(contrast=False):
-	if contrast:
-		seq = (0.0, 0.5, 1.0)
-		color = [random.choice(seq), random.choice(seq), random.choice(seq)]
-	else:
-		color = [random.random(), random.random(), random.random()]
+    settings_image = {
+        "file_format": "PNG",
+        "color_mode": "RGBA",
+        "compression": 100,
+    }
 
-	return color
+    for k, v in settings_render.items():
+        x = getattr(render, k)
+        setattr(render, k, v)
+        settings_render[k] = x
 
+    for k, v in settings_image.items():
+        x = getattr(image, k)
+        setattr(image, k, v)
+        settings_image[k] = x
 
-def user_asset_library_folder():
-	prefs = bpy.context.user_preferences.addons[var.addon_id].preferences
+    # Render and save
+    # ---------------------------
 
-	if prefs.use_custom_asset_dir:
-		return bpy.path.abspath(prefs.custom_asset_dir)
+    bpy.ops.render.opengl(write_still=True)
 
-	return var.user_asset_dir
+    # Revert settings
+    # ---------------------------
 
+    for k, v in settings_render.items():
+        setattr(render, k, v)
 
-def asset_import(filepath='', ob_name=False, me_name=False):
+    for k, v in settings_image.items():
+        setattr(image, k, v)
 
-	with bpy.data.libraries.load(filepath) as (data_from, data_to):
-		if ob_name:
-			data_to.objects = [ob_name]
-		if me_name:
-			data_to.meshes = [me_name]
 
-	return data_to
+# Object
+# ------------------------------------
 
 
-def asset_import_batch(filepath=''):
+def bm_to_scene(bm, name="New object", color=None):
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
 
-	with bpy.data.libraries.load(filepath) as (data_from, data_to):
-		data_to.objects = data_from.objects
+    scene = bpy.context.scene
 
-	return data_to
+    for ob_par in bpy.context.selected_objects:
 
+        ob = bpy.data.objects.new(name, me)
+        ob.show_all_edges = True
+        ob.location = ob_par.location
+        ob.rotation_euler = ob_par.rotation_euler
 
-def asset_export(folder='', filename=''):
-	filepath = os.path.join(folder, filename)
-	data_blocks = set(bpy.context.selected_objects)
+        ob.parent = ob_par
+        ob.matrix_parent_inverse = ob_par.matrix_basis.inverted()
 
-	if not os.path.exists(folder):
-		os.makedirs(folder)
+        add_material(ob, mat_name=name, color=color)
 
-	bpy.data.libraries.write(filepath, data_blocks, compress=True)
-
-
-def render_preview(filepath=''):
-	render = bpy.context.scene.render
-
-	# Store settings
-	# ---------------------------
-
-	fpath = render.filepath
-	x = render.resolution_x
-	y = render.resolution_y
-	res = render.resolution_percentage
-	ext = render.image_settings.file_format
-	alpha = render.alpha_mode
-	color = render.image_settings.color_mode
-	comp = render.image_settings.compression
-
-	# Apply settings
-	# ---------------------------
-
-	render.filepath = filepath
-	render.resolution_x = 256
-	render.resolution_y = 256
-	render.resolution_percentage = 100
-	render.image_settings.file_format = 'PNG'
-	render.alpha_mode = 'TRANSPARENT'
-	render.image_settings.color_mode = 'RGBA'
-	render.image_settings.compression = 100
-
-	# Render and save
-	# ---------------------------
-
-	bpy.ops.render.opengl(write_still=True)
-
-	# Revert settings
-	# ---------------------------
-
-	render.filepath = fpath
-	render.resolution_x = x
-	render.resolution_y = y
-	render.resolution_percentage = res
-	render.image_settings.file_format = ext
-	render.alpha_mode = alpha
-	render.image_settings.color_mode = color
-	render.image_settings.compression = comp
-
-
-def add_material_for_gem(self, ob):
-	add_material(ob, mat_name=self.stone_name, mat_type=self.stone, is_gem=True, color_rnd=self.color)
-
-
-def add_material(ob, mat_name='New Material', mat_type=None, is_gem=False, color_rnd=None):
-
-	mat = bpy.data.materials.get(mat_name)
-	mat_type = mat_type if mat_type else mat_name.upper()
-
-	if not mat:
-
-		mat = bpy.data.materials.new(mat_name)
-		color = var.default_color.get(mat_type)
-
-		if not color:
-			color = color_rnd if color_rnd else gen_color()
-
-		mat.diffuse_color = color
-		if not is_gem:
-			mat.specular_color = (0.0, 0.0, 0.0)
-
-		if bpy.context.scene.render.engine == 'CYCLES':
-			mat.use_nodes = True
-			nodes = mat.node_tree.nodes
-
-			for nd in nodes:
-				nodes.remove(nd)
-
-			if is_gem:
-				node = nodes.new('ShaderNodeBsdfGlass')
-			else:
-				node = nodes.new('ShaderNodeBsdfGlossy')
-
-			node.location = (0.0, 200.0)
-			node.inputs['Color'].default_value = color + [1.0]
-
-			node_out = nodes.new('ShaderNodeOutputMaterial')
-			node_out.location = (200.0, 200.0)
-
-			mat.node_tree.links.new(node.outputs['BSDF'], node_out.inputs['Surface'])
-
-	if len(ob.material_slots) < 1:
-		ob.data.materials.append(mat)
-	else:
-		ob.material_slots[0].material = mat
+        scene.objects.link(ob)
+        ob.layers = ob_par.layers
 
 
 def apply_scale(ob):
+    mat = Matrix()
+    mat[0][0] = ob.scale[0]
+    mat[1][1] = ob.scale[1]
+    mat[2][2] = ob.scale[2]
 
-	scale_mat = Matrix((
-		(ob.scale[0], 0.0, 0.0, 0.0),
-		(0.0, ob.scale[1], 0.0, 0.0),
-		(0.0, 0.0, ob.scale[2], 0.0),
-		(0.0, 0.0, 0.0, 1.0),
-		))
+    ob.data.transform(mat)
 
-	ob.data.transform(scale_mat)
+    ob.scale = (1.0, 1.0, 1.0)
 
-	ob.scale = (1.0, 1.0, 1.0)
+
+def ob_copy_to_pos(ob):
+    scene = bpy.context.scene
+    mats = mesh.face_pos()
+
+    if mats:
+        ob.matrix_world = mats.pop()
+
+        for mat in mats:
+            ob_copy = ob.copy()
+            scene.objects.link(ob_copy)
+            ob_copy.matrix_world = mat
+
+
+def mod_curve_off(ob, reverse=False):
+    """return -> bound box, curve object"""
+
+    mods = reversed(ob.modifiers) if reverse else ob.modifiers
+
+    for mod in mods:
+        if mod.type == "CURVE" and mod.object:
+            if mod.show_viewport:
+                mod.show_viewport = False
+                bpy.context.scene.update()
+                mod.show_viewport = True
+
+            return ob.bound_box, mod.object
+
+    return ob.bound_box, None

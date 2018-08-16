@@ -1,58 +1,78 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  JewelCraft jewelry design toolkit for Blender.
+#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# ##### END GPL LICENSE BLOCK #####
+
+
 from math import radians
 
-import bpy
 from bpy.types import Operator
 from bpy.props import BoolProperty, FloatProperty, IntProperty
 
 from .. import var
-from ..lib.asset import get_gem, bm_to_scene
-from .prongs_draw import UI_Draw
+from ..lib import asset
+from .prongs_draw import Draw
 from .prongs_presets import init_presets
 from .prongs_mesh import create_prongs
 
 
-class OBJECT_OT_JewelCraft_Prongs_Add(UI_Draw, Operator):
-	"""Create prongs for selected gems"""
-	bl_label = 'JewelCraft Make Prongs'
-	bl_idname = 'object.jewelcraft_prongs_add'
-	bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+class OBJECT_OT_jewelcraft_prongs_add(Draw, Operator):
+    bl_label = "JewelCraft Make Prongs"
+    bl_description = "Create prongs for selected gems"
+    bl_idname = "object.jewelcraft_prongs_add"
+    bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-	auto_presets = BoolProperty(name='Use Automated Presets', description='Use automatically generated presets, discards user edits or presets', default=True)
+    auto_presets = BoolProperty(name="Use Automated Presets", description="Use automatically generated presets, discards user edits or presets", default=True)
 
-	number = IntProperty(name='Prong Number', default=4, min=1, soft_max=10)
+    number = IntProperty(name="Prong Number", default=4, min=1, soft_max=10)
 
-	diameter = FloatProperty(name='Diameter', default=0.4, min=0.0, step=1, unit='LENGTH')
-	z_top = FloatProperty(name='Height Top', default=0.4, step=1, unit='LENGTH')
-	z_btm = FloatProperty(name='Height Bottom', default=0.5, step=1, unit='LENGTH')
+    diameter = FloatProperty(name="Diameter", default=0.4, min=0.0, step=1, unit="LENGTH")
+    z_top = FloatProperty(name="Height Top", default=0.4, step=1, unit="LENGTH")
+    z_btm = FloatProperty(name="Height Bottom", default=0.5, step=1, unit="LENGTH")
 
-	position = FloatProperty(name='Position', default=radians(45.0), step=100, precision=0, unit='ROTATION')
-	intersection = FloatProperty(name='Intersection', default=30.0, soft_min=0.0, soft_max=100.0, precision=0, subtype='PERCENTAGE')
-	alignment = FloatProperty(name='Alignment', step=100, precision=0, unit='ROTATION')
+    position = FloatProperty(name="Position", default=radians(45.0), step=100, precision=0, unit="ROTATION")
+    intersection = FloatProperty(name="Intersection", default=30.0, soft_min=0.0, soft_max=100.0, precision=0, subtype="PERCENTAGE")
+    alignment = FloatProperty(name="Alignment", step=100, precision=0, unit="ROTATION")
 
-	symmetry = BoolProperty(name='Symmetry')
-	symmetry_pivot = FloatProperty(name='Symmetry Pivot', step=100, precision=0, unit='ROTATION')
+    symmetry = BoolProperty(name="Symmetry")
+    symmetry_pivot = FloatProperty(name="Symmetry Pivot", step=100, precision=0, unit="ROTATION")
 
-	bump_scale = FloatProperty(name='Bump Scale', default=0.5, soft_min=0.0, soft_max=1.0, subtype='FACTOR')
-	taper = FloatProperty(name='Taper', default=0.0, min=0.0, soft_max=1.0, subtype='FACTOR')
+    bump_scale = FloatProperty(name="Bump Scale", default=0.5, soft_min=0.0, soft_max=1.0, subtype="FACTOR")
+    taper = FloatProperty(name="Taper", default=0.0, min=0.0, soft_max=1.0, subtype="FACTOR")
 
-	detalization = IntProperty(name='Detalization', default=32, min=12, soft_max=64, step=1)
+    detalization = IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
-	@classmethod
-	def poll(cls, context):
-		return context.active_object is not None and bool(context.selected_objects)
+    def execute(self, context):
+        bm = create_prongs(self)
+        asset.bm_to_scene(bm, name="Prongs", color=self.color)
 
-	def __init__(self):
-		if bpy.context.active_object is None:
-			return
+        return {"FINISHED"}
 
-		get_gem(self)
-		self.color = list(bpy.context.user_preferences.addons[var.addon_id].preferences.color_prongs)
+    def invoke(self, context, event):
+        if not context.active_object or not context.selected_objects:
+            self.report({"ERROR"}, "At least one gem object must be selected")
+            return {"CANCELLED"}
 
-		if self.auto_presets:
-			init_presets(self)
+        asset.get_gem(self, context)
+        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+        self.color = tuple(prefs.color_prongs)
 
-	def execute(self, context):
-		bm = create_prongs(self)
-		bm_to_scene(bm, name='Prongs', color=self.color)
+        if self.auto_presets:
+            init_presets(self)
 
-		return {'FINISHED'}
+        return self.execute(context)

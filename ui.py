@@ -1,347 +1,396 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  JewelCraft jewelry design toolkit for Blender.
+#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# ##### END GPL LICENSE BLOCK #####
+
+
 import bpy
-from bpy.types import Panel, Menu
+from bpy.types import Panel, Menu, UIList
 
-from . import dynamic_lists
-
-# Extern
-from . import addon_updater_ops
-
-
-preview_collections = {}
+from . import var, addon_updater_ops
+from .lib import asset
 
 
 # Utils
 # ---------------------------
 
 
-def icon_tria(prop):
-	if prop:
-		return 'TRIA_DOWN'
-
-	return 'TRIA_RIGHT'
-
-
 class Setup:
-	bl_category = 'JewelCraft'
-	bl_space_type = 'VIEW_3D'
-	bl_region_type = 'TOOLS'
+    bl_category = "JewelCraft"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
 
-	def __init__(self):
-		self.prefs = bpy.context.user_preferences.addons[__package__].preferences
-		self.scene_props = bpy.context.scene.jewelcraft
-		self.wm_props = bpy.context.window_manager.jewelcraft
+    def __init__(self):
+        self.prefs = bpy.context.user_preferences.addons[__package__].preferences
+        self.scene_props = bpy.context.scene.jewelcraft
+        self.wm_props = bpy.context.window_manager.jewelcraft
+        self.pcoll = var.preview_collections["icons"]
 
 
-# Presets
+# Lists
 # ---------------------------
 
 
-class VIEW3D_MT_JewelCraft_Weighting_Presets(Menu):
-	"""Weighting presets"""
-	bl_label = 'Presets'
-	preset_subdir = 'jewelcraft_weighting'
-	preset_operator = 'script.execute_preset'
-	draw = Menu.draw_preset
+class VIEW3D_UL_jewelcraft_weighting_set(UIList, Setup):
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        row = layout.row(align=True)
+        row.prop(item, "enabled", text="")
+
+        row = row.row(align=True)
+        row.active = item.enabled
+        row.prop(item, "name", text="", emboss=False)
+
+        if self.prefs.weighting_list_show_composition:
+            sub = row.row(align=True)
+            sub.scale_x = 1.5
+            sub.prop(item, "composition", text="", emboss=False)
+
+        if self.prefs.weighting_list_show_density:
+            sub = row.row(align=True)
+            sub.scale_x = 0.5
+            sub.prop(item, "density", text="", emboss=False)
 
 
 # Menus
 # ---------------------------
 
 
-class VIEW3D_MT_JewelCraft_Select_Gem_By(Menu):
-	"""Select gems by trait"""
-	bl_label = 'Select Gems By...'
+class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
+    bl_label = "Select Gems By..."
+    bl_description = "Select gems by trait"
 
-	def draw(self, context):
-		layout = self.layout
-
-		layout.operator('object.jewelcraft_select_gems_by_trait', text='Size', text_ctxt='Dative').filter_size = True
-		layout.operator('object.jewelcraft_select_gems_by_trait', text='Stone', text_ctxt='Dative').filter_stone = True
-		layout.operator('object.jewelcraft_select_gems_by_trait', text='Cut', text_ctxt='Dative').filter_cut = True
-		layout.separator()
-		layout.operator('object.jewelcraft_select_gems_by_trait', text='Similar').filter_similar = True
-		layout.separator()
-		layout.operator('object.jewelcraft_select_doubles', text='Doubles')
-		layout.separator()
-		layout.operator('object.jewelcraft_select_gems_by_trait', text='All')
+    def draw(self, context):
+        layout = self.layout
+        layout.operator("object.jewelcraft_select_gems_by_trait", text="Size", text_ctxt="Dative").filter_size = True
+        layout.operator("object.jewelcraft_select_gems_by_trait", text="Stone", text_ctxt="Dative").filter_stone = True
+        layout.operator("object.jewelcraft_select_gems_by_trait", text="Cut", text_ctxt="Dative").filter_cut = True
+        layout.separator()
+        layout.operator("object.jewelcraft_select_gems_by_trait", text="Similar").filter_similar = True
+        layout.operator("object.jewelcraft_select_doubles", text="Doubles")
+        layout.separator()
+        layout.operator("object.jewelcraft_select_gems_by_trait", text="All")
 
 
-class VIEW3D_MT_JewelCraft_Folder_Tools(Menu):
-	"""Category tools"""
-	bl_label = ''
+class VIEW3D_MT_jewelcraft_folder(Menu):
+    bl_label = ""
 
-	def draw(self, context):
-		layout = self.layout
-
-		layout.operator('wm.jewelcraft_asset_folder_create', icon='ZOOMIN')
-		layout.operator('wm.jewelcraft_asset_folder_rename', icon='LINE_DATA')
-		layout.separator()
-		layout.operator('wm.jewelcraft_asset_library_open', text='Open Library Folder', icon='FILE_FOLDER')
-		layout.separator()
-		layout.operator('wm.jewelcraft_asset_ui_refresh', icon='FILE_REFRESH')
-
-
-class VIEW3D_MT_JewelCraft_Asset_Tools(Menu):
-	"""Asset tools"""
-	bl_label = ''
-
-	def draw(self, context):
-		layout = self.layout
-
-		layout.operator('wm.jewelcraft_asset_rename', text='Rename', icon='LINE_DATA')
-		layout.operator('wm.jewelcraft_asset_replace', icon='GROUP')
-		layout.operator('wm.jewelcraft_asset_preview_replace', text='Replace Preview', icon='IMAGE_DATA')
+    def draw(self, context):
+        library_folder = asset.user_asset_library_folder_object()
+        layout = self.layout
+        layout.operator("wm.jewelcraft_asset_folder_create", icon="ZOOMIN")
+        layout.operator("wm.jewelcraft_asset_folder_rename", text="Rename", icon="LINE_DATA")
+        layout.separator()
+        layout.operator("wm.path_open", text="Open Library Folder", icon="FILE_FOLDER").filepath = library_folder
+        layout.separator()
+        layout.operator("wm.jewelcraft_asset_ui_refresh", icon="FILE_REFRESH")
 
 
-class VIEW3D_MT_JewelCraft_Alloy_Tools(Menu, Setup):
-	"""Alloys set"""
-	bl_label = ''
+class VIEW3D_MT_jewelcraft_asset(Menu):
+    bl_label = ""
 
-	def draw(self, context):
-		layout = self.layout
-		layout.label('Alloys Set:')
-		layout.prop(self.prefs, 'alloys_set', text='')
+    def draw(self, context):
+        layout = self.layout
+        layout.operator("wm.jewelcraft_asset_rename", text="Rename", icon="LINE_DATA")
+        layout.operator("wm.jewelcraft_asset_replace", icon="GROUP")
+        layout.operator("wm.jewelcraft_asset_preview_replace", text="Replace Preview", icon="IMAGE_DATA")
 
 
-class VIEW3D_MT_JewelCraft_Product_Report_Tools(Menu, Setup):
-	"""Product report language"""
-	bl_label = ''
+class VIEW3D_MT_jewelcraft_weighting_set(Menu):
+    bl_label = ""
 
-	def draw(self, context):
-		layout = self.layout
-		layout.prop(self.prefs, 'product_report_display')
-		layout.prop(self.prefs, 'product_report_save')
-		layout.separator()
-		layout.label('Report Language:')
-		layout.prop(self.prefs, 'product_report_lang', text='')
+    def draw(self, context):
+        library_folder = asset.user_asset_library_folder_weighting()
+        layout = self.layout
+        layout.operator("wm.jewelcraft_weighting_set_add", icon="ZOOMIN")
+        layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", icon="ZOOMOUT")
+        layout.operator("wm.jewelcraft_weighting_set_rename", text="Rename", icon="LINE_DATA")
+        layout.operator("wm.jewelcraft_weighting_set_replace", text="Replace", icon="GHOST")
+        layout.separator()
+        layout.operator("wm.path_open", text="Open Library Folder", icon="FILE_FOLDER").filepath = library_folder
+        layout.separator()
+        layout.operator("wm.jewelcraft_weighting_set_refresh", icon="FILE_REFRESH")
+
+
+class VIEW3D_MT_jewelcraft_weighting_list(Menu, Setup):
+    bl_label = ""
+
+    def draw(self, context):
+        layout = self.layout
+        layout.operator("wm.jewelcraft_ul_item_clear", icon="X")
+        layout.separator()
+        layout.prop(self.prefs, "weighting_list_show_composition")
+        layout.prop(self.prefs, "weighting_list_show_density")
+
+
+class VIEW3D_MT_jewelcraft_product_report(Menu, Setup):
+    bl_label = ""
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self.prefs, "product_report_display")
+        layout.prop(self.prefs, "product_report_save")
+        layout.separator()
+        layout.label("Report Language:")
+        layout.prop(self.prefs, "product_report_lang", text="")
 
 
 # Panels
 # ---------------------------
 
 
-class VIEW3D_PT_JewelCraft_Gems(Panel, Setup):
-	bl_label = 'Gems'
+class VIEW3D_PT_jewelcraft_update(Panel, Setup):
+    bl_label = "Update"
+    bl_context = "objectmode"
 
-	@classmethod
-	def poll(cls, context):
-		return context.mode in {'OBJECT', 'EDIT_MESH'}
+    @classmethod
+    def poll(cls, context):
+        return addon_updater_ops.updater.update_ready
 
-	def draw(self, context):
-
-		# Updater
-		# ------------------
-		addon_updater_ops.check_for_update_background(context)
-		addon_updater_ops.update_notice_box_ui(self, context)
-		# ------------------
-
-		layout = self.layout
-		props = self.wm_props
-
-		layout.template_icon_view(props, 'gem_cut', show_labels=True)
-
-		col = layout.column(align=True)
-		row = col.row(align=True)
-		row.prop(props, 'gem_stone', text='')
-		row.operator('view3d.jewelcraft_search_stone', text='', icon='VIEWZOOM')
-
-		layout.operator('object.jewelcraft_gem_add', text='Make Gem')
-
-		col = layout.column(align=True)
-		col.label('Replace:')
-		row = col.row(align=True)
-		row.operator('object.jewelcraft_stone_replace', text='Stone')
-		row.operator('object.jewelcraft_cut_replace', text='Cut', text_ctxt='JewelCraft')
-
-		layout.menu('VIEW3D_MT_JewelCraft_Select_Gem_By')
+    def draw(self, context):
+        addon_updater_ops.update_notice_box_ui(self, context)
 
 
-class VIEW3D_PT_JewelCraft_Assets(Panel, Setup):
-	bl_label = 'Assets'
-	bl_options = {'DEFAULT_CLOSED'}
+class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
+    bl_label = "Gems"
 
-	@classmethod
-	def poll(cls, context):
-		return context.mode in {'OBJECT', 'EDIT_MESH'}
+    @classmethod
+    def poll(cls, context):
+        return context.mode in {"OBJECT", "EDIT_MESH"}
 
-	def draw(self, context):
-		layout = self.layout
-		props = self.wm_props
+    def draw(self, context):
+        addon_updater_ops.check_for_update_background()
 
-		if not props.asset_folder:
-			layout.operator('wm.jewelcraft_asset_folder_create', icon='ZOOMIN')
-			layout.operator('wm.jewelcraft_asset_ui_refresh', icon='FILE_REFRESH')
-			return
+        layout = self.layout
 
-		row = layout.row(align=True)
-		row.prop(props, 'asset_folder', text='')
-		row.menu('VIEW3D_MT_JewelCraft_Folder_Tools', icon='SCRIPTWIN')
+        layout.template_icon_view(self.wm_props, "gem_cut", show_labels=True)
 
-		row = layout.row()
+        row = layout.row(align=True)
+        row.prop(self.wm_props, "gem_stone", text="")
+        row.operator("view3d.jewelcraft_search_stone", text="", icon="VIEWZOOM")
 
-		col = row.column()
-		col.enabled = bool(props.asset_list)
-		col.template_icon_view(props, 'asset_list', show_labels=True)
-		if self.prefs.display_asset_name:
-			col.label(props.asset_list)
+        row = layout.row(align=True)
+        row.operator("object.jewelcraft_gem_add", text="Add Gem", icon_value=self.pcoll["gem_add"].icon_id)
+        row.operator("object.jewelcraft_gem_edit", text="", icon_value=self.pcoll["gem_edit"].icon_id)
 
-		col = row.column(align=True)
-		col.operator('wm.jewelcraft_asset_add_to_library', text='', icon='ZOOMIN')
-		col.operator('wm.jewelcraft_asset_remove_from_library', text='', icon='ZOOMOUT')
-		col.operator('view3d.jewelcraft_search_asset', text='', icon='VIEWZOOM')
-		col.menu('VIEW3D_MT_JewelCraft_Asset_Tools', icon='SCRIPTWIN')
-
-		layout.operator('wm.jewelcraft_asset_import', text='Import Asset')
+        layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
 
 
-class VIEW3D_PT_JewelCraft_Jeweling(Panel, Setup):
-	bl_label = 'Jeweling'
-	bl_context = 'objectmode'
-	bl_options = {'DEFAULT_CLOSED'}
+class VIEW3D_PT_jewelcraft_widgets(Panel, Setup):
+    bl_label = "Widgets"
+    bl_options = {"DEFAULT_CLOSED"}
 
-	def draw(self, context):
-		layout = self.layout
+    @classmethod
+    def poll(cls, context):
+        return context.mode in {"OBJECT", "EDIT_MESH"}
 
-		col = layout.column(align=True)
-		col.label('Add:')
-		col.operator('object.jewelcraft_prongs_add', text='Prongs')
-		col.operator('object.jewelcraft_cutter_add', text='Cutter')
+    def draw_header(self, context):
+        layout = self.layout
+        layout.prop(self.wm_props, "widget_toggle", text="")
 
-		layout.operator('object.jewelcraft_make_dupliface', text='Make Dupli-face')
+    def draw(self, context):
+        layout = self.layout
+        layout.active = self.wm_props.widget_toggle
 
-		row = layout.row(align=True)
-		row.operator('object.jewelcraft_dist_helper_add', text='Distance Helper')
-		row.operator('object.jewelcraft_dist_helper_add', text='', icon='X').remove = True
+        col = layout.column(align=True)
+        col.prop(self.prefs, "widget_selection_only")
+        col.prop(self.prefs, "widget_use_overrides")
+        sub = col.column()
+        sub.active = self.prefs.widget_use_overrides
+        sub.prop(self.prefs, "widget_overrides_only")
+        col.prop(self.prefs, "widget_x_ray")
 
-		col = layout.column(align=True)
-		col.label('Deform:')
-		row = col.row(align=True)
-		row.operator('object.jewelcraft_scatter_along_curve', text='Scatter Along Curve')
-		row.operator('object.jewelcraft_redistribute_along_curve', text='', icon='FILE_REFRESH')
+        col = layout.column(align=True)
+        col.prop(self.prefs, "widget_color", text="")
+        col.prop(self.prefs, "widget_linewidth")
+        col.prop(self.prefs, "widget_distance")
 
-
-class VIEW3D_PT_JewelCraft_Curve(Panel, Setup):
-	bl_label = 'Curve'
-	bl_context = 'objectmode'
-	bl_options = {'DEFAULT_CLOSED'}
-
-	def draw(self, context):
-		layout = self.layout
-
-		col = layout.column(align=True)
-		col.label('Add:')
-		col.operator('curve.jewelcraft_size_curve_add', text='Size Curve', icon='CURVE_BEZCIRCLE')
-
-		col = layout.column(align=True)
-		col.label('Deform:')
-		col.operator('object.jewelcraft_move_over_under', text='Over', icon='TRIA_UP')
-		col.operator('object.jewelcraft_stretch_along_curve', text='Stretch', icon='ARROW_LEFTRIGHT')
-		col.operator('object.jewelcraft_move_over_under', text='Under', icon='TRIA_DOWN').under = True
-
-		col = layout.column(align=True)
-		col.label('Report:')
-		col.operator('curve.jewelcraft_length_display', text='Curve Length', icon='IPO_QUAD')
+        row = layout.row(align=True)
+        row.operator("object.jewelcraft_widgets_overrides_set")
+        row.operator("object.jewelcraft_widgets_overrides_del")
 
 
-class VIEW3D_PT_JewelCraft_Curve_Editmesh(Panel, Setup):
-	bl_label = 'Curve'
-	bl_context = 'mesh_edit'
+class VIEW3D_PT_jewelcraft_assets(Panel, Setup):
+    bl_label = "Assets"
+    bl_options = {"DEFAULT_CLOSED"}
 
-	def draw(self, context):
-		layout = self.layout
+    @classmethod
+    def poll(cls, context):
+        return context.mode in {"OBJECT", "EDIT_MESH"}
 
-		col = layout.column(align=True)
-		col.label('Deform:')
-		col.operator('object.jewelcraft_stretch_along_curve', text='Stretch', icon='ARROW_LEFTRIGHT')
+    def draw(self, context):
+        layout = self.layout
 
+        if not self.wm_props.asset_folder:
+            layout.operator("wm.jewelcraft_asset_folder_create", icon="ZOOMIN")
+            layout.operator("wm.jewelcraft_asset_ui_refresh", icon="FILE_REFRESH")
+            return
 
-class VIEW3D_PT_JewelCraft_Object(Panel, Setup):
-	bl_label = 'Object'
-	bl_context = 'objectmode'
-	bl_options = {'DEFAULT_CLOSED'}
+        row = layout.row(align=True)
+        row.prop(self.wm_props, "asset_folder", text="")
+        row.menu("VIEW3D_MT_jewelcraft_folder", icon="SCRIPTWIN")
 
-	def draw(self, context):
-		layout = self.layout
+        row = layout.row()
 
-		col = layout.column(align=True)
-		col.operator('object.jewelcraft_object_mirror', text='Mirror Objects', icon='MOD_MIRROR')
+        col = row.column()
+        col.enabled = bool(self.wm_props.asset_list)
+        col.template_icon_view(self.wm_props, "asset_list", show_labels=True)
 
-		col = layout.column(align=True)
-		col.label('Deform:')
-		col.operator('object.jewelcraft_lattice_project', text='Lattice Project', icon='MOD_SHRINKWRAP')
-		col.operator('object.jewelcraft_lattice_profile', text='Lattice Profile', icon='SPHERECURVE')
+        if self.prefs.display_asset_name:
+            col.label(self.wm_props.asset_list)
 
+        col = row.column(align=True)
+        col.operator("wm.jewelcraft_asset_add_to_library", text="", icon="ZOOMIN")
+        col.operator("wm.jewelcraft_asset_remove_from_library", text="", icon="ZOOMOUT")
+        col.operator("view3d.jewelcraft_search_asset", text="", icon="VIEWZOOM")
+        col.menu("VIEW3D_MT_jewelcraft_asset", icon="SCRIPTWIN")
 
-class VIEW3D_PT_JewelCraft_Weighting(Panel, Setup):
-	bl_label = 'Weighting'
-	bl_context = 'objectmode'
-	bl_options = {'DEFAULT_CLOSED'}
-
-	def draw(self, context):
-		layout = self.layout
-		props = self.wm_props
-
-		row = layout.row(align=True)
-		row.menu('VIEW3D_MT_JewelCraft_Weighting_Presets', text=VIEW3D_MT_JewelCraft_Weighting_Presets.bl_label)
-		row.operator('view3d.jewelcraft_add_preset_weighting', text='', icon='ZOOMIN')
-		row.operator('view3d.jewelcraft_add_preset_weighting', text='', icon='ZOOMOUT').remove_active = True
-
-		col = layout.column(align=True)
-		row = col.row(align=True)
-		row.prop(props, 'weighting_mat', text='')
-		row.menu('VIEW3D_MT_JewelCraft_Alloy_Tools', icon='SCRIPTWIN')
-		row.operator('view3d.jewelcraft_search_alloy', text='', icon='VIEWZOOM')
-
-		if props.weighting_mat == 'CUSTOM':
-			col.prop(props, 'weighting_dens')
-
-		layout.operator('mesh.jewelcraft_weight_display', text='Calculate')
+        layout.operator("wm.jewelcraft_asset_import", text="Import Asset")
 
 
-class VIEW3D_PT_JewelCraft_Product_Report(Panel, Setup):
-	bl_label = 'Product Report'
-	bl_context = 'objectmode'
-	bl_options = {'DEFAULT_CLOSED'}
+class VIEW3D_PT_jewelcraft_jeweling(Panel, Setup):
+    bl_label = "Jeweling"
+    bl_context = "objectmode"
+    bl_options = {"DEFAULT_CLOSED"}
 
-	def draw(self, context):
-		layout = self.layout
-		scene_props = self.scene_props
-		wm_props = self.wm_props
-		scene = context.scene
+    def draw(self, context):
+        layout = self.layout
 
-		col_box = layout.column(align=True)
+        col = layout.column(align=True)
+        col.operator("object.jewelcraft_prongs_add", text="Prongs", icon_value=self.pcoll["prongs"].icon_id)
+        col.operator("object.jewelcraft_cutter_add", text="Cutter", icon_value=self.pcoll["cutter"].icon_id)
 
-		box = col_box.box()
-		box.prop(wm_props, 'product_report_sizes', icon=icon_tria(wm_props.product_report_sizes), emboss=False)
-		if wm_props.product_report_sizes:
-			col = box.column()
-			col.prop_search(scene_props, 'product_report_ob_size', scene, 'objects')
-			col.prop_search(scene_props, 'product_report_ob_shank', scene, 'objects')
-			col.prop_search(scene_props, 'product_report_ob_dim', scene, 'objects', text='Dimensions', text_ctxt='JewelCraft')
+        row = layout.row(align=True)
+        row.operator("object.jewelcraft_curve_scatter", text="Curve Scatter", icon_value=self.pcoll["scatter"].icon_id)
+        row.operator("object.jewelcraft_curve_redistribute", text="", icon_value=self.pcoll["redistribute"].icon_id)
 
-		box = col_box.box()
-		box.prop(wm_props, 'product_report_weighting', icon=icon_tria(wm_props.product_report_weighting), emboss=False)
-		if wm_props.product_report_weighting:
 
-			box.prop_search(scene_props, 'product_report_ob_weight', scene, 'objects', text='')
+class VIEW3D_PT_jewelcraft_object(Panel, Setup):
+    bl_label = "Object"
+    bl_context = "objectmode"
+    bl_options = {"DEFAULT_CLOSED"}
 
-			col = box.column(align=True)
-			col.enabled = scene_props.product_report_ob_weight is not None
+    def draw(self, context):
+        layout = self.layout
 
-			alloy_list = dynamic_lists.alloys(self, context)[:-2]
+        col = layout.column(align=True)
+        col.operator("object.jewelcraft_mirror", text="Mirror", icon_value=self.pcoll["mirror"].icon_id)
+        col.operator("object.jewelcraft_make_dupliface", text="Make Dupli-face", icon_value=self.pcoll["dupliface"].icon_id)
 
-			for mat in alloy_list:
-				col.prop(scene_props, 'product_report_mat_' + mat[0].lower(), text=mat[1])
+        layout.operator("object.jewelcraft_resize", text="Resize", icon_value=self.pcoll["resize"].icon_id)
 
-			col.separator()
+        col = layout.column(align=True)
+        col.operator("object.jewelcraft_lattice_project", text="Lattice Project", icon_value=self.pcoll["lattice_project"].icon_id,)
+        col.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.pcoll["lattice_profile"].icon_id,)
 
-			col.prop(scene_props, 'product_report_mat_custom')
 
-			sub = col.column()
-			sub.enabled = scene_props.product_report_mat_custom
-			sub.prop(scene_props, 'product_report_mat_custom_name')
-			sub.prop(scene_props, 'product_report_mat_custom_dens')
+class VIEW3D_PT_jewelcraft_curve(Panel, Setup):
+    bl_label = "Curve"
+    bl_context = "objectmode"
+    bl_options = {"DEFAULT_CLOSED"}
 
-		row = layout.row(align=True)
-		row.operator('wm.jewelcraft_product_report', text='Product Report')
-		row.menu('VIEW3D_MT_JewelCraft_Product_Report_Tools', icon='SCRIPTWIN')
+    def draw(self, context):
+        layout = self.layout
+
+        layout.operator("curve.jewelcraft_size_curve_add", text="Size Curve", icon_value=self.pcoll["size_curve"].icon_id)
+
+        row = layout.row()
+        row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=self.pcoll["stretch"].icon_id)
+        sub = row.row(align=True)
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll["over"].icon_id)
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll["under"].icon_id).under = True
+
+        layout.operator("curve.jewelcraft_length_display", text="Curve Length", icon_value=self.pcoll["curve_length"].icon_id)
+
+
+class VIEW3D_PT_jewelcraft_curve_editmesh(Panel, Setup):
+    bl_label = "Curve"
+    bl_context = "mesh_edit"
+
+    def draw(self, context):
+        layout = self.layout
+
+        row = layout.row()
+        row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=self.pcoll["stretch"].icon_id)
+        sub = row.row(align=True)
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll["over"].icon_id)
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll["under"].icon_id).under = True
+
+
+class VIEW3D_PT_jewelcraft_weighting(Panel, Setup):
+    bl_label = "Weighting"
+    bl_context = "objectmode"
+    bl_options = {"DEFAULT_CLOSED"}
+
+    def draw(self, context):
+        layout = self.layout
+        material_list = self.prefs.weighting_materials
+
+        row = layout.row(align=True)
+        row.prop(self.wm_props, "weighting_set", text="")
+        row.menu("VIEW3D_MT_jewelcraft_weighting_set", icon="SCRIPTWIN")
+
+        row = layout.row(align=True)
+        row.operator("wm.jewelcraft_weighting_set_load")
+        row.operator("wm.jewelcraft_weighting_set_load_append")
+
+        layout.separator()
+
+        row = layout.row()
+
+        col = row.column()
+        col.template_list("VIEW3D_UL_jewelcraft_weighting_set", "", material_list, "coll", material_list, "index", rows=5)
+
+        col = row.column(align=True)
+        col.operator("wm.jewelcraft_ul_item_add", text="", icon="ZOOMIN")
+        col.operator("wm.jewelcraft_ul_item_del", text="", icon="ZOOMOUT")
+        col.menu("VIEW3D_MT_jewelcraft_weighting_list", icon="SCRIPTWIN")
+        col.separator()
+        col.operator("wm.jewelcraft_ul_item_move", text="", icon="TRIA_UP").move_up = True
+        col.operator("wm.jewelcraft_ul_item_move", text="", icon="TRIA_DOWN")
+
+        layout.operator("object.jewelcraft_weight_display", text="Calculate")
+
+
+class VIEW3D_PT_jewelcraft_product_report(Panel, Setup):
+    bl_label = "Product Report"
+    bl_context = "objectmode"
+    bl_options = {"DEFAULT_CLOSED"}
+
+    def draw(self, context):
+        layout = self.layout
+
+        row = layout.row(align=True)
+        col = row.column(align=True)
+        col.alignment = "RIGHT"
+        col.scale_x = 0.9
+        col.label("Size")
+        col.label("Shank")
+        col.label("Dimensions", text_ctxt="JewelCraft")
+        col.label("Weight")
+        col = row.column(align=True)
+        col.prop(self.scene_props, "product_report_ob_size", text="")
+        col.prop(self.scene_props, "product_report_ob_shank", text="")
+        col.prop(self.scene_props, "product_report_ob_dim", text="")
+        col.prop(self.scene_props, "product_report_ob_weight", text="")
+
+        layout.separator()
+
+        row = layout.row(align=True)
+        row.operator("wm.jewelcraft_product_report", text="Product Report")
+        row.menu("VIEW3D_MT_jewelcraft_product_report", icon="SCRIPTWIN")

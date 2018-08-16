@@ -1,132 +1,157 @@
+# ##### BEGIN GPL LICENSE BLOCK #####
+#
+#  JewelCraft jewelry design toolkit for Blender.
+#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# ##### END GPL LICENSE BLOCK #####
+
+
 import collections
 
 import bpy
 
-from .. import dynamic_lists
-from ..lib import unit, mesh
-from ..lib.compat import gem_id_compat
+from .. import var
+from ..lib import unit, mesh, asset
 
 
 def data_collect():
-	scene = bpy.context.scene
-	props = scene.jewelcraft
+    scene = bpy.context.scene
+    props = scene.jewelcraft
+    data = {}
 
-	data = {}
+    # Size
+    # ---------------------------
 
-	# Size
-	# ---------------------------
+    if props.product_report_ob_size:
+        ob = props.product_report_ob_size
+        size = max(ob.dimensions)
+        data["size"] = unit.to_metric(size)
 
-	if props.product_report_ob_size:
-		ob = props.product_report_ob_size
-		size = max(ob.dimensions)
-		data['size'] = unit.to_metric(size)
+    # Shank
+    # ---------------------------
 
-	# Shank
-	# ---------------------------
+    if props.product_report_ob_shank:
+        ob = props.product_report_ob_shank
 
-	if props.product_report_ob_shank:
-		ob = props.product_report_ob_shank
+        asset.mod_curve_off(ob, reverse=True)
+        dim = list(ob.dimensions)
+        scene.update()
 
-		for mod in reversed(ob.modifiers):
-			if mod.type == 'CURVE':
-				mod_state = mod.show_viewport
-				mod.show_viewport = False
-				scene.update()
-				dim = list(ob.dimensions)
-				mod.show_viewport = mod_state
-				scene.update()
-				break
-		else:
-			dim = list(ob.dimensions)
+        dim.remove(max(dim))
+        data["shank"] = unit.to_metric(dim, batch=True)
 
-		dim.remove(max(dim))
-		data['shank'] = unit.to_metric(dim, batch=True)
+    # Dimensions
+    # ---------------------------
 
-	# Dimensions
-	# ---------------------------
+    if props.product_report_ob_dim:
+        ob = props.product_report_ob_dim
+        data["dim"] = unit.to_metric(ob.dimensions.to_tuple(), batch=True)
 
-	if props.product_report_ob_dim:
-		ob = props.product_report_ob_dim
-		data['dim'] = unit.to_metric(ob.dimensions.to_tuple(), batch=True)
+    # Weight
+    # ---------------------------
 
-	# Weight
-	# ---------------------------
+    if props.product_report_ob_weight:
+        ob = props.product_report_ob_weight
+        vol = mesh.volume(ob)
+        data["weight"] = unit.to_metric(vol, volume=True)
 
-	materials = []
-	alloy_list = dynamic_lists.alloys(None, bpy.context)[:-1]
+    # Gems
+    # ---------------------------
 
-	for mat in alloy_list:
-		if getattr(props, 'product_report_mat_' + mat[0].lower()):
-			materials.append(mat[0])
+    sg = {}
+    known_stones = var.STONE_DENSITY.keys()
+    known_cuts = var.CUT_VOLUME_CORRECTION.keys()
 
-	if props.product_report_ob_weight and materials:
-		ob = props.product_report_ob_weight
-		vol = mesh.volume(ob)
-		data['weight'] = unit.to_metric(vol, volume=True)
-		data['weight_mats'] = materials
+    doubles = collections.defaultdict(int)
+    hidden = False
+    df_leftovers = False
+    deprecated_id = False
+    unknown_id = False
 
-	# Gems
-	# ---------------------------
+    for ob in scene.objects:
 
-	sg = {}
-	hidden = False
-	df_leftovers = False
-	doubles = collections.defaultdict(int)
+        if not deprecated_id:
+            deprecated_id = ob.type == "MESH" and "gem" in ob.data
 
-	for ob in scene.objects:
+        if "gem" in ob:
 
-		gem_id_compat(ob)
+            # Gem
+            stone = ob["gem"]["stone"]
+            cut = ob["gem"]["cut"]
+            size = tuple(round(x, 2) for x in unit.to_metric(ob.dimensions, batch=True))
+            count = 1
 
-		if 'gem' in ob:
+            # Warnings
+            if ob.hide:
+                hidden = True
 
-			if ob.hide:
-				hidden = True
+            loc = ob.matrix_world.to_translation().to_tuple()
+            doubles[loc] += 1
 
-			loc = ob.matrix_world.to_translation().to_tuple()
-			doubles[loc] += 1
+            if stone not in known_stones:
+                stone = "*" + stone
+                unknown_id = True
 
-			stone = ob['gem']['stone']
-			cut = ob['gem']['cut']
-			size = tuple([round(x, 2) for x in unit.to_metric(ob.dimensions, batch=True)])
+            if cut not in known_cuts:
+                cut = "*" + cut
+                unknown_id = True
 
-			# Handle Dupli-faces
-			if ob.parent and ob.parent.type == 'MESH':
-				if ob.parent.dupli_type == 'FACES':
-					count = mesh.polycount(ob.parent)
-				elif ob.parent.dupli_type == 'NONE':
-					count = 1
-					df_leftovers = True
-			else:
-				count = 1
+            # Dupli-faces
+            if ob.parent and ob.parent.type == "MESH":
+                if ob.parent.dupli_type == "FACES":
+                    ob.parent.dupli_list_create(scene)
+                    count = len([x for x in ob.parent.dupli_list if x.object is ob])
+                    ob.parent.dupli_list_clear()
+                elif ob.parent.dupli_type == "NONE":
+                    df_leftovers = True
 
-			if stone in sg and cut in sg[stone] and size in sg[stone][cut]:
-				sg[stone][cut][size] += count
-			elif stone in sg and cut in sg[stone]:
-				sg[stone][cut][size] = count
-			elif stone in sg:
-				sg[stone][cut] = {size: count}
-			else:
-				sg[stone] = {cut: {size: count}}
+            if stone in sg and cut in sg[stone] and size in sg[stone][cut]:
+                sg[stone][cut][size] += count
+            elif stone in sg and cut in sg[stone]:
+                sg[stone][cut][size] = count
+            elif stone in sg:
+                sg[stone][cut] = {size: count}
+            else:
+                sg[stone] = {cut: {size: count}}
 
-	data['gems'] = sg
+    data["gems"] = sg
 
-	# Find duplicates
-	# ---------------------------
+    # Find duplicates
+    # ---------------------------
 
-	doubles = [x for x in doubles.values() if x > 1]
+    doubles = [x for x in doubles.values() if x > 1]
 
-	# Warnings
-	# ---------------------------
+    # Warnings
+    # ---------------------------
 
-	data['warn'] = []
+    data["warn"] = []
 
-	if hidden:
-		data['warn'].append('Discovered hidden gems in the scene (use Show Hidden/Alt H)')
+    if hidden:
+        data["warn"].append("Hidden gems (use Show Hidden/Alt H)")
 
-	if df_leftovers:
-		data['warn'].append('Discovered possible gem Dupli-face leftovers')
+    if df_leftovers:
+        data["warn"].append("Possible gem dupli-face leftovers")
 
-	if doubles:
-		data['warn'].append('Discovered duplicated gems')
+    if doubles:
+        data["warn"].append("Duplicated gems")
 
-	return data
+    if deprecated_id:
+        data["warn"].append("Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)")
+
+    if unknown_id:
+        data["warn"].append("Unknown gem IDs, carats are not calculated for marked gems (*)")
+
+    return data
