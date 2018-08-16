@@ -10,32 +10,12 @@ Features:
 
 Video:
 
-v1.0
-
-* [Demo v1.0][2]
-
-v2.0
-
-* [Gems][3]
-* [Jeweling][4]
-* [Asset Manager][5]
-* [Curve & Object tools][6]
-
-Видео:
-
-v2.0
-
-* [Камни][7]
-* [Инструменты закрепки][8]
-* [Менеджер ассетов][9]
-* [Отчёт изделия][10]
-* [Оценка веса][11]
-* [Инструменты кривых и объектов][12]
-
-v2.1
-
-* [Оценка веса][13]
-* [Виджеты][14]
+* [Demo v1.0](https://youtu.be/XZ6uIdNnrHk)
+* [Prongs & Cutters v2.0](https://youtu.be/AZlCFg8bDSg)
+* [More videos][2] / [Больше видео][3]
+* New in v2.1:
+  * [Переработанная система оценки веса](https://youtu.be/w2VWn8UlmPM)
+  * [Виджеты во вьюпорте](https://youtu.be/Ck26lgKQ64Y)
 
 
 How to install
@@ -61,18 +41,5 @@ How to install
 
 
 [1]: https://github.com/mrachinskiy/jewelcraft/archive/master.zip
-
-[2]: https://youtu.be/XZ6uIdNnrHk
-[3]: https://youtu.be/SdoJWLVSyuQ
-[4]: https://youtu.be/mAqSwtdHwxw
-[5]: https://youtu.be/G3B259jEN74
-[6]: https://youtu.be/czpxIUfnxBM
-
-[7]: https://youtu.be/DqzDK7dSlUM
-[8]: https://youtu.be/VVooIV8u1JI
-[9]: https://youtu.be/S_SkB3dn4co
-[10]: https://youtu.be/lOt1wpfUQT8
-[11]: https://youtu.be/qb4OriNIRQg
-[12]: https://youtu.be/RoeWbrNPGPU
-[13]: https://youtu.be/w2VWn8UlmPM
-[14]: https://youtu.be/Ck26lgKQ64Y
+[2]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
+[3]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
