@@ -125,9 +125,9 @@ def weighting_set(self, context):
 
     if not prefs.weighting_hide_default_sets:
         list_ += [
-            ("JCASSET_PRECIOUS",    "Precious Alloys",                    "Commonly used precious alloys, physical properties taken directly from suppliers"),
-            ("JCASSET_PRECIOUS_RU", "Precious Alloys RU (ГОСТ 30649-99)", "Set of precious alloys according to Russian regulations"),
-            ("JCASSET_BASE",        "Base Alloys",                        "Set of base metal alloys, physical properties taken directly from suppliers"),
+            ("JCASSET_PRECIOUS",    "[JewelCraft] Precious",                    "Commonly used precious alloys, physical properties taken directly from suppliers"),
+            ("JCASSET_PRECIOUS_RU", "[JewelCraft] Precious RU (ГОСТ 30649-99)", "Set of precious alloys according to Russian regulations"),
+            ("JCASSET_BASE",        "[JewelCraft] Base",                        "Set of base metal alloys, physical properties taken directly from suppliers"),
         ]
 
     folder = asset.user_asset_library_folder_weighting()
