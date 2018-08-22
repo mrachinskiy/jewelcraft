@@ -228,7 +228,7 @@ class OBJECT_OT_jewelcraft_gem_id_convert_deprecated(Operator):
 
                 if ob.data.users > 1:
                     for link in obs:
-                        if link.data is ob.data:
+                        if link.data == ob.data:
                             link["gem"] = ob["gem"]
 
         return {"FINISHED"}
