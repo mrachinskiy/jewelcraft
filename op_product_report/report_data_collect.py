@@ -113,7 +113,7 @@ def data_collect():
             if ob.parent and ob.parent.type == "MESH":
                 if ob.parent.dupli_type == "FACES":
                     ob.parent.dupli_list_create(scene)
-                    count = len([x for x in ob.parent.dupli_list if x.object is ob])
+                    count = len([x for x in ob.parent.dupli_list if x.object == ob])
                     ob.parent.dupli_list_clear()
                 elif ob.parent.dupli_type == "NONE":
                     df_leftovers = True

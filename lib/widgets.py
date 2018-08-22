@@ -111,7 +111,7 @@ def draw_callback_px(self, context):
                 ob.parent.dupli_list_create(context.scene)
 
                 for dup in ob.parent.dupli_list:
-                    if dup.object is ob:
+                    if dup.object == ob:
                         mat = dup.matrix
                         bgl.glBegin(bgl.GL_LINE_LOOP)
                         for co in coords:

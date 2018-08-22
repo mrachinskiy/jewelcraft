@@ -12,10 +12,11 @@ Video:
 
 * [Demo v1.0](https://youtu.be/XZ6uIdNnrHk)
 * [Prongs & Cutters v2.0](https://youtu.be/AZlCFg8bDSg)
-* [More videos][2] / [Больше видео][3]
 * New in v2.1:
-  * [Переработанная система оценки веса](https://youtu.be/w2VWn8UlmPM)
-  * [Виджеты во вьюпорте](https://youtu.be/Ck26lgKQ64Y)
+  * [Оценка веса + Менеджер ассетов](https://youtu.be/w2VWn8UlmPM)
+  * [Виджеты](https://youtu.be/Ck26lgKQ64Y)
+
+[More videos][2] / [Больше видео][3]
 
 
 How to install
