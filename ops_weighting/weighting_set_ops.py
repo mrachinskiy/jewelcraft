@@ -55,7 +55,11 @@ def materials_export_to_file(materials, filepath):
     with open(filepath, "w", encoding="utf-8") as file:
 
         data = []
-        mat_fmt = {"name": "", "composition": "", "density": 0.0}
+        mat_fmt = {
+            "name": "",
+            "composition": "",
+            "density": 0.0,
+        }
 
         for mat in materials.values():
             mat_dict = {k: v for k, v in mat.items() if k in mat_fmt.keys()}
@@ -86,6 +90,10 @@ class WM_OT_jewelcraft_weighting_set_add(Operator, Setup):
         layout.separator()
 
     def execute(self, context):
+        if not self.set_name:
+            self.report({"ERROR"}, "Name must be specified")
+            return {"CANCELLED"}
+
         set_name = self.set_name + ".json"
         filepath = os.path.join(self.folder, set_name)
 
@@ -167,6 +175,10 @@ class WM_OT_jewelcraft_weighting_set_rename(Operator, Setup, EditCheck):
         layout.separator()
 
     def execute(self, context):
+        if not self.set_name:
+            self.report({"ERROR"}, "Name must be specified")
+            return {"CANCELLED"}
+
         filename_new = self.set_name + ".json"
         filepath_new = os.path.join(self.folder, filename_new)
 
@@ -225,8 +237,10 @@ class WeightingSetLoad:
 
                 for mat in data:
                     item = self.materials.add()
-                    item.name = mat["name"]
-                    item.composition = mat["composition"]
+                    if mat["name"]:
+                        item.name = mat["name"]
+                    if mat["composition"]:
+                        item.composition = mat["composition"]
                     item.density = mat["density"]
 
         return {"FINISHED"}

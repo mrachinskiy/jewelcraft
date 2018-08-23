@@ -54,6 +54,10 @@ class WM_OT_jewelcraft_asset_folder_create(Operator, Setup):
         layout.separator()
 
     def execute(self, context):
+        if not self.folder_name:
+            self.report({"ERROR"}, "Name must be specified")
+            return {"CANCELLED"}
+
         folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
 
         if not os.path.exists(folder):
@@ -85,6 +89,10 @@ class WM_OT_jewelcraft_asset_folder_rename(Operator, Setup):
         layout.separator()
 
     def execute(self, context):
+        if not self.folder_name:
+            self.report({"ERROR"}, "Name must be specified")
+            return {"CANCELLED"}
+
         folder_new = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
 
         if os.path.exists(self.folder):

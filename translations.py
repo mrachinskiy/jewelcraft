@@ -178,6 +178,7 @@ _ru = {
         "Active object must be a mesh": "Активный объект должен быть mesh",
         "Active object does not have a Follow Path constraint": "Активный объект не имеет ограничение Follow Path",
         "File not found": "Файл не найден",
+        "Name must be specified": "Имя должно быть указано",
         # Cuts
         "Round": "Кр-57",
         "Oval": "Овал",
