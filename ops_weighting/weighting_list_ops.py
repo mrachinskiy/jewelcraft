@@ -63,8 +63,10 @@ class WM_OT_jewelcraft_ul_item_add(Operator, Setup):
 
     def execute(self, context):
         item = self.materials.add()
-        item.name = self.name
-        item.composition = self.composition
+        if self.name:
+            item.name = self.name
+        if self.composition:
+            item.composition = self.composition
         item.density = self.density
         return {"FINISHED"}
 

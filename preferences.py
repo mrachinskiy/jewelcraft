@@ -41,7 +41,7 @@ from .lib import widgets
 
 class JewelCraftMaterialsCollection(PropertyGroup):
     enabled = BoolProperty(description="Enable material for weighting and product report", default=True)
-    name = StringProperty(default="Unknown")
+    name = StringProperty(default="Untitled")
     composition = StringProperty(default="Unknown")
     density = FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
 

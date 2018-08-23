@@ -52,15 +52,6 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
     def poll(cls, context):
         return bool(context.window_manager.jewelcraft.asset_folder)
 
-    def __init__(self):
-        super().__init__()
-        prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
-
-        if prefs.asset_name_from_obj:
-            self.asset_name = bpy.context.active_object.name
-        else:
-            self.asset_name = ""
-
     def draw(self, context):
         layout = self.layout
         layout.separator()
@@ -70,6 +61,10 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
         layout.separator()
 
     def execute(self, context):
+        if not self.asset_name:
+            self.report({"ERROR"}, "Name must be specified")
+            return {"CANCELLED"}
+
         filepath = os.path.join(self.folder, self.asset_name)
 
         asset.asset_export(folder=self.folder, filename=self.asset_name + ".blend")
@@ -80,6 +75,13 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+
+        if prefs.asset_name_from_obj:
+            self.asset_name = context.active_object.name
+        else:
+            self.asset_name = ""
+
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
@@ -138,6 +140,10 @@ class WM_OT_jewelcraft_asset_rename(Operator, Setup):
         layout.separator()
 
     def execute(self, context):
+        if not self.asset_name:
+            self.report({"ERROR"}, "Name must be specified")
+            return {"CANCELLED"}
+
         name_current = self.props.asset_list
 
         file_current = os.path.join(self.folder, name_current + ".blend")
