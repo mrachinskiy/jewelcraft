@@ -28,20 +28,20 @@ from ..lib import unit, mesh, ui_lib
 
 class OBJECT_OT_jewelcraft_weight_display(Operator):
     bl_label = "JewelCraft Display Weight"
-    bl_description = "Display weight and volume for active mesh object"
+    bl_description = "Display weight and volume for selected mesh objects"
     bl_idname = "object.jewelcraft_weight_display"
 
     def execute(self, context):
-        ob = context.active_object
+        obs = [ob for ob in context.selected_objects if ob.type == "MESH"]
 
-        if not ob or ob.type != "MESH":
-            self.report({"ERROR"}, "Active object must be a mesh")
+        if not obs:
+            self.report({"ERROR"}, "At least one mesh object must be selected")
             return {"CANCELLED"}
 
         prefs = context.user_preferences.addons[var.ADDON_ID].preferences
         materials = prefs.weighting_materials
 
-        vol = unit.to_metric(mesh.volume(ob), volume=True)
+        vol = unit.to_metric(mesh.est_volume(obs), volume=True)
 
         weight_report = []
 

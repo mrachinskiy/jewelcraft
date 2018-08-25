@@ -59,7 +59,7 @@ class Scatter:
 
         if self.absolute_ofst:
 
-            curve_length = mesh.edges_length(curve)
+            curve_length = mesh.curve_length(curve)
             ob_size = ob.dimensions[1]
             base_unit = 100.0 / curve_length
 

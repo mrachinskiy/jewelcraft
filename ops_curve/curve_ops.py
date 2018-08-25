@@ -88,7 +88,7 @@ class CURVE_OT_jewelcraft_length_display(Operator):
         # Display length
         # ---------------------------
 
-        length = unit.to_metric(mesh.edges_length(ob))
+        length = unit.to_metric(mesh.curve_length(ob))
         lengthf = "{:.2f} {}".format(length, _("mm"))
 
         ui_lib.popup_report(self, lengthf, title=_("Curve Length"))
@@ -117,7 +117,7 @@ class OBJECT_OT_jewelcraft_stretch_along_curve(Operator):
             bbox, curve = asset.mod_curve_off(ob)
 
             if curve:
-                length = mesh.edges_length(curve)
+                length = mesh.curve_length(curve)
                 length_halved = length / 2 / ob.matrix_world.to_scale()[0]
 
                 bm = bmesh.from_edit_mesh(me)
@@ -142,7 +142,7 @@ class OBJECT_OT_jewelcraft_stretch_along_curve(Operator):
                 bbox, curve = asset.mod_curve_off(ob)
 
                 if curve:
-                    length = mesh.edges_length(curve)
+                    length = mesh.curve_length(curve)
 
                     bbox = [ob.matrix_world * Vector(x) for x in bbox]
                     dim = max(x[0] for x in bbox) - min(x[0] for x in bbox)
