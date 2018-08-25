@@ -39,20 +39,20 @@ class WM_OT_jewelcraft_product_report(Operator):
         prefs = context.user_preferences.addons[var.ADDON_ID].preferences
         data_raw = data_collect()
         data_fmt = data_format(data_raw)
+        warnf = [_(x) for x in data_raw["warn"]]
 
         # Compose text datablock
         # ---------------------------
 
-        if data_raw["warn"]:
-            msgsf = [_(x) for x in data_raw["warn"]]
-            sep = "—" * max(40, len(max(msgsf)) + 2)
-            warns = "{}\n{}\n".format(_("WARNING"), sep)
+        if warnf:
+            sep = "—" * max(40, len(max(warnf)) + 2)
+            warn_fmt = "{}\n{}\n".format(_("WARNING"), sep)
 
-            for msg in msgsf:
-                warns += "-{}\n".format(_(msg))
+            for msg in warnf:
+                warn_fmt += "-{}\n".format(_(msg))
 
-            warns += "{}\n\n".format(sep)
-            data_fmt = warns + data_fmt
+            warn_fmt += "{}\n\n".format(sep)
+            data_fmt = warn_fmt + data_fmt
 
         if "JewelCraft Product Report" in bpy.data.texts:
             txt = bpy.data.texts["JewelCraft Product Report"]
@@ -88,26 +88,27 @@ class WM_OT_jewelcraft_product_report(Operator):
             space = area.spaces[0]
             space.text = txt
 
-        elif data_raw["warn"] or prefs.product_report_save:
+        elif warnf or prefs.product_report_save:
 
             def draw(self_local, context):
-                for msg in data_raw["warn"]:
-                    self_local.layout.label(_(msg), icon="ERROR")
-                    self.report({"WARNING"}, _(msg))
+
+                for msg in warnf:
+                    self_local.layout.label(msg, icon="ERROR")
+                    self.report({"WARNING"}, msg)
 
                 if prefs.product_report_save:
 
                     if bpy.data.is_saved:
-                        msg = "Text file successfully created in the project folder"
+                        msg = _("Text file successfully created in the project folder")
                         report_icon = "FILE_TICK"
                         report_type = {"INFO"}
                     else:
-                        msg = "Could not create text file, project folder does not exist"
+                        msg = _("Could not create text file, project folder does not exist")
                         report_icon = "ERROR"
                         report_type = {"WARNING"}
 
-                    self_local.layout.label(_(msg), icon=report_icon)
-                    self.report(report_type, _(msg))
+                    self_local.layout.label(msg, icon=report_icon)
+                    self.report(report_type, msg)
 
             context.window_manager.popup_menu(draw, title=_("Product Report"))
 

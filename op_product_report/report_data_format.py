@@ -65,19 +65,20 @@ def data_format(data):
     prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
     report = ""
 
-    if "size" in data:
+    if data["size"]:
         report += "{}:\n".format(_("Size"))
         report += "    {} {}\n\n".format(round(data["size"], 2), _("mm"))
 
-    if "shank" in data:
+    if data["shank"]:
         report += "{}:\n".format(_("Shank"))
         report += "    {} × {} {}\n\n".format(*[round(x, 2) for x in data["shank"]], _("mm"))
 
-    if "dim" in data:
+    if data["dim"]:
         report += "{}:\n".format(_("Dimensions"))
         report += "    {} × {} × {} {}\n\n".format(*[round(x, 2) for x in data["dim"]], _("mm"))
 
-    if "weight" in data:
+    if data["weight"]:
+
         vol = data["weight"]
 
         # Format values
