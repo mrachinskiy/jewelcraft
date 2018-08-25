@@ -30,7 +30,14 @@ from ..lib import unit, mesh, asset
 def data_collect():
     scene = bpy.context.scene
     props = scene.jewelcraft
-    data = {}
+    data = {
+        "size": 0.0,
+        "shank": [],
+        "dim": [],
+        "weight": 0.0,
+        "gems": {},
+        "warn": [],
+    }
 
     # Size
     # ---------------------------
@@ -65,12 +72,14 @@ def data_collect():
 
     if props.product_report_ob_weight:
         ob = props.product_report_ob_weight
-        data["weight"] = unit.to_metric(mesh.est_volume((ob,)), volume=True)
+
+        if ob.type == "MESH":
+            data["weight"] = unit.to_metric(mesh.est_volume((ob,)), volume=True)
 
     # Gems
     # ---------------------------
 
-    sg = {}
+    gms = data["gems"]
     known_stones = var.STONE_DENSITY.keys()
     known_cuts = var.CUT_VOLUME_CORRECTION.keys()
 
@@ -117,16 +126,14 @@ def data_collect():
                 elif ob.parent.dupli_type == "NONE":
                     df_leftovers = True
 
-            if stone in sg and cut in sg[stone] and size in sg[stone][cut]:
-                sg[stone][cut][size] += count
-            elif stone in sg and cut in sg[stone]:
-                sg[stone][cut][size] = count
-            elif stone in sg:
-                sg[stone][cut] = {size: count}
+            if stone in gms and cut in gms[stone] and size in gms[stone][cut]:
+                gms[stone][cut][size] += count
+            elif stone in gms and cut in gms[stone]:
+                gms[stone][cut][size] = count
+            elif stone in gms:
+                gms[stone][cut] = {size: count}
             else:
-                sg[stone] = {cut: {size: count}}
-
-    data["gems"] = sg
+                gms[stone] = {cut: {size: count}}
 
     # Find duplicates
     # ---------------------------
@@ -135,8 +142,6 @@ def data_collect():
 
     # Warnings
     # ---------------------------
-
-    data["warn"] = []
 
     if hidden:
         data["warn"].append("Hidden gems (use Show Hidden/Alt H)")

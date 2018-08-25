@@ -58,12 +58,12 @@ def est_volume(obs):
     bm = bmesh.new()
 
     for ob in obs:
-        if ob.type == "MESH":
-            me = ob.to_mesh(scene, True, "PREVIEW", calc_tessface=False)
-            me.transform(ob.matrix_world)
+        me = ob.to_mesh(scene, True, "PREVIEW", calc_tessface=False)
+        me.transform(ob.matrix_world)
 
-            bm.from_mesh(me)
-            bpy.data.meshes.remove(me)
+        bm.from_mesh(me)
+
+        bpy.data.meshes.remove(me)
 
     bmesh.ops.triangulate(bm, faces=bm.faces)
 
