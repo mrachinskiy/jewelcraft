@@ -65,8 +65,7 @@ def data_collect():
 
     if props.product_report_ob_weight:
         ob = props.product_report_ob_weight
-        vol = mesh.volume(ob)
-        data["weight"] = unit.to_metric(vol, volume=True)
+        data["weight"] = unit.to_metric(mesh.est_volume((ob,)), volume=True)
 
     # Gems
     # ---------------------------

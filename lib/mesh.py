@@ -53,47 +53,42 @@ def make_tri(bm, x, y, h):
 # ---------------------------
 
 
-def to_bmesh(ob, apply_modifiers=True, apply_transforms=True, triangulate=True):
+def est_volume(obs):
+    scene = bpy.context.scene
+    bm = bmesh.new()
 
-    if (apply_modifiers and ob.modifiers) or (ob.type != "MESH"):
-        me = ob.to_mesh(bpy.context.scene, True, "PREVIEW", calc_tessface=False)
-        bm = bmesh.new()
-        bm.from_mesh(me)
-        bpy.data.meshes.remove(me)
-    else:
-        me = ob.data
+    for ob in obs:
+        if ob.type == "MESH":
+            me = ob.to_mesh(scene, True, "PREVIEW", calc_tessface=False)
+            me.transform(ob.matrix_world)
 
-        if ob.mode == "EDIT":
-            bm_orig = bmesh.from_edit_mesh(me)
-            bm = bm_orig.copy()
-        else:
-            bm = bmesh.new()
             bm.from_mesh(me)
+            bpy.data.meshes.remove(me)
 
-    if apply_transforms:
-        bm.transform(ob.matrix_world)
+    bmesh.ops.triangulate(bm, faces=bm.faces)
 
-    if triangulate:
-        bmesh.ops.triangulate(bm, faces=bm.faces)
-
-    return bm
-
-
-def volume(ob):
-    bm = to_bmesh(ob)
     vol = bm.calc_volume()
     bm.free()
+
     return vol
 
 
-def edges_length(ob):
-    bm = to_bmesh(ob, triangulate=False)
+def curve_length(ob):
+    me = ob.to_mesh(bpy.context.scene, True, "PREVIEW", calc_tessface=False)
+
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bm.transform(ob.matrix_world)
+
+    bpy.data.meshes.remove(me)
+
     length = 0.0
 
     for edge in bm.edges:
         length += edge.calc_length()
 
     bm.free()
+
     return length
 
 
@@ -208,7 +203,13 @@ def face_pos():
         scene.update()
 
     ob.update_from_editmode()
-    bm = to_bmesh(ob, triangulate=False)
+    me = ob.to_mesh(scene, True, "PREVIEW", calc_tessface=False)
+
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bm.transform(ob.matrix_world)
+
+    bpy.data.meshes.remove(me)
 
     if mods_ignore:
         for mod, mod_show in mods_ignore:
