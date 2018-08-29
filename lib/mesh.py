@@ -146,20 +146,16 @@ def edge_loop_expand(e, limit=0):
     edges = []
     app = edges.append
 
-    app(e)
-
     loop = e.link_loops[0]
-
     loop_next = loop
     loop_prev = loop
+    app(e)
 
-    i = 1
-    while i < limit:
+    for i in range(1, limit):
         loop_next = loop_next.link_loop_next.link_loop_radial_next.link_loop_next
         loop_prev = loop_prev.link_loop_prev.link_loop_radial_prev.link_loop_prev
         app(loop_next.edge)
         app(loop_prev.edge)
-        i += 1
 
     return edges
 
@@ -168,24 +164,22 @@ def edge_loop_walk(verts):
     v = verts[0]
     e = v.link_edges[1]
 
-    v_loop = [v.co[:]]
-    v_total = len(verts) - 1
+    coords = []
+    app = coords.append
+    app(v.co.copy())
 
-    while v_total > 0:
+    for i in range(len(verts) - 1):
+
         ov = e.other_vert(v)
-        v_loop.append(ov.co[:])
+        app(ov.co.copy())
         v = ov
 
-        le = ov.link_edges
-
-        for oe in le:
+        for oe in ov.link_edges:
             if oe != e:
                 e = oe
                 break
 
-        v_total -= 1
-
-    return v_loop
+    return coords
 
 
 def face_pos():
