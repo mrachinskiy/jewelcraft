@@ -13,8 +13,8 @@ Video:
 * [Demo v1.0](https://youtu.be/XZ6uIdNnrHk)
 * [Prongs & Cutters v2.0](https://youtu.be/AZlCFg8bDSg)
 * New in v2.1:
-  * [Оценка веса + Менеджер ассетов](https://youtu.be/w2VWn8UlmPM)
-  * [Виджеты](https://youtu.be/Ck26lgKQ64Y)
+  * [Weighting + Asset Manager](https://youtu.be/LApwGXBoSXc) / [Оценка веса + Менеджер ассетов](https://youtu.be/w2VWn8UlmPM)
+  * [Viewport Widgets](https://youtu.be/5ux0o1ABgTk) / [Виджеты](https://youtu.be/Ck26lgKQ64Y)
 
 [More videos][2] / [Больше видео][3]
 
