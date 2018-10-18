@@ -43,12 +43,14 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
     stone = EnumProperty(name="Stone", items=dynamic_lists.stones)
     cut = EnumProperty(name="Cut", items=dynamic_lists.cuts)
 
+    select_children = BoolProperty(name="Select Children")
+
     def draw(self, context):
         layout = self.layout
 
         split = layout.split()
         split.prop(self, "filter_size")
-        split.prop(self, "size")
+        split.prop(self, "size", text="")
 
         split = layout.split()
         split.prop(self, "filter_stone")
@@ -58,12 +60,16 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
         split.prop(self, "filter_cut", text="Cut", text_ctxt="JewelCraft")
         split.template_icon_view(self, "cut", show_labels=True)
 
+        layout.prop(self, "select_children")
+
     def execute(self, context):
-        obs = context.visible_objects
+        visible = context.visible_objects
         size = round(self.size, 2)
 
-        expr = "for ob in obs:"
-        expr += "\n if 'gem' in ob"
+        expr = (
+            "for ob in visible:"
+            "\n if 'gem' in ob"
+        )
 
         if self.filter_size:
             expr += " and round(ob.dimensions[1], 2) == size"
@@ -72,23 +78,43 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
         if self.filter_cut:
             expr += " and ob['gem']['cut'] == self.cut"
 
-        expr += ": ob.select = True"
-        expr += "\n else: ob.select = False"
+        expr += (
+            ": ob.select = True"
+            "\n else: ob.select = False"
+        )
 
         exec(expr)
+
+        selected = context.selected_objects
+
+        if selected:
+
+            if not context.active_object.select:
+                context.scene.objects.active = selected[0]
+
+            if self.select_children:
+                visible = set(visible)
+
+                for ob in selected:
+                    if ob.children:
+                        for child in ob.children:
+                            if child in visible:
+                                child.select = True
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
         ob = context.active_object
 
-        if self.filter_similar and ob and "gem" in ob:
-            self.filter_size = True
-            self.filter_stone = True
-            self.filter_cut = True
+        if ob and "gem" in ob:
             self.size = ob.dimensions[1]
             self.stone = ob["gem"]["stone"]
             self.cut = ob["gem"]["cut"]
+
+        if self.filter_similar:
+            self.filter_size = True
+            self.filter_stone = True
+            self.filter_cut = True
 
         return self.execute(context)
 

@@ -174,8 +174,7 @@ class OBJECT_OT_jewelcraft_move_over_under(Operator):
 
             context.scene.update()
             bbox, curve = asset.mod_curve_off(ob)
-
-            bbox = [ob.matrix_world * Vector(x) for x in ob.bound_box]
+            bbox = [ob.matrix_world * Vector(x) for x in bbox]
 
             if self.under:
                 z_object = max(x[2] for x in bbox)
@@ -195,8 +194,7 @@ class OBJECT_OT_jewelcraft_move_over_under(Operator):
 
             for ob in context.selected_objects:
                 bbox, curve = asset.mod_curve_off(ob)
-
-                bbox = [ob.matrix_local * Vector(x) for x in ob.bound_box]
+                bbox = [ob.matrix_local * Vector(x) for x in bbox]
 
                 if self.under:
                     z_object = max(x[2] for x in bbox)

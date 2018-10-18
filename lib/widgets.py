@@ -93,7 +93,7 @@ def draw_callback_px(self, context):
             radius = max(ob.dimensions[:2]) / 2 + settings["distance"]
 
             mat_loc = Matrix.Translation(ob.matrix_world.translation)
-            mat_rot = ob.matrix_world.to_euler().to_matrix().to_4x4()
+            mat_rot = ob.matrix_world.to_quaternion().to_matrix().to_4x4()
             mat = mat_loc * mat_rot
 
             coords = circle_coords(radius)

@@ -232,6 +232,7 @@ class WM_OT_jewelcraft_asset_import(Operator, Setup):
         for ob in obs:
             scene.objects.link(ob)
             ob.select = True
+            ob.layers = self.view_layers
 
         if len(obs) == 1:
             ob.location = scene.cursor_location
@@ -243,3 +244,9 @@ class WM_OT_jewelcraft_asset_import(Operator, Setup):
         scene.objects.active = ob
 
         return {"FINISHED"}
+
+    def invoke(self, context, event):
+        self.view_layers = [False for x in range(20)]
+        self.view_layers[context.scene.active_layer] = True
+
+        return self.execute(context)

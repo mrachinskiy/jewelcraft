@@ -35,49 +35,58 @@ class Scatter:
         # ---------------------------
 
         if self.is_scatter:
-
             num = self.number - 1
+
             curve = context.active_object
             curve.select = False
+
             ob = context.selected_objects[0]
             scene.objects.active = ob
 
         else:
+            obs = {}
 
-            obs = context.selected_objects
-            num = len(obs) - 1
-            ob = obs[0]
+            for ob in context.selected_objects:
+                con = ob.constraints.get("Follow Path")
+                if con:
+                    obs[ob] = con.offset
+
+            obs_sorted = sorted(obs, key=obs.get, reverse=True)
+            num = len(obs_sorted) - 1
+            ob = context.active_object
+
+            if ob not in obs:
+                ob = obs_sorted[0]
+
             curve = ob.constraints["Follow Path"].target
 
-        asset.apply_scale(curve)
-        scene.update()
         curve.data.use_radius = False
-        cyclic = curve.data.splines[0].use_cyclic_u
+        asset.apply_scale(curve)
 
         # Offset
         # ---------------------------
 
-        if self.absolute_ofst:
+        ofst = 0.0
 
-            curve_length = mesh.curve_length(curve)
-            ob_size = ob.dimensions[1]
-            base_unit = 100.0 / curve_length
+        if num > 0:
 
-            ofst = base_unit * (ob_size + self.spacing)
+            if self.absolute_ofst:
+                ob_size = ob.dimensions[1]
+                base_unit = 100.0 / self.curve_length
 
-        else:
-
-            closed_scattering = True if round(end - start, 1) == 100.0 else False
-
-            if cyclic and closed_scattering:
-                ofst = (end - start) / (num + 1)
+                ofst = base_unit * (ob_size + self.spacing)
 
             else:
-                if not cyclic:
-                    start = start if start >= 0.0 else 0.0
-                    end = end if end <= 100.0 else 100.0
+                closed_scattering = True if round(end - start, 1) == 100.0 else False
 
-                ofst = (end - start) / num
+                if self.cyclic and closed_scattering:
+                    ofst = (end - start) / (num + 1)
+                else:
+                    if not self.cyclic:
+                        start = start if start >= 0.0 else 0.0
+                        end = end if end <= 100.0 else 100.0
+
+                    ofst = (end - start) / num
 
         # Scatter/Redistribute
         # ---------------------------
@@ -119,17 +128,9 @@ class Scatter:
 
         else:
 
-            obs_by_ofst = {}
-
-            for ob in obs:
-                con = ob.constraints.get("Follow Path")
-                if con:
-                    obs_by_ofst[ob] = con.offset
-
-            obs_by_ofst = sorted(obs_by_ofst, key=obs_by_ofst.get, reverse=True)
             ofst_fac = start
 
-            for ob in obs_by_ofst:
+            for ob in obs_sorted:
 
                 if self.rot_y:
                     mat_rot = Matrix.Rotation(self.rot_y, 4, "Y")
@@ -149,16 +150,42 @@ class Scatter:
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if len(context.selected_objects) < 2:
-            self.report({"ERROR"}, "At least two objects must be selected")
+
+        if self.is_scatter:
+
+            if len(context.selected_objects) < 2:
+                self.report({"ERROR"}, "At least two objects must be selected")
+                return {"CANCELLED"}
+
+            curve = context.active_object
+
+            if curve.type != "CURVE":
+                self.report({"ERROR"}, "Active object must be a curve")
+                return {"CANCELLED"}
+
+            self.cyclic = curve.data.splines[0].use_cyclic_u
+            self.curve_length = mesh.curve_length(curve)
+
+            return self.execute(context)
+
+        values = []
+        curve = None
+
+        for ob in context.selected_objects:
+            con = ob.constraints.get("Follow Path")
+            if con:
+                values.append(-con.offset)
+                curve = con.target
+
+        if not curve:
+            self.report({"ERROR"}, "Selected objects do not have Follow Path constraint")
             return {"CANCELLED"}
 
-        if self.is_scatter and context.active_object.type != "CURVE":
-            self.report({"ERROR"}, "Active object must be a curve")
-            return {"CANCELLED"}
+        self.start = min(values)
+        self.end = max(values)
 
-        elif not self.is_scatter and "Follow Path" not in context.active_object.constraints:
-            self.report({"ERROR"}, "Active object does not have a Follow Path constraint")
-            return {"CANCELLED"}
+        self.cyclic = curve.data.splines[0].use_cyclic_u
+        self.curve_length = mesh.curve_length(curve)
 
-        return self.execute(context)
+        wm = context.window_manager
+        return wm.invoke_props_popup(self, event)

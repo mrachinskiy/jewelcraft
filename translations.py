@@ -83,8 +83,8 @@ _ru = {
         "Width Offset": "Отступ ширины",
         "Position Offset": "Отступ позиции",
         "Start Up": "Начало сверху",
-        "Adjust Rotation": "Регулировать вращение",
         "Mirror Axis": "Оси отражения",
+        "Select Children": "Выделить потомков",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
@@ -176,7 +176,7 @@ _ru = {
         "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
         "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
         "Active object must be a curve": "Активный объект должен быть кривой",
-        "Active object does not have a Follow Path constraint": "Активный объект не имеет ограничение Follow Path",
+        "Selected objects do not have Follow Path constraint": "Выделенные объекты не имеют ограничение Follow Path",
         "File not found": "Файл не найден",
         "Name must be specified": "Имя должно быть указано",
         # Cuts

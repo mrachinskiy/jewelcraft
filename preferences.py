@@ -167,7 +167,6 @@ class JewelCraftPreferences(AddonPreferences):
 
         col = layout.column()
         col.row().prop(self, "active_section", expand=True)
-
         col.separator()
 
         if self.active_section == "ASSET_MANAGER":
