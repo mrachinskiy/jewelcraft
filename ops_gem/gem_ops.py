@@ -63,14 +63,15 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
 
         imported = asset.asset_import(filepath=var.GEM_ASSET_FILEPATH, ob_name=cut_name)
         ob = imported.objects[0]
+        scene.objects.link(ob)
 
-        ob["gem"] = {"cut": self.cut, "stone": self.stone}
+        ob.layers = self.view_layers
         ob.scale = ob.scale * self.size
         ob.location = scene.cursor_location
-        asset.add_material(ob, mat_name=stone_name, color=color, is_gem=True)
-
-        scene.objects.link(ob)
         ob.select = True
+        ob["gem"] = {"cut": self.cut, "stone": self.stone}
+
+        asset.add_material(ob, mat_name=stone_name, color=color, is_gem=True)
 
         if context.mode == "EDIT_MESH":
             asset.ob_copy_to_pos(ob)
@@ -85,6 +86,8 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
         self.stone = props.gem_stone
         self.cut = props.gem_cut
         self.color = asset.color_rnd()
+        self.view_layers = [False for x in range(20)]
+        self.view_layers[context.scene.active_layer] = True
 
         return self.execute(context)
 

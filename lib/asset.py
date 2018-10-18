@@ -23,7 +23,7 @@ import os
 import random
 
 import bpy
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 
 from . import mesh
 from .. import var
@@ -215,20 +215,20 @@ def bm_to_scene(bm, name="New object", color=None):
 
     scene = bpy.context.scene
 
-    for ob_par in bpy.context.selected_objects:
+    for parent in bpy.context.selected_objects:
 
         ob = bpy.data.objects.new(name, me)
-        ob.show_all_edges = True
-        ob.location = ob_par.location
-        ob.rotation_euler = ob_par.rotation_euler
+        scene.objects.link(ob)
 
-        ob.parent = ob_par
-        ob.matrix_parent_inverse = ob_par.matrix_basis.inverted()
+        ob.layers = parent.layers
+        ob.show_all_edges = True
+        ob.location = parent.location
+        ob.rotation_euler = parent.rotation_euler
+
+        ob.parent = parent
+        ob.matrix_parent_inverse = parent.matrix_basis.inverted()
 
         add_material(ob, mat_name=name, color=color)
-
-        scene.objects.link(ob)
-        ob.layers = ob_par.layers
 
 
 def apply_scale(ob):
@@ -252,6 +252,7 @@ def ob_copy_to_pos(ob):
         for mat in mats:
             ob_copy = ob.copy()
             scene.objects.link(ob_copy)
+            ob_copy.layers = ob.layers
             ob_copy.matrix_world = mat
 
 
@@ -270,3 +271,32 @@ def mod_curve_off(ob, reverse=False):
             return ob.bound_box, mod.object
 
     return ob.bound_box, None
+
+
+def calc_bbox(obs):
+    bbox = []
+
+    for ob in obs:
+        bbox += [ob.matrix_world * Vector(x) for x in ob.bound_box]
+
+    x_min = min(x[0] for x in bbox)
+    x_max = max(x[0] for x in bbox)
+    y_min = min(x[1] for x in bbox)
+    y_max = max(x[1] for x in bbox)
+    z_min = min(x[2] for x in bbox)
+    z_max = max(x[2] for x in bbox)
+
+    x_loc = (x_max + x_min) / 2
+    y_loc = (y_max + y_min) / 2
+    z_loc = (z_max + z_min) / 2
+
+    x_dim = x_max - x_min
+    y_dim = y_max - y_min
+    z_dim = z_max - z_min
+
+    return (
+        (x_loc, y_loc, z_loc),  # location
+        (x_dim, y_dim, z_dim),  # dimensions
+        (x_min, y_min, z_min),  # bbox min
+        (x_max, y_max, z_max),  # bbox max
+    )

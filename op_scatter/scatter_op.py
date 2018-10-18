@@ -34,7 +34,7 @@ class OBJECT_OT_jewelcraft_curve_scatter(Draw, Scatter, Operator):
 
     is_scatter = True
 
-    number = IntProperty(name="Object Number", default=10, min=2, soft_max=100)
+    number = IntProperty(name="Object Number", default=10, min=1, soft_max=100)
 
     rot_y = FloatProperty(name="Orientation", step=10, unit="ROTATION")
     rot_z = FloatProperty(name="Rotation", step=10, unit="ROTATION")
@@ -62,5 +62,5 @@ class OBJECT_OT_jewelcraft_curve_redistribute(Draw, Scatter, Operator):
     start = FloatProperty(name="Start")
     end = FloatProperty(name="End", default=100.0)
 
-    absolute_ofst = BoolProperty(name="Absolute Offset")
+    absolute_ofst = BoolProperty(name="Absolute Offset", options={"SKIP_SAVE"})
     spacing = FloatProperty(name="Spacing", default=0.2, unit="LENGTH")

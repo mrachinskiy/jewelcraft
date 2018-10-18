@@ -24,12 +24,9 @@ from math import pi
 import bpy
 from bpy.types import Operator
 from bpy.props import FloatProperty, BoolProperty, EnumProperty
-from mathutils import Matrix, Vector
+from mathutils import Matrix
 
 from ..lib import asset
-
-
-tau = pi * 2
 
 
 class OBJECT_OT_jewelcraft_mirror(Operator):
@@ -38,11 +35,9 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
     bl_idname = "object.jewelcraft_mirror"
     bl_options = {"REGISTER", "UNDO"}
 
-    x = BoolProperty(name="X", default=True, options={"SKIP_SAVE"})
+    x = BoolProperty(name="X", options={"SKIP_SAVE"})
     y = BoolProperty(name="Y", options={"SKIP_SAVE"})
     z = BoolProperty(name="Z", options={"SKIP_SAVE"})
-
-    rot_z = FloatProperty(name="Z", step=10, soft_min=-tau, soft_max=tau, unit="ROTATION", options={"SKIP_SAVE"})
 
     use_cursor = BoolProperty(name="Use 3D Cursor")
 
@@ -62,71 +57,86 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
         split.label("Pivot Point")
         split.prop(self, "use_cursor")
 
-        layout.separator()
-
-        split = layout.split()
-        split.label("Adjust Rotation")
-        split.prop(self, "rot_z")
-
     def execute(self, context):
+        axes = []
+        if self.x: axes.append(0)
+        if self.y: axes.append(1)
+        if self.z: axes.append(2)
+
+        if not axes:
+            return {"FINISHED"}
+
         scene = context.scene
-        ofst = scene.cursor_location if self.use_cursor else (0.0, 0.0, 0.0)
+        cursor_offset = scene.cursor_location * 2
+        is_odd_axis_count = len(axes) != 2
+        rotate_types = {"CAMERA", "LAMP", "SPEAKER", "FONT"}
+        duplimap = {}
+        children = {}
 
-        mat_z = Matrix.Rotation(self.rot_z, 4, "Z")
+        for ob_orig in context.selected_objects:
+            is_gem = "gem" in ob_orig
+            use_rot = ob_orig.type in rotate_types or is_gem
 
-        mat_y_180 = Matrix.Rotation(pi, 4, "Y")
-        mat_z_180 = Matrix.Rotation(pi, 4, "Z")
+            ob = ob_orig.copy()
 
-        for ob in context.selected_objects:
+            if not is_gem and ob.data:
+                ob.data = ob_orig.data.copy()
 
-            ob_copy = ob.copy()
-            scene.objects.link(ob_copy)
-            ob_copy.layers = ob.layers
+            scene.objects.link(ob)
 
-            ob.select = False
-            ob_copy.parent = None
+            ob.layers = ob_orig.layers
+            ob.matrix_world = ob_orig.matrix_world
+            ob_orig.select = False
 
-            if ob_copy.constraints:
-                for con in ob_copy.constraints:
-                    ob_copy.constraints.remove(con)
+            duplimap[ob_orig] = ob
 
-            ob_copy.matrix_world = ob.matrix_world
+            if ob.parent:
+                children[ob] = ob.parent
+                ob.parent = None
 
-            # Mirror axes
-            # ---------------------------
+            if ob.constraints:
+                for con in ob.constraints:
+                    ob.constraints.remove(con)
 
-            if self.x:
+            for i in axes:
 
-                ob_copy.rotation_euler[1] = -ob_copy.rotation_euler[1]
-                ob_copy.rotation_euler[2] = -ob_copy.rotation_euler[2]
+                if use_rot:
+                    quat = ob.matrix_world.to_quaternion()
+                    mat_rot_inv = quat.to_matrix().to_4x4().inverted()
+                    w, x, y, z = quat
 
-                ob_copy.location[0] = ob_copy.location[0] - (ob_copy.location[0] - ofst[0]) * 2
+                    if i == 0:
+                        quat[:] = w, x, -y, -z
+                    elif i == 1:
+                        quat[:] = z, y, x, w
+                    else:
+                        quat[:] = y, -z, w, -x
 
-            if self.y:
+                    ob.matrix_world *= mat_rot_inv * quat.to_matrix().to_4x4()
+                else:
+                    ob.matrix_world[i][0] *= -1
+                    ob.matrix_world[i][1] *= -1
+                    ob.matrix_world[i][2] *= -1
 
-                ob_copy.rotation_euler[0] = -ob_copy.rotation_euler[0]
-                ob_copy.rotation_euler[2] = -ob_copy.rotation_euler[2]
+                ob.matrix_world[i][3] *= -1
 
-                ob_copy.location[1] = ob_copy.location[1] - (ob_copy.location[1] - ofst[1]) * 2
+                if self.use_cursor:
+                    ob.matrix_world[i][3] += cursor_offset[i]
 
-                ob_copy.matrix_basis *= mat_z_180
+            if is_odd_axis_count and not use_rot and ob.type == "MESH":
+                asset.apply_scale(ob)
+                ob.data.flip_normals()
 
-            if self.z:
+        scene.objects.active = ob
 
-                ob_copy.rotation_euler[0] = -ob_copy.rotation_euler[0]
-                ob_copy.rotation_euler[1] = -ob_copy.rotation_euler[1]
+        # Handle relations
+        # -------------------------
 
-                ob_copy.location[2] = ob_copy.location[2] - (ob_copy.location[2] - ofst[2]) * 2
-
-                ob_copy.matrix_basis *= mat_y_180
-
-            # Adjust orientation for mirrored objects
-            # ---------------------------------------------
-
-            if self.rot_z:
-                ob_copy.matrix_basis *= mat_z
-
-        scene.objects.active = ob_copy
+        for child, parent in children.items():
+            parent = duplimap.get(parent)
+            if parent:
+                child.parent = parent
+                child.matrix_parent_inverse = parent.matrix_world.inverted()
 
         return {"FINISHED"}
 
@@ -134,7 +144,8 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
         if not context.selected_objects:
             return {"CANCELLED"}
 
-        return self.execute(context)
+        wm = context.window_manager
+        return wm.invoke_props_popup(self, event)
 
 
 class OBJECT_OT_jewelcraft_make_dupliface(Operator):
@@ -166,13 +177,14 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
         me.from_pydata(verts, [], faces)
 
         df = bpy.data.objects.new(df_name, me)
+        scene.objects.link(df)
+
         df.location = ob.location
         df.dupli_type = "FACES"
         df.select = True
-
-        scene.objects.link(df)
-        scene.objects.active = df
         df.layers = ob.layers
+
+        scene.objects.active = df
 
         mat_inv = Matrix.Translation(df.location).inverted()
 
@@ -200,32 +212,42 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
     bl_idname = "object.jewelcraft_lattice_project"
     bl_options = {"REGISTER", "UNDO"}
 
-    axis = EnumProperty(
+    direction = EnumProperty(
         items=(
-            ("X", "X", ""),
-            ("Y", "Y", ""),
-            ("Z", "Z", ""),
-            ("-X", "-X", ""),
-            ("-Y", "-Y", ""),
-            ("-Z", "-Z", ""),
+            ("NONE", "", ""),
+            ("POS_X", "X", ""),
+            ("POS_Y", "Y", ""),
+            ("POS_Z", "Z", ""),
+            ("NEG_X", "-X", ""),
+            ("NEG_Y", "-Y", ""),
+            ("NEG_Z", "-Z", ""),
         ),
-        default="-Z",
+        default="NONE",
+        options={"SKIP_SAVE"},
     )
 
     def draw(self, context):
         layout = self.layout
 
-        layout.separator()
-
         split = layout.split()
-        split.label("Axis")
-        split.row().prop(self, "axis", expand=True)
+        split.label("Direction")
 
-        layout.separator()
+        col = split.column(align=True)
+        row = col.row(align=True)
+        row.prop_enum(self, "direction", "POS_X")
+        row.prop_enum(self, "direction", "POS_Y")
+        row.prop_enum(self, "direction", "POS_Z")
+        row = col.row(align=True)
+        row.prop_enum(self, "direction", "NEG_X")
+        row.prop_enum(self, "direction", "NEG_Y")
+        row.prop_enum(self, "direction", "NEG_Z")
 
     def execute(self, context):
+        direction = self.direction.split("_")
+
         surf = context.active_object
         surf.select = False
+
         obs = context.selected_objects
 
         bpy.ops.object.add(radius=1, type="LATTICE")
@@ -237,66 +259,45 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
         md.use_project_z = True
         md.use_negative_direction = True
 
-        bbox = []
-
         for ob in obs:
             ob.select = True
-            bbox += [ob.matrix_world * Vector(x) for x in ob.bound_box]
             md = ob.modifiers.new("Lattice", "LATTICE")
             md.object = lat
 
-        x_min = min(x[0] for x in bbox)
-        x_max = max(x[0] for x in bbox)
-        y_min = min(x[1] for x in bbox)
-        y_max = max(x[1] for x in bbox)
-        z_min = min(x[2] for x in bbox)
-        z_max = max(x[2] for x in bbox)
+        if "X" in direction:
+            ratio = self.dim[2] / self.dim[1]
+            lat.scale[0] = self.dim[2]
+            lat.scale[1] = self.dim[1]
 
-        x_loc = (x_max + x_min) / 2
-        y_loc = (y_max + y_min) / 2
-        z_loc = (z_max + z_min) / 2
-
-        x_dim = x_max - x_min
-        y_dim = y_max - y_min
-        z_dim = z_max - z_min
-
-        if "X" in self.axis:
-            ratio = z_dim / y_dim
-
-            lat.scale[0] = z_dim
-            lat.scale[1] = y_dim
-
-            if "-" in self.axis:
+            if "NEG" in direction:
                 lat.rotation_euler[1] = pi / 2
-                lat.location = (x_min, y_loc, z_loc)
+                lat.location = (self.bbox_min[0], self.loc[1], self.loc[2])
             else:
                 lat.rotation_euler[1] = -pi / 2
-                lat.location = (x_max, y_loc, z_loc)
+                lat.location = (self.bbox_max[0], self.loc[1], self.loc[2])
 
-        elif "Y" in self.axis:
-            ratio = x_dim / z_dim
+        elif "Y" in direction:
+            ratio = self.dim[0] / self.dim[2]
+            lat.scale[0] = self.dim[0]
+            lat.scale[1] = self.dim[2]
 
-            lat.scale[0] = x_dim
-            lat.scale[1] = z_dim
-
-            if "-" in self.axis:
+            if "NEG" in direction:
                 lat.rotation_euler[0] = -pi / 2
-                lat.location = (x_loc, y_min, z_loc)
+                lat.location = (self.loc[0], self.bbox_min[1], self.loc[2])
             else:
                 lat.rotation_euler[0] = pi / 2
-                lat.location = (x_loc, y_max, z_loc)
+                lat.location = (self.loc[0], self.bbox_max[1], self.loc[2])
 
         else:
-            ratio = x_dim / y_dim
+            ratio = self.dim[0] / self.dim[1]
+            lat.scale[0] = self.dim[0]
+            lat.scale[1] = self.dim[1]
 
-            lat.scale[0] = x_dim
-            lat.scale[1] = y_dim
-
-            if "-" in self.axis:
-                lat.location = (x_loc, y_loc, z_min)
+            if "NEG" in direction:
+                lat.location = (self.loc[0], self.loc[1], self.bbox_min[2])
             else:
                 lat.rotation_euler[0] = -pi
-                lat.location = (x_loc, y_loc, z_max)
+                lat.location = (self.loc[0], self.loc[1], self.bbox_max[2])
 
         if ratio >= 1.0:
             pt_u = round(10 * ratio)
@@ -312,11 +313,17 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if len(context.selected_objects) < 2:
+        obs = context.selected_objects
+
+        if len(obs) < 2:
             self.report({"ERROR"}, "At least two objects must be selected")
             return {"CANCELLED"}
 
-        return self.execute(context)
+        obs.remove(context.active_object)
+        self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox(obs)
+
+        wm = context.window_manager
+        return wm.invoke_props_popup(self, event)
 
 
 class OBJECT_OT_jewelcraft_lattice_profile(Operator):
@@ -361,29 +368,12 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
         obs = context.selected_objects
         obs.remove(ob)
 
-        bbox = [ob.matrix_world * Vector(x) for x in ob.bound_box]
-
-        x_min = min(x[0] for x in bbox)
-        x_max = max(x[0] for x in bbox)
-        y_min = min(x[1] for x in bbox)
-        y_max = max(x[1] for x in bbox)
-        z_min = min(x[2] for x in bbox)
-        z_max = max(x[2] for x in bbox)
-
-        x_loc = (x_max + x_min) / 2
-        y_loc = (y_max + y_min) / 2
-        z_loc = (z_max + z_min) / 2
-
-        x_dim = x_max - x_min
-        y_dim = y_max - y_min
-        z_dim = z_max - z_min
-
         if self.axis == "X":
             rot_z = 0.0
-            xy_dim = y_dim
+            dim_xy = self.dim[1]
         else:
             rot_z = pi / 2
-            xy_dim = x_dim
+            dim_xy = self.dim[0]
 
         bpy.ops.object.add(radius=1, type="LATTICE", rotation=(0.0, 0.0, rot_z))
         lat = context.active_object
@@ -393,8 +383,8 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
 
         if self.lat_type == "2D":
 
-            lat.location = (x_loc, y_loc, z_loc)
-            lat.scale = (1.0, xy_dim * 1.5, z_dim)
+            lat.location = self.loc
+            lat.scale = (1.0, dim_xy * 1.5, self.dim[2])
 
             lat.data.interpolation_type_w = "KEY_LINEAR"
 
@@ -412,8 +402,8 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
 
         else:
 
-            lat.location = (x_loc, y_loc, z_max)
-            lat.scale[1] = xy_dim * 1.5
+            lat.location = (self.loc[0], self.loc[1], self.bbox_max[2])
+            lat.scale[1] = dim_xy * 1.5
 
             lat.data.points_u = 1
             lat.data.points_v = 7
@@ -459,8 +449,12 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.active_object:
+        ob = context.active_object
+
+        if not ob:
             return {"CANCELLED"}
+
+        self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox((ob,))
 
         return self.execute(context)
 

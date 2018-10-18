@@ -50,7 +50,7 @@ DEFAULT_WEIGHTING_SETS = {
     "JCASSET_PRECIOUS": (
         ("Yellow Gold 24K", 19.32, "Au 99.9%"),
         ("Yellow Gold 22K", 17.86, "Au 91.6%, Ag 4.9%, Cu 3.5%"),
-        ("Yellow Gold 18K", 15.53, "Au 75.3%, Ag 16.5, Cu 6.7%, Zn 1.5%"),
+        ("Yellow Gold 18K", 15.53, "Au 75.3%, Ag 16.5%, Cu 6.7%, Zn 1.5%"),
         ("Yellow Gold 14K", 13.05, "Au 58.4%, Ag 9.8%, Cu 28%, Zn 3.8%"),
         ("Yellow Gold 10K", 11.47, "Au 41.7%, Ag 11.2%, Cu 40.5%, Zn 6.6%"),
         ("White Gold 18K Pd", 15.66, "Au 78.7%, Cu 8.3%, Pd 13%"),

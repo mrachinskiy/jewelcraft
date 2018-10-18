@@ -103,7 +103,7 @@ def data_collect():
             count = 1
 
             # Warnings
-            if ob.hide:
+            if not hidden and not ob.is_visible(scene):
                 hidden = True
 
             loc = ob.matrix_world.to_translation().to_tuple()
