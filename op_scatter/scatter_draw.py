@@ -49,6 +49,6 @@ class Draw:
         layout.separator()
 
         split = layout.split()
-        split.prop(self, "absolute_ofst")
+        split.prop(self, "use_absolute_offset")
         col = split.column(align=True)
         col.prop(self, "spacing")

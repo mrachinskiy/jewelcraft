@@ -65,7 +65,7 @@ def est_volume(obs):
 
         bpy.data.meshes.remove(me)
 
-    bmesh.ops.triangulate(bm, faces=bm.faces)
+    bmesh.ops.triangulate(bm, faces=bm.faces, quad_method=3)
 
     vol = bm.calc_volume()
     bm.free()
