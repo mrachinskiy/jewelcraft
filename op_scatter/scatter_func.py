@@ -70,7 +70,7 @@ class Scatter:
 
         if num > 0:
 
-            if self.absolute_ofst:
+            if self.use_absolute_offset:
                 ob_size = ob.dimensions[1]
                 base_unit = 100.0 / self.curve_length
 
@@ -93,9 +93,12 @@ class Scatter:
 
         if self.is_scatter:
 
-            ob.location = (0.0, 0.0, 0.0)
-            ob.rotation_euler = (0.0, 0.0, 0.0)
-            scene.update()
+            mat = Matrix()
+            mat[0][0] = ob.scale[0]
+            mat[1][1] = ob.scale[1]
+            mat[2][2] = ob.scale[2]
+
+            ob.matrix_world = mat
 
             if self.rot_y:
                 mat_rot = Matrix.Rotation(self.rot_y, 4, "Y")
@@ -115,11 +118,21 @@ class Scatter:
                 ob_copy = ob.copy()
                 scene.objects.link(ob_copy)
                 ob_copy.layers = ob.layers
+
                 con = ob_copy.constraints.new("FOLLOW_PATH")
                 con.target = curve
                 con.offset = -ofst_fac
                 con.use_curve_follow = True
+
                 ofst_fac += ofst
+
+                if ob.children:
+                    for child in ob.children:
+                        child_copy = child.copy()
+                        scene.objects.link(child_copy)
+                        child_copy.layers = child.layers
+                        child_copy.parent = ob_copy
+                        child_copy.matrix_parent_inverse = child.matrix_parent_inverse
 
             con = ob.constraints.new("FOLLOW_PATH")
             con.target = curve
