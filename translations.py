@@ -101,7 +101,7 @@ _ru = {
         "Object for weight reference": "Объект для определения веса изделия",
         "Save product report to text file": "Сохранить отчёт изделия в текстовый файл",
         "Select gems by trait": "Выделить камни по характеристике",
-        "Select duplicated gems (located in the same spot)\nWARNING: it does not work with dupli-faces, objects only": "Выделить дубликаты (находящиеся на одной координате)\nПРЕДУПРЕЖДЕНИЕ: не работает с dupli-faces, только с объектами",
+        "Select duplicated gems (located in the same spot)\nWARNING: does not work with dupli-faces": "Выделить дубликаты (находящиеся на одной координате)\nПРЕДУПРЕЖДЕНИЕ: не работает с dupli-faces",
         "Search stone by name": "Искать камень по названию",
         "Search asset by name": "Искать ассет по названию",
         "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
