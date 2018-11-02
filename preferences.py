@@ -138,6 +138,7 @@ class JewelCraftPreferences(AddonPreferences):
     )
     product_report_display = BoolProperty(name="Display in a new window", description="Display product report in new window", default=True)
     product_report_save = BoolProperty(name="Save to file", description="Save product report to file in project folder", default=True)
+    product_report_use_layers = BoolProperty(name="Use view layers", description="Ignore gems located in hidden view layers")
 
     widget_selection_only = BoolProperty(name="Selection only", description="Draw widgets only for selected objects")
     widget_use_overrides = BoolProperty(name="Use overrides", description="Use object defined widget overrides", default=True)
@@ -211,6 +212,7 @@ class JewelCraftPreferences(AddonPreferences):
             col = layout.column()
             property_split(self, col, "Display in a new window", "product_report_display", ratio=1 / 3)
             property_split(self, col, "Save to file", "product_report_save", ratio=1 / 3)
+            property_split(self, col, "Use view layers", "product_report_use_layers", ratio=1 / 3)
             property_split(self, col, "Report Language", "product_report_lang", ratio=1 / 3)
 
         elif self.active_section == "THEMES":

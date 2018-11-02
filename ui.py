@@ -145,6 +145,7 @@ class VIEW3D_MT_jewelcraft_product_report(Menu, Setup):
         layout = self.layout
         layout.prop(self.prefs, "product_report_display")
         layout.prop(self.prefs, "product_report_save")
+        layout.prop(self.prefs, "product_report_use_layers")
         layout.separator()
         layout.label("Report Language:")
         layout.prop(self.prefs, "product_report_lang", text="")

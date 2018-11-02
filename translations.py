@@ -58,6 +58,7 @@ _ru = {
         "Show density": "Показать плотность",
         "Materials list": "Список материалов",
         "Composition": "Состав",
+        "Use view layers": "Учитывать слои",
         # Popup dialogs
         "Asset Name": "Название ассета",
         "Category Name": "Название категории",
@@ -161,6 +162,7 @@ _ru = {
         "Move each object individually": "Переместить каждый объект по отдельности",
         "Enable material for weighting and product report": "Использовать материал для оценки веса и отчёта изделия",
         "Clear materials list": "Очистить список материалов",
+        "Ignore gems located in hidden view layers": "Игнорировать камни расположенные в скрытых слоях",
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
