@@ -30,6 +30,7 @@ from ..lib import unit, mesh, asset
 def data_collect():
     scene = bpy.context.scene
     props = scene.jewelcraft
+    prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
     data = {
         "size": 0.0,
         "shank": [],
@@ -89,7 +90,19 @@ def data_collect():
     deprecated_id = False
     unknown_id = False
 
-    for ob in scene.objects:
+    if prefs.product_report_use_layers:
+        visible_layers = [i for i, x in enumerate(scene.layers) if x]
+        obs = []
+        app = obs.append
+        for ob in scene.objects:
+            for i in visible_layers:
+                if ob.layers[i]:
+                    app(ob)
+                    break
+    else:
+        obs = scene.objects
+
+    for ob in obs:
 
         if not deprecated_id:
             deprecated_id = ob.type == "MESH" and "gem" in ob.data
