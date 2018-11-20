@@ -53,7 +53,7 @@ def handler_toggle(self, context):
 
     if context.area.type == "VIEW_3D":
 
-        if context.window_manager.jewelcraft.widget_toggle:
+        if self.widget_toggle:
             handler_add(self, context)
         else:
             handler_del()
