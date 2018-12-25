@@ -1247,8 +1247,8 @@ def register(bl_info):
     updater.version_min_update = None  # if not wanting to define a min
 
     # max install (<) will install strictly anything lower
-    # updater.version_max_update = (9,9,9)
-    updater.version_max_update = None  # if not wanting to define a max
+    updater.version_max_update = (2,4,0)
+    # updater.version_max_update = None  # if not wanting to define a max
 
     # Function defined above, customize as appropriate per repository
     updater.skip_tag = skip_tag_function  # min and max used in this function
