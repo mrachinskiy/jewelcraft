@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ class WM_OT_jewelcraft_product_report(Operator):
     bl_idname = "wm.jewelcraft_product_report"
 
     def execute(self, context):
-        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
         data_raw = data_collect()
         data_fmt = data_format(data_raw)
         warnf = [_(x) for x in data_raw["warn"]]
@@ -51,7 +51,7 @@ class WM_OT_jewelcraft_product_report(Operator):
             for msg in warnf:
                 warn_fmt += "-{}\n".format(_(msg))
 
-            warn_fmt += "{}\n\n".format(sep)
+            warn_fmt += f"{sep}\n\n"
             data_fmt = warn_fmt + data_fmt
 
         if "JewelCraft Product Report" in bpy.data.texts:
@@ -93,7 +93,7 @@ class WM_OT_jewelcraft_product_report(Operator):
             def draw(self_local, context):
 
                 for msg in warnf:
-                    self_local.layout.label(msg, icon="ERROR")
+                    self_local.layout.label(text=msg, icon="ERROR")
                     self.report({"WARNING"}, msg)
 
                 if prefs.product_report_save:
@@ -107,7 +107,7 @@ class WM_OT_jewelcraft_product_report(Operator):
                         report_icon = "ERROR"
                         report_type = {"WARNING"}
 
-                    self_local.layout.label(msg, icon=report_icon)
+                    self_local.layout.label(text=msg, icon=report_icon)
                     self.report(report_type, msg)
 
             context.window_manager.popup_menu(draw, title=_("Product Report"))

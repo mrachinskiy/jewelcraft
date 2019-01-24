@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -43,46 +43,89 @@ class OBJECT_OT_jewelcraft_cutter_add(Draw, Operator):
     bl_idname = "object.jewelcraft_cutter_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    auto_presets = BoolProperty(name="Use Automated Presets", description="Use automatically generated presets, discards user edits or presets", default=True)
+    auto_presets: BoolProperty(
+        name="Use Automated Presets",
+        description="Use automatically generated presets, discards user edits or presets",
+        default=True,
+    )
 
-    detalization = IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
+    detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
-    handle = BoolProperty(name="Handle", default=True, update=update_coords_handle)
-    handle_l_size = FloatProperty(name="Handle Length", step=0.1, unit="LENGTH")
-    handle_w_size = FloatProperty(name="Handle Width", step=0.1, unit="LENGTH")
-    handle_z_top = FloatProperty(name="Handle Height Top", default=0.5, step=0.1, unit="LENGTH")
-    handle_z_btm = FloatProperty(name="Handle Height Bottom", default=0.5, step=0.1, unit="LENGTH")
+    handle: BoolProperty(name="Handle", default=True, update=update_coords_handle)
+    handle_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")
+    handle_w_size: FloatProperty(name="Width", step=0.1, unit="LENGTH")
+    handle_z_top: FloatProperty(name="Top", default=0.5, step=0.1, unit="LENGTH")
+    handle_z_btm: FloatProperty(name="Bottom", default=0.5, step=0.1, unit="LENGTH")
 
-    girdle_l_ofst = FloatProperty(name="Girdle Length Offset", step=0.1, unit="LENGTH")
-    girdle_w_ofst = FloatProperty(name="Girdle Width Offset", step=0.1, unit="LENGTH")
-    girdle_z_top = FloatProperty(name="Girdle Height Top", default=0.05, step=0.1, unit="LENGTH")
-    girdle_z_btm = FloatProperty(name="Girdle Height Bottom", step=0.1, unit="LENGTH")
-    table_z = FloatProperty(name="Table Height", options={"HIDDEN"})
+    girdle_l_ofst: FloatProperty(name="Length Offset", step=0.1, unit="LENGTH")
+    girdle_w_ofst: FloatProperty(name="Width Offset", step=0.1, unit="LENGTH")
+    girdle_z_top: FloatProperty(name="Top", default=0.05, step=0.1, unit="LENGTH")
+    girdle_z_btm: FloatProperty(name="Bottom", step=0.1, unit="LENGTH")
+    table_z: FloatProperty(name="Table", options={"HIDDEN"})
 
-    hole = BoolProperty(name="Hole", default=True, update=update_coords_hole)
-    hole_z_top = FloatProperty(name="Hole Height Top/Culet", default=0.25, step=0.1, unit="LENGTH")
-    hole_z_btm = FloatProperty(name="Hole Height Bottom", default=1.0, step=0.1, unit="LENGTH")
-    hole_l_size = FloatProperty(name="Hole Length", step=0.1, unit="LENGTH")
-    hole_w_size = FloatProperty(name="Hole Width", step=0.1, unit="LENGTH")
-    hole_pos_ofst = FloatProperty(name="Hole Position Offset", step=0.1, unit="LENGTH")
-    culet_z = FloatProperty(name="Height Culet", options={"HIDDEN"})
+    hole: BoolProperty(name="Hole", default=True, update=update_coords_hole)
+    hole_z_top: FloatProperty(name="Top", default=0.25, step=0.1, unit="LENGTH")
+    hole_z_btm: FloatProperty(name="Bottom", default=1.0, step=0.1, unit="LENGTH")
+    hole_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")
+    hole_w_size: FloatProperty(name="Width", step=0.1, unit="LENGTH")
+    hole_pos_ofst: FloatProperty(name="Position Offset", step=0.1, unit="LENGTH")
+    culet_z: FloatProperty(name="Culet", options={"HIDDEN"})
 
-    curve_seat = BoolProperty(name="Curve Seat")
-    curve_seat_segments = IntProperty(name="Curve Seat Segments", default=15, min=2, soft_max=30, step=1)
-    curve_seat_profile = FloatProperty(name="Curve Seat Profile", default=0.5, min=0.15, max=1.0, subtype="FACTOR")
+    curve_seat: BoolProperty(name="Curve Seat")
+    curve_seat_segments: IntProperty(name="Segments", default=15, min=2, soft_max=30, step=1)
+    curve_seat_profile: FloatProperty(name="Profile", default=0.5, min=0.15, max=1.0, subtype="FACTOR")
 
-    curve_profile = BoolProperty(name="Curve Profile")
-    curve_profile_segments = IntProperty(name="Curve Profile Segments", default=10, min=1, soft_max=30, step=1)
-    curve_profile_factor = FloatProperty(name="Curve Profile Factor", default=0.1, min=0.0, step=1)
+    curve_profile: BoolProperty(name="Curve Profile")
+    curve_profile_segments: IntProperty(name="Segments", default=10, min=1, soft_max=30, step=1)
+    curve_profile_factor: FloatProperty(name="Factor", default=0.1, min=0.0, step=1)
 
-    mul_1 = FloatProperty(name="Marquise Profile Factor 1", default=0.47, min=0.0, soft_max=1.0, step=0.01, subtype="FACTOR")
-    mul_2 = FloatProperty(name="Marquise Profile Factor 2", default=1.4, min=0.0, soft_max=2.0, step=0.01, subtype="FACTOR")
+    mul_1: FloatProperty(
+        name="Factor 1",
+        default=0.47,
+        min=0.0,
+        soft_max=1.0,
+        step=0.01,
+        subtype="FACTOR",
+    )
+    mul_2: FloatProperty(
+        name="Factor 2",
+        default=1.4,
+        min=0.0,
+        soft_max=2.0,
+        step=0.01,
+        subtype="FACTOR",
+    )
 
-    bevel_corners = BoolProperty(name="Bevel Corners")
-    bevel_corners_width = FloatProperty(name="Bevel Corners Width", default=0.1, min=0.0, step=0.1, unit="LENGTH")
-    bevel_corners_percent = FloatProperty(name="Bevel Corners Width (%)", default=18.0, min=0.0, max=50.0, step=1, subtype="PERCENTAGE")
-    bevel_corners_segments = IntProperty(name="Bevel Corners Segments", default=1, min=1, soft_max=30, step=1)
-    bevel_corners_profile = FloatProperty(name="Bevel Corners Profile", default=0.5, min=0.15, max=1.0, subtype="FACTOR")
+    bevel_corners: BoolProperty(name="Bevel Corners")
+    bevel_corners_width: FloatProperty(
+        name="Width",
+        default=0.1,
+        min=0.0,
+        step=0.1,
+        unit="LENGTH",
+    )
+    bevel_corners_percent: FloatProperty(
+        name="Width",
+        default=18.0,
+        min=0.0,
+        max=50.0,
+        step=1,
+        subtype="PERCENTAGE",
+    )
+    bevel_corners_segments: IntProperty(
+        name="Segments",
+        default=1,
+        min=1,
+        soft_max=30,
+        step=1,
+    )
+    bevel_corners_profile: FloatProperty(
+        name="Profile",
+        default=0.5,
+        min=0.15,
+        max=1.0,
+        subtype="FACTOR",
+    )
 
     def execute(self, context):
         bm = create_cutter(self)
@@ -96,7 +139,7 @@ class OBJECT_OT_jewelcraft_cutter_add(Draw, Operator):
             return {"CANCELLED"}
 
         asset.get_gem(self, context)
-        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = tuple(prefs.color_cutter)
 
         if self.auto_presets:

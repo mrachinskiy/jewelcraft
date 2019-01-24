@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -43,14 +43,15 @@ class WM_OT_jewelcraft_asset_folder_create(Operator, Setup):
     bl_idname = "wm.jewelcraft_asset_folder_create"
     bl_options = {"INTERNAL"}
 
-    folder_name = StringProperty(name="Category Name", description="Category name", options={"SKIP_SAVE"})
+    folder_name: StringProperty(name="Category Name", description="Category name", options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         layout.separator()
-        row = layout.row()
-        row.label("Category Name")
-        row.prop(self, "folder_name", text="")
+        layout.prop(self, "folder_name")
         layout.separator()
 
     def execute(self, context):
@@ -78,14 +79,15 @@ class WM_OT_jewelcraft_asset_folder_rename(Operator, Setup):
     bl_idname = "wm.jewelcraft_asset_folder_rename"
     bl_options = {"INTERNAL"}
 
-    folder_name = StringProperty(name="Category Name", description="Category name", options={"SKIP_SAVE"})
+    folder_name: StringProperty(name="Category Name", description="Category name", options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         layout.separator()
-        row = layout.row()
-        row.label("Category Name")
-        row.prop(self, "folder_name", text="")
+        layout.prop(self, "folder_name")
         layout.separator()
 
     def execute(self, context):

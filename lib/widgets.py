@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -20,25 +20,26 @@
 
 
 from functools import lru_cache
-from math import sin, cos, pi
+from math import sin, cos, tau
 
 import bpy
 import bgl
+import gpu
+from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix, Vector
 
 from .. import var
 
 
-tau = 2 * pi
-
 _handler = None
+shader = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
 
 
 def handler_add(self, context):
     global _handler
 
     if _handler is None:
-        _handler = bpy.types.SpaceView3D.draw_handler_add(draw_callback_px, (self, context), "WINDOW", "POST_VIEW")
+        _handler = bpy.types.SpaceView3D.draw_handler_add(draw, (self, context), "WINDOW", "POST_VIEW")
 
 
 def handler_del():
@@ -61,72 +62,73 @@ def handler_toggle(self, context):
         context.area.tag_redraw()
 
 
-def draw_callback_px(self, context):
+def draw(self, context):
 
-    if not context.window_manager.jewelcraft.widget_toggle or context.space_data.show_only_render:
+    if not context.window_manager.jewelcraft.widget_toggle or not context.space_data.overlay.show_overlays:
         return
 
-    prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+    depsgraph = context.depsgraph
+    prefs = context.preferences.addons[var.ADDON_ID].preferences
     use_ovrd = prefs.widget_use_overrides
+    use_ovrd_only = use_ovrd and prefs.widget_overrides_only
+    use_sel_only = prefs.widget_selection_only
+
     default_settings = {
         "color": prefs.widget_color,
         "linewidth": prefs.widget_linewidth,
         "distance": prefs.widget_distance,
     }
-    obs = context.selected_objects if prefs.widget_selection_only else context.visible_objects
-    key = "jewelcraft_widget" if use_ovrd and prefs.widget_overrides_only else "gem"
 
+    shader.bind()
     bgl.glEnable(bgl.GL_BLEND)
+    bgl.glEnable(bgl.GL_LINE_SMOOTH)
+    bgl.glDepthMask(bgl.GL_FALSE)
 
-    if prefs.widget_x_ray:
+    if prefs.widget_show_in_front:
         bgl.glDisable(bgl.GL_DEPTH_TEST)
 
-    for ob in obs:
-        if key in ob:
-            settings = default_settings.copy()
+    for dup in depsgraph.object_instances:
 
-            if use_ovrd and "jewelcraft_widget" in ob:
-                settings.update(ob["jewelcraft_widget"])
+        if dup.is_instance:
+            ob = dup.instance_object.original
+        else:
+            ob = dup.object.original
 
-            bgl.glLineWidth(settings["linewidth"])
-            bgl.glColor4f(*settings["color"])
-            radius = max(ob.dimensions[:2]) / 2 + settings["distance"]
+        if (
+            ("gem" not in ob) or
+            (use_ovrd_only and "jewelcraft_widget" not in ob) or
+            (use_sel_only and not ob.select_get())
+        ):
+            continue
 
+        if dup.is_instance:
+            mat = dup.matrix_world
+        else:
             mat_loc = Matrix.Translation(ob.matrix_world.translation)
             mat_rot = ob.matrix_world.to_quaternion().to_matrix().to_4x4()
-            mat = mat_loc * mat_rot
+            mat = mat_loc @ mat_rot
 
-            coords = circle_coords(radius)
+        settings = default_settings.copy()
 
-            bgl.glBegin(bgl.GL_LINE_LOOP)
-            for co in coords:
-                bgl.glVertex3f(*(mat * co))
-            bgl.glEnd()
+        if use_ovrd and "jewelcraft_widget" in ob:
+            settings.update(ob["jewelcraft_widget"])
 
-            # Duplifaces
-            # ----------------------------
+        radius = max(ob.dimensions[:2]) / 2 + settings["distance"]
+        coords = [mat @ co for co in circle_coords(radius)]
 
-            if ob.parent and ob.parent.dupli_type == "FACES":
-
-                ob.parent.dupli_list_create(context.scene)
-
-                for dup in ob.parent.dupli_list:
-                    if dup.object == ob:
-                        mat = dup.matrix
-                        bgl.glBegin(bgl.GL_LINE_LOOP)
-                        for co in coords:
-                            bgl.glVertex3f(*(mat * co))
-                        bgl.glEnd()
-
-                ob.parent.dupli_list_clear()
+        bgl.glLineWidth(settings["linewidth"])
+        shader.uniform_float("color", settings["color"])
+        batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
+        batch.draw(shader)
 
     # Restore OpenGL defaults
     # ----------------------------
 
-    bgl.glLineWidth(1)
-    bgl.glColor4f(0.0, 0.0, 0.0, 1.0)
     bgl.glDisable(bgl.GL_BLEND)
+    bgl.glDisable(bgl.GL_LINE_SMOOTH)
+    bgl.glDepthMask(bgl.GL_TRUE)
     bgl.glEnable(bgl.GL_DEPTH_TEST)
+    bgl.glLineWidth(1)
 
 
 @lru_cache(maxsize=128)

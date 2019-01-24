@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -76,10 +76,7 @@ def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8), is_gem=Fals
         mat = bpy.data.materials.new(mat_name)
         mat.diffuse_color = color
 
-        if not is_gem:
-            mat.specular_color = (0.0, 0.0, 0.0)
-
-        if bpy.context.scene.render.engine == "CYCLES":
+        if bpy.context.scene.render.engine in {"CYCLES", "BLENDER_EEVEE"}:
             mat.use_nodes = True
             nodes = mat.node_tree.nodes
 
@@ -88,14 +85,17 @@ def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8), is_gem=Fals
 
             if is_gem:
                 node = nodes.new("ShaderNodeBsdfGlass")
+                node.inputs["Color"].default_value = color + (1.0,)
             else:
-                node = nodes.new("ShaderNodeBsdfGlossy")
+                node = nodes.new("ShaderNodeBsdfPrincipled")
+                node.inputs["Base Color"].default_value = color + (1.0,)
+                node.inputs["Metallic"].default_value = 1.0
+                node.inputs["Roughness"].default_value = 0.0
 
-            node.inputs["Color"].default_value = color + (1.0,)
-            node.location = (0.0, 200.0)
+            node.location = (0.0, 0.0)
 
             node_out = nodes.new("ShaderNodeOutputMaterial")
-            node_out.location = (200.0, 200.0)
+            node_out.location = (400.0, 0.0)
 
             mat.node_tree.links.new(node.outputs["BSDF"], node_out.inputs["Surface"])
 
@@ -110,7 +110,7 @@ def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8), is_gem=Fals
 
 
 def user_asset_library_folder_object():
-    prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
 
     if prefs.use_custom_asset_dir:
         return bpy.path.abspath(prefs.custom_asset_dir)
@@ -119,7 +119,7 @@ def user_asset_library_folder_object():
 
 
 def user_asset_library_folder_weighting():
-    prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
 
     if prefs.weighting_set_use_custom_dir:
         return bpy.path.abspath(prefs.weighting_set_custom_dir)
@@ -213,22 +213,53 @@ def bm_to_scene(bm, name="New object", color=None):
     bm.to_mesh(me)
     bm.free()
 
-    scene = bpy.context.scene
-
     for parent in bpy.context.selected_objects:
 
         ob = bpy.data.objects.new(name, me)
-        scene.objects.link(ob)
 
-        ob.layers = parent.layers
-        ob.show_all_edges = True
+        for coll in parent.users_collection:
+            coll.objects.link(ob)
+
         ob.location = parent.location
         ob.rotation_euler = parent.rotation_euler
-
         ob.parent = parent
         ob.matrix_parent_inverse = parent.matrix_basis.inverted()
 
         add_material(ob, mat_name=name, color=color)
+
+
+def ob_copy_and_parent(ob, parents):
+    is_orig = True
+
+    for parent in parents:
+        if is_orig:
+            ob_copy = ob
+            is_orig = False
+        else:
+            ob_copy = ob.copy()
+
+        for coll in parent.users_collection:
+            coll.objects.link(ob_copy)
+
+        ob_copy.select_set(True)
+        ob.location = parent.location
+        ob.rotation_euler = parent.rotation_euler
+        ob.parent = parent
+        ob.matrix_parent_inverse = parent.matrix_basis.inverted()
+
+
+def ob_copy_to_faces(ob):
+    mats = mesh.face_pos()
+
+    if mats:
+        ob.matrix_world = mats.pop()
+        collection = bpy.context.collection
+
+        for mat in mats:
+            ob_copy = ob.copy()
+            collection.objects.link(ob_copy)
+            ob_copy.matrix_world = mat
+            ob_copy.select_set(True)
 
 
 def apply_scale(ob):
@@ -240,20 +271,6 @@ def apply_scale(ob):
     ob.data.transform(mat)
 
     ob.scale = (1.0, 1.0, 1.0)
-
-
-def ob_copy_to_pos(ob):
-    scene = bpy.context.scene
-    mats = mesh.face_pos()
-
-    if mats:
-        ob.matrix_world = mats.pop()
-
-        for mat in mats:
-            ob_copy = ob.copy()
-            scene.objects.link(ob_copy)
-            ob_copy.layers = ob.layers
-            ob_copy.matrix_world = mat
 
 
 def mod_curve_off(ob, reverse=False):
@@ -277,7 +294,7 @@ def calc_bbox(obs):
     bbox = []
 
     for ob in obs:
-        bbox += [ob.matrix_world * Vector(x) for x in ob.bound_box]
+        bbox += [ob.matrix_world @ Vector(x) for x in ob.bound_box]
 
     x_min = min(x[0] for x in bbox)
     x_max = max(x[0] for x in bbox)

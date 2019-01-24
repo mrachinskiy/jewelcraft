@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ from ..lib import asset
 class Setup:
 
     def __init__(self):
-        self.prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
+        self.prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
         self.props = bpy.context.window_manager.jewelcraft
         self.materials = self.prefs.weighting_materials
         self.filename = self.props.weighting_set
@@ -79,14 +79,15 @@ class WM_OT_jewelcraft_weighting_set_add(Operator, Setup):
     bl_idname = "wm.jewelcraft_weighting_set_add"
     bl_options = {"INTERNAL"}
 
-    set_name = StringProperty(options={"SKIP_SAVE"})
+    set_name: StringProperty(name="Set Name", options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         layout.separator()
-        row = layout.row()
-        row.label("Set Name")
-        row.prop(self, "set_name", text="")
+        layout.prop(self, "set_name")
         layout.separator()
 
     def execute(self, context):
@@ -160,7 +161,7 @@ class WM_OT_jewelcraft_weighting_set_rename(Operator, Setup, EditCheck):
     bl_idname = "wm.jewelcraft_weighting_set_rename"
     bl_options = {"INTERNAL"}
 
-    set_name = StringProperty(options={"SKIP_SAVE"})
+    set_name: StringProperty(name="Set Name", options={"SKIP_SAVE"})
 
     def __init__(self):
         super().__init__()
@@ -168,10 +169,11 @@ class WM_OT_jewelcraft_weighting_set_rename(Operator, Setup, EditCheck):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         layout.separator()
-        row = layout.row()
-        row.label("Set Name")
-        row.prop(self, "set_name", text="")
+        layout.prop(self, "set_name")
         layout.separator()
 
     def execute(self, context):
@@ -211,8 +213,6 @@ class WM_OT_jewelcraft_weighting_set_refresh(Operator):
 
 class WeightingSetLoad:
     bl_options = {"INTERNAL"}
-
-    clear_materials = False
 
     @classmethod
     def poll(cls, context):
@@ -258,3 +258,5 @@ class WM_OT_jewelcraft_weighting_set_load_append(Operator, Setup, WeightingSetLo
     bl_label = "Append"
     bl_description = "Append weighting set at the end of the current materials list"
     bl_idname = "wm.jewelcraft_weighting_set_load_append"
+
+    clear_materials = False

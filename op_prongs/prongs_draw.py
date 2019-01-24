@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,49 +23,45 @@ class Draw:
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
 
         layout.prop(self, "auto_presets")
 
         layout.separator()
 
-        split = layout.split()
-        split.label("Prong Number")
-        split.prop(self, "number", text="")
+        layout.prop(self, "number")
 
         layout.separator()
 
-        split = layout.split()
-        split.label("Dimensions")
-        col = split.column(align=True)
-        col.prop(self, "z_top", text="Top")
-        col.prop(self, "diameter", text="Diameter")
-        col.prop(self, "z_btm", text="Bottom")
+        layout.label(text="Dimensions")
+
+        col = layout.column()
+        col.prop(self, "z_top")
+        col.prop(self, "diameter")
+        col.prop(self, "z_btm")
 
         layout.separator()
 
-        split = layout.split()
-        split.label("Position")
-        col = split.column(align=True)
-        col.prop(self, "position", text="Position")
-        col.prop(self, "intersection", text="Intersection")
-        col.prop(self, "alignment", text="Alignment")
+        col = layout.column()
+        col.label(text="Position")
+        col.prop(self, "position")
+        col.prop(self, "intersection")
+        col.prop(self, "alignment")
+
+        split = col.split(factor=0.49)
+        split.prop(self, "symmetry")
+        sub = split.row()
+        sub.enabled = self.symmetry
+        sub.prop(self, "symmetry_pivot", text="")
 
         layout.separator()
 
-        split = layout.split()
-        split.prop(self, "symmetry", text="Symmetry")
-        split.prop(self, "symmetry_pivot", text="Pivot")
+        layout.label(text="Shape")
 
-        layout.separator()
-
-        split = layout.split()
-        split.label("Deformations")
-        col = split.column(align=True)
-        col.prop(self, "bump_scale", text="Bump Scale")
-        col.prop(self, "taper", text="Taper")
-
-        layout.separator()
-
-        split = layout.split()
-        split.label("Detalization")
-        split.prop(self, "detalization", text="")
+        col = layout.column()
+        col.prop(self, "bump_scale")
+        col.prop(self, "taper")
+        col.prop(self, "detalization")

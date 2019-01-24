@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ from .. import var
 class Setup:
 
     def __init__(self):
-        prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
         self.materials = prefs.weighting_materials
 
 
@@ -39,35 +39,46 @@ class WM_OT_jewelcraft_ul_item_add(Operator, Setup):
     bl_idname = "wm.jewelcraft_ul_item_add"
     bl_options = {"INTERNAL"}
 
-    name = StringProperty(name="Name", description="Material name", options={"SKIP_SAVE"})
-    composition = StringProperty(name="Composition", description="Material composition", options={"SKIP_SAVE"})
-    density = FloatProperty(name="Density", description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2, options={"SKIP_SAVE"})
+    name: StringProperty(
+        name="Name",
+        description="Material name",
+        options={"SKIP_SAVE"},
+    )
+    composition: StringProperty(
+        name="Composition",
+        description="Material composition",
+        options={"SKIP_SAVE"},
+    )
+    density: FloatProperty(
+        name="Density",
+        description="Density g/cm³",
+        default=0.01,
+        min=0.01,
+        step=1,
+        precision=2,
+        options={"SKIP_SAVE"},
+    )
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         layout.separator()
-
-        split = layout.split(percentage=1 / 3)
-        split.label("Name")
-        split.prop(self, "name", text="")
-
-        split = layout.split(percentage=1 / 3)
-        split.label("Composition")
-        split.prop(self, "composition", text="")
-
-        split = layout.split(percentage=1 / 3)
-        split.label("Density")
-        split.prop(self, "density", text="")
-
+        layout.prop(self, "name")
+        layout.prop(self, "composition")
+        layout.prop(self, "density")
         layout.separator()
 
     def execute(self, context):
         item = self.materials.add()
+
         if self.name:
             item.name = self.name
         if self.composition:
             item.composition = self.composition
         item.density = self.density
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -103,7 +114,7 @@ class WM_OT_jewelcraft_ul_item_move(Operator, Setup):
     bl_idname = "wm.jewelcraft_ul_item_move"
     bl_options = {"INTERNAL"}
 
-    move_up = BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
+    move_up: BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
         self.materials.move(self.move_up)

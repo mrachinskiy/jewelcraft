@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,17 +34,17 @@ class OBJECT_OT_jewelcraft_curve_scatter(Draw, Scatter, Operator):
 
     is_scatter = True
 
-    number = IntProperty(name="Object Number", default=10, min=1, soft_max=100)
+    number: IntProperty(name="Object Number", default=10, min=1, soft_max=100)
 
-    rot_y = FloatProperty(name="Orientation", step=10, unit="ROTATION")
-    rot_z = FloatProperty(name="Rotation", step=10, unit="ROTATION")
-    loc_z = FloatProperty(name="Position", unit="LENGTH")
+    rot_y: FloatProperty(name="Orientation", step=10, unit="ROTATION")
+    rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
+    loc_z: FloatProperty(name="Position", unit="LENGTH")
 
-    start = FloatProperty(name="Start")
-    end = FloatProperty(name="End", default=100.0)
+    start: FloatProperty(name="Start")
+    end: FloatProperty(name="End", default=100.0)
 
-    use_absolute_offset = BoolProperty(name="Absolute Offset")
-    spacing = FloatProperty(name="Spacing", default=0.2, unit="LENGTH")
+    use_absolute_offset: BoolProperty(name="Absolute Offset")
+    spacing: FloatProperty(name="Spacing", default=0.2, unit="LENGTH")
 
 
 class OBJECT_OT_jewelcraft_curve_redistribute(Draw, Scatter, Operator):
@@ -55,12 +55,12 @@ class OBJECT_OT_jewelcraft_curve_redistribute(Draw, Scatter, Operator):
 
     is_scatter = False
 
-    rot_y = FloatProperty(name="Orientation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
-    rot_z = FloatProperty(name="Rotation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
-    loc_z = FloatProperty(name="Position", unit="LENGTH", options={"SKIP_SAVE"})
+    rot_y: FloatProperty(name="Orientation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
+    rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
+    loc_z: FloatProperty(name="Position", unit="LENGTH", options={"SKIP_SAVE"})
 
-    start = FloatProperty(name="Start")
-    end = FloatProperty(name="End", default=100.0)
+    start: FloatProperty(name="Start")
+    end: FloatProperty(name="End", default=100.0)
 
-    use_absolute_offset = BoolProperty(name="Absolute Offset", options={"SKIP_SAVE"})
-    spacing = FloatProperty(name="Spacing", default=0.2, unit="LENGTH")
+    use_absolute_offset: BoolProperty(name="Absolute Offset", options={"SKIP_SAVE"})
+    spacing: FloatProperty(name="Spacing", default=0.2, unit="LENGTH")

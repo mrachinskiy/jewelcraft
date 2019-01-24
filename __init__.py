@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@ bl_info = {
     "name": "JewelCraft",
     "author": "Mikhail Rachinskiy",
     "version": (2, 2, 1),
-    "blender": (2, 79, 0),
-    "location": "3D View > Tool Shelf",
+    "blender": (2, 80, 0),
+    "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
     "wiki_url": "https://github.com/mrachinskiy/jewelcraft#readme",
     "tracker_url": "https://github.com/mrachinskiy/jewelcraft/issues",
@@ -41,12 +41,10 @@ if "bpy" in locals():
             module = os.path.splitext(entry.name)[0]
             importlib.reload(eval(module))
 
-        elif entry.is_dir() and not entry.name.startswith((".", "__")) and not entry.name.endswith("updater"):
-
+        elif entry.is_dir() and not (entry.name.startswith((".", "__")) or entry.name.endswith("updater")):
             for subentry in os.scandir(entry.path):
-
-                if subentry.name.endswith(".py"):
-                    module = "{}.{}".format(entry.name, os.path.splitext(subentry.name)[0])
+                if subentry.is_file() and subentry.name.endswith(".py"):
+                    module = entry.name + "." + os.path.splitext(subentry.name)[0]
                     importlib.reload(eval(module))
 else:
     import os
@@ -55,7 +53,14 @@ else:
     import bpy.utils.previews
     from bpy.props import PointerProperty
 
-    from . import var, ui, translations, preferences, dynamic_lists, addon_updater_ops
+    from . import (
+        var,
+        ui,
+        translations,
+        preferences,
+        dynamic_lists,
+        addon_updater_ops,
+    )
     from .lib import widgets
     from .op_cutter import cutter_op
     from .op_prongs import prongs_op
@@ -157,12 +162,18 @@ def register():
     pcoll = bpy.utils.previews.new()
 
     for entry in os.scandir(var.ICONS_DIR):
-
-        if entry.name.endswith(".png"):
+        if entry.is_file() and entry.name.endswith(".png"):
             name = os.path.splitext(entry.name)[0]
-            pcoll.load(name, entry.path, "IMAGE")
+            pcoll.load(name.upper(), entry.path, "IMAGE")
+        if entry.is_dir():
+            for subentry in os.scandir(entry.path):
+                if subentry.is_file() and subentry.name.endswith(".png"):
+                    name = entry.name + os.path.splitext(subentry.name)[0]
+                    pcoll.load(name.upper(), subentry.path, "IMAGE")
 
     var.preview_collections["icons"] = pcoll
+
+    addon_updater_ops.check_for_update_background()
 
 
 def unregister():
