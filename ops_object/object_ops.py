@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -35,27 +35,23 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
     bl_idname = "object.jewelcraft_mirror"
     bl_options = {"REGISTER", "UNDO"}
 
-    x = BoolProperty(name="X", options={"SKIP_SAVE"})
-    y = BoolProperty(name="Y", options={"SKIP_SAVE"})
-    z = BoolProperty(name="Z", options={"SKIP_SAVE"})
+    x: BoolProperty(name="X", options={"SKIP_SAVE"})
+    y: BoolProperty(name="Y", options={"SKIP_SAVE"})
+    z: BoolProperty(name="Z", options={"SKIP_SAVE"})
 
-    use_cursor = BoolProperty(name="Use 3D Cursor")
+    use_cursor: BoolProperty(name="Use 3D Cursor")
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
 
-        split = layout.split()
-        split.label("Mirror Axis")
-        col = split.column(align=True)
-        col.prop(self, "x")
-        col.prop(self, "y")
-        col.prop(self, "z")
-
-        layout.separator()
-
-        split = layout.split()
-        split.label("Pivot Point")
-        split.prop(self, "use_cursor")
+        layout.label(text="Mirror Axis")
+        layout.prop(self, "x")
+        layout.prop(self, "y")
+        layout.prop(self, "z")
+        layout.label(text="Pivot Point")
+        layout.prop(self, "use_cursor")
 
     def execute(self, context):
         axes = []
@@ -66,8 +62,7 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
         if not axes:
             return {"FINISHED"}
 
-        scene = context.scene
-        cursor_offset = scene.cursor_location * 2
+        cursor_offset = context.scene.cursor_location * 2
         is_odd_axis_count = len(axes) != 2
         rotate_types = {"CAMERA", "LAMP", "SPEAKER", "FONT"}
         duplimap = {}
@@ -82,11 +77,12 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
             if not is_gem and ob.data:
                 ob.data = ob_orig.data.copy()
 
-            scene.objects.link(ob)
+            for coll in ob_orig.users_collection:
+                coll.objects.link(ob)
 
-            ob.layers = ob_orig.layers
+            ob.select_set(True)
+            ob_orig.select_set(False)
             ob.matrix_world = ob_orig.matrix_world
-            ob_orig.select = False
 
             duplimap[ob_orig] = ob
 
@@ -127,7 +123,7 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
                 asset.apply_scale(ob)
                 ob.data.flip_normals()
 
-        scene.objects.active = ob
+        context.view_layer.objects.active = ob
 
         # Handle relations
         # -------------------------
@@ -154,10 +150,9 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
     bl_idname = "object.jewelcraft_make_dupliface"
     bl_options = {"REGISTER", "UNDO"}
 
-    apply_scale = BoolProperty(name="Apply Scale", default=True)
+    apply_scale: BoolProperty(name="Apply Scale", default=True)
 
     def execute(self, context):
-        scene = context.scene
         obs = context.selected_objects
         ob = context.active_object or obs[0]
 
@@ -177,14 +172,15 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
         me.from_pydata(verts, [], faces)
 
         df = bpy.data.objects.new(df_name, me)
-        scene.objects.link(df)
+
+        for coll in ob.users_collection:
+            coll.objects.link(df)
 
         df.location = ob.location
-        df.dupli_type = "FACES"
-        df.select = True
-        df.layers = ob.layers
+        df.instance_type = "FACES"
+        df.select_set(True)
 
-        scene.objects.active = df
+        context.view_layer.objects.active = df
 
         mat_inv = Matrix.Translation(df.location).inverted()
 
@@ -193,7 +189,7 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
             if self.apply_scale:
                 asset.apply_scale(ob)
 
-            ob.select = False
+            ob.select_set(False)
             ob.parent = df
             ob.matrix_parent_inverse = mat_inv
 
@@ -212,7 +208,7 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
     bl_idname = "object.jewelcraft_lattice_project"
     bl_options = {"REGISTER", "UNDO"}
 
-    direction = EnumProperty(
+    direction: EnumProperty(
         items=(
             ("NONE", "", ""),
             ("POS_X", "X", ""),
@@ -230,7 +226,7 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
         layout = self.layout
 
         split = layout.split()
-        split.label("Direction")
+        split.label(text="Direction")
 
         col = split.column(align=True)
         row = col.row(align=True)
@@ -246,7 +242,7 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
         direction = self.direction.split("_")
 
         surf = context.active_object
-        surf.select = False
+        surf.select_set(False)
 
         obs = context.selected_objects
 
@@ -260,7 +256,7 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
         md.use_negative_direction = True
 
         for ob in obs:
-            ob.select = True
+            ob.select_set(True)
             md = ob.modifiers.new("Lattice", "LATTICE")
             md.object = lat
 
@@ -332,41 +328,39 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
     bl_idname = "object.jewelcraft_lattice_profile"
     bl_options = {"REGISTER", "UNDO"}
 
-    axis = EnumProperty(
+    axis: EnumProperty(
+        name="Axis",
         items=(
             ("X", "X", ""),
             ("Y", "Y", ""),
         ),
         default="X",
     )
-    lat_type = EnumProperty(
+    lat_type: EnumProperty(
+        name="Lattice",
         items=(
             ("1D", "1D", "Use one-dimensional lattice for even deformation"),
             ("2D", "2D", "Use two-dimensional lattice for proportional deformation"),
         ),
         default="1D",
     )
-    scale = FloatProperty(default=1.0, options={"SKIP_SAVE"})
+    scale: FloatProperty(name="Curvature Scale", default=1.0, options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
 
-        split = layout.split()
-        split.label("Axis")
-        split.row().prop(self, "axis", expand=True)
-
-        split = layout.split()
-        split.label("Lattice")
-        split.row().prop(self, "lat_type", expand=True)
-
-        split = layout.split()
-        split.label("Curvature Scale")
-        split.prop(self, "scale", text="")
+        layout.row().prop(self, "axis", expand=True)
+        layout.row().prop(self, "lat_type", expand=True)
+        layout.prop(self, "scale")
 
     def execute(self, context):
         ob = context.active_object
         obs = context.selected_objects
-        obs.remove(ob)
+
+        if ob.select_get():
+            obs.remove(ob)
 
         if self.axis == "X":
             rot_z = 0.0
@@ -425,7 +419,7 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
                 v_gr = ob.vertex_groups.get("Lattice profile")
 
                 if not v_gr:
-                    v_gr = ob.vertex_groups.new("Lattice profile")
+                    v_gr = ob.vertex_groups.new(name="Lattice profile")
 
                 v_ids = [v.index for v in ob.data.vertices if v.co[2] > 0.1]
                 v_gr.add(v_ids, 1.0, "ADD")
@@ -469,7 +463,8 @@ class OBJECT_OT_jewelcraft_resize(Operator):
     bl_idname = "object.jewelcraft_resize"
     bl_options = {"REGISTER", "UNDO"}
 
-    axis = EnumProperty(
+    axis: EnumProperty(
+        name="Axis",
         items=(
             ("0", "X", ""),
             ("1", "Y", ""),
@@ -477,37 +472,30 @@ class OBJECT_OT_jewelcraft_resize(Operator):
         ),
         update=update_size,
     )
-    size = FloatProperty(min=0.0, unit="LENGTH")
+    size: FloatProperty(name="Size", min=0.0, unit="LENGTH")
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
 
-        split = layout.split()
-        split.label("Axis")
-        split.row().prop(self, "axis", expand=True)
-
-        split = layout.split()
-        split.label("Size")
-        split.prop(self, "size", text="")
+        layout.row().prop(self, "axis", expand=True)
+        layout.prop(self, "size")
 
     def execute(self, context):
-        context.space_data.pivot_point = "ACTIVE_ELEMENT"
-
         scale = self.size / self.dim_orig[int(self.axis)]
-        bpy.ops.transform.resize(value=(scale, scale, scale))
-
-        context.space_data.pivot_point = self.pivot_point_orig
+        bpy.ops.transform.resize(value=(scale, scale, scale), center_override=self.pivot)
         return {"FINISHED"}
 
     def invoke(self, context, event):
         if not context.active_object:
             return {"CANCELLED"}
 
-        wm = context.window_manager
         dim = context.active_object.dimensions
 
         self.dim_orig = dim.to_tuple()
         self.size = dim[int(self.axis)]
-        self.pivot_point_orig = context.space_data.pivot_point
+        self.pivot = context.active_object.location.to_tuple()
 
+        wm = context.window_manager
         return wm.invoke_props_dialog(self)

@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,16 +19,17 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from math import sin, cos, pi
+from math import sin, cos, pi, tau
 
 import bmesh
 from mathutils import Matrix
 
 
-tau = pi * 2
-
-
 def create_prongs(self):
+
+    # Prong
+    # ---------------------------
+
     prong_size = self.diameter / 2
     taper = self.taper + 1
 
@@ -69,6 +70,9 @@ def create_prongs(self):
     v_boundary = [x for x in bm.verts if x.is_boundary]
     bm.faces.new(reversed(v_boundary))
 
+    # Transforms
+    # ---------------------------
+
     if self.alignment != 0.0:
         bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.alignment, 4, "X"))
 
@@ -84,7 +88,7 @@ def create_prongs(self):
     bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.position, 4, "Z"))
 
     if self.symmetry:
-        bmesh.ops.mirror(bm, geom=bm.faces, merge_dist=0, axis=1)
+        bmesh.ops.mirror(bm, geom=bm.faces, merge_dist=0, axis="Y")
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))
 

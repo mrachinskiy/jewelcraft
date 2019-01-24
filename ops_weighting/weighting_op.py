@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ class OBJECT_OT_jewelcraft_weight_display(Operator):
             self.report({"ERROR"}, "At least one mesh object must be selected")
             return {"CANCELLED"}
 
-        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
         materials = prefs.weighting_materials
 
         vol = unit.to_metric(mesh.est_volume(obs), volume=True)

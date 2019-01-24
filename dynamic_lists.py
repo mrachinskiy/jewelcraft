@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -120,14 +120,26 @@ def weighting_set(self, context):
     if "weighting_set__list" in _cache:
         return _cache["weighting_set__list"]
 
-    prefs = context.user_preferences.addons[__package__].preferences
+    prefs = context.preferences.addons[__package__].preferences
     list_ = []
 
     if not prefs.weighting_hide_default_sets:
         list_ += [
-            ("JCASSET_PRECIOUS",    "[JewelCraft] Precious",                    "Commonly used precious alloys, physical properties taken directly from suppliers"),
-            ("JCASSET_PRECIOUS_RU", "[JewelCraft] Precious RU (ГОСТ 30649-99)", "Set of precious alloys according to Russian regulations"),
-            ("JCASSET_BASE",        "[JewelCraft] Base",                        "Set of base metal alloys, physical properties taken directly from suppliers"),
+            (
+                "JCASSET_PRECIOUS",
+                "[JewelCraft] Precious",
+                "Commonly used precious alloys, physical properties taken directly from suppliers"
+            ),
+            (
+                "JCASSET_PRECIOUS_RU",
+                "[JewelCraft] Precious RU (ГОСТ 30649-99)",
+                "Set of precious alloys according to Russian regulations"
+            ),
+            (
+                "JCASSET_BASE",
+                "[JewelCraft] Base",
+                "Set of base metal alloys, physical properties taken directly from suppliers"
+            ),
         ]
 
     folder = asset.user_asset_library_folder_weighting()
@@ -204,7 +216,7 @@ def assets(self, context):
 
     list_ = []
     i = 0
-    no_preview = var.preview_collections["icons"]["no_preview"].icon_id
+    no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
 
     for entry in os.scandir(folder):
 

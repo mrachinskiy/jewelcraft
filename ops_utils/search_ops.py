@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ class VIEW3D_OT_jewelcraft_search_stone(Operator):
     bl_property = "stone"
     bl_options = {"INTERNAL"}
 
-    stone = EnumProperty(items=dynamic_lists.stones)
+    stone: EnumProperty(items=dynamic_lists.stones)
 
     def execute(self, context):
         context.window_manager.jewelcraft.gem_stone = self.stone
@@ -51,7 +51,7 @@ class VIEW3D_OT_jewelcraft_search_asset(Operator):
     bl_property = "asset"
     bl_options = {"INTERNAL"}
 
-    asset = EnumProperty(items=dynamic_lists.assets)
+    asset: EnumProperty(items=dynamic_lists.assets)
 
     def execute(self, context):
         context.window_manager.jewelcraft.asset_list = self.asset

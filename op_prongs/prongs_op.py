@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -37,25 +37,36 @@ class OBJECT_OT_jewelcraft_prongs_add(Draw, Operator):
     bl_idname = "object.jewelcraft_prongs_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    auto_presets = BoolProperty(name="Use Automated Presets", description="Use automatically generated presets, discards user edits or presets", default=True)
+    auto_presets: BoolProperty(
+        name="Use Automated Presets",
+        description="Use automatically generated presets, discards user edits or presets",
+        default=True,
+    )
 
-    number = IntProperty(name="Prong Number", default=4, min=1, soft_max=10)
+    number: IntProperty(name="Prong Number", default=4, min=1, soft_max=10)
 
-    diameter = FloatProperty(name="Diameter", default=0.4, min=0.0, step=1, unit="LENGTH")
-    z_top = FloatProperty(name="Height Top", default=0.4, step=1, unit="LENGTH")
-    z_btm = FloatProperty(name="Height Bottom", default=0.5, step=1, unit="LENGTH")
+    diameter: FloatProperty(name="Diameter", default=0.4, min=0.0, step=1, unit="LENGTH")
+    z_top: FloatProperty(name="Top", default=0.4, step=1, unit="LENGTH")
+    z_btm: FloatProperty(name="Bottom", default=0.5, step=1, unit="LENGTH")
 
-    position = FloatProperty(name="Position", default=radians(45.0), step=100, precision=0, unit="ROTATION")
-    intersection = FloatProperty(name="Intersection", default=30.0, soft_min=0.0, soft_max=100.0, precision=0, subtype="PERCENTAGE")
-    alignment = FloatProperty(name="Alignment", step=100, precision=0, unit="ROTATION")
+    position: FloatProperty(name="Position", default=radians(45.0), step=100, precision=0, unit="ROTATION")
+    intersection: FloatProperty(
+        name="Intersection",
+        default=30.0,
+        soft_min=0.0,
+        soft_max=100.0,
+        precision=0,
+        subtype="PERCENTAGE",
+    )
+    alignment: FloatProperty(name="Alignment", step=100, precision=0, unit="ROTATION")
 
-    symmetry = BoolProperty(name="Symmetry")
-    symmetry_pivot = FloatProperty(name="Symmetry Pivot", step=100, precision=0, unit="ROTATION")
+    symmetry: BoolProperty(name="Symmetry")
+    symmetry_pivot: FloatProperty(name="Symmetry Pivot", step=100, precision=0, unit="ROTATION")
 
-    bump_scale = FloatProperty(name="Bump Scale", default=0.5, soft_min=0.0, soft_max=1.0, subtype="FACTOR")
-    taper = FloatProperty(name="Taper", default=0.0, min=0.0, soft_max=1.0, subtype="FACTOR")
+    bump_scale: FloatProperty(name="Bump Scale", default=0.5, soft_min=0.0, soft_max=1.0, subtype="FACTOR")
+    taper: FloatProperty(name="Taper", default=0.0, min=0.0, soft_max=1.0, subtype="FACTOR")
 
-    detalization = IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
+    detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
     def execute(self, context):
         bm = create_prongs(self)
@@ -69,7 +80,7 @@ class OBJECT_OT_jewelcraft_prongs_add(Draw, Operator):
             return {"CANCELLED"}
 
         asset.get_gem(self, context)
-        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = tuple(prefs.color_prongs)
 
         if self.auto_presets:

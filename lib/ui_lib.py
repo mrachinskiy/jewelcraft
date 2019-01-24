@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -22,25 +22,25 @@
 import bpy
 
 
-def popup_report(self, info, title="", icon="NONE"):
+def popup_report(self, info, title="", icon="INFO"):
 
     def draw(self, context):
-        self.layout.label(info)
+        self.layout.label(text=info)
 
-    self.report({"INFO"}, "{}: {}".format(title, info))
+    self.report({"INFO"}, f"{title}: {info}")
 
     bpy.context.window_manager.popup_menu(draw, title, icon)
 
 
-def popup_report_batch(self, info, title="", icon="NONE"):
+def popup_report_batch(self, info, title="", icon="INFO"):
 
     def draw(self_local, context):
         layout = self_local.layout
 
         for x in info:
-            layout.label(x)
+            layout.label(text=x)
             self.report({"INFO"}, x)
 
-    self.report({"INFO"}, "{}:\n".format(title))
+    self.report({"INFO"}, f"{title}:\n")
 
     bpy.context.window_manager.popup_menu(draw, title, icon)

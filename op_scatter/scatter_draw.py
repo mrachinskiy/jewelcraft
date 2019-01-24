@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,32 +23,30 @@ class Draw:
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
 
         if self.is_scatter:
-            split = layout.split()
-            split.label("Object Number")
-            split.prop(self, "number", text="")
-
+            layout.prop(self, "number")
             layout.separator()
 
-        split = layout.split()
-        split.label("Transforms")
-        col = split.column(align=True)
+        layout.label(text="Transforms")
+        col = layout.column(align=True)
         col.prop(self, "rot_y")
         col.prop(self, "rot_z")
         col.prop(self, "loc_z")
 
         layout.separator()
 
-        split = layout.split()
-        split.label("Scatter (%)")
-        col = split.column(align=True)
+        layout.label(text="Scatter (%)")
+        col = layout.column(align=True)
         col.prop(self, "start")
         col.prop(self, "end")
 
         layout.separator()
 
-        split = layout.split()
+        split = layout.split(align=True, factor=0.49)
         split.prop(self, "use_absolute_offset")
-        col = split.column(align=True)
-        col.prop(self, "spacing")
+        sub = split.row()
+        sub.enabled = self.use_absolute_offset
+        sub.prop(self, "spacing", text="")

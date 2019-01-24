@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -160,3 +160,33 @@ STONE_COLOR = {
     "MORGANITE": (0.41, 0.21, 0.09),
     "PERIDOT": (0.201, 0.748, 0.026),
 }
+
+
+# Updater
+# ------------------------------------
+
+
+engine = "Github"
+private_token = None
+include_branches = True
+use_releases = False
+include_branch_list = None
+
+user = "mrachinskiy"
+repo = "jewelcraft"
+website = "https://github.com/mrachinskiy/jewelcraft#how-to-install"
+
+subfolder_path = ""
+
+version_min_update = None
+version_max_update = None
+
+manual_only = False
+fake_install = False
+verbose = False
+showpopups = True
+
+backup_current = True
+backup_ignore_patterns = ["__pycache__"]
+overwrite_patterns = ["*"]
+remove_pre_update_patterns = ["*"]

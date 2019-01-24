@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ from ..lib import mesh, asset
 class Scatter:
 
     def execute(self, context):
-        scene = context.scene
+        collection = context.collection
         start = self.start
         end = self.end
 
@@ -38,10 +38,10 @@ class Scatter:
             num = self.number - 1
 
             curve = context.active_object
-            curve.select = False
+            curve.select_set(False)
 
             ob = context.selected_objects[0]
-            scene.objects.active = ob
+            context.view_layer.objects.active = ob
 
         else:
             obs = {}
@@ -102,22 +102,21 @@ class Scatter:
 
             if self.rot_y:
                 mat_rot = Matrix.Rotation(self.rot_y, 4, "Y")
-                ob.matrix_world *= mat_rot
+                ob.matrix_world @= mat_rot
 
             if self.rot_z:
                 mat_rot = Matrix.Rotation(self.rot_z, 4, "Z")
-                ob.matrix_world *= mat_rot
+                ob.matrix_world @= mat_rot
 
             if self.loc_z:
                 mat_loc = Matrix.Translation((0.0, 0.0, self.loc_z))
-                ob.matrix_world *= mat_loc
+                ob.matrix_world @= mat_loc
 
             ofst_fac = start + ofst
 
             for _ in range(num):
                 ob_copy = ob.copy()
-                scene.objects.link(ob_copy)
-                ob_copy.layers = ob.layers
+                collection.objects.link(ob_copy)
 
                 con = ob_copy.constraints.new("FOLLOW_PATH")
                 con.target = curve
@@ -129,8 +128,7 @@ class Scatter:
                 if ob.children:
                     for child in ob.children:
                         child_copy = child.copy()
-                        scene.objects.link(child_copy)
-                        child_copy.layers = child.layers
+                        collection.objects.link(child_copy)
                         child_copy.parent = ob_copy
                         child_copy.matrix_parent_inverse = child.matrix_parent_inverse
 
@@ -147,15 +145,15 @@ class Scatter:
 
                 if self.rot_y:
                     mat_rot = Matrix.Rotation(self.rot_y, 4, "Y")
-                    ob.matrix_basis *= mat_rot
+                    ob.matrix_basis @= mat_rot
 
                 if self.rot_z:
                     mat_rot = Matrix.Rotation(self.rot_z, 4, "Z")
-                    ob.matrix_basis *= mat_rot
+                    ob.matrix_basis @= mat_rot
 
                 if self.loc_z:
                     mat_loc = Matrix.Translation((0.0, 0.0, self.loc_z))
-                    ob.matrix_basis *= mat_loc
+                    ob.matrix_basis @= mat_loc
 
                 ob.constraints["Follow Path"].offset = -ofst_fac
                 ofst_fac += ofst

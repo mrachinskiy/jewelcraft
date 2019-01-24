@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import os
 
 import bpy
 from bpy.types import Operator
-from bpy.props import StringProperty
+from bpy.props import StringProperty, BoolProperty
 import bpy.utils.previews
 
 from .. import var, dynamic_lists
@@ -46,7 +46,7 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
     bl_idname = "wm.jewelcraft_asset_add_to_library"
     bl_options = {"INTERNAL"}
 
-    asset_name = StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
+    asset_name: StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
 
     @classmethod
     def poll(cls, context):
@@ -54,10 +54,11 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         layout.separator()
-        row = layout.row()
-        row.label("Asset Name")
-        row.prop(self, "asset_name", text="")
+        layout.prop(self, "asset_name")
         layout.separator()
 
     def execute(self, context):
@@ -72,10 +73,12 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
         dynamic_lists.asset_list_refresh()
         self.props.asset_list = self.asset_name
 
+        context.area.tag_redraw()
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
 
         if prefs.asset_name_from_obj:
             self.asset_name = context.active_object.name
@@ -112,6 +115,8 @@ class WM_OT_jewelcraft_asset_remove_from_library(Operator, Setup):
         if last and iterable:
             self.props.asset_list = asset_list[-2][0]
 
+        context.area.tag_redraw()
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -125,7 +130,7 @@ class WM_OT_jewelcraft_asset_rename(Operator, Setup):
     bl_idname = "wm.jewelcraft_asset_rename"
     bl_options = {"INTERNAL"}
 
-    asset_name = StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
+    asset_name: StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
 
     @classmethod
     def poll(cls, context):
@@ -133,10 +138,11 @@ class WM_OT_jewelcraft_asset_rename(Operator, Setup):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         layout.separator()
-        row = layout.row()
-        row.label("Asset Name")
-        row.prop(self, "asset_name", text="")
+        layout.prop(self, "asset_name")
         layout.separator()
 
     def execute(self, context):
@@ -163,6 +169,8 @@ class WM_OT_jewelcraft_asset_rename(Operator, Setup):
 
         dynamic_lists.asset_list_refresh()
         self.props.asset_list = self.asset_name
+
+        context.area.tag_redraw()
 
         return {"FINISHED"}
 
@@ -203,6 +211,7 @@ class WM_OT_jewelcraft_asset_preview_replace(Operator, Setup):
     def execute(self, context):
         asset.render_preview(filepath=self.filepath + ".png")
         dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
+        context.area.tag_redraw()
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -216,37 +225,44 @@ class WM_OT_jewelcraft_asset_import(Operator, Setup):
     bl_idname = "wm.jewelcraft_asset_import"
     bl_options = {"REGISTER", "UNDO"}
 
+    use_parent: BoolProperty(
+        name="Parent to selected",
+        description="Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)",
+    )
+
     @classmethod
     def poll(cls, context):
         return bool(context.window_manager.jewelcraft.asset_list)
 
     def execute(self, context):
-        scene = context.scene
+        collection = context.collection
+        selected = list(context.selected_objects)
 
-        for ob in scene.objects:
-            ob.select = False
+        for ob in selected:
+            ob.select_set(False)
 
         imported = asset.asset_import_batch(filepath=self.filepath + ".blend")
         obs = imported.objects
 
         for ob in obs:
-            scene.objects.link(ob)
-            ob.select = True
-            ob.layers = self.view_layers
+            collection.objects.link(ob)
+            ob.select_set(True)
 
         if len(obs) == 1:
-            ob.location = scene.cursor_location
+            ob.location = context.scene.cursor_location
 
-            if context.mode == "EDIT_MESH":
-                asset.ob_copy_to_pos(ob)
+            if self.use_parent and selected:
+                collection.objects.unlink(ob)
+                asset.ob_copy_and_parent(ob, selected)
+            elif context.mode == "EDIT_MESH":
+                asset.ob_copy_to_faces(ob)
                 bpy.ops.object.mode_set(mode="OBJECT")
 
-        scene.objects.active = ob
+        context.view_layer.objects.active = ob
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.view_layers = [False for x in range(20)]
-        self.view_layers[context.scene.active_layer] = True
+        self.use_parent = event.alt
 
         return self.execute(context)

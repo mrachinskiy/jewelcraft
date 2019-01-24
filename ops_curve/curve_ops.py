@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -37,8 +37,13 @@ class CURVE_OT_jewelcraft_size_curve_add(Operator):
     bl_idname = "curve.jewelcraft_size_curve_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    size = FloatProperty(name="Size", default=15.5, unit="LENGTH")
-    up = BoolProperty(name="Start Up", default=True, description="Make curve start at the top", options={"SKIP_SAVE"})
+    size: FloatProperty(name="Size", default=15.5, unit="LENGTH")
+    up: BoolProperty(
+        name="Start Up",
+        description="Make curve start at the top",
+        default=True,
+        options={"SKIP_SAVE"},
+    )
 
     def execute(self, context):
         obs = context.selected_objects
@@ -78,7 +83,11 @@ class CURVE_OT_jewelcraft_length_display(Operator):
         # Reset curve
         # ---------------------------
 
-        settings = {"bevel_object": None, "bevel_depth": 0.0, "extrude": 0.0}
+        settings = {
+            "bevel_object": None,
+            "bevel_depth": 0.0,
+            "extrude": 0.0,
+        }
 
         for k, v in settings.items():
             x = getattr(ob.data, k)
@@ -104,7 +113,10 @@ class CURVE_OT_jewelcraft_length_display(Operator):
 
 class OBJECT_OT_jewelcraft_stretch_along_curve(Operator):
     bl_label = "JewelCraft Stretch Along Curve"
-    bl_description = "Stretch deformed objects along curve, also works in Edit Mode with selected vertices"
+    bl_description = (
+        "Stretch deformed objects along curve on X axis, "
+        "also works in Edit Mode with selected vertices"
+    )
     bl_idname = "object.jewelcraft_stretch_along_curve"
     bl_options = {"REGISTER", "UNDO"}
 
@@ -112,29 +124,25 @@ class OBJECT_OT_jewelcraft_stretch_along_curve(Operator):
 
         if context.mode == "EDIT_MESH":
 
-            ob = context.edit_object
-            me = ob.data
-            bbox, curve = asset.mod_curve_off(ob)
+            for ob in context.objects_in_mode:
+                me = ob.data
+                bbox, curve = asset.mod_curve_off(ob)
 
-            if curve:
-                length = mesh.curve_length(curve)
-                length_halved = length / 2 / ob.matrix_world.to_scale()[0]
+                if curve:
+                    length = mesh.curve_length(curve)
+                    length_halved = length / 2 / ob.matrix_world.to_scale()[0]
 
-                bm = bmesh.from_edit_mesh(me)
+                    bm = bmesh.from_edit_mesh(me)
 
-                for v in bm.verts:
-                    if v.select:
-                        coord = ob.matrix_local * v.co
+                    for v in bm.verts:
+                        if v.select:
+                            if v.co[0] > 0.0:
+                                v.co[0] = length_halved
+                            else:
+                                v.co[0] = -length_halved
 
-                        if coord[0] > 0.0:
-                            coord[0] = length_halved
-                        else:
-                            coord[0] = -length_halved
-
-                        v.co = ob.matrix_local.inverted() * coord
-
-                bm.normal_update()
-                bmesh.update_edit_mesh(me)
+                    bm.normal_update()
+                    bmesh.update_edit_mesh(me)
 
         else:
 
@@ -144,13 +152,13 @@ class OBJECT_OT_jewelcraft_stretch_along_curve(Operator):
                 if curve:
                     length = mesh.curve_length(curve)
 
-                    bbox = [ob.matrix_world * Vector(x) for x in bbox]
+                    bbox = [ob.matrix_world @ Vector(x) for x in bbox]
                     dim = max(x[0] for x in bbox) - min(x[0] for x in bbox)
 
-                    scaling = ob.matrix_local * ob.scale
+                    scaling = ob.matrix_local @ ob.scale
                     scaling[0] = length / dim * scaling[0]
 
-                    ob.scale = ob.matrix_local.inverted() * scaling
+                    ob.scale = ob.matrix_local.inverted() @ scaling
 
         return {"FINISHED"}
 
@@ -161,8 +169,8 @@ class OBJECT_OT_jewelcraft_move_over_under(Operator):
     bl_idname = "object.jewelcraft_move_over_under"
     bl_options = {"REGISTER", "UNDO"}
 
-    under = BoolProperty(name="Under", options={"SKIP_SAVE"})
-    individual = BoolProperty(name="Individual", description="Move each object individually")
+    under: BoolProperty(name="Under", options={"SKIP_SAVE"})
+    individual: BoolProperty(name="Individual", description="Move each object individually")
 
     def execute(self, context):
         if not self.individual or context.mode == "EDIT_MESH":
@@ -174,7 +182,7 @@ class OBJECT_OT_jewelcraft_move_over_under(Operator):
 
             context.scene.update()
             bbox, curve = asset.mod_curve_off(ob)
-            bbox = [ob.matrix_world * Vector(x) for x in bbox]
+            bbox = [ob.matrix_world @ Vector(x) for x in bbox]
 
             if self.under:
                 z_object = max(x[2] for x in bbox)
@@ -194,7 +202,7 @@ class OBJECT_OT_jewelcraft_move_over_under(Operator):
 
             for ob in context.selected_objects:
                 bbox, curve = asset.mod_curve_off(ob)
-                bbox = [ob.matrix_local * Vector(x) for x in bbox]
+                bbox = [ob.matrix_local @ Vector(x) for x in bbox]
 
                 if self.under:
                     z_object = max(x[2] for x in bbox)

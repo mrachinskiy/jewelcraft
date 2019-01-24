@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ _ru = {
         "Display asset name": "Показывать название ассета",
         "Product Report": "Отчёт изделия",
         "Report Language": "Язык отчёта",
-        "Report Language:": "Язык отчёта:",
         "Display in a new window": "Отобразить в новом окне",
         "Save to file": "Сохранить в файл",
         "Use custom library folder": "Использовать пользовательский каталог библиотеки",
@@ -58,7 +57,8 @@ _ru = {
         "Show density": "Показать плотность",
         "Materials list": "Список материалов",
         "Composition": "Состав",
-        "Use view layers": "Учитывать слои",
+        "Warnings": "Предупреждения",
+        "Hidden gems": "Скрытые камни",
         # Popup dialogs
         "Asset Name": "Название ассета",
         "Category Name": "Название категории",
@@ -67,7 +67,6 @@ _ru = {
         # Operator redo
         "Use Automated Presets": "Использовать автоматические пресеты",
         "Prong Number": "Количество корнеров",
-        "Deformations": "Деформации",
         "Detalization": "Детализация",
         "Intersection": "Пересечение",
         "Bump Scale": "Масштаб выпуклости",
@@ -75,7 +74,7 @@ _ru = {
         "Size Offset": "Отступ размера",
         "Girdle": "Рундист",
         "Hole": "Отверстие",
-        "Top/Culet": "Верх/Калетта",
+        "Culet": "Калетта",
         "Handle": "Рукоять",
         "Curve Seat": "Изгиб посадочного места",
         "Curve Profile": "Изгиб контура",
@@ -86,12 +85,19 @@ _ru = {
         "Start Up": "Начало сверху",
         "Mirror Axis": "Оси отражения",
         "Select Children": "Выделить потомков",
+        "Parent to selected": "Привязать к выделению",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
-        "Commonly used precious alloys, physical properties taken directly from suppliers": "Распространённые драгоценные сплавы, физические свойства взяты напрямую у поставщиков",
+
+        "Commonly used precious alloys, physical properties taken directly from suppliers":
+            "Распространённые драгоценные сплавы, физические свойства взяты напрямую у поставщиков",
+
         "Set of precious alloys according to Russian regulations": "Драгоценные сплавы согласно ГОСТ 30649-99",
-        "Set of base metal alloys, physical properties taken directly from suppliers": "Сплавы из недрагоценных металлов, физические свойства взяты напрямую у поставщиков",
+
+        "Set of base metal alloys, physical properties taken directly from suppliers":
+            "Сплавы из недрагоценных металлов, физические свойства взяты напрямую у поставщиков",
+
         "Display product report in new window": "Отобразить отчёт изделия в новом окне",
         "Save product report to file in project folder": "Сохранить отчёт изделия в файл в каталоге проекта",
         "Product report language": "Язык отчёта изделия",
@@ -102,21 +108,46 @@ _ru = {
         "Object for weight reference": "Объект для определения веса изделия",
         "Save product report to text file": "Сохранить отчёт изделия в текстовый файл",
         "Select gems by trait": "Выделить камни по характеристике",
-        "Select duplicated gems (located in the same spot)\nWARNING: does not work with dupli-faces": "Выделить дубликаты (находящиеся на одной координате)\nПРЕДУПРЕЖДЕНИЕ: не работает с dupli-faces",
+
+        "Select duplicated gems (located in the same spot)":
+            "Выделить дубликаты (находящиеся на одной координате)",
+
         "Search stone by name": "Искать камень по названию",
         "Search asset by name": "Искать ассет по названию",
         "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
         "Redistribute selected objects along curve": "Перераспределить выделенные объекты по кривой",
-        "Display weight and volume for selected mesh objects": "Показать вес и объём выделенных mesh объектов",
+
+        "Display weight and volume for selected mesh objects":
+            "Показать вес и объём выделенных mesh объектов",
+
         "Create dupli-face for selected objects": "Создать dupli-face для выделенных объектов",
         "Create size curve": "Создать размерную кривую",
-        "Stretch deformed objects along curve, also works in Edit Mode with selected vertices": "Растянуть деформированный объект по кривой, также работает в режиме редактирования с выделенными вершинами",
+
+        (
+            "Stretch deformed objects along curve on X axis, "
+            "also works in Edit Mode with selected vertices"
+        ): (
+            "Растянуть деформированный объект вдоль кривой по оси X, "
+            "также работает в режиме редактирования с выделенными вершинами"
+        ),
+
         "Display curve length": "Показать длину кривой",
-        "Move deformed object over or under the curve": "Переместить деформированные объекты под или над кривой",
-        "Mirror selected objects around one or more axes, keeping object data linked": "Отразить выделенные объекты относительно одной или нескольких осей, сохраняя связь данных объекта",
-        "Project selected objects onto active object using Lattice": "Проецировать выделенные объекты на активный объект с помощью Lattice",
-        "Deform active object profile with Lattice": "Деформировать профиль активного объекта с помощью Lattice",
-        "Use automatically generated presets, discards user edits or presets": "Использовать автоматически сгенерированные пресеты, сбрасывает пользовательское редактирование",
+
+        "Move deformed object over or under the curve":
+            "Переместить деформированные объекты под или над кривой",
+
+        "Mirror selected objects around one or more axes, keeping object data linked":
+            "Отразить выделенные объекты относительно одной или нескольких осей, сохраняя связь данных объекта",
+
+        "Project selected objects onto active object using Lattice":
+            "Проецировать выделенные объекты на активный объект с помощью Lattice",
+
+        "Deform active object profile with Lattice":
+            "Деформировать профиль активного объекта с помощью Lattice",
+
+        "Use automatically generated presets, discards user edits or presets":
+            "Использовать автоматически сгенерированные пресеты, сбрасывает пользовательское редактирование",
+
         "Create prongs for selected gems": "Создать корнера для выделенных камней",
         "Create cutter for selected gems": "Создать выборку для выделенных камней",
         "Make curve start at the top": "Расположить начало кривой сверху",
@@ -132,17 +163,33 @@ _ru = {
         "Replace asset preview image": "Заменить превью ассета",
         "Import selected asset": "Импортировать выбранный ассет",
         "Asset category": "Категория ассетов",
-        "Set custom asset library folder, if disabled the default library folder will be used": "Указать пользовательский каталог библиотеки ассетов, если отключено, то используется стандартный каталог",
+
+        "Set custom asset library folder, if disabled the default library folder will be used": (
+            "Указать пользовательский каталог библиотеки ассетов, если отключено, "
+            "то используется стандартный каталог"
+        ),
+
         "Custom library folder path": "Путь к пользовательскому каталогу библиотеки",
         "Display asset name in Tool Shelf": "Показывать название ассета в панели инструментов",
-        "Use active object name when creating new asset": "Использовать имя активного объекта при создании нового ассета",
+
+        "Use active object name when creating new asset":
+            "Использовать имя активного объекта при создании нового ассета",
+
         "Enable widgets drawing": "Активировать отображение виджетов",
         "Draw widgets only for selected objects": "Отображать виджеты только для выделенных объектов",
         "Use object defined widget overrides": "Использовать переопределения виджетов заданные на объектах",
-        "Display only object defined widget overrides": "Отображать только виджеты с переопределениями заданными на объектах",
+
+        "Display only object defined widget overrides":
+            "Отображать только виджеты с переопределениями заданными на объектах",
+
         "Draw widgets in front of objects": "Отображать виджеты поверх объектов",
-        "Override widget display properties for selected objects": "Переопределить отображение виджетов для выделенных объектов",
-        "Remove widget override properties from selected objects": "Удалить настройки переопределяющие отображение виджетов с выделенных объектов",
+
+        "Override widget display properties for selected objects":
+            "Переопределить отображение виджетов для выделенных объектов",
+
+        "Remove widget override properties from selected objects":
+            "Удалить настройки переопределяющие отображение виджетов с выделенных объектов",
+
         "Add new material to the list": "Добавить новый материал в список",
         "Remove material from the list": "Удалить материал из списка",
         "Display material density in the list": "Отображать в списке плотность материала",
@@ -150,35 +197,72 @@ _ru = {
         "Create weighting set from materials list": "Создать набор материалов из списка материалов",
         "Remove weighting set": "Удалить набор материалов",
         "Rename weighting set": "Переименовать набор материалов",
-        "Load weighting set to the materials list by replacing existing materials": "Загрузить набор материалов в список материалов, заменив текущие материалы",
-        "Append weighting set at the end of the current materials list": "Присоеденить набор материалов в конец текущего списока материалов",
-        "Hide default JewelCraft sets from weighting sets menu": "Скрыть стандартные наборы материалов JewelCraft из меню",
-        "Replace selected weighting set with current materials list": "Заменить активный набор материалов текущим списком материалов",
+
+        "Load weighting set to the materials list by replacing existing materials":
+            "Загрузить набор материалов в список материалов, заменив текущие материалы",
+
+        "Append weighting set at the end of the current materials list":
+            "Присоеденить набор материалов в конец текущего списока материалов",
+
+        "Hide default JewelCraft sets from weighting sets menu":
+            "Скрыть стандартные наборы материалов JewelCraft из меню",
+
+        "Replace selected weighting set with current materials list":
+            "Заменить активный набор материалов текущим списком материалов",
+
         "Material name": "Название материала",
         "Material composition": "Состав материала",
-        "Use one-dimensional lattice for even deformation": "Использовать одномерный Lattice для равномерной деформации",
-        "Use two-dimensional lattice for proportional deformation": "Использовать двумерный Lattice для пропорциональной деформации",
+
+        "Use one-dimensional lattice for even deformation":
+            "Использовать одномерный Lattice для равномерной деформации",
+
+        "Use two-dimensional lattice for proportional deformation":
+            "Использовать двумерный Lattice для пропорциональной деформации",
+
         "Scale selected objects to given size": "Масштабировать выделенные объекты в заданный размер",
         "Move each object individually": "Переместить каждый объект по отдельности",
-        "Enable material for weighting and product report": "Использовать материал для оценки веса и отчёта изделия",
+
+        "Enable material for weighting and product report":
+            "Использовать материал для оценки веса и отчёта изделия",
+
         "Clear materials list": "Очистить список материалов",
-        "Ignore gems located in hidden view layers": "Игнорировать камни расположенные в скрытых слоях",
+
+        "Show warning if there are hidden gem objects in the scene":
+            "Показать предупреждение, если в сцене есть скрытые объекты камней",
+
+        "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": (
+            "Привязать импортированный ассет к выделенным объектам "
+            "(Горячая клавиша: удерживайте Alt при использовании инструмента)"
+        ),
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
         "Hidden gems (use Show Hidden/Alt H)": "Скрытые камни (используйте Show Hidden/Alt H)",
         "Duplicated gems": "Дублируемые камни",
-        "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)": "Устаревшие идентификаторы камней (используйте Convert Deprecated Gem IDs из меню Operator Search)",
-        "Unknown gem IDs, carats are not calculated for marked gems (*)": "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)",
+
+        "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
+            "Устаревшие идентификаторы камней (используйте Convert Deprecated Gem IDs из меню Operator Search)",
+
+        "Unknown gem IDs, carats are not calculated for marked gems (*)":
+            "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)",
+
         "Curve Length": "Длина кривой",
         "{} duplicates found": "{} дубликатов обнаружено",
-        "Text file successfully created in the project folder": "Текстовый файл успешно создан в каталоге проекта",
-        "Could not create text file, project folder does not exist": "Не удалось создать текстовый файл, каталог проекта не существует",
+
+        "Text file successfully created in the project folder":
+            "Текстовый файл успешно создан в каталоге проекта",
+
+        "Could not create text file, project folder does not exist":
+            "Не удалось создать текстовый файл, каталог проекта не существует",
+
         "At least two objects must be selected": "Как минимум два объекта должны быть выделены",
         "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
         "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
         "Active object must be a curve": "Активный объект должен быть кривой",
-        "Selected objects do not have Follow Path constraint": "Выделенные объекты не имеют ограничение Follow Path",
+
+        "Selected objects do not have Follow Path constraint":
+            "Выделенные объекты не имеют ограничение Follow Path",
+
         "File not found": "Файл не найден",
         "Name must be specified": "Имя должно быть указано",
         # Cuts
@@ -337,10 +421,10 @@ del _ru
 
 
 def iface_lang():
-    system = bpy.context.user_preferences.system
+    view = bpy.context.preferences.view
 
-    if system.use_international_fonts and system.use_translate_interface:
-        return system.language
+    if view.use_international_fonts and view.use_translate_interface:
+        return view.language
 
     return "DEFAULT"
 
@@ -348,7 +432,7 @@ def iface_lang():
 def gettext_prep(text, ctxt="*"):
     """gettext implementation for Product Report"""
 
-    lang = bpy.context.user_preferences.addons[__package__].preferences.product_report_lang
+    lang = bpy.context.preferences.addons[__package__].preferences.product_report_lang
 
     if lang == "AUTO":
         lang = bpy.app.translations.locale

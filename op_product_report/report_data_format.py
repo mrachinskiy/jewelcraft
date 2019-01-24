@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ def ct_calc(stone, cut, l, w, h):
 
 
 def data_format(data):
-    prefs = bpy.context.user_preferences.addons[var.ADDON_ID].preferences
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     report = ""
 
     if data["size"]:

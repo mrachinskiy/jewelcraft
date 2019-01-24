@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,9 +31,29 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
     bl_idname = "object.jewelcraft_widgets_overrides_set"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
-    color = FloatVectorProperty(name="Widget Color", default=(1.0, 1.0, 1.0, 1.0), size=4, min=0.0, soft_max=1.0, subtype="COLOR")
-    linewidth = IntProperty(name="Line Width", default=2, min=1, soft_max=5, subtype="PIXEL")
-    distance = FloatProperty(name="Distance", default=0.2, min=0.0, step=1, precision=2, unit="LENGTH")
+    color: FloatVectorProperty(
+        name="Widget Color",
+        default=(1.0, 1.0, 1.0, 1.0),
+        size=4,
+        min=0.0,
+        soft_max=1.0,
+        subtype="COLOR",
+    )
+    linewidth: IntProperty(
+        name="Line Width",
+        default=2,
+        min=1,
+        soft_max=5,
+        subtype="PIXEL",
+    )
+    distance: FloatProperty(
+        name="Distance",
+        default=0.2,
+        min=0.0,
+        step=1,
+        precision=2,
+        unit="LENGTH",
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -59,7 +79,7 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        prefs = context.user_preferences.addons[var.ADDON_ID].preferences
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
         default_settings = {
             "color": prefs.widget_color,
             "linewidth": prefs.widget_linewidth,
@@ -86,7 +106,6 @@ class OBJECT_OT_jewelcraft_widgets_overrides_del(Operator):
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     def execute(self, context):
-
         for ob in context.selected_objects:
             if "jewelcraft_widget" in ob:
                 del ob["jewelcraft_widget"]

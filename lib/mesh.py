@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -54,18 +54,18 @@ def make_tri(bm, x, y, h):
 
 
 def est_volume(obs):
-    scene = bpy.context.scene
+    depsgraph = bpy.context.depsgraph
     bm = bmesh.new()
 
     for ob in obs:
-        me = ob.to_mesh(scene, True, "PREVIEW", calc_tessface=False)
+        me = ob.to_mesh(depsgraph, True)
         me.transform(ob.matrix_world)
 
         bm.from_mesh(me)
 
         bpy.data.meshes.remove(me)
 
-    bmesh.ops.triangulate(bm, faces=bm.faces, quad_method=3)
+    bmesh.ops.triangulate(bm, faces=bm.faces, quad_method="SHORT_EDGE")
 
     vol = bm.calc_volume()
     bm.free()
@@ -74,20 +74,15 @@ def est_volume(obs):
 
 
 def curve_length(ob):
-    me = ob.to_mesh(bpy.context.scene, True, "PREVIEW", calc_tessface=False)
-
-    bm = bmesh.new()
-    bm.from_mesh(me)
-    bm.transform(ob.matrix_world)
-
-    bpy.data.meshes.remove(me)
+    curve = ob.data.copy()
+    curve.transform(ob.matrix_world)
 
     length = 0.0
 
-    for edge in bm.edges:
-        length += edge.calc_length()
+    for spline in curve.splines:
+        length += spline.calc_length()
 
-    bm.free()
+    bpy.data.curves.remove(curve)
 
     return length
 
@@ -183,45 +178,46 @@ def edge_loop_walk(verts):
 
 
 def face_pos():
+    depsgraph = bpy.context.depsgraph
     scene = bpy.context.scene
-    ob = bpy.context.active_object
-
-    # Prepare bmesh
-    # --------------------------------
-
-    mods_ignore = [(x, x.show_viewport) for x in ob.modifiers if x.type == "SUBSURF"]
-
-    if mods_ignore:
-        for mod, mod_show in mods_ignore:
-            mod.show_viewport = False
-        scene.update()
-
-    ob.update_from_editmode()
-    me = ob.to_mesh(scene, True, "PREVIEW", calc_tessface=False)
-
-    bm = bmesh.new()
-    bm.from_mesh(me)
-    bm.transform(ob.matrix_world)
-
-    bpy.data.meshes.remove(me)
-
-    if mods_ignore:
-        for mod, mod_show in mods_ignore:
-            mod.show_viewport = mod_show
-
-    # Collect transform matrices
-    # --------------------------------
-
     mats = []
 
-    for f in bm.faces:
-        if f.select:
-            mat_loc = Matrix.Translation(f.calc_center_median())
-            mat_rot = f.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
-            mat = mat_loc * mat_rot
+    for ob in bpy.context.objects_in_mode:
 
-            mats.append(mat)
+        # Prepare bmesh
+        # --------------------------------
 
-    bm.free()
+        mods_ignore = [(x, x.show_viewport) for x in ob.modifiers if x.type == "SUBSURF"]
+
+        if mods_ignore:
+            for mod, mod_show in mods_ignore:
+                mod.show_viewport = False
+            scene.update()
+
+        ob.update_from_editmode()
+        me = ob.to_mesh(depsgraph, True)
+
+        bm = bmesh.new()
+        bm.from_mesh(me)
+        bm.transform(ob.matrix_world)
+
+        bpy.data.meshes.remove(me)
+
+        if mods_ignore:
+            for mod, mod_show in mods_ignore:
+                mod.show_viewport = mod_show
+
+        # Collect transform matrices
+        # --------------------------------
+
+        for f in bm.faces:
+            if f.select:
+                mat_loc = Matrix.Translation(f.calc_center_median())
+                mat_rot = f.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+                mat = mat_loc @ mat_rot
+
+                mats.append(mat)
+
+        bm.free()
 
     return mats

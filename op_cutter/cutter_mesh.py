@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2018  Mikhail Rachinskiy
+#  Copyright (C) 2015-2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from math import sin, cos, pi
+from math import sin, cos, pi, tau
 
 import bmesh
 
@@ -35,17 +35,8 @@ from ..lib.mesh import (
 from . import profile_pear, profile_heart
 
 
-tau = pi * 2
-
-
 def create_cutter(self):
     bm = bmesh.new()
-    offset_types = {
-        "offset": 0,
-        "width": 1,
-        "depth": 2,
-        "percent": 3,
-    }
 
     # Square/Rectangle
     # ---------------------------
@@ -68,10 +59,10 @@ def create_cutter(self):
         # Bevel corners
 
         if self.shape_rect:
-            bv_off_t = offset_types["offset"]
+            bv_off_t = "OFFSET"
             bv_off = self.bevel_corners_width
         else:
-            bv_off_t = offset_types["percent"]
+            bv_off_t = "PERCENT"
             bv_off = self.bevel_corners_percent
 
         if self.bevel_corners and bv_off:
@@ -180,7 +171,7 @@ def create_cutter(self):
 
         if self.bevel_corners or self.curve_profile:
 
-            bv_off_t = offset_types["percent"]
+            bv_off_t = "PERCENT"
             bv_off = self.bevel_corners_percent
 
             base_coords = [
@@ -202,7 +193,7 @@ def create_cutter(self):
                     bm.edges.ensure_lookup_table()
                     e_subd = (bm.edges[-1], bm.edges[-2], bm.edges[-3])
                     bm.normal_update()
-                    bmesh.ops.subdivide_edges(bm, edges=e_subd, smooth=self.curve_profile_factor, smooth_falloff=4, cuts=self.curve_profile_segments)
+                    bmesh.ops.subdivide_edges(bm, edges=e_subd, smooth=self.curve_profile_factor, smooth_falloff="LINEAR", cuts=self.curve_profile_segments)
 
                 bm.verts.ensure_lookup_table()
                 profile_coords = edge_loop_walk(bm.verts)
@@ -261,7 +252,7 @@ def create_cutter(self):
         else:
             f_bottom = bm.faces.new(reversed(v_fallback))
             bm.normal_update()
-            bmesh.ops.poke(bm, faces=[f_bottom], offset=self.hole_z_top - sm_z, center_mode=0)
+            bmesh.ops.poke(bm, faces=[f_bottom], offset=self.hole_z_top - sm_z)
 
     # Fantasy
     # ---------------------------
@@ -396,7 +387,7 @@ def create_cutter(self):
         else:
             f_bottom = bm.faces.new(reversed(v_fallback))
             bm.normal_update()
-            pk = bmesh.ops.poke(bm, faces=[f_bottom], offset=self.hole_z_top - sm_z, center_mode=0)
+            pk = bmesh.ops.poke(bm, faces=[f_bottom], offset=self.hole_z_top - sm_z)
 
             if self.cut == "PEAR":
                 pk["verts"][0].co[1] = v_girdle_btm[16].co[1]
@@ -446,7 +437,7 @@ def create_cutter(self):
     # ---------------------------
 
     if self.curve_seat:
-        bmesh.ops.bevel(bm, geom=e_sm[:] + v_sm[:], offset=100.0, offset_type=offset_types["percent"], segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
+        bmesh.ops.bevel(bm, geom=e_sm[:] + v_sm[:], offset=100.0, offset_type="PERCENT", segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
 
     return bm
