@@ -24,13 +24,13 @@ How to install
 
 ### Blender 2.80
 
-1. [Download Commotion v2.3.0 (pre-release).][v_master]<sup>1</sup>
+1. [Download JewelCraft v2.3.0 (pre-release).][v_master]<sup>1</sup>
 2. Open `Edit` → `Preferences` → `Add-ons` category.
 3. Use `Install` to install add-on from downloaded zip archive.
 
 ### Blender 2.79
 
-1. [Download Commotion v2.2.1.][v2_2_1]<sup>1</sup>
+1. [Download JewelCraft v2.2.1.][v2_2_1]<sup>1</sup>
 2. Open `File` → `User Preferences` → `Add-ons` category.
 3. Use `Install Add-on from File` to install add-on from downloaded zip archive.
 
@@ -42,13 +42,13 @@ How to install
 
 ### Blender 2.80
 
-1. [Загрузите Commotion v2.3.0 (пре-релиз).][v_master]<sup>1</sup>
+1. [Загрузите JewelCraft v2.3.0 (пре-релиз).][v_master]<sup>1</sup>
 2. Откройте `Edit` → `Preferences` → `Add-ons`.
 3. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.
 
 ### Blender 2.79
 
-1. [Загрузите Commotion v2.2.1.][v2_2_1]<sup>1</sup>
+1. [Загрузите JewelCraft v2.2.1.][v2_2_1]<sup>1</sup>
 2. Откройте `File` → `User Preferences` → `Add-ons`.
 3. Воспользуйтесь `Install Add-on from File` чтобы установить аддон из загруженного архива.
 
