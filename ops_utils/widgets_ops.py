@@ -86,7 +86,7 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
             "distance": prefs.widget_distance,
         }
 
-        ovrd = context.active_object.get("jewelcraft_widget")
+        ovrd = context.object.get("jewelcraft_widget")
 
         if ovrd:
             default_settings.update(ovrd)

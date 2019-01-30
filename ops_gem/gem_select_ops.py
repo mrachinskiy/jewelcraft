@@ -91,7 +91,7 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
 
         if selected:
 
-            if not context.active_object.select_get():
+            if not context.object.select_get():
                 context.view_layer.objects.active = selected[0]
 
             if self.use_select_children:
@@ -106,7 +106,7 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        ob = context.active_object
+        ob = context.object
 
         if ob and "gem" in ob:
             self.size = ob.dimensions[1]

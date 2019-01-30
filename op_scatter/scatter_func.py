@@ -37,7 +37,7 @@ class Scatter:
         if self.is_scatter:
             num = self.number - 1
 
-            curve = context.active_object
+            curve = context.object
             curve.select_set(False)
 
             ob = context.selected_objects[0]
@@ -53,7 +53,7 @@ class Scatter:
 
             obs_sorted = sorted(obs, key=obs.get, reverse=True)
             num = len(obs_sorted) - 1
-            ob = context.active_object
+            ob = context.object
 
             if ob not in obs:
                 ob = obs_sorted[0]
@@ -170,7 +170,7 @@ class Scatter:
                 self.report({"ERROR"}, "At least two objects must be selected")
                 return {"CANCELLED"}
 
-            curve = context.active_object
+            curve = context.object
 
             if curve.type != "CURVE":
                 self.report({"ERROR"}, "Active object must be a curve")

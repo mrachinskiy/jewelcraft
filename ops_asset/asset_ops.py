@@ -81,7 +81,7 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
 
         if prefs.asset_name_from_obj:
-            self.asset_name = context.active_object.name
+            self.asset_name = context.object.name
         else:
             self.asset_name = ""
 

@@ -157,11 +157,11 @@ class OBJECT_OT_jewelcraft_gem_edit(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.selected_objects or not context.active_object:
+        if not context.selected_objects or not context.object:
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        ob = context.active_object
+        ob = context.object
 
         if "gem" in ob:
             self.cut = ob["gem"]["cut"]

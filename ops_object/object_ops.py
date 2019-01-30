@@ -154,7 +154,7 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
 
     def execute(self, context):
         obs = context.selected_objects
-        ob = context.active_object or obs[0]
+        ob = context.object or obs[0]
 
         df_name = ob.name + " Dupli-faces"
         df_radius = min(ob.dimensions[:2]) * 0.15
@@ -241,13 +241,13 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
     def execute(self, context):
         direction = self.direction.split("_")
 
-        surf = context.active_object
+        surf = context.object
         surf.select_set(False)
 
         obs = context.selected_objects
 
         bpy.ops.object.add(radius=1, type="LATTICE")
-        lat = context.active_object
+        lat = context.object
 
         md = lat.modifiers.new("Shrinkwrap", "SHRINKWRAP")
         md.target = surf
@@ -315,7 +315,7 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
             self.report({"ERROR"}, "At least two objects must be selected")
             return {"CANCELLED"}
 
-        obs.remove(context.active_object)
+        obs.remove(context.object)
         self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox(obs)
 
         wm = context.window_manager
@@ -356,7 +356,7 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
         layout.prop(self, "scale")
 
     def execute(self, context):
-        ob = context.active_object
+        ob = context.object
         obs = context.selected_objects
 
         if ob.select_get():
@@ -370,7 +370,7 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
             dim_xy = self.dim[0]
 
         bpy.ops.object.add(radius=1, type="LATTICE", rotation=(0.0, 0.0, rot_z))
-        lat = context.active_object
+        lat = context.object
 
         md = ob.modifiers.new("Lattice", "LATTICE")
         md.object = lat
@@ -443,7 +443,7 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        ob = context.active_object
+        ob = context.object
 
         if not ob:
             return {"CANCELLED"}
@@ -454,7 +454,7 @@ class OBJECT_OT_jewelcraft_lattice_profile(Operator):
 
 
 def update_size(self, context):
-    self.size = context.active_object.dimensions[int(self.axis)]
+    self.size = context.object.dimensions[int(self.axis)]
 
 
 class OBJECT_OT_jewelcraft_resize(Operator):
@@ -488,14 +488,14 @@ class OBJECT_OT_jewelcraft_resize(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.active_object:
+        if not context.object:
             return {"CANCELLED"}
 
-        dim = context.active_object.dimensions
+        dim = context.object.dimensions
 
         self.dim_orig = dim.to_tuple()
         self.size = dim[int(self.axis)]
-        self.pivot = context.active_object.location.to_tuple()
+        self.pivot = context.object.location.to_tuple()
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)

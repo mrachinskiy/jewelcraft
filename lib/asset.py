@@ -34,7 +34,7 @@ from .. import var
 
 
 def get_gem(self, context):
-    ob = context.active_object
+    ob = context.object
 
     self.gem_w = ob.dimensions[0]
     self.gem_l = ob.dimensions[1]
