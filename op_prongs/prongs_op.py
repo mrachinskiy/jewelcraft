@@ -75,7 +75,7 @@ class OBJECT_OT_jewelcraft_prongs_add(Draw, Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.active_object or not context.selected_objects:
+        if not context.object or not context.selected_objects:
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 

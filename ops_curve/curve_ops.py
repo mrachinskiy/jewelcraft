@@ -50,7 +50,7 @@ class CURVE_OT_jewelcraft_size_curve_add(Operator):
 
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.size / 2, rotation=(pi / 2, 0.0, 0.0))
 
-        curve = context.active_object
+        curve = context.object
         curve.name = "Size"
         curve.data.name = "Size"
         curve.data.resolution_u = 512
@@ -74,7 +74,7 @@ class CURVE_OT_jewelcraft_length_display(Operator):
     bl_idname = "curve.jewelcraft_length_display"
 
     def execute(self, context):
-        ob = context.active_object
+        ob = context.object
 
         if not ob or ob.type != "CURVE":
             self.report({"ERROR"}, "Active object must be a curve")
@@ -175,7 +175,7 @@ class OBJECT_OT_jewelcraft_move_over_under(Operator):
     def execute(self, context):
         if not self.individual or context.mode == "EDIT_MESH":
 
-            ob = context.edit_object or context.active_object
+            ob = context.edit_object or context.object
 
             if not ob:
                 return {"CANCELLED"}
