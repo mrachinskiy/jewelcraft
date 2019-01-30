@@ -237,14 +237,16 @@ class JewelCraftPreferences(AddonPreferences):
     )
     color_prongs: FloatVectorProperty(
         name="Prongs",
-        default=(0.8, 0.8, 0.8),
+        default=(0.8, 0.8, 0.8, 1.0),
+        size=4,
         min=0.0,
         soft_max=1.0,
         subtype="COLOR",
     )
     color_cutter: FloatVectorProperty(
         name="Cutter",
-        default=(0.8, 0.8, 0.8),
+        default=(0.8, 0.8, 0.8, 1.0),
+        size=4,
         min=0.0,
         soft_max=1.0,
         subtype="COLOR",

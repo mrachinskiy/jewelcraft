@@ -122,6 +122,7 @@ class Scatter:
                 con.target = curve
                 con.offset = -ofst_fac
                 con.use_curve_follow = True
+                con.forward_axis = "FORWARD_X"
 
                 ofst_fac += ofst
 
@@ -136,6 +137,7 @@ class Scatter:
             con.target = curve
             con.offset = -start
             con.use_curve_follow = True
+            con.forward_axis = "FORWARD_X"
 
         else:
 

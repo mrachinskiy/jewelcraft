@@ -66,10 +66,10 @@ def get_name(x):
 
 def color_rnd():
     seq = (0.0, 0.5, 1.0)
-    return random.choice(seq), random.choice(seq), random.choice(seq)
+    return random.choice(seq), random.choice(seq), random.choice(seq), 1.0
 
 
-def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8), is_gem=False):
+def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8, 1.0), is_gem=False):
     mat = bpy.data.materials.get(mat_name)
 
     if not mat:
@@ -85,10 +85,10 @@ def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8), is_gem=Fals
 
             if is_gem:
                 node = nodes.new("ShaderNodeBsdfGlass")
-                node.inputs["Color"].default_value = color + (1.0,)
+                node.inputs["Color"].default_value = color
             else:
                 node = nodes.new("ShaderNodeBsdfPrincipled")
-                node.inputs["Base Color"].default_value = color + (1.0,)
+                node.inputs["Base Color"].default_value = color
                 node.inputs["Metallic"].default_value = 1.0
                 node.inputs["Roughness"].default_value = 0.0
 
