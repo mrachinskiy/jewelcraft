@@ -108,7 +108,7 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
                     else:
                         quat[:] = y, -z, w, -x
 
-                    ob.matrix_world *= mat_rot_inv * quat.to_matrix().to_4x4()
+                    ob.matrix_world @= mat_rot_inv @ quat.to_matrix().to_4x4()
                 else:
                     ob.matrix_world[i][0] *= -1
                     ob.matrix_world[i][1] *= -1
