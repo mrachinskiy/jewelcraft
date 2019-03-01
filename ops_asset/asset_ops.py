@@ -249,7 +249,7 @@ class WM_OT_jewelcraft_asset_import(Operator, Setup):
             ob.select_set(True)
 
         if len(obs) == 1:
-            ob.location = context.scene.cursor_location
+            ob.location = context.scene.cursor.location
 
             if self.use_parent and selected:
                 collection.objects.unlink(ob)

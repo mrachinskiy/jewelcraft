@@ -71,7 +71,7 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
         context.collection.objects.link(ob)
 
         ob.scale = ob.scale * self.size
-        ob.location = scene.cursor_location
+        ob.location = scene.cursor.location
         ob.select_set(True)
         ob["gem"] = {"cut": self.cut, "stone": self.stone}
 
