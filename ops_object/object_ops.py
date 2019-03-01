@@ -62,7 +62,7 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
         if not axes:
             return {"FINISHED"}
 
-        cursor_offset = context.scene.cursor_location * 2
+        cursor_offset = context.scene.cursor.location * 2
         is_odd_axis_count = len(axes) != 2
         rotate_types = {"CAMERA", "LAMP", "SPEAKER", "FONT"}
         duplimap = {}
