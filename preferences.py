@@ -31,8 +31,9 @@ from bpy.props import (
     CollectionProperty,
 )
 
-from . import dynamic_lists, addon_updater_ops
+from . import dynamic_lists
 from .lib import widgets
+from .mod_update import update_ui
 
 
 # Custom properties
@@ -109,23 +110,27 @@ class JewelCraftPreferences(AddonPreferences):
             ("WEIGHTING",      "Weighting",      ""),
             ("PRODUCT_REPORT", "Product Report", ""),
             ("THEMES",         "Themes",         ""),
-            ("UPDATER",        "Update",         ""),
+            ("UPDATES",        "Updates",         ""),
         ),
     )
-    update_auto_check: BoolProperty(
+    update_use_auto_check: BoolProperty(
         name="Automatically check for updates",
         description="Automatically check for updates with specified interval",
         default=True,
     )
     update_interval: EnumProperty(
-        name="Interval",
-        description="Interval",
+        name="Auto-check Interval",
+        description="Auto-check interval",
         items=(
             ("1", "Once a day", ""),
             ("7", "Once a week", ""),
             ("30", "Once a month", ""),
         ),
         default="7",
+    )
+    update_use_prerelease: BoolProperty(
+        name="Update to pre-release",
+        description="Update add-on to pre-release version if available",
     )
     asset_name_from_obj: BoolProperty(
         name="Asset name from active object",
@@ -343,9 +348,8 @@ class JewelCraftPreferences(AddonPreferences):
             col.prop(self, "color_prongs")
             col.prop(self, "color_cutter")
 
-        elif self.active_section == "UPDATER":
-            box.use_property_split = False
-            addon_updater_ops.update_settings_ui(self, context, element=box)
+        elif self.active_section == "UPDATES":
+            update_ui.prefs_ui(self, box)
 
 
 # Window manager properties

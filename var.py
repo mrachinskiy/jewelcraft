@@ -23,16 +23,12 @@ import os
 import sys
 
 
-preview_collections = {}  # Store icons
-
-
 ADDON_ID = __package__
 ADDON_DIR = os.path.dirname(__file__)
 
 ICONS_DIR = os.path.join(ADDON_DIR, "assets", "icons")
 GEM_ASSET_DIR = os.path.join(ADDON_DIR, "assets", "gems")
 GEM_ASSET_FILEPATH = os.path.join(GEM_ASSET_DIR, "gems.blend")
-
 
 if sys.platform == "win32":
     LOCAL_PATH = os.getenv("LOCALAPPDATA")
@@ -41,10 +37,10 @@ elif sys.platform == "darwin":
 else:
     LOCAL_PATH = os.path.expanduser("~/.local/share")
 
-USER_ASSET_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft", "Asset Library")
+ADDON_DATA_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
+USER_ASSET_DIR = os.path.join(ADDON_DATA_DIR, "Asset Library")
 USER_ASSET_DIR_OBJECT = os.path.join(USER_ASSET_DIR, "Object")
 USER_ASSET_DIR_WEIGHTING = os.path.join(USER_ASSET_DIR, "Weighting")
-
 
 DEFAULT_WEIGHTING_SETS = {
     "JCASSET_PRECIOUS": (
@@ -161,32 +157,22 @@ STONE_COLOR = {
     "PERIDOT": (0.201, 0.748, 0.026, 1.0),
 }
 
-
-# Updater
-# ------------------------------------
+preview_collections = {}  # Store icons
 
 
-engine = "Github"
-private_token = None
-include_branches = True
-use_releases = False
-include_branch_list = None
+# mod_update
+# --------------------------------
 
-user = "mrachinskiy"
-repo = "jewelcraft"
-website = "https://github.com/mrachinskiy/jewelcraft#how-to-install"
 
-subfolder_path = ""
+UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_DATA_DIR, "update_state.json")
+UPDATE_RELEASES_URL = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
+UPDATE_MAX_VERSION = None
+UPDATE_ADDON_VERSION = None
 
-version_min_update = None
-version_max_update = None
-
-manual_only = False
-fake_install = False
-verbose = False
-showpopups = True
-
-backup_current = True
-backup_ignore_patterns = ["__pycache__"]
-overwrite_patterns = ["*"]
-remove_pre_update_patterns = ["*"]
+update_available = False
+update_in_progress = False
+update_completed = False
+update_last_check = None  # int type if set
+update_version = ""
+update_download_url = ""
+update_html_url = ""
