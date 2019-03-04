@@ -22,7 +22,7 @@
 bl_info = {
     "name": "JewelCraft",
     "author": "Mikhail Rachinskiy",
-    "version": (2, 2, 1),
+    "version": (2, 3, 0),
     "blender": (2, 80, 0),
     "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
@@ -59,7 +59,6 @@ else:
         translations,
         preferences,
         dynamic_lists,
-        addon_updater_ops,
     )
     from .lib import widgets
     from .op_cutter import cutter_op
@@ -72,8 +71,10 @@ else:
     from .ops_object import object_ops
     from .ops_utils import search_ops, widgets_ops
     from .ops_weighting import weighting_list_ops, weighting_set_ops, weighting_op
+    from .mod_update import update_lib, update_ops
 
 
+var.UPDATE_ADDON_VERSION = bl_info["version"]
 classes = (
     preferences.JewelCraftMaterialsCollection,
     preferences.JewelCraftMaterialsList,
@@ -142,12 +143,13 @@ classes = (
     weighting_set_ops.WM_OT_jewelcraft_weighting_set_load_append,
     weighting_set_ops.WM_OT_jewelcraft_weighting_set_rename,
     weighting_set_ops.WM_OT_jewelcraft_weighting_set_refresh,
+    update_ops.WM_OT_jewelcraft_update_check,
+    update_ops.WM_OT_jewelcraft_update_download,
+    update_ops.WM_OT_jewelcraft_update_whats_new,
 )
 
 
 def register():
-    addon_updater_ops.register(bl_info)
-
     for cls in classes:
         bpy.utils.register_class(cls)
 
@@ -173,12 +175,10 @@ def register():
 
     var.preview_collections["icons"] = pcoll
 
-    addon_updater_ops.check_for_update_background()
+    update_lib.update_init_check()
 
 
 def unregister():
-    addon_updater_ops.unregister()
-
     for cls in classes:
         bpy.utils.unregister_class(cls)
 

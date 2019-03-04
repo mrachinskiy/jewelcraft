@@ -20,7 +20,6 @@
 
 
 import os
-import json
 
 import bpy
 from bpy.types import Operator
@@ -51,6 +50,7 @@ class EditCheck:
 
 
 def materials_export_to_file(materials, filepath):
+    import json
 
     with open(filepath, "w", encoding="utf-8") as file:
 
@@ -220,6 +220,7 @@ class WeightingSetLoad:
         return bool(props.weighting_set)
 
     def execute(self, context):
+        import json
 
         if self.clear_materials:
             self.materials.clear()
