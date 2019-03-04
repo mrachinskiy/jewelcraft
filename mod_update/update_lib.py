@@ -78,7 +78,7 @@ def _update_check(use_force_check):
     if save_state["last_check"]:
         last_check = datetime.date.fromtimestamp(save_state["last_check"])
         delta = datetime.date.today() - last_check
-        var.update_last_check = delta.days
+        var.update_days_passed = delta.days
 
     if not use_force_check and not prefs.update_use_auto_check:
         return
@@ -86,7 +86,7 @@ def _update_check(use_force_check):
     if save_state["update_available"]:
         use_force_check = True
 
-    if not use_force_check and (var.update_last_check and var.update_last_check < int(prefs.update_interval)):
+    if not use_force_check and (var.update_days_passed and var.update_days_passed < int(prefs.update_interval)):
         return
 
     _runtime_state_set(in_progress=True)
@@ -106,11 +106,11 @@ def _update_check(use_force_check):
                 if var.UPDATE_MAX_VERSION and update_version >= var.UPDATE_MAX_VERSION:
                     continue
 
-                if update_version > var.UPDATE_ADDON_VERSION:
+                if update_version > var.UPDATE_CURRENT_VERSION:
                     break
                 else:
-                    if var.update_last_check is None:
-                        var.update_last_check = 0
+                    if var.update_days_passed is None:
+                        var.update_days_passed = 0
                     _save_state_set()
                     _runtime_state_set(in_progress=False)
                     return

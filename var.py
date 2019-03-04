@@ -37,8 +37,7 @@ elif sys.platform == "darwin":
 else:
     LOCAL_PATH = os.path.expanduser("~/.local/share")
 
-ADDON_DATA_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
-USER_ASSET_DIR = os.path.join(ADDON_DATA_DIR, "Asset Library")
+USER_ASSET_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft", "Asset Library")
 USER_ASSET_DIR_OBJECT = os.path.join(USER_ASSET_DIR, "Object")
 USER_ASSET_DIR_WEIGHTING = os.path.join(USER_ASSET_DIR, "Weighting")
 
@@ -164,15 +163,15 @@ preview_collections = {}  # Store icons
 # --------------------------------
 
 
-UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_DATA_DIR, "update_state.json")
+UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_DIR, "update_state.json")
 UPDATE_RELEASES_URL = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
 UPDATE_MAX_VERSION = None
-UPDATE_ADDON_VERSION = None
+UPDATE_CURRENT_VERSION = None
 
 update_available = False
 update_in_progress = False
 update_completed = False
-update_last_check = None  # int type if set
+update_days_passed = None
 update_version = ""
 update_download_url = ""
 update_html_url = ""

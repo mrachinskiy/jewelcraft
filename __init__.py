@@ -74,7 +74,7 @@ else:
     from .mod_update import update_lib, update_ops
 
 
-var.UPDATE_ADDON_VERSION = bl_info["version"]
+var.UPDATE_CURRENT_VERSION = bl_info["version"]
 classes = (
     preferences.JewelCraftMaterialsCollection,
     preferences.JewelCraftMaterialsList,

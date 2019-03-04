@@ -56,14 +56,14 @@ def prefs_ui(self, layout):
 
     elif var.update_available:
         row.label(text=_("Update {} is available").format(var.update_version))
-    elif var.update_last_check is None:
+    elif var.update_days_passed is None:
         row.label(text="Last checked never")
-    elif var.update_last_check == 0:
+    elif var.update_days_passed == 0:
         row.label(text="Last checked today")
-    elif var.update_last_check == 1:
+    elif var.update_days_passed == 1:
         row.label(text="Last checked yesterday")
     else:
-        row.label(text=_("Last checked {} days ago").format(var.update_last_check))
+        row.label(text=_("Last checked {} days ago").format(var.update_days_passed))
 
     col = box.row()
     col.alignment = "CENTER"
