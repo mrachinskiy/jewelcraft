@@ -32,7 +32,7 @@ def _save_state_get(reset=False):
 
     data = {
         "update_available": False,
-        "last_check": "",
+        "last_check": 0,
     }
 
     if not reset and os.path.exists(var.UPDATE_SAVE_STATE_FILEPATH):
@@ -48,7 +48,7 @@ def _save_state_set(reset=False):
 
     data = {
         "update_available": False if reset else var.update_available,
-        "last_check": "" if reset else datetime.date.today().isoformat(),
+        "last_check": 0 if reset else int(datetime.datetime.now().timestamp()),
     }
 
     if not os.path.exists(var.ADDON_DATA_DIR):
@@ -76,9 +76,8 @@ def _update_check(use_force_check):
     save_state = _save_state_get()
 
     if save_state["last_check"]:
-        last_check = datetime.datetime.strptime(save_state["last_check"], "%Y-%m-%d").date()
-        today = datetime.date.today()
-        delta = today - last_check
+        last_check = datetime.date.fromtimestamp(save_state["last_check"])
+        delta = datetime.date.today() - last_check
         var.update_last_check = delta.days
 
     if not use_force_check and not prefs.update_use_auto_check:
