@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2019  Mikhail Rachinskiy
+#  mod_update automatic add-on updates.
+#  Copyright (C) 2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,25 +25,23 @@ from .. import var
 
 
 def prefs_ui(self, layout):
-    box = layout
-
-    col = box.column()
+    col = layout.column()
     col.prop(self, "update_use_auto_check")
     col.prop(self, "update_use_prerelease")
     sub = col.column()
     sub.active = self.update_use_auto_check
     sub.prop(self, "update_interval")
 
-    box.separator()
+    layout.separator()
 
-    row = box.row(align=True)
+    row = layout.row(align=True)
     row.alignment = "CENTER"
 
     if var.update_completed:
         row.label(text="Update completed")
         row.operator("wm.jewelcraft_update_whats_new")
 
-        row = box.row(align=True)
+        row = layout.row(align=True)
         row.alignment = "CENTER"
         row.label(text="Close Blender to complete the installation", icon="ERROR")
 
@@ -65,7 +63,7 @@ def prefs_ui(self, layout):
     else:
         row.label(text=_("Last checked {} days ago").format(var.update_days_passed))
 
-    col = box.row()
+    col = layout.row()
     col.alignment = "CENTER"
     col.scale_y = 1.5
     col.enabled = not var.update_in_progress and not var.update_completed
