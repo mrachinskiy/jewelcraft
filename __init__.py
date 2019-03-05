@@ -41,7 +41,7 @@ if "bpy" in locals():
             module = os.path.splitext(entry.name)[0]
             importlib.reload(eval(module))
 
-        elif entry.is_dir() and not (entry.name.startswith((".", "__")) or entry.name.endswith("updater")):
+        elif entry.is_dir() and not entry.name.startswith((".", "__")):
             for subentry in os.scandir(entry.path):
                 if subentry.is_file() and subentry.name.endswith(".py"):
                     module = entry.name + "." + os.path.splitext(subentry.name)[0]
