@@ -1,7 +1,7 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  JewelCraft jewelry design toolkit for Blender.
-#  Copyright (C) 2015-2019  Mikhail Rachinskiy
+#  mod_update automatic add-on updates.
+#  Copyright (C) 2019  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -42,17 +42,14 @@ def _save_state_get(reset=False):
     return data
 
 
-def _save_state_set(reset=False):
+def _save_state_set():
     import datetime
     import json
 
     data = {
-        "update_available": False if reset else var.update_available,
-        "last_check": 0 if reset else int(datetime.datetime.now().timestamp()),
+        "update_available": var.update_available,
+        "last_check": int(datetime.datetime.now().timestamp()),
     }
-
-    if not os.path.exists(var.ADDON_DATA_DIR):
-        os.makedirs(var.ADDON_DATA_DIR)
 
     with open(var.UPDATE_SAVE_STATE_FILEPATH, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
@@ -142,16 +139,15 @@ def _update_download():
 
     with urllib.request.urlopen(var.update_download_url) as response:
         with zipfile.ZipFile(io.BytesIO(response.read())) as zfile:
-            addon_pardir = os.path.dirname(var.ADDON_DIR)
+            addons_dir = os.path.dirname(var.ADDON_DIR)
             extract_dirname = zfile.namelist()[0]
-            extract_dir = os.path.join(addon_pardir, extract_dirname)
+            extract_dir = os.path.join(addons_dir, extract_dirname)
 
             shutil.rmtree(var.ADDON_DIR)
-            zfile.extractall(addon_pardir)
+            zfile.extractall(addons_dir)
             os.rename(extract_dir, var.ADDON_DIR)
 
     var.update_completed = True
-    _save_state_set(reset=True)
     _runtime_state_set(in_progress=True)
 
 

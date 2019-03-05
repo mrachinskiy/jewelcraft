@@ -59,22 +59,6 @@ _ru = {
         "Composition": "Состав",
         "Warnings": "Предупреждения",
         "Hidden gems": "Скрытые камни",
-        # mod_update
-        "Update completed": "Обновление завершено",
-        "Close Blender to complete the installation": "Для завершения установки закройте Blender",
-        "Installing...": "Установка...",
-        "Checking...": "Проверка...",
-        "Update {} is available": "Доступно обновление {}",
-        "Last checked never": "Последняя проверка никогда",
-        "Last checked today": "Последняя проверка сегодня",
-        "Last checked yesterday": "Последняя проверка вчера",
-        "Last checked {} days ago": "Последняя проверка {} дней назад",
-        "Automatically check for updates": "Автоматически проверять наличие обновлений",
-        "Auto-check Interval": "Интервал автопроверки",
-        "Once a day": "Раз в день",
-        "Once a week": "Раз в неделю",
-        "Once a month": "Раз в месяц",
-        "Update to pre-release": "Обновление до пре-релиза",
         # Popup dialogs
         "Asset Name": "Название ассета",
         "Category Name": "Название категории",
@@ -250,15 +234,6 @@ _ru = {
             "Привязать импортированный ассет к выделенным объектам "
             "(Горячая клавиша: удерживайте Alt при использовании инструмента)"
         ),
-        # mod_update
-        "Check for new add-on release": "Проверить наличие новой версии дополнения",
-        "Download and install new version of the add-on": "Загрузить и установить новую версию дополнения",
-        "Open release notes in web browser": "Открыть страницу изменений в веб-браузере",
-        "Automatically check for updates with specified interval":
-            "Автоматически проверять наличие обновлений с указанным интервалом",
-        "Auto-check interval": "Интервал автопроверки",
-        "Update add-on to pre-release version if available":
-            "Обновить до пре-релизной версии (если доступно)",
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
@@ -417,10 +392,6 @@ _ru = {
         "Replace Set": "Заменить набор",
         "Remove Set": "Удалить набор",
         "Rename Set": "Переименовать набор",
-        # mod_update
-        "Check for Updates": "Проверить наличие обновлений",
-        "Install Update": "Установить обновление",
-        "See What's New": "Смотреть изменения",
     },
 }
 

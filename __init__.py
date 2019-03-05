@@ -71,7 +71,7 @@ else:
     from .ops_object import object_ops
     from .ops_utils import search_ops, widgets_ops
     from .ops_weighting import weighting_list_ops, weighting_set_ops, weighting_op
-    from .mod_update import update_lib, update_ops
+    from .mod_update import update_lib, update_ops, update_translations
 
 
 var.UPDATE_CURRENT_VERSION = bl_info["version"]
@@ -157,6 +157,7 @@ def register():
     bpy.types.Scene.jewelcraft = PointerProperty(type=preferences.JewelCraftPropertiesScene)
 
     bpy.app.translations.register(__name__, translations.DICTIONARY)
+    bpy.app.translations.register(__name__ + "mod_update", update_translations.DICTIONARY)
 
     # Previews
     # ---------------------------
@@ -186,6 +187,7 @@ def unregister():
     del bpy.types.Scene.jewelcraft
 
     bpy.app.translations.unregister(__name__)
+    bpy.app.translations.unregister(__name__ + "mod_update")
 
     # Previews
     # ---------------------------
