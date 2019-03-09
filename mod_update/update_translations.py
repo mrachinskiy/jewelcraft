@@ -22,21 +22,22 @@
 _ru = {
     "*": {
         # Interface
+        "Automatically check for updates": "Автоматически проверять наличие обновлений",
+        "Update to pre-release": "Обновление до пре-релиза",
+        "Auto-check Interval": "Интервал автопроверки",
+        "Once a day": "Раз в день",
+        "Once a week": "Раз в неделю",
+        "Once a month": "Раз в месяц",
         "Update completed": "Обновление завершено",
         "Close Blender to complete the installation": "Для завершения установки закройте Blender",
         "Installing...": "Установка...",
         "Checking...": "Проверка...",
         "Update {} is available": "Доступно обновление {}",
-        "Last checked never": "Последняя проверка никогда",
-        "Last checked today": "Последняя проверка сегодня",
-        "Last checked yesterday": "Последняя проверка вчера",
-        "Last checked {} days ago": "Последняя проверка {} дней назад",
-        "Automatically check for updates": "Автоматически проверять наличие обновлений",
-        "Auto-check Interval": "Интервал автопроверки",
-        "Once a day": "Раз в день",
-        "Once a week": "Раз в неделю",
-        "Once a month": "Раз в месяц",
-        "Update to pre-release": "Обновление до пре-релиза",
+        "Last checked": "Предыдущая проверка",
+        "never": "никогда",
+        "today": "сегодня",
+        "yesterday": "вчера",
+        "days ago": "дней назад",
         # Tooltips
         "Check for new add-on release": "Проверить наличие новой версии дополнения",
         "Download and install new version of the add-on": "Загрузить и установить новую версию дополнения",
@@ -63,7 +64,6 @@ def translation_dict(x):
     d = {}
 
     for ctxt, msgs in x.items():
-
         for msg_key, msg_translation in msgs.items():
             d[(ctxt, msg_key)] = msg_translation
 

@@ -404,7 +404,6 @@ def translation_dict(x):
     d = {}
 
     for ctxt, msgs in x.items():
-
         for msg_key, msg_translation in msgs.items():
             d[(ctxt, msg_key)] = msg_translation
 

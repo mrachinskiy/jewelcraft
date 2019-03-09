@@ -27,7 +27,8 @@ import bpy
 from .. import var
 
 
-def _save_state_get(reset=False):
+def _save_state_get():
+    import datetime
     import json
 
     data = {
@@ -35,9 +36,13 @@ def _save_state_get(reset=False):
         "last_check": 0,
     }
 
-    if not reset and os.path.exists(var.UPDATE_SAVE_STATE_FILEPATH):
+    if os.path.exists(var.UPDATE_SAVE_STATE_FILEPATH):
         with open(var.UPDATE_SAVE_STATE_FILEPATH, "r", encoding="utf-8") as file:
             data.update(json.load(file))
+
+            last_check = datetime.date.fromtimestamp(data["last_check"])
+            delta = datetime.date.today() - last_check
+            var.update_days_passed = delta.days
 
     return data
 
@@ -46,6 +51,7 @@ def _save_state_set():
     import datetime
     import json
 
+    var.update_days_passed = 0
     data = {
         "update_available": var.update_available,
         "last_check": int(datetime.datetime.now().timestamp()),
@@ -64,18 +70,12 @@ def _runtime_state_set(in_progress=False):
 
 
 def _update_check(use_force_check):
-    import datetime
     import re
     import urllib.request
     import json
 
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     save_state = _save_state_get()
-
-    if save_state["last_check"]:
-        last_check = datetime.date.fromtimestamp(save_state["last_check"])
-        delta = datetime.date.today() - last_check
-        var.update_days_passed = delta.days
 
     if not use_force_check and not prefs.update_use_auto_check:
         return
@@ -106,8 +106,6 @@ def _update_check(use_force_check):
                 if update_version > var.UPDATE_CURRENT_VERSION:
                     break
                 else:
-                    if var.update_days_passed is None:
-                        var.update_days_passed = 0
                     _save_state_set()
                     _runtime_state_set(in_progress=False)
                     return
@@ -120,10 +118,11 @@ def _update_check(use_force_check):
                     break
 
             prerelease_note = " (pre-release)" if release["prerelease"] else ""
-            var.update_download_url = asset["browser_download_url"]
-            var.update_html_url = release["html_url"]
+
             var.update_available = True
             var.update_version = release["tag_name"] + prerelease_note
+            var.update_download_url = asset["browser_download_url"]
+            var.update_html_url = release["html_url"]
 
     _save_state_set()
     _runtime_state_set(in_progress=False)
