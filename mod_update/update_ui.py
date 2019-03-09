@@ -46,7 +46,6 @@ def prefs_ui(self, layout):
         row.label(text="Close Blender to complete the installation", icon="ERROR")
 
     elif var.update_in_progress:
-
         if var.update_available:
             row.label(text="Installing...")
         else:
@@ -54,14 +53,18 @@ def prefs_ui(self, layout):
 
     elif var.update_available:
         row.label(text=_("Update {} is available").format(var.update_version))
-    elif var.update_days_passed is None:
-        row.label(text="Last checked never")
-    elif var.update_days_passed == 0:
-        row.label(text="Last checked today")
-    elif var.update_days_passed == 1:
-        row.label(text="Last checked yesterday")
+
     else:
-        row.label(text=_("Last checked {} days ago").format(var.update_days_passed))
+        if var.update_days_passed is None:
+            msg_date = _("never")
+        elif var.update_days_passed == 0:
+            msg_date = _("today")
+        elif var.update_days_passed == 1:
+            msg_date = _("yesterday")
+        else:
+            msg_date = "{} {}".format(var.update_days_passed, _("days ago"))
+
+        row.label(text="{} {}".format(_("Last checked"), msg_date))
 
     col = layout.row()
     col.alignment = "CENTER"
