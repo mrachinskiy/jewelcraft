@@ -65,3 +65,8 @@ class WM_OT_jewelcraft_update_whats_new(Operator):
         import webbrowser
         webbrowser.open(var.update_html_url)
         return {"FINISHED"}
+
+
+OP_IDNAME_CHECK = WM_OT_jewelcraft_update_check.bl_idname
+OP_IDNAME_DOWNLOAD = WM_OT_jewelcraft_update_download.bl_idname
+OP_IDNAME_WHATS_NEW = WM_OT_jewelcraft_update_whats_new.bl_idname
