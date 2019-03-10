@@ -73,6 +73,7 @@ def _update_check(use_force_check):
     import re
     import urllib.request
     import json
+    import ssl
 
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     save_state = _save_state_get()
@@ -87,8 +88,9 @@ def _update_check(use_force_check):
         return
 
     _runtime_state_set(in_progress=True)
+    ssl_context = ssl.SSLContext()
 
-    with urllib.request.urlopen(var.UPDATE_RELEASES_URL) as response:
+    with urllib.request.urlopen(var.UPDATE_RELEASES_URL, context=ssl_context) as response:
         data = json.load(response)
 
         for release in data:
@@ -110,7 +112,7 @@ def _update_check(use_force_check):
                     _runtime_state_set(in_progress=False)
                     return
 
-        with urllib.request.urlopen(release["assets_url"]) as response:
+        with urllib.request.urlopen(release["assets_url"], context=ssl_context) as response:
             data = json.load(response)
 
             for asset in data:
@@ -133,10 +135,12 @@ def _update_download():
     import zipfile
     import urllib.request
     import shutil
+    import ssl
 
     _runtime_state_set(in_progress=True)
+    ssl_context = ssl.SSLContext()
 
-    with urllib.request.urlopen(var.update_download_url) as response:
+    with urllib.request.urlopen(var.update_download_url, context=ssl_context) as response:
         with zipfile.ZipFile(io.BytesIO(response.read())) as zfile:
             addons_dir = os.path.dirname(var.ADDON_DIR)
             extract_dirname = zfile.namelist()[0]
