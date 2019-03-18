@@ -22,7 +22,7 @@
 from bpy.types import Operator
 
 from .. import var
-from . import update_lib
+from . import lib
 
 
 class WM_OT_jewelcraft_update_check(Operator):
@@ -35,7 +35,7 @@ class WM_OT_jewelcraft_update_check(Operator):
         if var.update_in_progress:
             return {"CANCELLED"}
 
-        update_lib.update_init_check(use_force_check=True)
+        lib.update_init_check(use_force_check=True)
 
         return {"FINISHED"}
 
@@ -50,7 +50,7 @@ class WM_OT_jewelcraft_update_download(Operator):
         if var.update_in_progress:
             return {"CANCELLED"}
 
-        update_lib.update_init_download()
+        lib.update_init_download()
 
         return {"FINISHED"}
 

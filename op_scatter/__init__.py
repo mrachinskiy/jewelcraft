@@ -22,11 +22,11 @@
 from bpy.types import Operator
 from bpy.props import IntProperty, FloatProperty, BoolProperty
 
-from .scatter_draw import Draw
+from .scatter_ui import UI
 from .scatter_func import Scatter
 
 
-class OBJECT_OT_jewelcraft_curve_scatter(Draw, Scatter, Operator):
+class OBJECT_OT_jewelcraft_curve_scatter(UI, Scatter, Operator):
     bl_label = "JewelCraft Curve Scatter"
     bl_description = "Scatter selected object along active curve"
     bl_idname = "object.jewelcraft_curve_scatter"
@@ -47,7 +47,7 @@ class OBJECT_OT_jewelcraft_curve_scatter(Draw, Scatter, Operator):
     spacing: FloatProperty(name="Spacing", default=0.2, unit="LENGTH")
 
 
-class OBJECT_OT_jewelcraft_curve_redistribute(Draw, Scatter, Operator):
+class OBJECT_OT_jewelcraft_curve_redistribute(UI, Scatter, Operator):
     bl_label = "JewelCraft Curve Redistribute"
     bl_description = "Redistribute selected objects along curve"
     bl_idname = "object.jewelcraft_curve_redistribute"

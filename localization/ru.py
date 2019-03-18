@@ -19,10 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import bpy
-
-
-_ru = {
+dictionary = {
     "*": {
         # Interface
         "Asset Manager": "Менеджер ассетов",
@@ -394,49 +391,3 @@ _ru = {
         "Rename Set": "Переименовать набор",
     },
 }
-
-
-# Translation dictionary
-# -----------------------------
-
-
-def translation_dict(x):
-    d = {}
-
-    for ctxt, msgs in x.items():
-        for msg_key, msg_translation in msgs.items():
-            d[(ctxt, msg_key)] = msg_translation
-
-    return d
-
-
-DICTIONARY = {"ru_RU": translation_dict(_ru)}
-
-del _ru
-
-
-# Utility
-# -----------------------------
-
-
-def iface_lang():
-    view = bpy.context.preferences.view
-
-    if view.use_international_fonts and view.use_translate_interface:
-        return view.language
-
-    return "DEFAULT"
-
-
-def gettext_prep(text, ctxt="*"):
-    """gettext implementation for Product Report"""
-
-    lang = bpy.context.preferences.addons[__package__].preferences.product_report_lang
-
-    if lang == "AUTO":
-        lang = bpy.app.translations.locale
-
-    if lang in DICTIONARY:
-        return DICTIONARY[lang].get((ctxt, text), text)
-
-    return text

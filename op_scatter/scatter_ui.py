@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-class Draw:
+class UI:
 
     def draw(self, context):
         layout = self.layout

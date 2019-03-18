@@ -22,7 +22,7 @@
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
-from . import update_ops
+from . import operators
 
 
 def prefs_ui(self, layout):
@@ -40,7 +40,7 @@ def prefs_ui(self, layout):
 
     if var.update_completed:
         row.label(text="Update completed")
-        row.operator(update_ops.OP_IDNAME_WHATS_NEW)
+        row.operator(operators.OP_IDNAME_WHATS_NEW)
 
         row = layout.row(align=True)
         row.alignment = "CENTER"
@@ -73,9 +73,9 @@ def prefs_ui(self, layout):
     col.enabled = not var.update_in_progress and not var.update_completed
 
     if var.update_available:
-        col.operator(update_ops.OP_IDNAME_DOWNLOAD)
+        col.operator(operators.OP_IDNAME_DOWNLOAD)
     else:
-        col.operator(update_ops.OP_IDNAME_CHECK)
+        col.operator(operators.OP_IDNAME_CHECK)
 
 
 def sidebar_ui(self, context):
@@ -88,7 +88,7 @@ def sidebar_ui(self, context):
 
     if var.update_completed:
         row.label(text="Update completed")
-        row.operator(update_ops.OP_IDNAME_WHATS_NEW)
+        row.operator(operators.OP_IDNAME_WHATS_NEW)
 
         row = layout.row(align=True)
         row.alignment = "CENTER"
@@ -104,4 +104,4 @@ def sidebar_ui(self, context):
     col.alignment = "CENTER"
     col.scale_y = 1.5
     col.enabled = not var.update_in_progress and not var.update_completed
-    col.operator(update_ops.OP_IDNAME_DOWNLOAD)
+    col.operator(operators.OP_IDNAME_DOWNLOAD)

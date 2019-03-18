@@ -56,20 +56,16 @@ _ru = {
 }
 
 
-# Translation dictionary
-# -----------------------------
-
-
-def translation_dict(x):
+def _translation_dict(dictionary):
     d = {}
 
-    for ctxt, msgs in x.items():
+    for ctxt, msgs in dictionary.items():
         for msg_key, msg_translation in msgs.items():
             d[(ctxt, msg_key)] = msg_translation
 
     return d
 
 
-DICTIONARY = {"ru_RU": translation_dict(_ru)}
+DICTIONARY = {"ru_RU": _translation_dict(_ru)}
 
-del _ru
+_ru.clear()

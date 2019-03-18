@@ -23,8 +23,8 @@ import bpy
 from bpy.props import EnumProperty, FloatProperty
 from bpy.types import Operator
 
-from .. import var, dynamic_lists
-from ..lib import asset
+from .. import var
+from ..lib import asset, dynamic_list
 
 
 class OBJECT_OT_jewelcraft_gem_add(Operator):
@@ -33,8 +33,8 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
     bl_idname = "object.jewelcraft_gem_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    cut: EnumProperty(name="Cut", items=dynamic_lists.cuts)
-    stone: EnumProperty(name="Stone", items=dynamic_lists.stones)
+    cut: EnumProperty(name="Cut", items=dynamic_list.cuts)
+    stone: EnumProperty(name="Stone", items=dynamic_list.stones)
     size: FloatProperty(
         name="Size",
         description="Gem size",
@@ -59,6 +59,7 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
     def execute(self, context):
         scene = context.scene
         view_layer = context.view_layer
+        space_data = context.space_data
         stone_name = asset.get_name(self.stone)
         cut_name = asset.get_name(self.cut)
         color = var.STONE_COLOR.get(self.stone) or self.color
@@ -69,6 +70,9 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
         imported = asset.asset_import(filepath=var.GEM_ASSET_FILEPATH, ob_name=cut_name)
         ob = imported.objects[0]
         context.collection.objects.link(ob)
+
+        if space_data.local_view:
+            ob.local_view_set(space_data, True)
 
         ob.scale = ob.scale * self.size
         ob.location = scene.cursor.location
@@ -100,8 +104,8 @@ class OBJECT_OT_jewelcraft_gem_edit(Operator):
     bl_idname = "object.jewelcraft_gem_edit"
     bl_options = {"REGISTER", "UNDO"}
 
-    cut: EnumProperty(name="Cut", items=dynamic_lists.cuts, options={"SKIP_SAVE"})
-    stone: EnumProperty(name="Stone", items=dynamic_lists.stones, options={"SKIP_SAVE"})
+    cut: EnumProperty(name="Cut", items=dynamic_list.cuts, options={"SKIP_SAVE"})
+    stone: EnumProperty(name="Stone", items=dynamic_list.stones, options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
@@ -181,8 +185,8 @@ class OBJECT_OT_jewelcraft_gem_id_add(Operator):
     bl_idname = "object.jewelcraft_gem_id_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    cut: EnumProperty(name="Cut", items=dynamic_lists.cuts)
-    stone: EnumProperty(name="Stone", items=dynamic_lists.stones)
+    cut: EnumProperty(name="Cut", items=dynamic_list.cuts)
+    stone: EnumProperty(name="Stone", items=dynamic_list.stones)
 
     def draw(self, context):
         layout = self.layout

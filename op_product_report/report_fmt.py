@@ -24,8 +24,23 @@ from math import pi
 import bpy
 
 from .. import var
+from ..localization import DICTIONARY
 from ..lib import unit, asset
-from ..translations import gettext_prep as _
+
+
+def _gettext_prep(text, ctxt="*"):
+    lang = bpy.context.preferences.addons[var.ADDON_ID].preferences.product_report_lang
+
+    if lang == "AUTO":
+        lang = bpy.app.translations.locale
+
+    if lang == "es_ES":
+        lang = "es"
+
+    if lang in DICTIONARY:
+        return DICTIONARY[lang].get((ctxt, text), text)
+
+    return text
 
 
 def to_int(x):
@@ -34,7 +49,7 @@ def to_int(x):
     return x
 
 
-def ct_calc(stone, cut, l, w, h):
+def _ct_calc(stone, cut, l, w, h):
     dens = var.STONE_DENSITY.get(stone)
     corr = var.CUT_VOLUME_CORRECTION.get(cut)
 
@@ -63,6 +78,7 @@ def ct_calc(stone, cut, l, w, h):
 
 def data_format(data):
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+    _ = _gettext_prep
     report = ""
 
     if data["size"]:
@@ -120,7 +136,7 @@ def data_format(data):
 
                     # Values
                     # ---------------------------
-                    ct = ct_calc(stone, cut, l=size[1], w=size[0], h=size[2])
+                    ct = _ct_calc(stone, cut, l=size[1], w=size[0], h=size[2])
                     qty = gems[stone][cut][size]
                     qty_ct = round(qty * ct, 3)
 

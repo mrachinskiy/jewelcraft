@@ -25,8 +25,7 @@ import bpy
 from bpy.types import Operator
 from bpy.props import StringProperty
 
-from .. import dynamic_lists
-from ..lib import asset
+from ..lib import asset, dynamic_list
 
 
 class Setup:
@@ -63,7 +62,7 @@ class WM_OT_jewelcraft_asset_folder_create(Operator, Setup):
 
         if not os.path.exists(folder):
             os.makedirs(folder)
-            dynamic_lists.asset_folder_list_refresh()
+            dynamic_list.asset_folder_list_refresh()
             self.props.asset_folder = self.folder_name
 
         return {"FINISHED"}
@@ -99,7 +98,7 @@ class WM_OT_jewelcraft_asset_folder_rename(Operator, Setup):
 
         if os.path.exists(self.folder):
             os.rename(self.folder, folder_new)
-            dynamic_lists.asset_folder_list_refresh()
+            dynamic_list.asset_folder_list_refresh()
             self.props.asset_folder = self.folder_name
 
         return {"FINISHED"}
@@ -116,6 +115,6 @@ class WM_OT_jewelcraft_asset_ui_refresh(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        dynamic_lists.asset_folder_list_refresh()
-        dynamic_lists.asset_list_refresh(hard=True)
+        dynamic_list.asset_folder_list_refresh()
+        dynamic_list.asset_list_refresh(hard=True)
         return {"FINISHED"}

@@ -25,7 +25,7 @@ from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
 
-from .. import dynamic_lists
+from ..lib import dynamic_list
 
 
 class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
@@ -40,8 +40,8 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
     filter_similar: BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     size: FloatProperty(name="Size", default=1.0, min=0.0, step=10, precision=2, unit="LENGTH")
-    stone: EnumProperty(name="Stone", items=dynamic_lists.stones)
-    cut: EnumProperty(name="Cut", items=dynamic_lists.cuts)
+    stone: EnumProperty(name="Stone", items=dynamic_list.stones)
+    cut: EnumProperty(name="Cut", items=dynamic_list.cuts)
 
     use_extend: BoolProperty(name="Extend", description="Extend selection")
     use_select_children: BoolProperty(name="Select Children")

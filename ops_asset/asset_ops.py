@@ -26,8 +26,8 @@ from bpy.types import Operator
 from bpy.props import StringProperty, BoolProperty
 import bpy.utils.previews
 
-from .. import var, dynamic_lists
-from ..lib import asset
+from .. import var
+from ..lib import asset, dynamic_list
 
 
 class Setup:
@@ -70,7 +70,7 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
 
         asset.asset_export(folder=self.folder, filename=self.asset_name + ".blend")
         asset.render_preview(filepath=filepath + ".png")
-        dynamic_lists.asset_list_refresh()
+        dynamic_list.asset_list_refresh()
         self.props.asset_list = self.asset_name
 
         context.area.tag_redraw()
@@ -100,7 +100,7 @@ class WM_OT_jewelcraft_asset_remove_from_library(Operator, Setup):
         return bool(context.window_manager.jewelcraft.asset_list)
 
     def execute(self, context):
-        asset_list = dynamic_lists.assets(self, context)
+        asset_list = dynamic_list.assets(self, context)
         last = self.asset_name == asset_list[-1][0]
         iterable = len(asset_list) > 1
 
@@ -110,7 +110,7 @@ class WM_OT_jewelcraft_asset_remove_from_library(Operator, Setup):
         if os.path.exists(self.filepath + ".png"):
             os.remove(self.filepath + ".png")
 
-        dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
+        dynamic_list.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
 
         if last and iterable:
             self.props.asset_list = asset_list[-2][0]
@@ -167,7 +167,7 @@ class WM_OT_jewelcraft_asset_rename(Operator, Setup):
         if os.path.exists(file_preview_current):
             os.rename(file_preview_current, file_preview_new)
 
-        dynamic_lists.asset_list_refresh()
+        dynamic_list.asset_list_refresh()
         self.props.asset_list = self.asset_name
 
         context.area.tag_redraw()
@@ -210,7 +210,7 @@ class WM_OT_jewelcraft_asset_preview_replace(Operator, Setup):
 
     def execute(self, context):
         asset.render_preview(filepath=self.filepath + ".png")
-        dynamic_lists.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
+        dynamic_list.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
         context.area.tag_redraw()
         return {"FINISHED"}
 
@@ -235,6 +235,8 @@ class WM_OT_jewelcraft_asset_import(Operator, Setup):
         return bool(context.window_manager.jewelcraft.asset_list)
 
     def execute(self, context):
+        space_data = context.space_data
+        use_local_view = bool(space_data.local_view)
         collection = context.collection
         selected = list(context.selected_objects)
 
@@ -247,6 +249,9 @@ class WM_OT_jewelcraft_asset_import(Operator, Setup):
         for ob in obs:
             collection.objects.link(ob)
             ob.select_set(True)
+
+            if use_local_view:
+                ob.local_view_set(space_data, True)
 
         if len(obs) == 1:
             ob.location = context.scene.cursor.location

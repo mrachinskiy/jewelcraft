@@ -22,9 +22,8 @@
 import bpy
 from bpy.types import Panel, Menu, UIList
 
-from . import var
+from . import var, mod_update
 from .lib import asset
-from .mod_update import update_ui
 
 
 # Utils
@@ -167,7 +166,7 @@ class VIEW3D_PT_jewelcraft_update(Panel, Setup):
         return var.update_available
 
     def draw(self, context):
-        update_ui.sidebar_ui(self, context)
+        mod_update.sidebar_ui(self, context)
 
 
 class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
