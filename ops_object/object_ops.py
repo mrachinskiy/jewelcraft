@@ -62,6 +62,8 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
         if not axes:
             return {"FINISHED"}
 
+        space_data = context.space_data
+        use_local_view = bool(space_data.local_view)
         cursor_offset = context.scene.cursor.location * 2
         is_odd_axis_count = len(axes) != 2
         rotate_types = {"CAMERA", "LAMP", "SPEAKER", "FONT"}
@@ -79,6 +81,9 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
 
             for coll in ob_orig.users_collection:
                 coll.objects.link(ob)
+
+            if use_local_view:
+                ob.local_view_set(space_data, True)
 
             ob.select_set(True)
             ob_orig.select_set(False)
@@ -153,6 +158,7 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
     apply_scale: BoolProperty(name="Apply Scale", default=True)
 
     def execute(self, context):
+        space_data = context.space_data
         obs = context.selected_objects
         ob = context.object or obs[0]
 
@@ -175,6 +181,9 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
 
         for coll in ob.users_collection:
             coll.objects.link(df)
+
+        if space_data.local_view:
+            df.local_view_set(space_data, True)
 
         df.location = ob.location
         df.instance_type = "FACES"

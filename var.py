@@ -156,7 +156,7 @@ STONE_COLOR = {
     "PERIDOT": (0.201, 0.748, 0.026, 1.0),
 }
 
-preview_collections = {}  # Store icons
+preview_collections = {}
 
 
 # mod_update

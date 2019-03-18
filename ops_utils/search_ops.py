@@ -22,7 +22,7 @@
 from bpy.types import Operator
 from bpy.props import EnumProperty
 
-from .. import dynamic_lists
+from ..lib import dynamic_list
 
 
 class VIEW3D_OT_jewelcraft_search_stone(Operator):
@@ -32,7 +32,7 @@ class VIEW3D_OT_jewelcraft_search_stone(Operator):
     bl_property = "stone"
     bl_options = {"INTERNAL"}
 
-    stone: EnumProperty(items=dynamic_lists.stones)
+    stone: EnumProperty(items=dynamic_list.stones)
 
     def execute(self, context):
         context.window_manager.jewelcraft.gem_stone = self.stone
@@ -51,7 +51,7 @@ class VIEW3D_OT_jewelcraft_search_asset(Operator):
     bl_property = "asset"
     bl_options = {"INTERNAL"}
 
-    asset: EnumProperty(items=dynamic_lists.assets)
+    asset: EnumProperty(items=dynamic_list.assets)
 
     def execute(self, context):
         context.window_manager.jewelcraft.asset_list = self.asset

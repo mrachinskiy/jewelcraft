@@ -26,12 +26,12 @@ from bpy.props import BoolProperty, FloatProperty, IntProperty
 
 from .. import var
 from ..lib import asset
-from .prongs_draw import Draw
+from .prongs_ui import UI
 from .prongs_presets import init_presets
 from .prongs_mesh import create_prongs
 
 
-class OBJECT_OT_jewelcraft_prongs_add(Draw, Operator):
+class OBJECT_OT_jewelcraft_prongs_add(UI, Operator):
     bl_label = "JewelCraft Make Prongs"
     bl_description = "Create prongs for selected gems"
     bl_idname = "object.jewelcraft_prongs_add"

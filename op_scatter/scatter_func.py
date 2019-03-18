@@ -27,6 +27,8 @@ from ..lib import mesh, asset
 class Scatter:
 
     def execute(self, context):
+        space_data = context.space_data
+        use_local_view = bool(space_data.local_view)
         collection = context.collection
         start = self.start
         end = self.end
@@ -117,6 +119,9 @@ class Scatter:
             for _ in range(num):
                 ob_copy = ob.copy()
                 collection.objects.link(ob_copy)
+
+                if use_local_view:
+                    ob_copy.local_view_set(space_data, True)
 
                 con = ob_copy.constraints.new("FOLLOW_PATH")
                 con.target = curve

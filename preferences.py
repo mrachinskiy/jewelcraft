@@ -31,9 +31,8 @@ from bpy.props import (
     CollectionProperty,
 )
 
-from . import dynamic_lists
-from .lib import widgets
-from .mod_update import update_ui
+from . import mod_update
+from .lib import widget, dynamic_list
 
 
 # Custom properties
@@ -97,8 +96,8 @@ def property_split(data, layout, label, prop, ratio=0.0):
 
 
 def update_asset_refresh(self, context):
-    dynamic_lists.asset_folder_list_refresh()
-    dynamic_lists.asset_list_refresh(hard=True)
+    dynamic_list.asset_folder_list_refresh()
+    dynamic_list.asset_list_refresh(hard=True)
 
 
 class JewelCraftPreferences(AddonPreferences):
@@ -154,18 +153,18 @@ class JewelCraftPreferences(AddonPreferences):
     weighting_hide_default_sets: BoolProperty(
         name="Hide default sets",
         description="Hide default JewelCraft sets from weighting sets menu",
-        update=dynamic_lists.weighting_set_refresh,
+        update=dynamic_list.weighting_set_refresh,
     )
     weighting_set_use_custom_dir: BoolProperty(
         name="Use custom library folder",
         description="Set custom asset library folder, if disabled the default library folder will be used",
-        update=dynamic_lists.weighting_set_refresh,
+        update=dynamic_list.weighting_set_refresh,
     )
     weighting_set_custom_dir: StringProperty(
         name="Library Folder Path",
         description="Custom library folder path",
         subtype="DIR_PATH",
-        update=dynamic_lists.weighting_set_refresh,
+        update=dynamic_list.weighting_set_refresh,
     )
     weighting_materials: PointerProperty(type=JewelCraftMaterialsList)
     weighting_list_show_composition: BoolProperty(
@@ -182,6 +181,7 @@ class JewelCraftPreferences(AddonPreferences):
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
             ("en_US", "English (English)", ""),
+            ("es", "Spanish (Español)", ""),
             ("ru_RU", "Russian (Русский)", ""),
         ),
     )
@@ -349,7 +349,7 @@ class JewelCraftPreferences(AddonPreferences):
             col.prop(self, "color_cutter")
 
         elif self.active_section == "UPDATES":
-            update_ui.prefs_ui(self, box)
+            mod_update.prefs_ui(self, box)
 
 
 # Window manager properties
@@ -357,28 +357,28 @@ class JewelCraftPreferences(AddonPreferences):
 
 
 def update_asset_list(self, context):
-    dynamic_lists.asset_list_refresh()
-    item_id = dynamic_lists.assets(self, context)[0][0]
+    dynamic_list.asset_list_refresh()
+    item_id = dynamic_list.assets(self, context)[0][0]
 
     if item_id:
         self.asset_list = item_id
 
 
 class JewelCraftPropertiesWm(PropertyGroup):
-    gem_cut: EnumProperty(items=dynamic_lists.cuts)
-    gem_stone: EnumProperty(name="Stone", description="Stone", items=dynamic_lists.stones)
-    widget_toggle: BoolProperty(description="Enable widgets drawing", update=widgets.handler_toggle)
+    gem_cut: EnumProperty(items=dynamic_list.cuts)
+    gem_stone: EnumProperty(name="Stone", description="Stone", items=dynamic_list.stones)
+    widget_toggle: BoolProperty(description="Enable widgets drawing", update=widget.handler_toggle)
     asset_folder: EnumProperty(
         name="Category",
         description="Asset category",
-        items=dynamic_lists.asset_folders,
+        items=dynamic_list.asset_folders,
         update=update_asset_list,
     )
-    asset_list: EnumProperty(items=dynamic_lists.assets)
+    asset_list: EnumProperty(items=dynamic_list.assets)
     weighting_set: EnumProperty(
         name="Weighting Set",
         description="Set of materials for weighting",
-        items=dynamic_lists.weighting_set,
+        items=dynamic_list.weighting_set,
     )
 
 

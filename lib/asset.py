@@ -209,6 +209,9 @@ def render_preview(filepath="//"):
 
 
 def bm_to_scene(bm, name="New object", color=None):
+    space_data = bpy.context.space_data
+    use_local_view = bool(space_data.local_view)
+
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
     bm.free()
@@ -220,6 +223,9 @@ def bm_to_scene(bm, name="New object", color=None):
         for coll in parent.users_collection:
             coll.objects.link(ob)
 
+        if use_local_view:
+            ob.local_view_set(space_data, True)
+
         ob.location = parent.location
         ob.rotation_euler = parent.rotation_euler
         ob.parent = parent
@@ -230,6 +236,8 @@ def bm_to_scene(bm, name="New object", color=None):
 
 def ob_copy_and_parent(ob, parents):
     is_orig = True
+    space_data = bpy.context.space_data
+    use_local_view = bool(space_data.local_view)
 
     for parent in parents:
         if is_orig:
@@ -240,6 +248,9 @@ def ob_copy_and_parent(ob, parents):
 
         for coll in parent.users_collection:
             coll.objects.link(ob_copy)
+
+        if use_local_view:
+            ob_copy.local_view_set(space_data, True)
 
         ob_copy.select_set(True)
         ob.location = parent.location
@@ -254,12 +265,17 @@ def ob_copy_to_faces(ob):
     if mats:
         ob.matrix_world = mats.pop()
         collection = bpy.context.collection
+        space_data = bpy.context.space_data
+        use_local_view = bool(space_data.local_view)
 
         for mat in mats:
             ob_copy = ob.copy()
             collection.objects.link(ob_copy)
             ob_copy.matrix_world = mat
             ob_copy.select_set(True)
+
+            if use_local_view:
+                ob_copy.local_view_set(space_data, True)
 
 
 def apply_scale(ob):

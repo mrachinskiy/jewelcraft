@@ -24,16 +24,24 @@ import os
 import bpy.utils.previews
 from bpy.app.translations import pgettext_iface as _
 
-from . import var
-from .lib import asset
-from .translations import iface_lang
+from .. import var
+from . import asset
 
 
 _cache = {}
 
 
+def _iface_lang(context):
+    view = context.preferences.view
+
+    if view.use_international_fonts and view.use_translate_interface:
+        return view.language
+
+    return "DEFAULT"
+
+
 def cuts(self, context):
-    lang = iface_lang()
+    lang = _iface_lang(context)
 
     if _cache.get("cuts__lang") == lang:
         return _cache["cuts__list"]
@@ -77,7 +85,7 @@ def cuts(self, context):
 
 
 def stones(self, context):
-    lang = iface_lang()
+    lang = _iface_lang(context)
 
     if _cache.get("stones__lang") == lang:
         return _cache["stones__list"]
@@ -120,7 +128,7 @@ def weighting_set(self, context):
     if "weighting_set__list" in _cache:
         return _cache["weighting_set__list"]
 
-    prefs = context.preferences.addons[__package__].preferences
+    prefs = context.preferences.addons[var.ADDON_ID].preferences
     list_ = []
 
     if not prefs.weighting_hide_default_sets:

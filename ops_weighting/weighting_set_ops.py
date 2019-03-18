@@ -26,8 +26,8 @@ from bpy.types import Operator
 from bpy.props import StringProperty
 from bpy.app.translations import pgettext_iface as _
 
-from .. import var, dynamic_lists
-from ..lib import asset
+from .. import var
+from ..lib import asset, dynamic_list
 
 
 class Setup:
@@ -103,7 +103,7 @@ class WM_OT_jewelcraft_weighting_set_add(Operator, Setup):
 
         materials_export_to_file(self.materials, filepath)
 
-        dynamic_lists.weighting_set_refresh()
+        dynamic_list.weighting_set_refresh()
         self.props.weighting_set = set_name
 
         return {"FINISHED"}
@@ -136,15 +136,15 @@ class WM_OT_jewelcraft_weighting_set_del(Operator, Setup, EditCheck):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        list_ = [x[0] for x in dynamic_lists.weighting_set(self, context)]
+        list_ = [x[0] for x in dynamic_list.weighting_set(self, context)]
         index = max(0, list_.index(self.filename) - 1)
 
         if os.path.exists(self.filepath):
             os.remove(self.filepath)
 
-        dynamic_lists.weighting_set_refresh()
+        dynamic_list.weighting_set_refresh()
 
-        list_ = [x[0] for x in dynamic_lists.weighting_set(self, context)]
+        list_ = [x[0] for x in dynamic_list.weighting_set(self, context)]
         if list_:
             self.props.weighting_set = list_[index]
 
@@ -189,7 +189,7 @@ class WM_OT_jewelcraft_weighting_set_rename(Operator, Setup, EditCheck):
             return {"CANCELLED"}
 
         os.rename(self.filepath, filepath_new)
-        dynamic_lists.weighting_set_refresh()
+        dynamic_list.weighting_set_refresh()
         self.props.weighting_set = filename_new
 
         return {"FINISHED"}
@@ -207,7 +207,7 @@ class WM_OT_jewelcraft_weighting_set_refresh(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        dynamic_lists.weighting_set_refresh()
+        dynamic_list.weighting_set_refresh()
         return {"FINISHED"}
 
 

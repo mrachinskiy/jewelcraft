@@ -26,8 +26,7 @@ from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
 
 from .. import var
-from .report_data_collect import data_collect
-from .report_data_format import data_format
+from . import report_get, report_fmt
 
 
 class WM_OT_jewelcraft_product_report(Operator):
@@ -37,8 +36,8 @@ class WM_OT_jewelcraft_product_report(Operator):
 
     def execute(self, context):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
-        data_raw = data_collect()
-        data_fmt = data_format(data_raw)
+        data_raw = report_get.data_collect()
+        data_fmt = report_fmt.data_format(data_raw)
         warnf = [_(x) for x in data_raw["warn"]]
 
         # Compose text datablock
@@ -100,7 +99,7 @@ class WM_OT_jewelcraft_product_report(Operator):
 
                     if bpy.data.is_saved:
                         msg = _("Text file successfully created in the project folder")
-                        report_icon = "FILE_TICK"
+                        report_icon = "BLANK1"
                         report_type = {"INFO"}
                     else:
                         msg = _("Could not create text file, project folder does not exist")
