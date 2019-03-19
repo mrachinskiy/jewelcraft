@@ -37,7 +37,6 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
     bl_idname = "wm.jewelcraft_product_report"
 
     def execute(self, context):
-        prefs = self.prefs
         data_raw = self.data_collect(context)
         data_fmt = self.data_format(data_raw)
         warnf = [_(x) for x in data_raw["warn"]]
@@ -67,7 +66,7 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
         # Save to file
         # ---------------------------
 
-        if prefs.product_report_save and bpy.data.is_saved:
+        if self.prefs.product_report_save and bpy.data.is_saved:
 
             filepath = bpy.data.filepath
             filename = os.path.splitext(os.path.basename(filepath))[0]
@@ -79,7 +78,7 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
         # Display
         # ---------------------------
 
-        if prefs.product_report_display:
+        if self.prefs.product_report_display:
 
             bpy.ops.screen.userpref_show("INVOKE_DEFAULT")
 
@@ -89,7 +88,7 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
             space = area.spaces[0]
             space.text = txt
 
-        elif warnf or prefs.product_report_save:
+        elif warnf or self.prefs.product_report_save:
 
             def draw(self_local, context):
 
@@ -97,7 +96,7 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
                     self_local.layout.label(text=msg, icon="ERROR")
                     self.report({"WARNING"}, msg)
 
-                if prefs.product_report_save:
+                if self.prefs.product_report_save:
 
                     if bpy.data.is_saved:
                         msg = _("Text file successfully created in the project folder")
