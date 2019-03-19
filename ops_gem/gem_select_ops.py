@@ -19,8 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import collections
-
 from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
@@ -128,6 +126,8 @@ class OBJECT_OT_jewelcraft_select_doubles(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
+        import collections
+
         doubles = collections.defaultdict(list)
 
         for dup in context.depsgraph.object_instances:

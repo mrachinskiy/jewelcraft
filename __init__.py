@@ -158,8 +158,16 @@ def register():
     bpy.types.WindowManager.jewelcraft = PointerProperty(type=preferences.JewelCraftPropertiesWm)
     bpy.types.Scene.jewelcraft = PointerProperty(type=preferences.JewelCraftPropertiesScene)
 
+    # Translations
+    # ---------------------------
+
+    for k, v in localization.DICTIONARY.items():
+        if k in mod_update.DICTIONARY.keys():
+            v.update(mod_update.DICTIONARY[k])
+
     bpy.app.translations.register(__name__, localization.DICTIONARY)
-    bpy.app.translations.register(__name__ + "mod_update", mod_update.DICTIONARY)
+
+    mod_update.DICTIONARY.clear()
 
     # Previews
     # ---------------------------
@@ -191,7 +199,6 @@ def unregister():
     del bpy.types.Scene.jewelcraft
 
     bpy.app.translations.unregister(__name__)
-    bpy.app.translations.unregister(__name__ + "mod_update")
 
     # Previews
     # ---------------------------

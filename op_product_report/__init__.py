@@ -26,18 +26,20 @@ from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
 
 from .. import var
-from . import report_get, report_fmt
+from ..localization import DICTIONARY
+from .report_get import DataCollect
+from .report_fmt import DataFormat
 
 
-class WM_OT_jewelcraft_product_report(Operator):
+class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
     bl_label = "JewelCraft Product Report"
     bl_description = "Save product report to text file"
     bl_idname = "wm.jewelcraft_product_report"
 
     def execute(self, context):
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        data_raw = report_get.data_collect()
-        data_fmt = report_fmt.data_format(data_raw)
+        prefs = self.prefs
+        data_raw = self.data_collect(context)
+        data_fmt = self.data_format(data_raw)
         warnf = [_(x) for x in data_raw["warn"]]
 
         # Compose text datablock
@@ -112,3 +114,22 @@ class WM_OT_jewelcraft_product_report(Operator):
             context.window_manager.popup_menu(draw, title=_("Product Report"))
 
         return {"FINISHED"}
+
+    def gettext(self, text, ctxt="*"):
+        if self.use_gettext:
+            return DICTIONARY[self.lang].get((ctxt, text), text)
+        return text
+
+    def invoke(self, context, event):
+        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
+        self.lang = self.prefs.product_report_lang
+
+        if self.lang == "AUTO":
+            self.lang = bpy.app.translations.locale
+
+        if self.lang == "es_ES":
+            self.lang = "es"
+
+        self.use_gettext = self.lang in DICTIONARY.keys()
+
+        return self.execute(context)

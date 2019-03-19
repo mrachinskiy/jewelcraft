@@ -21,26 +21,8 @@
 
 from math import pi
 
-import bpy
-
 from .. import var
-from ..localization import DICTIONARY
 from ..lib import unit, asset
-
-
-def _gettext_prep(text, ctxt="*"):
-    lang = bpy.context.preferences.addons[var.ADDON_ID].preferences.product_report_lang
-
-    if lang == "AUTO":
-        lang = bpy.app.translations.locale
-
-    if lang == "es_ES":
-        lang = "es"
-
-    if lang in DICTIONARY:
-        return DICTIONARY[lang].get((ctxt, text), text)
-
-    return text
 
 
 def to_int(x):
@@ -76,98 +58,99 @@ def _ct_calc(stone, cut, l, w, h):
     return round(ct, 3)
 
 
-def data_format(data):
-    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    _ = _gettext_prep
-    report = ""
+class DataFormat:
 
-    if data["size"]:
-        report += "{}:\n".format(_("Size"))
-        report += "    {} {}\n\n".format(round(data["size"], 2), _("mm"))
+    def data_format(self, data):
+        _ = self.gettext
+        report = ""
 
-    if data["shank"]:
-        report += "{}:\n".format(_("Shank"))
-        report += "    {} × {} {}\n\n".format(*[round(x, 2) for x in data["shank"]], _("mm"))
+        if data["size"]:
+            report += "{}:\n".format(_("Size"))
+            report += "    {} {}\n\n".format(round(data["size"], 2), _("mm"))
 
-    if data["dim"]:
-        report += "{}:\n".format(_("Dimensions"))
-        report += "    {} × {} × {} {}\n\n".format(*[round(x, 2) for x in data["dim"]], _("mm"))
+        if data["shank"]:
+            report += "{}:\n".format(_("Shank"))
+            report += "    {} × {} {}\n\n".format(*[round(x, 2) for x in data["shank"]], _("mm"))
 
-    if data["weight"]:
+        if data["dim"]:
+            report += "{}:\n".format(_("Dimensions"))
+            report += "    {} × {} × {} {}\n\n".format(*[round(x, 2) for x in data["dim"]], _("mm"))
 
-        vol = data["weight"]
+        if data["weight"]:
 
-        # Format values
-        # ---------------------------
-        volf = "{} {}".format(round(vol, 4), _("mm³"))
+            vol = data["weight"]
 
-        materialsf = [(volf, _("Volume"))]
-        col_width = len(volf)
+            # Format values
+            # ---------------------------
+            volf = "{} {}".format(round(vol, 4), _("mm³"))
 
-        for mat in prefs.weighting_materials.values():
-            if mat.enabled:
-                density = unit.convert(mat.density, "CM3_TO_MM3")
-                weight = round(vol * density, 2)
-                weightf = "{} {}".format(weight, _("g"))
+            materialsf = [(volf, _("Volume"))]
+            col_width = len(volf)
 
-                materialsf.append((weightf, mat.name))
-                col_width = max(col_width, len(weightf))
+            for mat in self.prefs.weighting_materials.values():
+                if mat.enabled:
+                    density = unit.convert(mat.density, "CM3_TO_MM3")
+                    weight = round(vol * density, 2)
+                    weightf = "{} {}".format(weight, _("g"))
 
-        # Format list
-        # ---------------------------
-        report += "{}:\n".format(_("Weight"))
-        row = "    {value:{width}}  {name}\n"
+                    materialsf.append((weightf, mat.name))
+                    col_width = max(col_width, len(weightf))
 
-        for value, name in materialsf:
-            report += row.format(width=col_width, value=value, name=name)
+            # Format list
+            # ---------------------------
+            report += "{}:\n".format(_("Weight"))
+            row = "    {value:{width}}  {name}\n"
 
-        report += "\n"
+            for value, name in materialsf:
+                report += row.format(width=col_width, value=value, name=name)
 
-    if data["gems"]:
+            report += "\n"
 
-        gems = data["gems"]
-        gemsf = []
-        table_heading = (_("Gem"), _("Cut"), _("Size"), _("Qty"))
-        cols_width = [len(x) for x in table_heading]
+        if data["gems"]:
 
-        for stone in sorted(gems):
-            for cut in sorted(gems[stone]):
-                for size in sorted(gems[stone][cut]):
+            gems = data["gems"]
+            gemsf = []
+            table_heading = (_("Gem"), _("Cut"), _("Size"), _("Qty"))
+            cols_width = [len(x) for x in table_heading]
 
-                    # Values
-                    # ---------------------------
-                    ct = _ct_calc(stone, cut, l=size[1], w=size[0], h=size[2])
-                    qty = gems[stone][cut][size]
-                    qty_ct = round(qty * ct, 3)
+            for stone in sorted(gems):
+                for cut in sorted(gems[stone]):
+                    for size in sorted(gems[stone][cut]):
 
-                    # Format
-                    # ---------------------------
-                    stonef = _(asset.get_name(stone))
-                    cutf = _(asset.get_name(cut))
-                    qtyf = "{} {} ({} {})".format(qty, _("pcs"), qty_ct, _("ct."))
+                        # Values
+                        # ---------------------------
+                        ct = _ct_calc(stone, cut, l=size[1], w=size[0], h=size[2])
+                        qty = gems[stone][cut][size]
+                        qty_ct = round(qty * ct, 3)
 
-                    if cut in {"ROUND", "SQUARE", "ASSCHER", "OCTAGON", "FLANDERS"}:
-                        sizef = "{} {} ({} {})".format(to_int(size[1]), _("mm"), ct, _("ct."))
-                    else:
-                        sizef = "{} × {} {} ({} {})".format(to_int(size[1]), to_int(size[0]), _("mm"), ct, _("ct."))
+                        # Format
+                        # ---------------------------
+                        stonef = _(asset.get_name(stone))
+                        cutf = _(asset.get_name(cut))
+                        qtyf = "{} {} ({} {})".format(qty, _("pcs"), qty_ct, _("ct."))
 
-                    gemf = (stonef, cutf, sizef, qtyf)
-                    gemsf.append(gemf)
+                        if cut in {"ROUND", "SQUARE", "ASSCHER", "OCTAGON", "FLANDERS"}:
+                            sizef = "{} {} ({} {})".format(to_int(size[1]), _("mm"), ct, _("ct."))
+                        else:
+                            sizef = "{} × {} {} ({} {})".format(to_int(size[1]), to_int(size[0]), _("mm"), ct, _("ct."))
 
-                    # Columns width
-                    # ---------------------------
-                    for i, width in enumerate(cols_width):
-                        cols_width[i] = max(width, len(gemf[i]))
+                        gemf = (stonef, cutf, sizef, qtyf)
+                        gemsf.append(gemf)
 
-        # Format table
-        # ---------------------------
-        row = "    {{:{}}} | {{:{}}} | {{:{}}} | {{}}\n".format(*cols_width)
+                        # Columns width
+                        # ---------------------------
+                        for i, width in enumerate(cols_width):
+                            cols_width[i] = max(width, len(gemf[i]))
 
-        report += "{}:\n".format(_("Settings"))
-        report += row.format(*table_heading)
-        report += "    {}\n".format("—" * (sum(cols_width) + 10))
+            # Format table
+            # ---------------------------
+            row = "    {{:{}}} | {{:{}}} | {{:{}}} | {{}}\n".format(*cols_width)
 
-        for gemf in gemsf:
-            report += row.format(*gemf)
+            report += "{}:\n".format(_("Settings"))
+            report += row.format(*table_heading)
+            report += "    {}\n".format("—" * (sum(cols_width) + 10))
 
-    return report
+            for gemf in gemsf:
+                report += row.format(*gemf)
+
+        return report
