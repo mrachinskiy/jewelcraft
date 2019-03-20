@@ -24,7 +24,7 @@ _ru = {
         # Interface
         "Automatically check for updates": "Автоматически проверять наличие обновлений",
         "Update to pre-release": "Обновление до пре-релиза",
-        "Auto-check Interval": "Интервал автопроверки",
+        "Auto-check interval": "Интервал автопроверки",
         "Once a day": "Раз в день",
         "Once a week": "Раз в неделю",
         "Once a month": "Раз в месяц",
@@ -44,7 +44,6 @@ _ru = {
         "Open release notes in web browser": "Открыть страницу изменений в веб-браузере",
         "Automatically check for updates with specified interval":
             "Автоматически проверять наличие обновлений с указанным интервалом",
-        "Auto-check interval": "Интервал автопроверки",
         "Update add-on to pre-release version if available":
             "Обновить до пре-релизной версии (если доступно)",
     },
@@ -52,6 +51,41 @@ _ru = {
         "Check for Updates": "Проверить наличие обновлений",
         "Install Update": "Установить обновление",
         "See What's New": "Смотреть изменения",
+    },
+}
+
+_es = {
+    "*": {
+        # Interface
+        "Automatically check for updates": "Buscar actualizaciones automáticamente",
+        "Update to pre-release": "Actualizar a prelanzamiento",
+        "Auto-check interval": "Intervalo buscar automáticamente",
+        "Once a day": "Una vez al día",
+        "Once a week": "Una vez por semana",
+        "Once a month": "Una vez al mes",
+        "Update completed": "Actualización completada",
+        "Close Blender to complete the installation": "Cerrar Blender para completar la instalación",
+        "Installing...": "Instalando...",
+        "Checking...": "Revisando...",
+        "Update {} is available": "Actualización {} disponible",
+        "Last checked": "Última revisón",
+        "never": "nunca",
+        "today": "hoy",
+        "yesterday": "ayer",
+        "days ago": "hace días",
+        # Tooltips
+        "Check for new add-on release": "Buscar si hay un nuevo lanzamiento del agregado",
+        "Download and install new version of the add-on": "Descargar e instalar la nueva versión del agregado",
+        "Open release notes in web browser": "Abrir las notas de la versión en el navegador web",
+        "Automatically check for updates with specified interval":
+            "Buscar actualizaciones automáticamente con un intervalo específico",
+        "Update add-on to pre-release version if available":
+            "Actualizar agregado a versión de prelanzamiento (si está disponible)",
+    },
+    "Operator": {
+        "Check for Updates": "Buscar actualizaciones",
+        "Install Update": "Instalar actualización",
+        "See What's New": "Ver novedades",
     },
 }
 
@@ -66,6 +100,10 @@ def _translation_dict(dictionary):
     return d
 
 
-DICTIONARY = {"ru_RU": _translation_dict(_ru)}
+DICTIONARY = {
+    "es": _translation_dict(_es),
+    "ru_RU": _translation_dict(_ru),
+}
 
+_es.clear()
 _ru.clear()

@@ -19,7 +19,11 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from . import es, ru
+from . import (
+	es,
+	fr,
+	ru,
+)
 
 
 def _translation_dict(dictionary):
@@ -34,8 +38,10 @@ def _translation_dict(dictionary):
 
 DICTIONARY = {
     "es": _translation_dict(es.dictionary),
+    "fr_FR": _translation_dict(fr.dictionary),
     "ru_RU": _translation_dict(ru.dictionary),
 }
 
 es.dictionary.clear()
+fr.dictionary.clear()
 ru.dictionary.clear()
