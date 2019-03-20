@@ -118,7 +118,7 @@ class JewelCraftPreferences(AddonPreferences):
         default=True,
     )
     update_interval: EnumProperty(
-        name="Auto-check Interval",
+        name="Auto-check interval",
         description="Auto-check interval",
         items=(
             ("1", "Once a day", ""),
@@ -182,6 +182,7 @@ class JewelCraftPreferences(AddonPreferences):
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
             ("en_US", "English (English)", ""),
             ("es", "Spanish (Español)", ""),
+            ("fr_FR", "French (Français)", ""),
             ("ru_RU", "Russian (Русский)", ""),
         ),
     )

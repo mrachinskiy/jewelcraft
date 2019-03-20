@@ -238,7 +238,7 @@ dictionary = {
         "Duplicated gems": "Germas duplicadas",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
-            "ID de gemas en desuso (usar Convertir ID de Gemas Depreciadas del menú Buscar Operador)",
+            "ID de gemas en desuso (usar Convert Deprecated Gem IDs del menú Buscar Operador)",
 
         "Unknown gem IDs, carats are not calculated for marked gems (*)":
             "ID de gemas desconocidas, los quilates no se calcularon para las gemas marcadas (*)",

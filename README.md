@@ -63,9 +63,16 @@ Contributing
 
 ### Translations
 
-* Get `localization/ru.py` translation dictionary from repository.
-* Translate key messages (in English) to the language of your choice.
-* Do not add additional key value pairs to the dictionary, or change formatting.
+* Get `localization/ru.py` translation dictionary from repository and use it as an example template for your translation.
+* Example:
+  ```
+  "Save to file": "Сохранить в файл",
+  "{} duplicates found": "{} дубликатов обнаружено",
+  "Use Show Hidden/Alt H": "Используйте Show Hidden/Alt H",
+  ```
+  * On the left is the original English message, on the right is Russian translation of that message.
+  * Note that no every word has to be translated, in this example `Show Hidden` is not translated because it referencing Blender tool name.
+  * Do not add additional key value pairs to the dictionary, or change formatting.
 * After translation is done submit it back through email or pull request.
 
 
