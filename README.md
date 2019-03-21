@@ -21,7 +21,7 @@ How to install
 
 ### Blender 2.80
 
-1. [Download JewelCraft v2.3.0 (March 18 pre-release).][v2_3_0]<sup>1</sup>
+1. [Download JewelCraft v2.3.0 (March 21 pre-release).][v2_3_0]<sup>1</sup>
 2. Open `Edit` → `Preferences` → `Add-ons` category.
 3. Use `Install` to install add-on from downloaded zip archive.
 
@@ -39,7 +39,7 @@ How to install
 
 ### Blender 2.80
 
-1. [Загрузите JewelCraft v2.3.0 (пре-релиз от 18-03).][v2_3_0]<sup>1</sup>
+1. [Загрузите JewelCraft v2.3.0 (пре-релиз от 21-03).][v2_3_0]<sup>1</sup>
 2. Откройте `Edit` → `Preferences` → `Add-ons`.
 3. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.
 
