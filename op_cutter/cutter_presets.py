@@ -26,8 +26,8 @@ def init_presets(self):
 
     self.detalization = 32
 
-    self.girdle_l_ofst = 0.01
-    self.girdle_w_ofst = 0.01
+    self.girdle_l_ofst = self.gem_l * 0.01
+    self.girdle_w_ofst = self.gem_w * 0.01
 
     self.mul_1 = 0.47
     self.mul_2 = 1.4

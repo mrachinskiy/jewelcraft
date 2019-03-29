@@ -45,9 +45,7 @@ dictionary = {
         "Cutter": "Cortador",
         "Library Folder Path": "Ruta a Carpeta Biblioteca",
         "Widgets": "Controles",
-        "Selection only": "Solo Selección",
         "Use overrides": "Usar Anulaciones",
-        "Overrides only": "Solo Anulaciones",
         "Widget Color": "Color del Control",
         "Line Width": "Ancho de Línea",
         "Show composition": "Mostrar Composición",
@@ -56,6 +54,10 @@ dictionary = {
         "Composition": "Composición",
         "Warnings": "Alertas",
         "Hidden gems": "Gemas Ocultas",
+        # TODO
+        # "Show all": "",
+        # "Scene scale is not optimal": "",
+        # "Unsupported unit system": "",
         # Popup dialogs
         "Asset Name": "Nombre de Activo",
         "Category Name": "Nombre de Categoría",
@@ -105,10 +107,6 @@ dictionary = {
         "Object for weight reference": "Objeto para referencia de peso",
         "Save product report to text file": "Guardar el informe del producto en un archivo de texto",
         "Select gems by trait": "Seleccionar gemas por rasgo",
-
-        "Select duplicated gems (located in the same spot)":
-            "Seleccionar gemas duplicadas (ubicadas en el mismo lugar)",
-
         "Search stone by name": "Buscar piedra por nombre",
         "Search asset by name": "Buscar activo por nombre",
         "Scatter selected object along active curve": "Dispersión del objeto seleccionado a lo largo de la curva activa",
@@ -173,11 +171,7 @@ dictionary = {
             "Usar el nombre del objeto activo al crear un nuevo activo",
 
         "Enable widgets drawing": "Activar mostrar controles",
-        "Draw widgets only for selected objects": "Mostrar controles solo para los boejtos seleccionados",
         "Use object defined widget overrides": "Usar las anulaciones de los controles definidos por el objeto",
-
-        "Display only object defined widget overrides":
-            "Mostrar solo las anulaciones de los controles definidos por el objeto",
 
         "Draw widgets in front of objects": "Mostrar los controles por delante de los objetos",
 
@@ -231,11 +225,20 @@ dictionary = {
             "Activo padre importado a los objetos seleccionados "
             "(Atajo: mantener presionada la tecla Alt al usar la herramienta)"
         ),
+
+        #TODO
+        # "Select gems that are less than 0.1 mm distance from each other or overlapping":
+        #     "",
+
+        # "Display spacing widget for all visible gems": "",
+
+        # "Set optimal unit settings for jewelry modelling":
+        #     "",
+
         # Reports
         "WARNING": "ADVERTENCIA",
         "Possible gem dupli-face leftovers": "Posibles restos de Duplicados en Caras de gemas",
         "Hidden gems (use Show Hidden/Alt H)": "Ocultar gemas (usar Mostrar Oculto / Alt H)",
-        "Duplicated gems": "Germas duplicadas",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
             "ID de gemas en desuso (usar Convert Deprecated Gem IDs del menú Buscar Operador)",
@@ -244,7 +247,6 @@ dictionary = {
             "ID de gemas desconocidas, los quilates no se calcularon para las gemas marcadas (*)",
 
         "Curve Length": "Longitud de Curva",
-        "{} duplicates found": "{} duplicados encontrados",
 
         "Text file successfully created in the project folder":
             "Archivo de texto creado con éxito en la carpeta del proyecto",
@@ -262,6 +264,10 @@ dictionary = {
 
         "File not found": "Archivo no encontrado",
         "Name must be specified": "El nombre debe ser especificado",
+        # TODO
+        # "Overlapping gems": "",
+        # "{} overlaps found": "",
+        # "Optimal unit settings are in use": "",
         # Cuts
         "Round": "Redonda",
         "Oval": "Óvalo",
@@ -353,6 +359,8 @@ dictionary = {
         "Cut": "Corte",
         "Dimensions": "Dimensiones",
         "Round": "Redonda",
+        # TODO
+        # "Spacing": "",
     },
     "Dative": {
         "Size": "Tamaño",
@@ -361,7 +369,6 @@ dictionary = {
     },
     "Operator": {
         "Add Gem": "Añadir Gema",
-        "Doubles": "Dobles",
         "Curve Scatter": "Dispersor de Curva",
         "Prongs": "Clavijas",
         "Cutter": "Cortador",
@@ -389,5 +396,8 @@ dictionary = {
         "Replace Set": "Reemplazar Conjunto",
         "Remove Set": "Eliminar Conjunto",
         "Rename Set": "Renombrar Conjunto",
+        # TODO
+        # "Overlapping": "",
+        # "Set Units": "",
     },
 }

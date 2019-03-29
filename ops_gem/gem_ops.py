@@ -37,10 +37,9 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
     stone: EnumProperty(name="Stone", items=dynamic_list.stones)
     size: FloatProperty(
         name="Size",
-        description="Gem size",
         default=1.0,
         min=0.0001,
-        step=10,
+        step=5,
         precision=2,
         unit="LENGTH",
     )
@@ -74,7 +73,7 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
         if space_data.local_view:
             ob.local_view_set(space_data, True)
 
-        ob.scale = ob.scale * self.size
+        ob.scale *= self.size
         ob.location = scene.cursor.location
         ob.select_set(True)
         ob["gem"] = {"cut": self.cut, "stone": self.stone}
@@ -90,12 +89,10 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        props = context.window_manager.jewelcraft
-        self.stone = props.gem_stone
-        self.cut = props.gem_cut
         self.color = asset.color_rnd()
 
-        return self.execute(context)
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
 
 
 class OBJECT_OT_jewelcraft_gem_edit(Operator):

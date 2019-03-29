@@ -65,7 +65,7 @@ def create_prongs(self):
         bm.edges.new((v_profile[i], v_profile[i + 1]))
 
     bmesh.ops.spin(bm, geom=bm.edges, angle=tau, steps=self.detalization, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0))
-    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
 
     v_boundary = [x for x in bm.verts if x.is_boundary]
     bm.faces.new(reversed(v_boundary))

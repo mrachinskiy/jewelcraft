@@ -23,9 +23,9 @@ import os
 import random
 
 import bpy
-from mathutils import Matrix, Vector
+from mathutils import Matrix, Vector, kdtree
 
-from . import mesh
+from . import mesh, unit
 from .. import var
 
 
@@ -333,3 +333,35 @@ def calc_bbox(obs):
         (x_min, y_min, z_min),  # bbox min
         (x_max, y_max, z_max),  # bbox max
     )
+
+
+def object_overlap(context, data, threshold=0.1, first_match=False):
+    kd = kdtree.KDTree(len(data))
+
+    for i, (loc, rad) in enumerate(data):
+        kd.insert(loc, i)
+
+    kd.balance()
+
+    overlap_indices = set()
+    seek_range = unit.Scale().to_scene(4)
+
+    for i1, (loc1, rad1) in enumerate(data):
+
+        if i1 in overlap_indices:
+            continue
+
+        for loc, i2, dis in kd.find_range(loc1, seek_range):
+            rad2 = data[i2][1]
+            dis_gap = dis - (rad1 + rad2)
+
+            if dis_gap < threshold and i1 != i2:
+                if first_match:
+                    return True
+                overlap_indices.add(i1)
+                break
+
+    if first_match:
+        return False
+
+    return overlap_indices

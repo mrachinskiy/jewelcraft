@@ -46,8 +46,8 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
         soft_max=5,
         subtype="PIXEL",
     )
-    distance: FloatProperty(
-        name="Distance",
+    spacing: FloatProperty(
+        name="Spacing",
         default=0.2,
         min=0.0,
         step=1,
@@ -57,21 +57,21 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
 
     def draw(self, context):
         layout = self.layout
-        split = layout.split()
-        split.row()
-        col = split.column(align=True)
-        col.prop(self, "color", text="")
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        col = layout.column()
+        col.prop(self, "color")
         col.prop(self, "linewidth")
-        col.prop(self, "distance")
+        col.prop(self, "spacing", text="Spacing", text_ctxt="JewelCraft")
 
     def execute(self, context):
-
         for ob in context.selected_objects:
             if "gem" in ob:
                 ob["jewelcraft_widget"] = {
                     "color": self.color,
                     "linewidth": self.linewidth,
-                    "distance": self.distance,
+                    "spacing": self.spacing,
                 }
 
         context.area.tag_redraw()
@@ -80,20 +80,20 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
 
     def invoke(self, context, event):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
+
         default_settings = {
             "color": prefs.widget_color,
             "linewidth": prefs.widget_linewidth,
-            "distance": prefs.widget_distance,
+            "spacing": prefs.widget_spacing,
         }
 
         ovrd = context.object.get("jewelcraft_widget")
-
         if ovrd:
             default_settings.update(ovrd)
 
         self.color = default_settings["color"]
         self.linewidth = default_settings["linewidth"]
-        self.distance = default_settings["distance"]
+        self.spacing = default_settings["spacing"]
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)

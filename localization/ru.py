@@ -45,9 +45,7 @@ dictionary = {
         "Cutter": "Выборка",
         "Library Folder Path": "Путь к каталогу библиотеки",
         "Widgets": "Виджеты",
-        "Selection only": "Только выделение",
         "Use overrides": "Использовать переопределения",
-        "Overrides only": "Только переопределения",
         "Widget Color": "Цвет виджета",
         "Line Width": "Ширина линии",
         "Show composition": "Показать состав",
@@ -56,6 +54,9 @@ dictionary = {
         "Composition": "Состав",
         "Warnings": "Предупреждения",
         "Hidden gems": "Скрытые камни",
+        "Show all": "Показать все",
+        "Scene scale is not optimal": "Масштаб сцены не оптимален",
+        "Unsupported unit system": "Неподдерживаемая система единиц измерения",
         # Popup dialogs
         "Asset Name": "Название ассета",
         "Category Name": "Название категории",
@@ -105,10 +106,6 @@ dictionary = {
         "Object for weight reference": "Объект для определения веса изделия",
         "Save product report to text file": "Сохранить отчёт изделия в текстовый файл",
         "Select gems by trait": "Выделить камни по характеристике",
-
-        "Select duplicated gems (located in the same spot)":
-            "Выделить дубликаты (находящиеся на одной координате)",
-
         "Search stone by name": "Искать камень по названию",
         "Search asset by name": "Искать ассет по названию",
         "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
@@ -173,11 +170,7 @@ dictionary = {
             "Использовать имя активного объекта при создании нового ассета",
 
         "Enable widgets drawing": "Активировать отображение виджетов",
-        "Draw widgets only for selected objects": "Отображать виджеты только для выделенных объектов",
         "Use object defined widget overrides": "Использовать переопределения виджетов заданные на объектах",
-
-        "Display only object defined widget overrides":
-            "Отображать только виджеты с переопределениями заданными на объектах",
 
         "Draw widgets in front of objects": "Отображать виджеты поверх объектов",
 
@@ -231,11 +224,19 @@ dictionary = {
             "Привязать импортированный ассет к выделенным объектам "
             "(Горячая клавиша: удерживайте Alt при использовании инструмента)"
         ),
+
+        "Select gems that are less than 0.1 mm distance from each other or overlapping":
+            "Выделить перекрывающиеся камни или расположенные на расстоянии менее 0.1 мм друг от друга",
+
+        "Display spacing widget for all visible gems": "Отображать виджет расстояния для всех видимых камней",
+
+        "Set optimal unit settings for jewelry modelling":
+            "Задать оптимальные настройки единиц измерения для моделирования ювелирных изделий",
+
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
         "Hidden gems (use Show Hidden/Alt H)": "Скрытые камни (используйте Show Hidden/Alt H)",
-        "Duplicated gems": "Дублируемые камни",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
             "Устаревшие идентификаторы камней (используйте Convert Deprecated Gem IDs из меню Operator Search)",
@@ -244,7 +245,6 @@ dictionary = {
             "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)",
 
         "Curve Length": "Длина кривой",
-        "{} duplicates found": "{} дубликатов обнаружено",
 
         "Text file successfully created in the project folder":
             "Текстовый файл успешно создан в каталоге проекта",
@@ -262,6 +262,9 @@ dictionary = {
 
         "File not found": "Файл не найден",
         "Name must be specified": "Имя должно быть указано",
+        "Overlapping gems": "Пересекающиеся камни",
+        "{} overlaps found": "{} пересечений обнаружено",
+        "Optimal unit settings are in use": "Используются оптимальные настройки единиц измерения",
         # Cuts
         "Round": "Кр-57",
         "Oval": "Овал",
@@ -353,6 +356,7 @@ dictionary = {
         "Cut": "Огранка",
         "Dimensions": "Габариты",
         "Round": "Кр-57",
+        "Spacing": "Расстояние",
     },
     "Dative": {
         "Size": "Размеру",
@@ -361,7 +365,6 @@ dictionary = {
     },
     "Operator": {
         "Add Gem": "Создать камень",
-        "Doubles": "Дубликаты",
         "Curve Scatter": "Распределить по кривой",
         "Prongs": "Крапана",
         "Cutter": "Выборка",
@@ -389,5 +392,7 @@ dictionary = {
         "Replace Set": "Заменить набор",
         "Remove Set": "Удалить набор",
         "Rename Set": "Переименовать набор",
+        "Overlapping": "Пересекающиеся",
+        "Set Units": "Задать единицы измерения",
     },
 }

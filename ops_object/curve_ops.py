@@ -97,7 +97,7 @@ class CURVE_OT_jewelcraft_length_display(Operator):
         # Display length
         # ---------------------------
 
-        length = unit.to_metric(mesh.curve_length(ob))
+        length = unit.Scale().from_scene(mesh.curve_length(ob))
         lengthf = "{:.2f} {}".format(length, _("mm"))
 
         ui_lib.popup_report(self, lengthf, title=_("Curve Length"))

@@ -41,7 +41,7 @@ class OBJECT_OT_jewelcraft_weight_display(Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         materials = prefs.weighting_materials
 
-        vol = unit.to_metric(mesh.est_volume(obs), volume=True)
+        vol = unit.Scale().from_scene(mesh.est_volume(obs), volume=True)
 
         weight_report = []
 
