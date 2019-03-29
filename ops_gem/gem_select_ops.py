@@ -23,7 +23,7 @@ from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
 
-from ..lib import dynamic_list
+from ..lib import asset, dynamic_list
 
 
 class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
@@ -37,7 +37,14 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
     filter_cut: BoolProperty(name="Cut", options={"SKIP_SAVE"})
     filter_similar: BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
 
-    size: FloatProperty(name="Size", default=1.0, min=0.0, step=10, precision=2, unit="LENGTH")
+    size: FloatProperty(
+        name="Size",
+        default=1.0,
+        min=0.0,
+        step=10,
+        precision=2,
+        unit="LENGTH",
+    )
     stone: EnumProperty(name="Stone", items=dynamic_list.stones)
     cut: EnumProperty(name="Cut", items=dynamic_list.cuts)
 
@@ -119,16 +126,26 @@ class OBJECT_OT_jewelcraft_select_gems_by_trait(Operator):
         return self.execute(context)
 
 
-class OBJECT_OT_jewelcraft_select_doubles(Operator):
-    bl_label = "JewelCraft Select Doubles"
-    bl_description = "Select duplicated gems (located in the same spot)"
-    bl_idname = "object.jewelcraft_select_doubles"
+class OBJECT_OT_jewelcraft_select_overlapping(Operator):
+    bl_label = "JewelCraft Select Overlapping"
+    bl_description = "Select gems that are less than 0.1 mm distance from each other or overlapping"
+    bl_idname = "object.jewelcraft_select_overlapping"
     bl_options = {"REGISTER", "UNDO"}
 
-    def execute(self, context):
-        import collections
+    threshold: FloatProperty(
+        name="Threshold",
+        default=0.1,
+        soft_min=0.0,
+        step=1,
+        precision=2,
+        unit="LENGTH",
+    )
 
-        doubles = collections.defaultdict(list)
+    def execute(self, context):
+        obs = []
+        ob_data = []
+
+        context.scene.update()
 
         for dup in context.depsgraph.object_instances:
 
@@ -140,34 +157,33 @@ class OBJECT_OT_jewelcraft_select_doubles(Operator):
             ob.select_set(False)
 
             if "gem" in ob:
+                loc = dup.matrix_world.to_translation()
+                rad = max(ob.dimensions[:2]) / 2
 
                 if dup.is_instance:
 
                     if ob.parent and ob.parent.is_instancer:
-                        value = ob.parent
+                        sel = ob.parent
                     else:
-                        value = None
+                        sel = None
 
                 else:
-                    value = ob
+                    sel = ob
 
-                loc = dup.matrix_world.translation.to_tuple()
-                doubles[loc].append(value)
+                obs.append(sel)
+                ob_data.append((loc, rad))
 
-        doubles = {k: v for k, v in doubles.items() if len(v) > 1}
+        overlaps = asset.object_overlap(context, ob_data, threshold=self.threshold)
 
-        if doubles:
-            d = 0
+        if overlaps:
+            for i in overlaps:
+                ob = obs[i]
+                if ob:
+                    ob.select_set(True)
 
-            for obs in doubles.values():
-                for ob in obs[1:]:
-                    if ob:
-                        ob.select_set(True)
-                    d += 1
-
-            self.report({"WARNING"}, _("{} duplicates found").format(d))
+            self.report({"WARNING"}, _("{} overlaps found").format(len(overlaps)))
 
         else:
-            self.report({"INFO"}, _("{} duplicates found").format(0))
+            self.report({"INFO"}, _("{} overlaps found").format(0))
 
         return {"FINISHED"}

@@ -23,26 +23,39 @@ import bpy
 
 
 def convert(x, units):
-
     if units == "CM3_TO_MM3":
         return x / 1000
-
-    elif units == "G_TO_CT":
+    if units == "G_TO_CT":
         return x * 5
 
 
-def to_metric(x, volume=False, batch=False):
-    unit = bpy.context.scene.unit_settings
-    scale = unit.scale_length
+class Scale:
 
-    if unit.system == "METRIC" and scale != 0.001:
+    def __init__(self):
+        unit = bpy.context.scene.unit_settings
+        self.scale = unit.scale_length
+        self.use_conversion = unit.system == "METRIC" and self.scale != 0.001
 
-        if batch:
-            return tuple(v * 1000 * scale for v in x)
+    def from_scene(self, x, volume=False, batch=False):
+        if self.use_conversion:
 
-        if volume:
-            return x * 1000 ** 3 * scale ** 3
+            if batch:
+                return tuple(v * 1000 * self.scale for v in x)
+            if volume:
+                return x * 1000 ** 3 * self.scale ** 3
 
-        return x * 1000 * scale
+            return x * 1000 * self.scale
 
-    return x
+        return x
+
+    def to_scene(self, x, volume=False, batch=False):
+        if self.use_conversion:
+
+            if batch:
+                return tuple(v / 1000 / self.scale for v in x)
+            if volume:
+                return x / 1000 ** 3 / self.scale ** 3
+
+            return x / 1000 / self.scale
+
+        return x

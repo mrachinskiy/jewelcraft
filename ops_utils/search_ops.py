@@ -25,25 +25,6 @@ from bpy.props import EnumProperty
 from ..lib import dynamic_list
 
 
-class VIEW3D_OT_jewelcraft_search_stone(Operator):
-    bl_label = "Search Stone"
-    bl_description = "Search stone by name"
-    bl_idname = "view3d.jewelcraft_search_stone"
-    bl_property = "stone"
-    bl_options = {"INTERNAL"}
-
-    stone: EnumProperty(items=dynamic_list.stones)
-
-    def execute(self, context):
-        context.window_manager.jewelcraft.gem_stone = self.stone
-        context.area.tag_redraw()
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        context.window_manager.invoke_search_popup(self)
-        return {"FINISHED"}
-
-
 class VIEW3D_OT_jewelcraft_search_asset(Operator):
     bl_label = "Search Asset"
     bl_description = "Search asset by name"

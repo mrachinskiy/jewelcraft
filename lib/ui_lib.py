@@ -22,22 +22,22 @@
 import bpy
 
 
-def popup_report(self, info, title="", icon="INFO"):
+def popup_report(self, text, title="", icon="INFO"):
 
     def draw(self, context):
-        self.layout.label(text=info)
+        self.layout.label(text=text)
 
-    self.report({"INFO"}, f"{title}: {info}")
+    self.report({"INFO"}, f"{title}: {text}")
 
     bpy.context.window_manager.popup_menu(draw, title, icon)
 
 
-def popup_report_batch(self, info, title="", icon="INFO"):
+def popup_report_batch(self, data, title="", icon="INFO"):
 
     def draw(self_local, context):
         layout = self_local.layout
 
-        for x in info:
+        for x in data:
             layout.label(text=x)
             self.report({"INFO"}, x)
 

@@ -201,22 +201,23 @@ class JewelCraftPreferences(AddonPreferences):
         description="Show warning if there are hidden gem objects in the scene",
         default=True,
     )
-    widget_selection_only: BoolProperty(
-        name="Selection only",
-        description="Draw widgets only for selected objects",
+    product_report_use_overlap: BoolProperty(
+        name="Overlapping gems",
+        description="",
+        default=True,
+    )
+    widget_show_all: BoolProperty(
+        name="Show all",
+        description="Display spacing widget for all visible gems",
+    )
+    widget_show_in_front: BoolProperty(
+        name="In Front",
+        description="Draw widgets in front of objects",
     )
     widget_use_overrides: BoolProperty(
         name="Use overrides",
         description="Use object defined widget overrides",
         default=True,
-    )
-    widget_overrides_only: BoolProperty(
-        name="Overrides only",
-        description="Display only object defined widget overrides",
-    )
-    widget_show_in_front: BoolProperty(
-        name="In Front",
-        description="Draw widgets in front of objects",
     )
     widget_color: FloatVectorProperty(
         name="Color",
@@ -228,13 +229,18 @@ class JewelCraftPreferences(AddonPreferences):
     )
     widget_linewidth: IntProperty(
         name="Line Width",
-        default=2,
+        default=1,
         min=1,
         soft_max=5,
         subtype="PIXEL",
     )
-    widget_distance: FloatProperty(
-        name="Distance",
+    widget_font_size: IntProperty(
+        name="Font size",
+        default=16,
+        min=1,
+    )
+    widget_spacing: FloatProperty(
+        name="Spacing",
         default=0.2,
         min=0.0,
         step=1,
@@ -326,6 +332,7 @@ class JewelCraftPreferences(AddonPreferences):
 
             box.label(text="Warnings")
             box.prop(self, "product_report_use_hidden_gems")
+            box.prop(self, "product_report_use_overlap")
 
         elif self.active_section == "THEMES":
             box.label(text="Interface")
@@ -334,15 +341,13 @@ class JewelCraftPreferences(AddonPreferences):
 
             box.label(text="Widgets")
             col = box.column()
-            col.prop(self, "widget_selection_only")
-            col.prop(self, "widget_use_overrides")
-            sub = col.column()
-            sub.active = self.widget_use_overrides
-            sub.prop(self, "widget_overrides_only")
+            col.prop(self, "widget_show_all")
             col.prop(self, "widget_show_in_front")
+            col.prop(self, "widget_use_overrides")
             col.prop(self, "widget_color")
             col.prop(self, "widget_linewidth")
-            col.prop(self, "widget_distance")
+            col.prop(self, "widget_spacing")
+            col.prop(self, "widget_font_size")
 
             box.label(text="Materials")
             col = box.column()
@@ -366,8 +371,6 @@ def update_asset_list(self, context):
 
 
 class JewelCraftPropertiesWm(PropertyGroup):
-    gem_cut: EnumProperty(items=dynamic_list.cuts)
-    gem_stone: EnumProperty(name="Stone", description="Stone", items=dynamic_list.stones)
     widget_toggle: BoolProperty(description="Enable widgets drawing", update=widget.handler_toggle)
     asset_folder: EnumProperty(
         name="Category",

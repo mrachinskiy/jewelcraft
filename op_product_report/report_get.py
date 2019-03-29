@@ -26,11 +26,11 @@ from ..lib import unit, mesh, asset
 class DataCollect:
 
     def data_collect(self, context):
-        import collections
-
         scene = context.scene
         depsgraph = context.depsgraph
         props = scene.jewelcraft
+        UScale = unit.Scale()
+        _from_scene = UScale.from_scene
         data = {
             "size": 0.0,
             "shank": [],
@@ -46,7 +46,7 @@ class DataCollect:
         if props.product_report_ob_size:
             ob = props.product_report_ob_size
             size = max(ob.dimensions)
-            data["size"] = unit.to_metric(size)
+            data["size"] = _from_scene(size)
 
         # Shank
         # ---------------------------
@@ -59,14 +59,14 @@ class DataCollect:
             scene.update()
 
             dim.remove(max(dim))
-            data["shank"] = unit.to_metric(dim, batch=True)
+            data["shank"] = _from_scene(dim, batch=True)
 
         # Dimensions
         # ---------------------------
 
         if props.product_report_ob_dim:
             ob = props.product_report_ob_dim
-            data["dim"] = unit.to_metric(ob.dimensions.to_tuple(), batch=True)
+            data["dim"] = _from_scene(ob.dimensions.to_tuple(), batch=True)
 
         # Weight
         # ---------------------------
@@ -75,7 +75,7 @@ class DataCollect:
             ob = props.product_report_ob_weight
 
             if ob.type == "MESH":
-                data["weight"] = unit.to_metric(mesh.est_volume((ob,)), volume=True)
+                data["weight"] = _from_scene(mesh.est_volume((ob,)), volume=True)
 
         # Gems
         # ---------------------------
@@ -83,8 +83,7 @@ class DataCollect:
         gms = data["gems"]
         known_stones = var.STONE_DENSITY.keys()
         known_cuts = var.CUT_VOLUME_CORRECTION.keys()
-        doubles = collections.defaultdict(int)
-        hidden = False
+        ob_data = []
         df_leftovers = False
         deprecated_id = False
         unknown_id = False
@@ -105,7 +104,7 @@ class DataCollect:
                 # Gem
                 stone = ob["gem"]["stone"]
                 cut = ob["gem"]["cut"]
-                size = tuple(round(x, 2) for x in unit.to_metric(ob.dimensions, batch=True))
+                size = tuple(round(x, 2) for x in _from_scene(ob.dimensions, batch=True))
                 count = 1
 
                 if not dup.is_instance and ob in instance_orig:
@@ -113,7 +112,8 @@ class DataCollect:
 
                 # Warnings
                 loc = dup.matrix_world.translation.to_tuple()
-                doubles[loc] += 1
+                rad = max(ob.dimensions[:2]) / 2
+                ob_data.append((loc, rad))
 
                 if stone not in known_stones:
                     stone = "*" + stone
@@ -141,13 +141,19 @@ class DataCollect:
                 else:
                     gms[stone] = {cut: {size: count}}
 
-        # Find duplicates
+        # Find overlaps
         # ---------------------------
 
-        doubles = [x for x in doubles.values() if x > 1]
+        overlaps = False
+
+        if self.prefs.product_report_use_overlap:
+            thold = UScale.to_scene(0.1)
+            overlaps = asset.object_overlap(context, ob_data, threshold=thold, first_match=True)
 
         # Find hidden gems
         # ---------------------------
+
+        hidden = False
 
         if self.prefs.product_report_use_hidden_gems:
             for ob in scene.objects:
@@ -164,8 +170,8 @@ class DataCollect:
         if df_leftovers:
             data["warn"].append("Possible gem dupli-face leftovers")
 
-        if doubles:
-            data["warn"].append("Duplicated gems")
+        if overlaps:
+            data["warn"].append("Overlapping gems")
 
         if deprecated_id:
             data["warn"].append("Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)")

@@ -430,7 +430,7 @@ def create_cutter(self):
             bm.edges.new((v_profile[i], v_profile[i + 1]))
 
         bmesh.ops.spin(bm, geom=bm.edges, angle=tau, steps=self.detalization, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0))
-        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
         bmesh.ops.holes_fill(bm, edges=bm.edges, sides=0)
 
     # Common operations
@@ -438,6 +438,6 @@ def create_cutter(self):
 
     if self.curve_seat:
         bmesh.ops.bevel(bm, geom=e_sm[:] + v_sm[:], offset=100.0, offset_type="PERCENT", segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
-        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
 
     return bm

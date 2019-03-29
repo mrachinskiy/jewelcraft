@@ -82,7 +82,7 @@ class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
         layout.operator("object.jewelcraft_select_gems_by_trait", text="Cut", text_ctxt="Dative").filter_cut = True
         layout.separator()
         layout.operator("object.jewelcraft_select_gems_by_trait", text="Similar").filter_similar = True
-        layout.operator("object.jewelcraft_select_doubles", text="Doubles")
+        layout.operator("object.jewelcraft_select_overlapping", text="Overlapping")
         layout.separator()
         layout.operator("object.jewelcraft_select_gems_by_trait", text="All")
 
@@ -151,6 +151,7 @@ class VIEW3D_MT_jewelcraft_product_report(Menu, Setup):
         layout.separator()
         layout.label(text="Warnings")
         layout.prop(self.prefs, "product_report_use_hidden_gems")
+        layout.prop(self.prefs, "product_report_use_overlap")
 
 
 # Panels
@@ -169,6 +170,43 @@ class VIEW3D_PT_jewelcraft_update(Panel, Setup):
         mod_update.sidebar_ui(self, context)
 
 
+class VIEW3D_PT_jewelcraft_warning(Panel, Setup):
+    bl_label = "Warning"
+    bl_context = "objectmode"
+
+    @classmethod
+    def poll(cls, context):
+        unit_settings = context.scene.unit_settings
+        is_scale = (
+            unit_settings.system == "METRIC" and
+            round(unit_settings.scale_length, 5) != 0.001
+        )
+        is_imperial = unit_settings.system == "IMPERIAL"
+
+        return is_scale or is_imperial
+
+    def draw(self, context):
+        layout = self.layout
+
+        unit_settings = context.scene.unit_settings
+        is_scale = (
+            unit_settings.system == "METRIC" and
+            round(unit_settings.scale_length, 5) != 0.001
+        )
+        is_imperial = unit_settings.system == "IMPERIAL"
+
+        if is_scale:
+            layout.label(text="Scene scale is not optimal", icon="ERROR")
+
+        elif is_imperial:
+            layout.label(text="Unsupported unit system", icon="ERROR")
+
+        col = layout.row()
+        col.alignment = "CENTER"
+        col.scale_y = 1.5
+        col.operator("scene.jewelcraft_scene_units_set")
+
+
 class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
     bl_label = "Gems"
 
@@ -180,12 +218,6 @@ class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
         layout = self.layout
         icon_theme = self.prefs.theme_icon
 
-        layout.template_icon_view(self.wm_props, "gem_cut", show_labels=True)
-
-        row = layout.row(align=True)
-        row.prop(self.wm_props, "gem_stone", text="")
-        row.operator("view3d.jewelcraft_search_stone", text="", icon="VIEWZOOM")
-
         row = layout.row(align=True)
         row.operator("object.jewelcraft_gem_add", text="Add Gem", icon_value=self.pcoll[icon_theme + "GEM_ADD"].icon_id)
         row.operator("object.jewelcraft_gem_edit", text="", icon_value=self.pcoll[icon_theme + "GEM_EDIT"].icon_id)
@@ -196,6 +228,7 @@ class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
 class VIEW3D_PT_jewelcraft_widgets(Panel, Setup):
     bl_label = "Widgets"
     bl_options = {"DEFAULT_CLOSED"}
+    bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
 
     @classmethod
     def poll(cls, context):
@@ -212,17 +245,19 @@ class VIEW3D_PT_jewelcraft_widgets(Panel, Setup):
         layout.active = self.wm_props.widget_toggle
 
         col = layout.column()
-        col.prop(self.prefs, "widget_selection_only")
-        col.prop(self.prefs, "widget_use_overrides")
-        sub = col.column()
-        sub.active = self.prefs.widget_use_overrides
-        sub.prop(self.prefs, "widget_overrides_only")
+        col.prop(self.prefs, "widget_show_all")
         col.prop(self.prefs, "widget_show_in_front")
+        col.prop(self.prefs, "widget_use_overrides")
+
+        col.separator()
+
         col.prop(self.prefs, "widget_color")
         col.prop(self.prefs, "widget_linewidth")
-        col.prop(self.prefs, "widget_distance")
+        col.prop(self.prefs, "widget_spacing", text="Spacing", text_ctxt="JewelCraft")
 
-        row = layout.row(align=True)
+        col.separator()
+
+        row = col.row(align=True)
         row.operator("object.jewelcraft_widgets_overrides_set")
         row.operator("object.jewelcraft_widgets_overrides_del")
 

@@ -45,9 +45,7 @@ dictionary = {
         "Cutter": "Couteaux",
         "Library Folder Path": "Chemin du dossier de librairie",
         "Widgets": "Widgets",
-        "Selection only": "Sélection seulement",
         "Use overrides": "Utiliser des substitutions",
-        "Overrides only": "Substitutions seulement",
         "Widget Color": "Couleur du widget",
         "Line Width": "Epaisseur de ligne",
         "Show composition": "Afficher la composition",
@@ -56,6 +54,10 @@ dictionary = {
         "Composition": "Composition",
         "Warnings": "Avertissements",
         "Hidden gems": "Cacher les pierres",
+        # TODO
+        # "Show all": "",
+        # "Scene scale is not optimal": "",
+        # "Unsupported unit system": "",
         # Popup dialogs
         "Asset Name": "Nom de ressources",
         "Category Name": "Nom des catégories",
@@ -105,10 +107,6 @@ dictionary = {
         "Object for weight reference": "Objet pour référence de poids",
         "Save product report to text file": "Enregistrer le rapport du produit dans un fichier texte",
         "Select gems by trait": "Sélectionnez des pierres par trait",
-
-        "Select duplicated gems (located in the same spot)":
-            "Sélectionnez les pierres dupliquées (situées au même endroit)",
-
         "Search stone by name": "Chercher les pierres par nom",
         "Search asset by name": "Chercher les ressources par nom",
         "Scatter selected object along active curve": "Distribuer l'objet sélectionné le long de la courbe active",
@@ -173,11 +171,7 @@ dictionary = {
             "Utiliser le nom de l'objet actif pour la création d'une nouvelle ressource",
 
         "Enable widgets drawing": "Activer le dessin des widgets",
-        "Draw widgets only for selected objects": "Dessiner des widgets uniquement pour les objets sélectionnés",
         "Use object defined widget overrides": "Utiliser les substitutions de widget définis par un objet",
-
-        "Display only object defined widget overrides":
-            "Afficher uniquement les substitutions de widget définies par un objet",
 
         "Draw widgets in front of objects": "Dessiner des widgets devant des objets",
 
@@ -231,11 +225,20 @@ dictionary = {
             "Parenter la ressource importée pour les objets sélectionnés "
             "(Raccourcie: Alt en utilisant l'outil)"
         ),
+
+        #TODO
+        # "Select gems that are less than 0.1 mm distance from each other or overlapping":
+        #     "",
+
+        # "Display spacing widget for all visible gems": "",
+
+        # "Set optimal unit settings for jewelry modelling":
+        #     "",
+
         # Reports
         "WARNING": "AVERTISSEMENT",
         "Possible gem dupli-face leftovers": "Restes de pierres dupli-face possibles",
         "Hidden gems (use Show Hidden/Alt H)": "Cacher les pierres (utiliser Afficher/Cacher: Alt + H)",
-        "Duplicated gems": "Pierres dupliquées",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
             "ID de pierre obsolète (utiliser Convert Deprecated Gem IDs dans le menu de recherche de fonction)",
@@ -244,7 +247,6 @@ dictionary = {
             "IDs de pierre inconnus, les carats sont calculés pour des pierres marquées (*)",
 
         "Curve Length": "Longueur de la courbe",
-        "{} duplicates found": "{} duplications trouvées",
 
         "Text file successfully created in the project folder":
             "Fichier texte créé avec succès dans le dossier du projet",
@@ -262,6 +264,10 @@ dictionary = {
 
         "File not found": "Fichier non trouvé",
         "Name must be specified": "Le nom doit être spécifié",
+        # TODO
+        # "Overlapping gems": "",
+        # "{} overlaps found": "",
+        # "Optimal unit settings are in use": "",
         # Cuts
         "Round": "Rond",
         "Oval": "Ovale",
@@ -304,25 +310,25 @@ dictionary = {
         "Yellow Gold 18K": "Or Jaune 18K",
         "Yellow Gold 14K": "Or Jaune 14K",
         "Yellow Gold 10K": "Or Jaune 10K",
-        "White Gold 18K Pd": "Or blanc 18K Pd",
-        "White Gold 18K Ni": "Or blanc 18K Ni",
-        "White Gold 14K Pd": "Or blanc 14K Pd",
-        "White Gold 14K Ni": "Or blanc 14K Ni",
-        "White Gold 10K": "Or blanc 10K",
-        "Rose Gold 18K": "Or rose 18K",
-        "Rose Gold 14K": "Or rose 14K",
-        "Rose Gold 10K": "Or rose 10K",
+        "White Gold 18K Pd": "Or Blanc 18K Pd",
+        "White Gold 18K Ni": "Or Blanc 18K Ni",
+        "White Gold 14K Pd": "Or Blanc 14K Pd",
+        "White Gold 14K Ni": "Or Blanc 14K Ni",
+        "White Gold 10K": "Or Blanc 10K",
+        "Rose Gold 18K": "Or Rose 18K",
+        "Rose Gold 14K": "Or Rose 14K",
+        "Rose Gold 10K": "Or Rose 10K",
         "Yellow Gold 999": "Or Jaune 999",
         "Yellow Gold 958": "Or Jaune 958",
         "Yellow Gold 750": "Or Jaune 750",
         "Yellow Gold 585": "Or Jaune 585",
         "Yellow Gold 375": "Or Jaune 375",
-        "White Gold 750 Pd": "Or blanc 750 Pd",
-        "White Gold 750 Ni": "Or blanc 750 Ni",
-        "White Gold 585 Pd": "Or blanc 585 Pd",
-        "White Gold 585 Ni": "Or blanc 585 Ni",
-        "Red Gold 585": "Or rouge 585",
-        "Red Gold 375": "Or rouge 375",
+        "White Gold 750 Pd": "Or Blanc 750 Pd",
+        "White Gold 750 Ni": "Or Blanc 750 Ni",
+        "White Gold 585 Pd": "Or Blanc 585 Pd",
+        "White Gold 585 Ni": "Or Blanc 585 Ni",
+        "Red Gold 585": "Or Rouge 585",
+        "Red Gold 375": "Or Rouge 375",
         "Platinum 950": "Platine 950",
         "Platinum 900": "Platine 900",
         "Palladium 950": "Palladium 950",
@@ -330,7 +336,7 @@ dictionary = {
         "Silver Sterling": "Argent Sterling",
         "Brass": "Laiton",
         "Bronze": "Bronze",
-        "Steel Stainless": "Acier inoxydable",
+        "Steel Stainless": "Acier Inoxydable",
         "Titanium": "Titane",
         # Product report
         "Size": "Taille",
@@ -353,6 +359,8 @@ dictionary = {
         "Cut": "Coupe",
         "Dimensions": "Dimensions",
         "Round": "Arrondi",
+        # TODO
+        # "Spacing": "",
     },
     "Dative": {
         "Size": "Taille",
@@ -361,7 +369,6 @@ dictionary = {
     },
     "Operator": {
         "Add Gem": "Ajouter une pierre",
-        "Doubles": "Doubles",
         "Curve Scatter": "Dispersion de la courbe",
         "Prongs": "Fourches",
         "Cutter": "Couteau",
@@ -389,5 +396,8 @@ dictionary = {
         "Replace Set": "Remplacer un jeu",
         "Remove Set": "Effacer un jeu",
         "Rename Set": "Renommer un jeu",
+        # TODO
+        # "Overlapping": "",
+        # "Set Units": "",
     },
 }
