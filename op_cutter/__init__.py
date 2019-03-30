@@ -81,18 +81,16 @@ class OBJECT_OT_jewelcraft_cutter_add(UI, Operator):
 
     mul_1: FloatProperty(
         name="Factor 1",
-        default=0.47,
+        default=1.0,
         min=0.0,
-        soft_max=1.0,
-        step=0.01,
+        soft_max=2.0,
         subtype="FACTOR",
     )
     mul_2: FloatProperty(
         name="Factor 2",
-        default=1.4,
+        default=1.0,
         min=0.0,
         soft_max=2.0,
-        step=0.01,
         subtype="FACTOR",
     )
 
