@@ -29,9 +29,6 @@ def init_presets(self):
     self.girdle_l_ofst = self.gem_l * 0.01
     self.girdle_w_ofst = self.gem_w * 0.01
 
-    self.mul_1 = 0.47
-    self.mul_2 = 1.4
-
     self.handle = True
     self.handle_l_size = self.gem_l * 0.66
     self.handle_w_size = self.gem_w * 0.66
@@ -92,12 +89,17 @@ def init_presets(self):
         self.girdle_z_top = self.gem_h * 0.08
         self.hole_z_top = self.gem_h * 0.3
         self.hole_pos_ofst = self.gem_l * 0.07
+        self.mul_1 = 1.82
+        self.mul_2 = 0.64
+        self.detalization = 64
 
     elif self.cut == "MARQUISE":
-        self.detalization = 64
         self.handle_z_btm = self.gem_h * 0.32
         self.girdle_z_top = self.gem_h * 0.08
         self.hole_z_top = self.gem_h * 0.3
+        self.mul_1 = 0.47
+        self.mul_2 = 1.4
+        self.detalization = 64
 
     elif self.cut == "PRINCESS":
         self.handle_z_btm = self.gem_h * 0.25
@@ -141,6 +143,9 @@ def init_presets(self):
         self.girdle_z_top = self.gem_h * 0.08
         self.handle_z_btm = self.gem_h * 0.35
         self.hole_pos_ofst = self.gem_l * 0.03
+        self.mul_1 = 0.22
+        self.mul_2 = 0.25
+        self.detalization = 64
 
     elif self.cut == "TRILLION":
         self.handle_l_size = self.gem_l * 0.6

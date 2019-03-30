@@ -125,7 +125,7 @@ class UI:
                 col.prop(self, "curve_profile_segments")
                 col.prop(self, "curve_profile_factor")
 
-            elif self.cut == "MARQUISE":
+            elif self.cut in {"MARQUISE", "PEAR", "HEART"}:
 
                 # Marquise Profile
                 # ------------------------
@@ -160,7 +160,7 @@ class UI:
                 col.prop(self, "bevel_corners_segments")
                 col.prop(self, "bevel_corners_profile")
 
-        if self.shape_rnd or self.cut in {"OVAL", "MARQUISE"}:
+        if self.shape_rnd or self.cut in {"OVAL", "MARQUISE", "PEAR", "HEART"}:
 
             layout.separator()
             layout.prop(self, "detalization")

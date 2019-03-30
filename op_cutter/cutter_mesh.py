@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from math import sin, cos, pi, tau
+from math import pi, tau, sin, cos
 
 import bmesh
 
@@ -32,7 +32,6 @@ from ..lib.mesh import (
     duplicate_verts,
     edge_loop_walk,
 )
-from . import profile_pear, profile_heart
 
 
 def create_cutter(self):
@@ -75,8 +74,8 @@ def create_cutter(self):
 
             coords = []
 
-            for co in base_coords:
-                vs = make_rect(bm, co[0], co[1], co[2])
+            for x, y, z in base_coords:
+                vs = make_rect(bm, x, y, z)
                 make_edges(bm, vs)
 
                 bv = bmesh.ops.bevel(bm, geom=bm.verts, clamp_overlap=True, vertex_only=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
@@ -182,8 +181,8 @@ def create_cutter(self):
 
             coords = []
 
-            for co in base_coords:
-                v_profile = make_tri(bm, co[0], co[1], 0.0)
+            for x, y, z in base_coords:
+                v_profile = make_tri(bm, x, y, 0.0)
                 make_edges(bm, v_profile)
 
                 if self.bevel_corners:
@@ -203,12 +202,12 @@ def create_cutter(self):
                 bm = bmesh.new()
 
             if self.handle:
-                v_handle_bottom = [bm.verts.new((v[0], v[1], self.handle_z_btm)) for v in coords[0]]
+                v_handle_bottom = [bm.verts.new((x, y, self.handle_z_btm)) for x, y, z in coords[0]]
 
-            v_girdle_btm = [bm.verts.new((v[0], v[1], -self.girdle_z_btm)) for v in coords[1]]
+            v_girdle_btm = [bm.verts.new((x, y, -self.girdle_z_btm)) for x, y, z in coords[1]]
 
             if self.hole:
-                v_hole_top = [bm.verts.new((v[0], v[1], -self.hole_z_top)) for v in coords[2]]
+                v_hole_top = [bm.verts.new((x, y, -self.hole_z_top)) for x, y, z in coords[2]]
 
         else:
 
@@ -275,7 +274,7 @@ def create_cutter(self):
                 z = 0.0
                 co_app((x, y, z))
 
-            v_cos = [(v[0] * size_w, v[1] * size_l, -self.girdle_z_btm) for v in profile_coords]
+            v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
 
         elif self.cut == "MARQUISE":
             size_l = self.gem_l / 2 + self.girdle_l_ofst
@@ -299,23 +298,70 @@ def create_cutter(self):
                 m1 *= (self.mul_1 * m2 - 1) / curve_resolution + 1
                 m2 *= self.mul_2 / curve_resolution + 1
 
-            for v in reversed(profile_coords[:-1]):
-                co_app((v[0], -v[1], v[2]))
+            for x, y, z in reversed(profile_coords[:-1]):
+                co_app((x, -y, z))
 
-            for v in reversed(profile_coords[1:-1]):
-                co_app((-v[0], v[1], v[2]))
+            for x, y, z in reversed(profile_coords[1:-1]):
+                co_app((-x, y, z))
 
-            v_cos = [(v[0] * size_w, v[1] * size_l, -self.girdle_z_btm) for v in profile_coords]
+            v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
 
-        elif self.cut in {"PEAR", "HEART"}:
-            profile_coords = profile_pear.COORDS if self.cut == "PEAR" else profile_heart.COORDS
+        elif self.cut == "PEAR":
+            size_l = self.gem_l / 2 + self.girdle_l_ofst
+            size_w = self.gem_w / 2 + self.girdle_l_ofst
 
-            size_l = self.gem_l + self.girdle_l_ofst * 2
-            size_w = self.gem_w + self.girdle_l_ofst * 2
+            curve_resolution = self.detalization + 1
+            angle = pi / (curve_resolution - 1)
 
-            size = max(size_l, size_w)
+            profile_coords = []
+            co_app = profile_coords.append
 
-            v_cos = [(x[0] * size, x[1] * size, -self.girdle_z_btm) for x in profile_coords]
+            for i in range(curve_resolution):
+                x = sin(i * angle) * ((curve_resolution - i) / curve_resolution * self.mul_1) ** self.mul_2
+                y = cos(i * angle)
+                z = 0.0
+                co_app((-x, y, z))
+
+            for x, y, z in reversed(profile_coords[1:-1]):
+                co_app((-x, y, z))
+
+            v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
+
+        elif self.cut == "HEART":
+            size_l = self.gem_l / 2 + self.girdle_l_ofst
+            size_w = self.gem_w / 2 + self.girdle_l_ofst
+
+            curve_resolution = self.detalization + 1
+            angle = pi / (curve_resolution - 1)
+
+            profile_coords = []
+            co_app = profile_coords.append
+
+            m1 = 0.0
+            m2 = 1.0
+            z = -self.gem_h * 4 / (curve_resolution / 5)
+            thold_1 = int(curve_resolution / 2)
+
+            for i in range(curve_resolution):
+                x = sin(i * angle)
+                y = cos(i * angle) * ((i + 1) / curve_resolution) ** self.mul_1 + m1 + 0.2
+                co_app((-x, y, z))
+
+                if i == thold_1:
+                    m1 = -self.gem_l / 100
+
+                if m1 < 0.0:
+                    m1 += m1 * (self.mul_2 / m2)
+                    m2 += m2 / 20.0
+
+                if z < 0.0:
+                    z += -z / 7
+                    z = min(z, 0.0)
+
+            for x, y, z in reversed(profile_coords[1:-1]):
+                co_app((-x, y, z))
+
+            v_cos = [(x * size_w, y * size_l, z - self.girdle_z_btm) for x, y, z in profile_coords]
 
         v_girdle_btm = [bm.verts.new(v) for v in v_cos]
         v_girdle_top = duplicate_verts(bm, v_girdle_btm, z=self.girdle_z_top)
@@ -323,17 +369,10 @@ def create_cutter(self):
 
         if self.handle:
 
-            if self.cut == "PEAR":
-                handle_l_size = self.handle_l_size
-                handle_w_size = self.handle_w_size * 1.6
-            elif self.cut == "HEART":
-                handle_l_size = self.handle_l_size
-                handle_w_size = self.handle_w_size
-            else:
-                handle_l_size = self.handle_l_size / 2
-                handle_w_size = self.handle_w_size / 2
+            handle_l_size = self.handle_l_size / 2
+            handle_w_size = self.handle_w_size / 2
 
-            v_cos_handle = [(v[0] * handle_w_size, v[1] * handle_l_size, self.handle_z_btm) for v in profile_coords]
+            v_cos_handle = [(x * handle_w_size, y * handle_l_size, self.handle_z_btm) for x, y, z in profile_coords]
             v_handle_bottom = [bm.verts.new(v) for v in v_cos_handle]
             v_handle_top = duplicate_verts(bm, v_handle_bottom, z=self.handle_z_top)
             bridge_verts(bm, v_handle_top, v_handle_bottom)
@@ -361,20 +400,13 @@ def create_cutter(self):
 
         if self.hole:
 
-            if self.cut == "PEAR":
-                hole_l_size = self.hole_l_size
-                hole_w_size = self.hole_w_size * 1.6
-            elif self.cut == "HEART":
-                hole_l_size = self.hole_l_size
-                hole_w_size = self.hole_w_size
-            else:
-                hole_l_size = self.hole_l_size / 2
-                hole_w_size = self.hole_w_size / 2
+            hole_l_size = self.hole_l_size / 2
+            hole_w_size = self.hole_w_size / 2
 
-            v_cos_hole = [(v[0] * hole_w_size, v[1] * hole_l_size, -self.hole_z_top) for v in profile_coords]
+            v_cos_hole = [(x * hole_w_size, y * hole_l_size, -self.hole_z_top) for x, y, z in profile_coords]
 
             v_hole_top = [bm.verts.new(v) for v in v_cos_hole]
-            v_hole_bottom = [bm.verts.new((v[0], v[1], -self.hole_z_btm)) for v in v_cos_hole]
+            v_hole_bottom = [bm.verts.new((x, y, -self.hole_z_btm)) for x, y, z in v_cos_hole]
 
             bridge_verts(bm, v_fallback, v_hole_top)
             bridge_verts(bm, v_hole_top, v_hole_bottom)
@@ -390,7 +422,7 @@ def create_cutter(self):
             pk = bmesh.ops.poke(bm, faces=[f_bottom], offset=self.hole_z_top - sm_z)
 
             if self.cut == "PEAR":
-                pk["verts"][0].co[1] = v_girdle_btm[16].co[1]
+                pk["verts"][0].co[1] *= 4.5
             elif self.cut == "HEART":
                 pk["verts"][0].co[1] = 0.0
 
