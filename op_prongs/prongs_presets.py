@@ -27,18 +27,18 @@ def init_presets(self):
     # Defaults
     # ---------------------------
 
-    self.detalization = 32
     self.number = 4
-    self.diameter = 0.4
-    self.intersection = 30.0
+    self.diameter = 0.4 * self.gem_l
+    self.z_top = 0.3 * self.gem_l
+    self.z_btm = 0.5 * self.gem_l
     self.position = radians(45.0)
+    self.intersection = 30.0
+    self.alignment = 0.0
     self.symmetry = False
     self.symmetry_pivot = 0.0
     self.bump_scale = 0.5
-    self.z_top = 0.3
-    self.z_btm = 0.5
     self.taper = 0.0
-    self.alignment = 0.0
+    self.detalization = 32
 
     # Sizes
     # ---------------------------
@@ -63,23 +63,28 @@ def init_presets(self):
         self.z_top = 0.4
         self.z_btm = 0.6
 
+    elif self.gem_l >= 1.0:
+        self.diameter = 0.4
+        self.z_top = 0.3
+        self.z_btm = 0.5
+
     # Shapes
     # ---------------------------
 
     if self.shape_rnd:
         self.number = 2
-        self.intersection = 30.0
         self.position = radians(-30.0)
+        self.intersection = 30.0
 
         if self.cut == "OVAL":
-            self.intersection = 40.0
             self.position = radians(30.0)
+            self.intersection = 40.0
             self.symmetry = True
 
     elif self.shape_tri:
         self.number = 3
-        self.intersection = 0.0
         self.position = radians(60.0)
+        self.intersection = 0.0
         self.alignment = radians(10.0)
 
     elif self.shape_sq:
@@ -90,28 +95,28 @@ def init_presets(self):
 
     elif self.shape_rect:
         self.number = 2
-        self.intersection = -20.0
         self.position = radians(36.0)
+        self.intersection = -20.0
         self.symmetry = True
 
         if self.cut == "BAGUETTE":
-            self.intersection = -10.0
             self.position = radians(29.0)
+            self.intersection = -10.0
 
     elif self.shape_fant:
         self.number = 2
-        self.intersection = 0.0
         self.position = radians(0.0)
+        self.intersection = 0.0
         self.alignment = radians(10.0)
 
         if self.cut == "HEART":
             self.number = 3
-            self.intersection = -10.0
             self.position = radians(60.0)
+            self.intersection = -10.0
 
         elif self.cut == "PEAR":
             self.number = 1
-            self.intersection = 40.0
             self.position = radians(50.0)
+            self.intersection = 40.0
             self.symmetry = True
             self.symmetry_pivot = radians(-90.0)
