@@ -59,11 +59,11 @@ class UI:
         col = layout.column()
         col.prop(self, "girdle_z_top", text="Top" if self.handle else "Table")
 
-        if not self.shape_tri:
-            col.prop(self, "girdle_l_ofst", text="Size Offset")
-        else:
+        if self.shape_tri or self.cut == "HEART":
             col.prop(self, "girdle_l_ofst")
             col.prop(self, "girdle_w_ofst")
+        else:
+            col.prop(self, "girdle_l_ofst", text="Size Offset")
 
         col.prop(self, "girdle_z_btm")
 

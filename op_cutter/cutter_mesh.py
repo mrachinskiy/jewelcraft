@@ -329,7 +329,7 @@ def create_cutter(self):
 
         elif self.cut == "HEART":
             size_l = self.gem_l / 2 + self.girdle_l_ofst
-            size_w = self.gem_w / 2 + self.girdle_l_ofst
+            size_w = self.gem_w / 2 + self.girdle_w_ofst
 
             curve_resolution = self.detalization + 1
             angle = pi / (curve_resolution - 1)
