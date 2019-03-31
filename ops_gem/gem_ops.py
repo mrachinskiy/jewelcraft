@@ -78,7 +78,7 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
         ob.select_set(True)
         ob["gem"] = {"cut": self.cut, "stone": self.stone}
 
-        asset.add_material(ob, mat_name=stone_name, color=color, is_gem=True)
+        asset.add_material(ob, name=stone_name, color=color, is_gem=True)
 
         if context.mode == "EDIT_MESH":
             asset.ob_copy_to_faces(ob)
@@ -153,7 +153,7 @@ class OBJECT_OT_jewelcraft_gem_edit(Operator):
                         ob.data = ob.data.copy()
 
                     ob["gem"]["stone"] = self.stone
-                    asset.add_material(ob, mat_name=stone_name, color=color, is_gem=True)
+                    asset.add_material(ob, name=stone_name, color=color, is_gem=True)
 
         return {"FINISHED"}
 

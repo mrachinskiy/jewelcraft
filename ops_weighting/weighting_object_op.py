@@ -55,6 +55,6 @@ class OBJECT_OT_jewelcraft_weight_display(Operator):
                 weight_fmt = "{} {}  {}".format(weight, _("g"), mat.name)
                 weight_report.append(weight_fmt)
 
-        ui_lib.popup_report_batch(self, weight_report, title=_("Weighting"))
+        ui_lib.popup_report_batch(self, data=weight_report, title=_("Weighting"))
 
         return {"FINISHED"}

@@ -138,7 +138,7 @@ class OBJECT_OT_jewelcraft_cutter_add(UI, Operator):
 
         asset.get_gem(self, context)
         prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.color = tuple(prefs.color_cutter)
+        self.color = prefs.color_cutter
 
         if self.auto_presets:
             init_presets(self)

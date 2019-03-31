@@ -146,7 +146,7 @@ def edge_loop_expand(e, limit=0):
     loop_prev = loop
     app(e)
 
-    for i in range(1, limit):
+    for _ in range(1, limit):
         loop_next = loop_next.link_loop_next.link_loop_radial_next.link_loop_next
         loop_prev = loop_prev.link_loop_prev.link_loop_radial_prev.link_loop_prev
         app(loop_next.edge)
@@ -163,7 +163,7 @@ def edge_loop_walk(verts):
     app = coords.append
     app(v.co.copy())
 
-    for i in range(len(verts) - 1):
+    for _ in range(len(verts) - 1):
 
         ov = e.other_vert(v)
         app(ov.co.copy())

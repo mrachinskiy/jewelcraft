@@ -70,7 +70,7 @@ class Scatter:
 
         ofst = 0.0
 
-        if num > 0:
+        if num:
 
             if self.use_absolute_offset:
                 ob_size = ob.dimensions[1]
