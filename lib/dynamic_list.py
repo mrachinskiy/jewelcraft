@@ -136,17 +136,17 @@ def weighting_set(self, context):
             (
                 "JCASSET_PRECIOUS",
                 "[JewelCraft] Precious",
-                "Commonly used precious alloys, physical properties taken directly from suppliers"
+                "Commonly used precious alloys, physical properties taken directly from suppliers",
             ),
             (
                 "JCASSET_PRECIOUS_RU",
                 "[JewelCraft] Precious RU (ГОСТ 30649-99)",
-                "Set of precious alloys according to Russian regulations"
+                "Set of precious alloys according to Russian regulations",
             ),
             (
                 "JCASSET_BASE",
                 "[JewelCraft] Base",
-                "Set of base metal alloys, physical properties taken directly from suppliers"
+                "Set of base metal alloys, physical properties taken directly from suppliers",
             ),
         ]
 

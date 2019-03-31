@@ -81,7 +81,7 @@ class OBJECT_OT_jewelcraft_prongs_add(UI, Operator):
 
         asset.get_gem(self, context)
         prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.color = tuple(prefs.color_prongs)
+        self.color = prefs.color_prongs
 
         if self.auto_presets:
             init_presets(self)

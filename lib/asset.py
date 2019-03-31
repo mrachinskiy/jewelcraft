@@ -69,11 +69,11 @@ def color_rnd():
     return random.choice(seq), random.choice(seq), random.choice(seq), 1.0
 
 
-def add_material(ob, mat_name="New Material", color=(0.8, 0.8, 0.8, 1.0), is_gem=False):
-    mat = bpy.data.materials.get(mat_name)
+def add_material(ob, name="New Material", color=None, is_gem=False):
+    mat = bpy.data.materials.get(name)
 
     if not mat:
-        mat = bpy.data.materials.new(mat_name)
+        mat = bpy.data.materials.new(name)
         mat.diffuse_color = color
 
         if bpy.context.scene.render.engine in {"CYCLES", "BLENDER_EEVEE"}:
@@ -231,7 +231,7 @@ def bm_to_scene(bm, name="New object", color=None):
         ob.parent = parent
         ob.matrix_parent_inverse = parent.matrix_basis.inverted()
 
-        add_material(ob, mat_name=name, color=color)
+        add_material(ob, name=name, color=color)
 
 
 def ob_copy_and_parent(ob, parents):
