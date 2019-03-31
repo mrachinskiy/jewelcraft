@@ -143,8 +143,8 @@ def init_presets(self):
         self.girdle_z_top = self.gem_h * 0.08
         self.handle_z_btm = self.gem_h * 0.35
         self.hole_pos_ofst = self.gem_l * 0.03
-        self.mul_1 = 0.22
-        self.mul_2 = 0.25
+        self.mul_1 = 0.54
+        self.mul_2 = 0.45
         self.detalization = 64
 
     elif self.cut == "TRILLION":

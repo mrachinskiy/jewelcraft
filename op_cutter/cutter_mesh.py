@@ -271,8 +271,7 @@ def create_cutter(self):
             for i in range(curve_resolution):
                 x = sin(i * angle)
                 y = cos(i * angle)
-                z = 0.0
-                co_app((x, y, z))
+                co_app((x, y, 0.0))
 
             v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
 
@@ -292,8 +291,7 @@ def create_cutter(self):
             for i in range(curve_resolution):
                 x = sin(i * angle)
                 y = cos(i * angle) * m1
-                z = 0.0
-                co_app((-x, y, z))
+                co_app((-x, y, 0.0))
 
                 m1 *= (self.mul_1 * m2 - 1) / curve_resolution + 1
                 m2 *= self.mul_2 / curve_resolution + 1
@@ -319,8 +317,7 @@ def create_cutter(self):
             for i in range(curve_resolution):
                 x = sin(i * angle) * ((curve_resolution - i) / curve_resolution * self.mul_1) ** self.mul_2
                 y = cos(i * angle)
-                z = 0.0
-                co_app((-x, y, z))
+                co_app((-x, y, 0.0))
 
             for x, y, z in reversed(profile_coords[1:-1]):
                 co_app((-x, y, z))
@@ -337,26 +334,29 @@ def create_cutter(self):
             profile_coords = []
             co_app = profile_coords.append
 
-            m1 = 0.0
-            m2 = 1.0
-            z = -self.gem_h * 4 / (curve_resolution / 5)
-            thold_1 = int(curve_resolution / 2)
+            m1 = -self.mul_1
+            z = -self.gem_h * 0.3
+            basis1 = curve_resolution / 5
+            basis2 = curve_resolution / 12
 
             for i in range(curve_resolution):
                 x = sin(i * angle)
-                y = cos(i * angle) * ((i + 1) / curve_resolution) ** self.mul_1 + m1 + 0.2
-                co_app((-x, y, z))
-
-                if i == thold_1:
-                    m1 = -self.gem_l / 100
+                y = cos(i * angle) + m1 + 0.2
+                co_app([-x, y, z])
 
                 if m1 < 0.0:
-                    m1 += m1 * (self.mul_2 / m2)
-                    m2 += m2 / 20.0
+                    m1 -= m1 / basis1
 
                 if z < 0.0:
-                    z += -z / 7
-                    z = min(z, 0.0)
+                    z -= z / basis2
+
+            m2 = -self.mul_2
+            basis = curve_resolution / 4
+
+            for v in reversed(profile_coords):
+                if m2 < 0.0:
+                    v[1] += m2
+                    m2 -= m2 / basis
 
             for x, y, z in reversed(profile_coords[1:-1]):
                 co_app((-x, y, z))
