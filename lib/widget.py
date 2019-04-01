@@ -106,7 +106,6 @@ def draw(self, context):
 
     if is_df:
         df = context.edit_object
-
         for ob_act in df.children:
             if "gem" in ob_act:
                 is_act_gem = True
@@ -115,25 +114,11 @@ def draw(self, context):
             is_act_gem = False
             if not show_all:
                 return
-
-        if is_act_gem:
-            df.update_from_editmode()
-            polys = df.data.polygons
-            poly = polys[polys.active]
-            ob_act_loc = df.matrix_world @ poly.center
-            ob_act_rad = max(ob_act.dimensions[:2]) / 2
-            df_pass = False
-
     else:
         ob_act = context.object
         is_act_gem = "gem" in ob_act if ob_act else False
-
         if not (show_all or is_act_gem):
             return
-
-        if is_act_gem:
-            ob_act_loc = ob_act.matrix_world.translation
-            ob_act_rad = max(ob_act.dimensions[:2]) / 2
 
     if is_act_gem:
         if use_ovrd and "jewelcraft_widget" in ob_act:
@@ -144,12 +129,27 @@ def draw(self, context):
         _from_scene = unit.Scale().from_scene
 
         if is_df:
-            mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+            df_pass = False
+            df.update_from_editmode()
+
+            if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
+                me = df.to_mesh(context.depsgraph, True)
+                poly = me.polygons[df.data.polygons.active]
+                ob_act_loc = df.matrix_world @ poly.center
+                mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+                bpy.data.meshes.remove(me)
+            else:
+                polys = df.data.polygons
+                poly = polys[polys.active]
+                ob_act_loc = df.matrix_world @ poly.center
+                mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
         else:
+            ob_act_loc = ob_act.matrix_world.translation
             mat_rot = ob_act.matrix_world.to_quaternion().to_matrix().to_4x4()
+
+        ob_act_rad = max(ob_act.dimensions[:2]) / 2
         mat_loc = Matrix.Translation(ob_act_loc)
         mat = mat_loc @ mat_rot
-
         girdle_act = [mat @ co for co in circle_coords(ob_act_rad)]
 
     shader.bind()
