@@ -119,7 +119,8 @@ def draw(self, context):
         if is_act_gem:
             df.update_from_editmode()
             polys = df.data.polygons
-            ob_act_loc = df.matrix_world @ polys[polys.active].center
+            poly = polys[polys.active]
+            ob_act_loc = df.matrix_world @ poly.center
             ob_act_rad = max(ob_act.dimensions[:2]) / 2
             df_pass = False
 
@@ -142,11 +143,19 @@ def draw(self, context):
 
         _from_scene = unit.Scale().from_scene
 
+        if is_df:
+            mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        else:
+            mat_rot = ob_act.matrix_world.to_quaternion().to_matrix().to_4x4()
+        mat_loc = Matrix.Translation(ob_act_loc)
+        mat = mat_loc @ mat_rot
+
+        girdle_act = [mat @ co for co in circle_coords(ob_act_rad)]
+
     shader.bind()
     bgl.glEnable(bgl.GL_BLEND)
     bgl.glEnable(bgl.GL_LINE_SMOOTH)
     bgl.glDepthMask(bgl.GL_FALSE)
-    bgl.glPointSize(5.0)
 
     if prefs.widget_show_in_front:
         bgl.glDisable(bgl.GL_DEPTH_TEST)
@@ -180,38 +189,23 @@ def draw(self, context):
             else:
                 is_act = ob is ob_act
 
-        if use_ovrd and "jewelcraft_widget" in ob:
-            _color = ob["jewelcraft_widget"].get("color", default_color)
-            _linewidth = ob["jewelcraft_widget"].get("linewidth", default_linewidth)
-            _spacing = ob["jewelcraft_widget"].get("spacing", default_spacing)
+            use_diplay_dis = not is_act and dis_thold
         else:
-            _color = default_color
-            _linewidth = default_linewidth
-            _spacing = default_spacing
+            use_diplay_dis = False
 
-        bgl.glLineWidth(_linewidth)
-        shader.uniform_float("color", _color)
+        if show_all or use_diplay_dis:
 
-        if is_act_gem and not is_act and dis_thold:
-
-            if dis_ob:
-                start = ob_act_loc.lerp(ob_loc, ob_act_rad / dis_ob)
-                end = ob_loc.lerp(ob_act_loc, ob_rad / dis_ob)
-                mid = start.lerp(end, 0.5)
+            if use_ovrd and "jewelcraft_widget" in ob:
+                _color = ob["jewelcraft_widget"].get("color", default_color)
+                _linewidth = ob["jewelcraft_widget"].get("linewidth", default_linewidth)
+                _spacing = ob["jewelcraft_widget"].get("spacing", default_spacing)
             else:
-                start = ob_loc.copy()
-                end = ob_loc.copy()
-                mid = ob_loc.copy()
+                _color = default_color
+                _linewidth = default_linewidth
+                _spacing = default_spacing
 
-            _font_loc.append((dis_gap, mid, _from_scene(max(ob_act_spacing, _spacing))))
-
-            batch = batch_for_shader(shader, "LINES", {"pos": (start, end)})
-            batch.draw(shader)
-
-            batch = batch_for_shader(shader, "POINTS", {"pos": (start, end)})
-            batch.draw(shader)
-
-        if show_all or (not is_act and dis_gap < 0.5):
+            bgl.glLineWidth(_linewidth)
+            shader.uniform_float("color", _color)
 
             if dup.is_instance:
                 mat = dup.matrix_world
@@ -220,6 +214,28 @@ def draw(self, context):
                 mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
                 mat = mat_loc @ mat_rot
 
+        if use_diplay_dis:
+
+            if dis_ob:
+                girdle_ob = [mat @ co for co in circle_coords(ob_rad)]
+
+                girdle_proxy = []
+                app = girdle_proxy.append
+
+                for co1 in girdle_act:
+                    for co2 in girdle_ob:
+                        app((_from_scene((co1 - co2).length), co1, co2))
+
+                dis_gap, start, end = min(girdle_proxy, key=lambda x: x[0])
+                mid = start.lerp(end, 0.5)
+            else:
+                start = end = mid = ob_loc.copy()
+
+            _font_loc.append((dis_gap, mid, _from_scene(max(ob_act_spacing, _spacing))))
+            batch = batch_for_shader(shader, "LINES", {"pos": (start, end)})
+            batch.draw(shader)
+
+        if show_all or (not is_act and dis_gap < 0.5):
             radius = ob_rad + _spacing
             coords = [mat @ co for co in circle_coords(radius)]
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
@@ -233,7 +249,6 @@ def draw(self, context):
     bgl.glDepthMask(bgl.GL_TRUE)
     bgl.glEnable(bgl.GL_DEPTH_TEST)
     bgl.glLineWidth(1.0)
-    bgl.glPointSize(1.0)
 
 
 def draw_font(self, context):
