@@ -227,11 +227,11 @@ class JewelCraftPreferences(AddonPreferences):
         soft_max=1.0,
         subtype="COLOR",
     )
-    widget_linewidth: IntProperty(
+    widget_linewidth: FloatProperty(
         name="Line Width",
-        default=1,
-        min=1,
-        soft_max=5,
+        default=1.2,
+        min=1.0,
+        soft_max=5.0,
         subtype="PIXEL",
     )
     widget_font_size: IntProperty(

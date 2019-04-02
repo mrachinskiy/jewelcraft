@@ -39,11 +39,11 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
         soft_max=1.0,
         subtype="COLOR",
     )
-    linewidth: IntProperty(
+    linewidth: FloatProperty(
         name="Line Width",
-        default=2,
-        min=1,
-        soft_max=5,
+        default=1.2,
+        min=1.0,
+        soft_max=5.0,
         subtype="PIXEL",
     )
     spacing: FloatProperty(
