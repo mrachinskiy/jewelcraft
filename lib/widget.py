@@ -20,7 +20,7 @@
 
 
 from functools import lru_cache
-from math import sin, cos, tau
+from math import tau, sin, cos
 
 import bpy
 from bpy_extras.view3d_utils import location_3d_to_region_2d
@@ -63,28 +63,46 @@ def handler_del():
 
 
 def handler_toggle(self, context):
-
     if context.area.type == "VIEW_3D":
-
         if self.widget_toggle:
             handler_add(self, context)
         else:
             handler_del()
 
-        context.area.tag_redraw()
-
 
 @lru_cache(maxsize=128)
-def circle_coords(radius):
+def circle_coords(radius, mat):
     coords = []
+    app = coords.append
     angle = tau / 64
 
     for i in range(64):
         x = sin(i * angle) * radius
         y = cos(i * angle) * radius
-        coords.append(Vector((x, y, 0.0)))
+        app(Vector((x, y, 0.0)))
 
-    return coords
+    return tuple((mat @ co).freeze() for co in coords)
+
+
+@lru_cache(maxsize=128)
+def find_closest(loc1, rad1, coords1, coords2):
+    proximity = []
+    app = proximity.append
+
+    for co2 in coords2:
+        app(((co2 - loc1).length, co2))
+    dis, co2 = min(proximity, key=lambda x: x[0])
+
+    if dis < rad1:
+        return dis - rad1, co2, co2
+
+    proximity.clear()
+
+    for co1 in coords1:
+        app(((co1 - co2).length, co1))
+    dis, co1 = min(proximity, key=lambda x: x[0])
+
+    return dis, co1, co2
 
 
 def draw(self, context):
@@ -117,6 +135,7 @@ def draw(self, context):
     else:
         ob_act = context.object
         is_act_gem = "gem" in ob_act if ob_act else False
+
         if not (show_all or is_act_gem):
             return
 
@@ -135,22 +154,29 @@ def draw(self, context):
             if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
                 me = df.to_mesh(context.depsgraph, True)
                 poly = me.polygons[df.data.polygons.active]
+
                 ob_act_loc = df.matrix_world @ poly.center
                 mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+
                 bpy.data.meshes.remove(me)
             else:
                 polys = df.data.polygons
                 poly = polys[polys.active]
+
                 ob_act_loc = df.matrix_world @ poly.center
                 mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
         else:
-            ob_act_loc = ob_act.matrix_world.translation
+            ob_act_loc = ob_act.matrix_world.to_translation()
             mat_rot = ob_act.matrix_world.to_quaternion().to_matrix().to_4x4()
 
+        ob_act_loc.freeze()
         ob_act_rad = max(ob_act.dimensions[:2]) / 2
+
         mat_loc = Matrix.Translation(ob_act_loc)
         mat = mat_loc @ mat_rot
-        girdle_act = [mat @ co for co in circle_coords(ob_act_rad)]
+        mat.freeze()
+
+        girdle_act = circle_coords(ob_act_rad, mat)
 
     shader.bind()
     bgl.glEnable(bgl.GL_BLEND)
@@ -176,7 +202,7 @@ def draw(self, context):
         if is_act_gem:
             dis_ob = (ob_act_loc - ob_loc).length
             dis_gap = _from_scene(dis_ob - (ob_act_rad + ob_rad))
-            dis_thold = dis_gap < 0.8
+            dis_thold = dis_gap < 0.6
 
             if not (show_all or dis_thold):
                 continue
@@ -208,36 +234,46 @@ def draw(self, context):
             shader.uniform_float("color", _color)
 
             if dup.is_instance:
-                mat = dup.matrix_world
+                mat = dup.matrix_world.copy()
             else:
                 mat_loc = Matrix.Translation(ob_loc)
                 mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
                 mat = mat_loc @ mat_rot
 
+            mat.freeze()
+
         if use_diplay_dis:
 
             if dis_ob:
-                girdle_ob = [mat @ co for co in circle_coords(ob_rad)]
+                girdle_ob = circle_coords(ob_rad, mat)
+                dis_gap, start, end = find_closest(ob_act_loc, ob_act_rad, girdle_act, girdle_ob)
 
-                girdle_proxy = []
-                app = girdle_proxy.append
+                dis_gap = _from_scene(dis_gap)
+                dis_thold = dis_gap < 0.6
+                spacing_thold = dis_gap < (_spacing + 0.2)
 
-                for co1 in girdle_act:
-                    for co2 in girdle_ob:
-                        app((_from_scene((co1 - co2).length), co1, co2))
+                if not (show_all or dis_thold):
+                    continue
 
-                dis_gap, start, end = min(girdle_proxy, key=lambda x: x[0])
                 mid = start.lerp(end, 0.5)
             else:
                 start = end = mid = ob_loc.copy()
 
-            _font_loc.append((dis_gap, mid, _from_scene(max(ob_act_spacing, _spacing))))
-            batch = batch_for_shader(shader, "LINES", {"pos": (start, end)})
-            batch.draw(shader)
+            if dis_thold:
 
-        if show_all or (not is_act and dis_gap < 0.5):
+                if dis_gap < 0.1:
+                    shader.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
+                elif dis_gap < _spacing:
+                    shader.uniform_float("color", (1.0, 0.9, 0.0, 1.0))
+
+                _font_loc.append((dis_gap, mid, _from_scene(max(ob_act_spacing, _spacing))))
+
+                batch = batch_for_shader(shader, "LINES", {"pos": (start, end)})
+                batch.draw(shader)
+
+        if show_all or (not is_act and spacing_thold):
             radius = ob_rad + _spacing
-            coords = [mat @ co for co in circle_coords(radius)]
+            coords = circle_coords(radius, mat)
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
             batch.draw(shader)
 
