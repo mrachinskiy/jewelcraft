@@ -184,10 +184,10 @@ def face_pos():
 
     for ob in bpy.context.objects_in_mode:
 
-        # Prepare bmesh
+        # Get evaluated mesh
         # --------------------------------
 
-        mods_ignore = [(x, x.show_viewport) for x in ob.modifiers if x.type == "SUBSURF"]
+        mods_ignore = [(mod, mod.show_viewport) for mod in ob.modifiers if mod.type == "SUBSURF"]
 
         if mods_ignore:
             for mod, mod_show in mods_ignore:
@@ -196,12 +196,7 @@ def face_pos():
 
         ob.update_from_editmode()
         me = ob.to_mesh(depsgraph, True)
-
-        bm = bmesh.new()
-        bm.from_mesh(me)
-        bm.transform(ob.matrix_world)
-
-        bpy.data.meshes.remove(me)
+        me.transform(ob.matrix_world)
 
         if mods_ignore:
             for mod, mod_show in mods_ignore:
@@ -210,14 +205,14 @@ def face_pos():
         # Collect transform matrices
         # --------------------------------
 
-        for f in bm.faces:
-            if f.select:
-                mat_loc = Matrix.Translation(f.calc_center_median())
-                mat_rot = f.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        for poly in me.polygons:
+            if poly.select:
+                mat_loc = Matrix.Translation(poly.center)
+                mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
                 mat = mat_loc @ mat_rot
 
                 mats.append(mat)
 
-        bm.free()
+        bpy.data.meshes.remove(me)
 
     return mats

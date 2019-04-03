@@ -160,7 +160,6 @@ class VIEW3D_MT_jewelcraft_product_report(Menu, Setup):
 
 class VIEW3D_PT_jewelcraft_update(Panel, Setup):
     bl_label = "Update"
-    bl_context = "objectmode"
 
     @classmethod
     def poll(cls, context):
@@ -172,7 +171,6 @@ class VIEW3D_PT_jewelcraft_update(Panel, Setup):
 
 class VIEW3D_PT_jewelcraft_warning(Panel, Setup):
     bl_label = "Warning"
-    bl_context = "objectmode"
 
     @classmethod
     def poll(cls, context):
