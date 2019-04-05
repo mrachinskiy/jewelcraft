@@ -25,7 +25,7 @@ import random
 import bpy
 from mathutils import Matrix, Vector, kdtree
 
-from . import mesh, unit
+from . import mesh, unit, widget
 from .. import var
 
 
@@ -338,24 +338,36 @@ def calc_bbox(obs):
 def object_overlap(context, data, threshold=0.1, first_match=False):
     kd = kdtree.KDTree(len(data))
 
-    for i, (loc, rad) in enumerate(data):
+    for i, (loc, _, _) in enumerate(data):
         kd.insert(loc, i)
 
     kd.balance()
 
     overlap_indices = set()
-    seek_range = unit.Scale().to_scene(4)
+    UScale = unit.Scale()
+    _from_scene = UScale.from_scene
+    seek_range = UScale.to_scene(4)
 
-    for i1, (loc1, rad1) in enumerate(data):
+    for i1, (loc1, rad1, mat1) in enumerate(data):
 
         if i1 in overlap_indices:
             continue
 
-        for loc, i2, dis in kd.find_range(loc1, seek_range):
-            rad2 = data[i2][1]
-            dis_gap = dis - (rad1 + rad2)
+        girdle1 = widget.circle_coords(rad1, mat1)
 
-            if dis_gap < threshold and i1 != i2:
+        for loc2, i2, dis_ob in kd.find_range(loc1, seek_range):
+
+            _, rad2, mat2 = data[i2]
+            dis_gap = dis_ob - (rad1 + rad2)
+
+            if dis_gap > threshold or i1 == i2:
+                continue
+
+            girdle2 = widget.circle_coords(rad2, mat2)
+            dis_gap, _, _ = widget.find_closest(loc1, rad1, girdle1, girdle2)
+            dis_gap = _from_scene(dis_gap)
+
+            if dis_gap < threshold:
                 if first_match:
                     return True
                 overlap_indices.add(i1)
