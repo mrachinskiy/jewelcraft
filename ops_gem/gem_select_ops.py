@@ -22,6 +22,7 @@
 from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
+from mathutils import Matrix
 
 from ..lib import asset, dynamic_list
 
@@ -161,17 +162,24 @@ class OBJECT_OT_jewelcraft_select_overlapping(Operator):
                 rad = max(ob.dimensions[:2]) / 2
 
                 if dup.is_instance:
+                    mat = dup.matrix_world.copy()
 
                     if ob.parent and ob.parent.is_instancer:
                         sel = ob.parent
                     else:
                         sel = None
-
                 else:
+                    mat_loc = Matrix.Translation(loc)
+                    mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
+                    mat = mat_loc @ mat_rot
+
                     sel = ob
 
+                loc.freeze()
+                mat.freeze()
+
                 obs.append(sel)
-                ob_data.append((loc, rad))
+                ob_data.append((loc, rad, mat))
 
         overlaps = asset.object_overlap(context, ob_data, threshold=self.threshold)
 

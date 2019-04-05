@@ -19,6 +19,9 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from mathutils import Matrix
+
+
 from .. import var
 from ..lib import unit, mesh, asset
 
@@ -111,9 +114,17 @@ class DataCollect:
                     count = 0
 
                 # Warnings
-                loc = dup.matrix_world.translation.to_tuple()
+                loc = dup.matrix_world.to_translation()
                 rad = max(ob.dimensions[:2]) / 2
-                ob_data.append((loc, rad))
+                if dup.is_instance:
+                    mat = dup.matrix_world.copy()
+                else:
+                    mat_loc = Matrix.Translation(loc)
+                    mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
+                    mat = mat_loc @ mat_rot
+                loc.freeze()
+                mat.freeze()
+                ob_data.append((loc, rad, mat))
 
                 if stone not in known_stones:
                     stone = "*" + stone
