@@ -19,19 +19,17 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from functools import lru_cache
-from math import tau, sin, cos
-
 import bpy
 from bpy_extras.view3d_utils import location_3d_to_region_2d
 import bgl
 import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
-from mathutils import Matrix, Vector
+from mathutils import Matrix
 
 from .. import var
 from . import unit
+from .asset import girdle_coords, find_nearest
 
 
 _handler = None
@@ -70,41 +68,6 @@ def handler_toggle(self, context):
             handler_del()
 
 
-@lru_cache(maxsize=128)
-def circle_coords(radius, mat):
-    coords = []
-    app = coords.append
-    angle = tau / 64
-
-    for i in range(64):
-        x = sin(i * angle) * radius
-        y = cos(i * angle) * radius
-        app(Vector((x, y, 0.0)))
-
-    return tuple((mat @ co).freeze() for co in coords)
-
-
-@lru_cache(maxsize=128)
-def find_closest(loc1, rad1, coords1, coords2):
-    proximity = []
-    app = proximity.append
-
-    for co2 in coords2:
-        app(((co2 - loc1).length, co2))
-    dis, co2 = min(proximity, key=lambda x: x[0])
-
-    if dis < rad1:
-        return dis - rad1, co2, co2
-
-    proximity.clear()
-
-    for co1 in coords1:
-        app(((co1 - co2).length, co1))
-    dis, co1 = min(proximity, key=lambda x: x[0])
-
-    return dis, co1, co2
-
-
 def draw(self, context):
     if (
         not context.window_manager.jewelcraft.widget_toggle or
@@ -121,6 +84,7 @@ def draw(self, context):
     default_color = prefs.widget_color
     default_linewidth = prefs.widget_linewidth
     default_spacing = prefs.widget_spacing
+    diplay_thold = default_spacing + 0.5
 
     if is_df:
         df = context.edit_object
@@ -176,7 +140,7 @@ def draw(self, context):
         mat = mat_loc @ mat_rot
         mat.freeze()
 
-        girdle_act = circle_coords(ob_act_rad, mat)
+        girdle_act = girdle_coords(ob_act_rad, mat)
 
     shader.bind()
     bgl.glEnable(bgl.GL_BLEND)
@@ -202,7 +166,7 @@ def draw(self, context):
         if is_act_gem:
             dis_ob = (ob_act_loc - ob_loc).length
             dis_gap = _from_scene(dis_ob - (ob_act_rad + ob_rad))
-            dis_thold = dis_gap < 0.6
+            dis_thold = dis_gap < diplay_thold
 
             if not (show_all or dis_thold):
                 continue
@@ -245,12 +209,12 @@ def draw(self, context):
         if use_diplay_dis:
 
             if dis_ob:
-                girdle_ob = circle_coords(ob_rad, mat)
-                dis_gap, start, end = find_closest(ob_act_loc, ob_act_rad, girdle_act, girdle_ob)
+                girdle_ob = girdle_coords(ob_rad, mat)
+                dis_gap, start, end = find_nearest(ob_act_loc, ob_act_rad, girdle_act, girdle_ob)
 
                 dis_gap = _from_scene(dis_gap)
-                dis_thold = dis_gap < 0.6
-                spacing_thold = dis_gap < (_spacing + 0.2)
+                dis_thold = dis_gap < diplay_thold
+                spacing_thold = dis_gap < _spacing + 0.3
 
                 if not (show_all or dis_thold):
                     continue
@@ -273,7 +237,7 @@ def draw(self, context):
 
         if show_all or (not is_act and spacing_thold):
             radius = ob_rad + _spacing
-            coords = circle_coords(radius, mat)
+            coords = girdle_coords(radius, mat)
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
             batch.draw(shader)
 
@@ -299,7 +263,7 @@ def draw_font(self, context):
     font_size = prefs.widget_font_size
     fontid = 0
     blf.size(fontid, font_size, 72)
-    blf.color(fontid, 1, 1, 1, 1)
+    blf.color(fontid, 1.0, 1.0, 1.0, 1.0)
 
     for dis, loc, spacing in _font_loc:
         bgl.glEnable(bgl.GL_BLEND)

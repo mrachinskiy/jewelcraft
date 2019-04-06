@@ -21,11 +21,13 @@
 
 import os
 import random
+from math import tau, sin, cos
+from functools import lru_cache
 
 import bpy
 from mathutils import Matrix, Vector, kdtree
 
-from . import mesh, unit, widget
+from . import mesh, unit
 from .. import var
 
 
@@ -58,6 +60,85 @@ def get_gem(self, context):
 
 def get_name(x):
     return x.replace("_", " ").title()
+
+
+@lru_cache(maxsize=128)
+def girdle_coords(radius, mat):
+    coords = []
+    app = coords.append
+    angle = tau / 64
+
+    for i in range(64):
+        x = sin(i * angle) * radius
+        y = cos(i * angle) * radius
+        app(Vector((x, y, 0.0)))
+
+    return tuple((mat @ co).freeze() for co in coords)
+
+
+@lru_cache(maxsize=128)
+def find_nearest(loc1, rad1, coords1, coords2):
+    proximity = []
+    app = proximity.append
+
+    for co2 in coords2:
+        app(((co2 - loc1).length, co2))
+    dis, co2 = min(proximity, key=lambda x: x[0])
+
+    if dis < rad1:
+        return dis - rad1, co2, co2
+
+    proximity.clear()
+
+    for co1 in coords1:
+        app(((co1 - co2).length, co1))
+    dis, co1 = min(proximity, key=lambda x: x[0])
+
+    return dis, co1, co2
+
+
+def gem_overlap(data, threshold=0.1, first_match=False):
+    kd = kdtree.KDTree(len(data))
+
+    for i, (loc, _, _) in enumerate(data):
+        kd.insert(loc, i)
+
+    kd.balance()
+
+    overlap_indices = set()
+    UScale = unit.Scale()
+    _from_scene = UScale.from_scene
+    seek_range = UScale.to_scene(4)
+
+    for i1, (loc1, rad1, mat1) in enumerate(data):
+
+        if i1 in overlap_indices:
+            continue
+
+        girdle1 = girdle_coords(rad1, mat1)
+
+        for loc2, i2, dis_ob in kd.find_range(loc1, seek_range):
+
+            _, rad2, mat2 = data[i2]
+            dis_gap = dis_ob - (rad1 + rad2)
+
+            if dis_gap > threshold or i1 == i2:
+                continue
+
+            girdle2 = girdle_coords(rad2, mat2)
+            dis_gap, _, _ = find_nearest(loc1, rad1, girdle1, girdle2)
+            dis_gap = _from_scene(dis_gap)
+
+            if dis_gap < threshold:
+                if first_match:
+                    return True
+                overlap_indices.add(i1)
+                break
+
+    if first_match:
+        return False
+
+    return overlap_indices
 
 
 # Material
@@ -333,47 +414,3 @@ def calc_bbox(obs):
         (x_min, y_min, z_min),  # bbox min
         (x_max, y_max, z_max),  # bbox max
     )
-
-
-def object_overlap(context, data, threshold=0.1, first_match=False):
-    kd = kdtree.KDTree(len(data))
-
-    for i, (loc, _, _) in enumerate(data):
-        kd.insert(loc, i)
-
-    kd.balance()
-
-    overlap_indices = set()
-    UScale = unit.Scale()
-    _from_scene = UScale.from_scene
-    seek_range = UScale.to_scene(4)
-
-    for i1, (loc1, rad1, mat1) in enumerate(data):
-
-        if i1 in overlap_indices:
-            continue
-
-        girdle1 = widget.circle_coords(rad1, mat1)
-
-        for loc2, i2, dis_ob in kd.find_range(loc1, seek_range):
-
-            _, rad2, mat2 = data[i2]
-            dis_gap = dis_ob - (rad1 + rad2)
-
-            if dis_gap > threshold or i1 == i2:
-                continue
-
-            girdle2 = widget.circle_coords(rad2, mat2)
-            dis_gap, _, _ = widget.find_closest(loc1, rad1, girdle1, girdle2)
-            dis_gap = _from_scene(dis_gap)
-
-            if dis_gap < threshold:
-                if first_match:
-                    return True
-                overlap_indices.add(i1)
-                break
-
-    if first_match:
-        return False
-
-    return overlap_indices

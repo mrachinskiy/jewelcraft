@@ -159,7 +159,7 @@ class DataCollect:
 
         if self.prefs.product_report_use_overlap:
             thold = UScale.to_scene(0.1)
-            overlaps = asset.object_overlap(context, ob_data, threshold=thold, first_match=True)
+            overlaps = asset.gem_overlap(ob_data, threshold=thold, first_match=True)
 
         # Find hidden gems
         # ---------------------------
