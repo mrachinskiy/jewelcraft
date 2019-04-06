@@ -181,7 +181,7 @@ class OBJECT_OT_jewelcraft_select_overlapping(Operator):
                 obs.append(sel)
                 ob_data.append((loc, rad, mat))
 
-        overlaps = asset.object_overlap(context, ob_data, threshold=self.threshold)
+        overlaps = asset.gem_overlap(ob_data, threshold=self.threshold)
 
         if overlaps:
             for i in overlaps:
