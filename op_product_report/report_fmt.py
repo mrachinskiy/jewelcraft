@@ -25,7 +25,7 @@ from .. import var
 from ..lib import unit, asset
 
 
-def to_int(x):
+def _to_int(x):
     if x.is_integer():
         return int(x)
     return x
@@ -108,39 +108,35 @@ class DataFormat:
 
         if data["gems"]:
 
-            gems = data["gems"]
             gemsf = []
             table_heading = (_("Gem"), _("Cut"), _("Size"), _("Qty"))
             cols_width = [len(x) for x in table_heading]
 
-            for stone in sorted(gems):
-                for cut in sorted(gems[stone]):
-                    for size in sorted(gems[stone][cut]):
+            for (stone, cut, size), qty in sorted(data["gems"].items(), key=lambda x: x[0]):
 
-                        # Values
-                        # ---------------------------
-                        ct = _ct_calc(stone, cut, l=size[1], w=size[0], h=size[2])
-                        qty = gems[stone][cut][size]
-                        qty_ct = round(qty * ct, 3)
+                # Values
+                # ---------------------------
+                ct = _ct_calc(stone, cut, l=size[1], w=size[0], h=size[2])
+                qty_ct = round(qty * ct, 3)
 
-                        # Format
-                        # ---------------------------
-                        stonef = _(asset.get_name(stone))
-                        cutf = _(asset.get_name(cut))
-                        qtyf = "{} {} ({} {})".format(qty, _("pcs"), qty_ct, _("ct."))
+                # Format
+                # ---------------------------
+                stonef = _(asset.get_name(stone))
+                cutf = _(asset.get_name(cut))
+                qtyf = "{} {} ({} {})".format(qty, _("pcs"), qty_ct, _("ct."))
 
-                        if cut in {"ROUND", "SQUARE", "ASSCHER", "OCTAGON", "FLANDERS"}:
-                            sizef = "{} {} ({} {})".format(to_int(size[1]), _("mm"), ct, _("ct."))
-                        else:
-                            sizef = "{} × {} {} ({} {})".format(to_int(size[1]), to_int(size[0]), _("mm"), ct, _("ct."))
+                if cut in {"ROUND", "SQUARE", "ASSCHER", "OCTAGON", "FLANDERS"}:
+                    sizef = "{} {} ({} {})".format(_to_int(size[1]), _("mm"), ct, _("ct."))
+                else:
+                    sizef = "{} × {} {} ({} {})".format(_to_int(size[1]), _to_int(size[0]), _("mm"), ct, _("ct."))
 
-                        gemf = (stonef, cutf, sizef, qtyf)
-                        gemsf.append(gemf)
+                gemf = (stonef, cutf, sizef, qtyf)
+                gemsf.append(gemf)
 
-                        # Columns width
-                        # ---------------------------
-                        for i, width in enumerate(cols_width):
-                            cols_width[i] = max(width, len(gemf[i]))
+                # Columns width
+                # ---------------------------
+                for i, width in enumerate(cols_width):
+                    cols_width[i] = max(width, len(gemf[i]))
 
             # Format table
             # ---------------------------

@@ -29,6 +29,8 @@ from ..lib import unit, mesh, asset
 class DataCollect:
 
     def data_collect(self, context):
+        import collections
+
         scene = context.scene
         depsgraph = context.depsgraph
         props = scene.jewelcraft
@@ -39,7 +41,7 @@ class DataCollect:
             "shank": [],
             "dim": [],
             "weight": 0.0,
-            "gems": {},
+            "gems": collections.defaultdict(int),
             "warn": [],
         }
 
@@ -83,7 +85,7 @@ class DataCollect:
         # Gems
         # ---------------------------
 
-        gms = data["gems"]
+        gems = data["gems"]
         known_stones = var.STONE_DENSITY.keys()
         known_cuts = var.CUT_VOLUME_CORRECTION.keys()
         ob_data = []
@@ -102,55 +104,43 @@ class DataCollect:
             if not deprecated_id:
                 deprecated_id = ob.type == "MESH" and "gem" in ob.data
 
-            if "gem" in ob:
+            if "gem" not in ob or (not dup.is_instance and ob in instance_orig):
+                continue
 
-                # Gem
-                stone = ob["gem"]["stone"]
-                cut = ob["gem"]["cut"]
-                size = tuple(round(x, 2) for x in _from_scene(ob.dimensions, batch=True))
-                count = 1
+            # Gem
+            stone = ob["gem"]["stone"]
+            cut = ob["gem"]["cut"]
+            size = tuple(round(x, 2) for x in _from_scene(ob.dimensions, batch=True))
+            gems[(stone, cut, size)] += 1
 
-                if not dup.is_instance and ob in instance_orig:
-                    count = 0
+            # Warnings
+            loc = dup.matrix_world.to_translation()
+            rad = max(ob.dimensions[:2]) / 2
+            if dup.is_instance:
+                mat = dup.matrix_world.copy()
+            else:
+                mat_loc = Matrix.Translation(loc)
+                mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
+                mat = mat_loc @ mat_rot
+            loc.freeze()
+            mat.freeze()
+            ob_data.append((loc, rad, mat))
 
-                # Warnings
-                loc = dup.matrix_world.to_translation()
-                rad = max(ob.dimensions[:2]) / 2
-                if dup.is_instance:
-                    mat = dup.matrix_world.copy()
-                else:
-                    mat_loc = Matrix.Translation(loc)
-                    mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
-                    mat = mat_loc @ mat_rot
-                loc.freeze()
-                mat.freeze()
-                ob_data.append((loc, rad, mat))
+            if stone not in known_stones:
+                stone = "*" + stone
+                unknown_id = True
 
-                if stone not in known_stones:
-                    stone = "*" + stone
-                    unknown_id = True
+            if cut not in known_cuts:
+                cut = "*" + cut
+                unknown_id = True
 
-                if cut not in known_cuts:
-                    cut = "*" + cut
-                    unknown_id = True
-
-                if (
-                    not df_leftovers and
-                    ob.parent and
-                    ob.parent.type == "MESH" and
-                    ob.parent.instance_type == "NONE"
-                ):
-                    df_leftovers = True
-
-                # Data
-                if stone in gms and cut in gms[stone] and size in gms[stone][cut]:
-                    gms[stone][cut][size] += count
-                elif stone in gms and cut in gms[stone]:
-                    gms[stone][cut][size] = count
-                elif stone in gms:
-                    gms[stone][cut] = {size: count}
-                else:
-                    gms[stone] = {cut: {size: count}}
+            if (
+                not df_leftovers and
+                ob.parent and
+                ob.parent.type == "MESH" and
+                ob.parent.instance_type == "NONE"
+            ):
+                df_leftovers = True
 
         # Find overlaps
         # ---------------------------
