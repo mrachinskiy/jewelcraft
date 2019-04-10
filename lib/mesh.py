@@ -179,7 +179,7 @@ def edge_loop_walk(verts):
 
 def face_pos():
     depsgraph = bpy.context.depsgraph
-    scene = bpy.context.scene
+    view_layer = bpy.context.view_layer
     mats = []
 
     for ob in bpy.context.objects_in_mode:
@@ -192,9 +192,11 @@ def face_pos():
         if mods_ignore:
             for mod, mod_show in mods_ignore:
                 mod.show_viewport = False
-            scene.update()
 
         ob.update_from_editmode()
+        ob.update_tag()
+        view_layer.update()
+
         me = ob.to_mesh(depsgraph, True)
         me.transform(ob.matrix_world)
 
