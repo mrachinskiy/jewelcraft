@@ -26,24 +26,27 @@ from .. import var
 from ..lib import unit, mesh, asset
 
 
-class DataCollect:
+def data_collect(context, gem_map=False):
+    import collections
 
-    def data_collect(self, context):
-        import collections
+    UnitScale = unit.Scale(context)
+    from_scene_scale = UnitScale.from_scene
+    to_scene_scale = UnitScale.to_scene
 
-        scene = context.scene
-        depsgraph = context.depsgraph
-        props = scene.jewelcraft
-        UScale = unit.Scale()
-        _from_scene = UScale.from_scene
-        data = {
-            "size": 0.0,
-            "shank": [],
-            "dim": [],
-            "weight": 0.0,
-            "gems": collections.defaultdict(int),
-            "warn": [],
-        }
+    scene = context.scene
+    depsgraph = context.depsgraph
+    prefs = context.preferences.addons[var.ADDON_ID].preferences
+    props = scene.jewelcraft
+    data = {
+        "size": 0.0,
+        "shank": [],
+        "dim": [],
+        "weight": 0.0,
+        "gems": collections.defaultdict(int),
+        "warn": [],
+    }
+
+    if not gem_map:
 
         # Size
         # ---------------------------
@@ -51,7 +54,7 @@ class DataCollect:
         if props.product_report_ob_size:
             ob = props.product_report_ob_size
             size = max(ob.dimensions)
-            data["size"] = _from_scene(size)
+            data["size"] = from_scene_scale(size)
 
         # Shank
         # ---------------------------
@@ -64,14 +67,14 @@ class DataCollect:
             scene.update()
 
             dim.remove(max(dim))
-            data["shank"] = _from_scene(dim, batch=True)
+            data["shank"] = from_scene_scale(dim, batch=True)
 
         # Dimensions
         # ---------------------------
 
         if props.product_report_ob_dim:
             ob = props.product_report_ob_dim
-            data["dim"] = _from_scene(ob.dimensions.to_tuple(), batch=True)
+            data["dim"] = from_scene_scale(ob.dimensions.to_tuple(), batch=True)
 
         # Weight
         # ---------------------------
@@ -80,104 +83,104 @@ class DataCollect:
             ob = props.product_report_ob_weight
 
             if ob.type == "MESH":
-                data["weight"] = _from_scene(mesh.est_volume((ob,)), volume=True)
+                data["weight"] = from_scene_scale(mesh.est_volume((ob,)), volume=True)
 
-        # Gems
-        # ---------------------------
+    # Gems
+    # ---------------------------
 
-        gems = data["gems"]
-        known_stones = var.STONE_DENSITY.keys()
-        known_cuts = var.CUT_VOLUME_CORRECTION.keys()
-        ob_data = []
-        df_leftovers = False
-        deprecated_id = False
-        unknown_id = False
-        instance_orig = set(dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance)
+    gems = data["gems"]
+    known_stones = var.STONE_DENSITY.keys()
+    known_cuts = var.CUT_VOLUME_CORRECTION.keys()
+    ob_data = []
+    df_leftovers = False
+    deprecated_id = False
+    unknown_id = False
+    instance_orig = set(dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance)
 
-        for dup in depsgraph.object_instances:
+    for dup in depsgraph.object_instances:
 
-            if dup.is_instance:
-                ob = dup.instance_object.original
-            else:
-                ob = dup.object.original
+        if dup.is_instance:
+            ob = dup.instance_object.original
+        else:
+            ob = dup.object.original
 
-            if not deprecated_id:
-                deprecated_id = ob.type == "MESH" and "gem" in ob.data
+        if not deprecated_id:
+            deprecated_id = ob.type == "MESH" and "gem" in ob.data
 
-            if "gem" not in ob or (not dup.is_instance and ob in instance_orig):
-                continue
+        if "gem" not in ob or (not dup.is_instance and ob in instance_orig):
+            continue
 
-            # Gem
-            stone = ob["gem"]["stone"]
-            cut = ob["gem"]["cut"]
-            size = tuple(round(x, 2) for x in _from_scene(ob.dimensions, batch=True))
-            gems[(stone, cut, size)] += 1
-
-            # Warnings
-            loc = dup.matrix_world.to_translation()
-            rad = max(ob.dimensions[:2]) / 2
-            if dup.is_instance:
-                mat = dup.matrix_world.copy()
-            else:
-                mat_loc = Matrix.Translation(loc)
-                mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
-                mat = mat_loc @ mat_rot
-            loc.freeze()
-            mat.freeze()
-            ob_data.append((loc, rad, mat))
-
-            if stone not in known_stones:
-                stone = "*" + stone
-                unknown_id = True
-
-            if cut not in known_cuts:
-                cut = "*" + cut
-                unknown_id = True
-
-            if (
-                not df_leftovers and
-                ob.parent and
-                ob.parent.type == "MESH" and
-                ob.parent.instance_type == "NONE"
-            ):
-                df_leftovers = True
-
-        # Find overlaps
-        # ---------------------------
-
-        overlaps = False
-
-        if self.prefs.product_report_use_overlap:
-            thold = UScale.to_scene(0.1)
-            overlaps = asset.gem_overlap(ob_data, threshold=thold, first_match=True)
-
-        # Find hidden gems
-        # ---------------------------
-
-        hidden = False
-
-        if self.prefs.product_report_use_hidden_gems:
-            for ob in scene.objects:
-                if "gem" in ob and not ob.visible_get():
-                    hidden = True
-                    break
+        # Gem
+        stone = ob["gem"]["stone"]
+        cut = ob["gem"]["cut"]
+        size = tuple(round(x, 2) for x in from_scene_scale(ob.dimensions, batch=True))
+        gems[(stone, cut, size)] += 1
 
         # Warnings
-        # ---------------------------
+        loc = dup.matrix_world.to_translation()
+        rad = max(ob.dimensions[:2]) / 2
+        if dup.is_instance:
+            mat = dup.matrix_world.copy()
+        else:
+            mat_loc = Matrix.Translation(loc)
+            mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
+            mat = mat_loc @ mat_rot
+        loc.freeze()
+        mat.freeze()
+        ob_data.append((loc, rad, mat))
 
-        if hidden:
-            data["warn"].append("Hidden gems (use Show Hidden/Alt H)")
+        if stone not in known_stones:
+            stone = "*" + stone
+            unknown_id = True
 
-        if df_leftovers:
-            data["warn"].append("Possible gem dupli-face leftovers")
+        if cut not in known_cuts:
+            cut = "*" + cut
+            unknown_id = True
 
-        if overlaps:
-            data["warn"].append("Overlapping gems")
+        if (
+            not df_leftovers and
+            ob.parent and
+            ob.parent.type == "MESH" and
+            ob.parent.instance_type == "NONE"
+        ):
+            df_leftovers = True
 
-        if deprecated_id:
-            data["warn"].append("Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)")
+    # Find overlaps
+    # ---------------------------
 
-        if unknown_id:
-            data["warn"].append("Unknown gem IDs, carats are not calculated for marked gems (*)")
+    overlaps = False
 
-        return data
+    if prefs.product_report_use_overlap:
+        threshold = to_scene_scale(0.1)
+        overlaps = asset.gem_overlap(context, ob_data, threshold, first_match=True)
+
+    # Find hidden gems
+    # ---------------------------
+
+    hidden = False
+
+    if prefs.product_report_use_hidden_gems:
+        for ob in scene.objects:
+            if "gem" in ob and not ob.visible_get():
+                hidden = True
+                break
+
+    # Warnings
+    # ---------------------------
+
+    if hidden:
+        data["warn"].append("Hidden gems")
+
+    if df_leftovers:
+        data["warn"].append("Possible gem dupli-face leftovers")
+
+    if overlaps:
+        data["warn"].append("Overlapping gems")
+
+    if deprecated_id:
+        data["warn"].append("Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)")
+
+    if unknown_id:
+        data["warn"].append("Unknown gem IDs, carats are not calculated for marked gems (*)")
+
+    return data

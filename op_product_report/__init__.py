@@ -25,33 +25,35 @@ import bpy
 from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
 
+from . import report_fmt, report_get
 from .. import var
-from ..localization import DICTIONARY
-from .report_get import DataCollect
-from .report_fmt import DataFormat
+from ..lib import asset
 
 
-class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
+class WM_OT_jewelcraft_product_report(Operator):
     bl_label = "JewelCraft Product Report"
-    bl_description = "Save product report to text file"
+    bl_description = "Present summary information about product, including sizes, weight and used gems"
     bl_idname = "wm.jewelcraft_product_report"
 
     def execute(self, context):
-        data_raw = self.data_collect(context)
-        data_fmt = self.data_format(data_raw)
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        use_save = prefs.product_report_save
+        data_raw = report_get.data_collect(context)
+        data_fmt = report_fmt.data_format(context, data_raw)
         warnf = [_(x) for x in data_raw["warn"]]
 
         # Compose text datablock
         # ---------------------------
 
         if warnf:
-            sep = "—" * max(40, len(max(warnf)) + 2)
-            warn_fmt = "{}\n{}\n".format(_("WARNING"), sep)
+            sep = "-" * 30
+            warn_fmt = _("WARNING") + "\n"
+            warn_fmt = sep + "\n"
 
             for msg in warnf:
-                warn_fmt += "-{}\n".format(_(msg))
+                warn_fmt += f"* {msg}\n"
 
-            warn_fmt += f"{sep}\n\n"
+            warn_fmt += sep + "\n\n"
             data_fmt = warn_fmt + data_fmt
 
         if "JewelCraft Product Report" in bpy.data.texts:
@@ -66,8 +68,7 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
         # Save to file
         # ---------------------------
 
-        if self.prefs.product_report_save and bpy.data.is_saved:
-
+        if use_save and bpy.data.is_saved:
             filepath = bpy.data.filepath
             filename = os.path.splitext(os.path.basename(filepath))[0]
             save_path = os.path.join(os.path.dirname(filepath), filename + " Report.txt")
@@ -78,26 +79,17 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
         # Display
         # ---------------------------
 
-        if self.prefs.product_report_display:
+        if prefs.product_report_display:
+            asset.show_window(800, 540, area_type="TEXT_EDITOR", space_data={"text": txt})
 
-            bpy.ops.screen.userpref_show("INVOKE_DEFAULT")
-
-            area = bpy.context.window_manager.windows[-1].screen.areas[0]
-            area.type = "TEXT_EDITOR"
-
-            space = area.spaces[0]
-            space.text = txt
-
-        elif warnf or self.prefs.product_report_save:
+        elif warnf or use_save:
 
             def draw(self_local, context):
-
                 for msg in warnf:
                     self_local.layout.label(text=msg, icon="ERROR")
                     self.report({"WARNING"}, msg)
 
-                if self.prefs.product_report_save:
-
+                if use_save:
                     if bpy.data.is_saved:
                         msg = _("Text file successfully created in the project folder")
                         report_icon = "BLANK1"
@@ -113,22 +105,3 @@ class WM_OT_jewelcraft_product_report(Operator, DataCollect, DataFormat):
             context.window_manager.popup_menu(draw, title=_("Product Report"))
 
         return {"FINISHED"}
-
-    def gettext(self, text, ctxt="*"):
-        if self.use_gettext:
-            return DICTIONARY[self.lang].get((ctxt, text), text)
-        return text
-
-    def invoke(self, context, event):
-        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.lang = self.prefs.product_report_lang
-
-        if self.lang == "AUTO":
-            self.lang = bpy.app.translations.locale
-
-        if self.lang == "es_ES":
-            self.lang = "es"
-
-        self.use_gettext = self.lang in DICTIONARY.keys()
-
-        return self.execute(context)

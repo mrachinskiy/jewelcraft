@@ -156,6 +156,14 @@ STONE_COLOR = {
     "PERIDOT": (0.201, 0.748, 0.026, 1.0),
 }
 
+CUT_SIZE_SINGLE = {
+    "ASSCHER",
+    "FLANDERS",
+    "OCTAGON",
+    "ROUND",
+    "SQUARE",
+}
+
 preview_collections = {}
 
 

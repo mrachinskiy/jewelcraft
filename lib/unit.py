@@ -19,9 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import bpy
-
-
 def convert(x, units):
     if units == "CM3_TO_MM3":
         return x / 1000
@@ -31,18 +28,18 @@ def convert(x, units):
 
 class Scale:
 
-    def __init__(self):
-        unit = bpy.context.scene.unit_settings
+    def __init__(self, context):
+        unit = context.scene.unit_settings
         self.scale = unit.scale_length
         self.use_conversion = unit.system == "METRIC" and self.scale != 0.001
 
     def from_scene(self, x, volume=False, batch=False):
         if self.use_conversion:
 
-            if batch:
-                return tuple(v * 1000 * self.scale for v in x)
             if volume:
                 return x * 1000 ** 3 * self.scale ** 3
+            if batch:
+                return tuple(v * 1000 * self.scale for v in x)
 
             return x * 1000 * self.scale
 
@@ -51,10 +48,10 @@ class Scale:
     def to_scene(self, x, volume=False, batch=False):
         if self.use_conversion:
 
-            if batch:
-                return tuple(v / 1000 / self.scale for v in x)
             if volume:
                 return x / 1000 ** 3 / self.scale ** 3
+            if batch:
+                return tuple(v / 1000 / self.scale for v in x)
 
             return x / 1000 / self.scale
 

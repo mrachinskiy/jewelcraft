@@ -481,7 +481,7 @@ class OBJECT_OT_jewelcraft_resize(Operator):
         ),
         update=update_size,
     )
-    size: FloatProperty(name="Size", min=0.0, unit="LENGTH")
+    size: FloatProperty(name="Size", min=0.0, step=10, unit="LENGTH")
 
     def draw(self, context):
         layout = self.layout
@@ -504,7 +504,7 @@ class OBJECT_OT_jewelcraft_resize(Operator):
 
         self.dim_orig = dim.to_tuple()
         self.size = dim[int(self.axis)]
-        self.pivot = context.object.location.to_tuple()
+        self.pivot = context.object.matrix_world.translation.to_tuple()
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)

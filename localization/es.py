@@ -23,20 +23,19 @@ dictionary = {
     "*": {
         # Interface
         "Asset Manager": "Gestor de Activos",
-        "Asset name from active object": "Nombre del activo desde objeto activo",
-        "Display asset name": "Mostrar nombre de activo",
+        "Name From Active": "Nombre del activo desde objeto activo",
+        "Display Asset Name": "Mostrar nombre de activo",
         "Product Report": "Informe del Producto",
         "Report Language": "Idioma del Informe",
-        "Display in a new window": "Mostrar en una Nueva Ventana",
-        "Save to file": "Guardar en Archivo",
-        "Use custom library folder": "Usar Carpeta de Biblioteca Personalizada",
+        "Save To File": "Guardar en Archivo",
+        "Use Custom Library Folder": "Usar Carpeta de Biblioteca Personalizada",
         "Gems": "Gemas",
         "Assets": "Activos",
         "Select Gems By...": "Seleccionar Gemas por...",
         "Jeweling": "Joyería",
         "Weighting": "Evaluación del Peso",
         "Weighting Set": "Conjunto de Materiales",
-        "Hide default sets": "Ocultar Conjuntos por defecto",
+        "Hide Default Sets": "Ocultar Conjuntos por defecto",
         "[JewelCraft] Precious": "[Joyería] Preciosa",
         "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[Joyería] Preciosa RU (ГОСТ 30649-99)",
         "[JewelCraft] Base": "[Joyería] Base",
@@ -45,19 +44,28 @@ dictionary = {
         "Cutter": "Cortador",
         "Library Folder Path": "Ruta a Carpeta Biblioteca",
         "Widgets": "Controles",
-        "Use overrides": "Usar Anulaciones",
+        "Use Overrides": "Usar Anulaciones",
         "Widget Color": "Color del Control",
         "Line Width": "Ancho de Línea",
-        "Show composition": "Mostrar Composición",
-        "Show density": "Mostrar Densidad",
+        "Show Composition": "Mostrar Composición",
+        "Show Density": "Mostrar Densidad",
         "Materials list": "Lista de Materiales",
         "Composition": "Composición",
         "Warnings": "Alertas",
-        "Hidden gems": "Gemas Ocultas",
+        "Hidden Gems": "Gemas Ocultas",
+
         # TODO
-        # "Show all": "",
+        # "Show All": "",
         # "Scene scale is not optimal": "",
         # "Unsupported unit system": "",
+        # "Overlapping Gems": "",
+        # "Limit By Selection": "",
+        # "Save To Image": "",
+        # "Gem Map": "",
+        # "Gem Table": "",
+        # "Gem Size": "",
+        # "Viewport Text Size": "",
+
         # Popup dialogs
         "Asset Name": "Nombre de Activo",
         "Category Name": "Nombre de Categoría",
@@ -97,7 +105,7 @@ dictionary = {
         "Set of base metal alloys, physical properties taken directly from suppliers":
             "Conjunto de aleaciones de metales comunes, propiedades físicas tomadas directamente de los proveedores",
 
-        "Display product report in new window": "Mostrar informe del producto en una nueva ventana",
+        "Display product report in a new window": "Mostrar informe del producto en una nueva ventana",
         "Save product report to file in project folder": "Guardar el informe del producto en un archivo en la carpeta del proyecto",
         "Product report language": "Idioma del informe del producto",
         "Use user preferences language setting": "Usar los ajustes de preferencias de usuario del idioma",
@@ -105,7 +113,6 @@ dictionary = {
         "Object for shank width and height reference": "Objeto para referencia de anchura y altura del vástago",
         "Object for dimensions reference": "Objeto para referencia de dimensiones",
         "Object for weight reference": "Objeto para referencia de peso",
-        "Save product report to text file": "Guardar el informe del producto en un archivo de texto",
         "Select gems by trait": "Seleccionar gemas por rasgo",
         "Search stone by name": "Buscar piedra por nombre",
         "Search asset by name": "Buscar activo por nombre",
@@ -158,7 +165,7 @@ dictionary = {
         "Replace asset preview image": "Reemplazar imagen de vista previa del activo",
         "Import selected asset": "Importar activo seleccionado",
         "Asset category": "Categoría de activo",
-        
+
         "Set custom asset library folder, if disabled the default library folder will be used": (
             "Establecer carpeta de biblioteca de activos personalizada, "
             "si está desactivada, se usará la carpeta de biblioteca predeterminada"
@@ -218,27 +225,23 @@ dictionary = {
 
         "Clear materials list": "Limpiara lista de materiales",
 
-        "Show warning if there are hidden gem objects in the scene":
-            "Mostrar advertencia si hay objetos de gemas ocultos en la escena",
-
         "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": (
             "Activo padre importado a los objetos seleccionados "
             "(Atajo: mantener presionada la tecla Alt al usar la herramienta)"
         ),
 
-        #TODO
-        # "Select gems that are less than 0.1 mm distance from each other or overlapping":
-        #     "",
-
+        # TODO
+        # "Select gems that are less than 0.1 mm distance from each other or overlapping": "",
         # "Display spacing widget for all visible gems": "",
-
-        # "Set optimal unit settings for jewelry modelling":
-        #     "",
+        # "Set optimal unit settings for jewelry modelling": "",
+        # "Enable or disable given warning": "",
+        # "Compose gem table and map it to gems in the scene": "",
+        # "Present summary information about product, including sizes, weight and used gems": "",
 
         # Reports
         "WARNING": "ADVERTENCIA",
         "Possible gem dupli-face leftovers": "Posibles restos de Duplicados en Caras de gemas",
-        "Hidden gems (use Show Hidden/Alt H)": "Ocultar gemas (usar Mostrar Oculto / Alt H)",
+        "Hidden gems": "Ocultar gemas",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
             "ID de gemas en desuso (usar Convert Deprecated Gem IDs del menú Buscar Operador)",
@@ -264,10 +267,12 @@ dictionary = {
 
         "File not found": "Archivo no encontrado",
         "Name must be specified": "El nombre debe ser especificado",
+
         # TODO
         # "Overlapping gems": "",
         # "{} overlaps found": "",
         # "Optimal unit settings are in use": "",
+
         # Cuts
         "Round": "Redonda",
         "Oval": "Óvalo",
@@ -359,6 +364,7 @@ dictionary = {
         "Cut": "Corte",
         "Dimensions": "Dimensiones",
         "Round": "Redonda",
+
         # TODO
         # "Spacing": "",
     },
@@ -396,8 +402,11 @@ dictionary = {
         "Replace Set": "Reemplazar Conjunto",
         "Remove Set": "Eliminar Conjunto",
         "Rename Set": "Renombrar Conjunto",
+
         # TODO
         # "Overlapping": "",
         # "Set Units": "",
+        # "Gem Map": "",
+        # "Append": "",
     },
 }

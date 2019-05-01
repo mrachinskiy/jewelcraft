@@ -37,7 +37,7 @@ shader = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
 
 _handler_font = None
 _font_loc = []
-shader_2d = gpu.shader.from_builtin('2D_UNIFORM_COLOR')
+shader_2d = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
 
 def handler_add(self, context):
@@ -109,7 +109,7 @@ def draw(self, context):
         else:
             ob_act_spacing = default_spacing
 
-        _from_scene = unit.Scale().from_scene
+        from_scene_scale = unit.Scale(context).from_scene
 
         if is_df:
             df_pass = False
@@ -165,7 +165,7 @@ def draw(self, context):
 
         if is_act_gem:
             dis_ob = (ob_act_loc - ob_loc).length
-            dis_gap = _from_scene(dis_ob - (ob_act_rad + ob_rad))
+            dis_gap = from_scene_scale(dis_ob - (ob_act_rad + ob_rad))
             dis_thold = dis_gap < diplay_thold
 
             if not (show_all or dis_thold):
@@ -212,7 +212,7 @@ def draw(self, context):
                 girdle_ob = girdle_coords(ob_rad, mat)
                 dis_gap, start, end = find_nearest(ob_act_loc, ob_act_rad, girdle_act, girdle_ob)
 
-                dis_gap = _from_scene(dis_gap)
+                dis_gap = from_scene_scale(dis_gap)
                 dis_thold = dis_gap < diplay_thold
                 spacing_thold = dis_gap < _spacing + 0.3
 
@@ -230,7 +230,7 @@ def draw(self, context):
                 elif dis_gap < _spacing:
                     shader.uniform_float("color", (1.0, 0.9, 0.0, 1.0))
 
-                _font_loc.append((dis_gap, mid, _from_scene(max(ob_act_spacing, _spacing))))
+                _font_loc.append((dis_gap, mid, from_scene_scale(max(ob_act_spacing, _spacing))))
 
                 batch = batch_for_shader(shader, "LINES", {"pos": (start, end)})
                 batch.draw(shader)
@@ -260,7 +260,7 @@ def draw_font(self, context):
     region = context.region
     region_3d = context.space_data.region_3d
     prefs = context.preferences.addons[var.ADDON_ID].preferences
-    font_size = prefs.widget_font_size
+    font_size = prefs.view_font_size_distance
     fontid = 0
     blf.size(fontid, font_size, 72)
     blf.color(fontid, 1.0, 1.0, 1.0, 1.0)
@@ -291,7 +291,7 @@ def draw_font(self, context):
         batch_font = batch_for_shader(shader_2d, "TRI_FAN", {"pos": verts})
         batch_font.draw(shader_2d)
 
-        blf.position(fontid, loc_x, loc_y, 0)
+        blf.position(fontid, loc_x, loc_y, 0.0)
         blf.draw(fontid, dis_str)
 
     _font_loc.clear()

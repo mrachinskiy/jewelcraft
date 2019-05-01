@@ -88,13 +88,6 @@ class JewelCraftMaterialsList(PropertyGroup):
 # ------------------------------------------
 
 
-def property_split(data, layout, label, prop, ratio=0.0):
-    split = layout.split(align=True, factor=ratio)
-    split.alignment = "RIGHT"
-    split.label(text=label)
-    split.prop(data, prop, text="")
-
-
 def update_asset_refresh(self, context):
     dynamic_list.asset_folder_list_refresh()
     dynamic_list.asset_list_refresh(hard=True)
@@ -112,6 +105,8 @@ class JewelCraftPreferences(AddonPreferences):
             ("UPDATES",        "Updates",         ""),
         ),
     )
+    # Updates
+    # ------------------------
     update_use_auto_check: BoolProperty(
         name="Automatically check for updates",
         description="Automatically check for updates with specified interval",
@@ -131,12 +126,14 @@ class JewelCraftPreferences(AddonPreferences):
         name="Update to pre-release",
         description="Update add-on to pre-release version if available",
     )
+    # Asset
+    # ------------------------
     asset_name_from_obj: BoolProperty(
-        name="Asset name from active object",
+        name="Name From Active",
         description="Use active object name when creating new asset",
     )
     use_custom_asset_dir: BoolProperty(
-        name="Use custom library folder",
+        name="Use Custom Library Folder",
         description="Set custom asset library folder, if disabled the default library folder will be used",
         update=update_asset_refresh,
     )
@@ -147,16 +144,18 @@ class JewelCraftPreferences(AddonPreferences):
         update=update_asset_refresh,
     )
     display_asset_name: BoolProperty(
-        name="Display asset name",
+        name="Display Asset Name",
         description="Display asset name in Tool Shelf",
     )
+    # Weighting
+    # ------------------------
     weighting_hide_default_sets: BoolProperty(
-        name="Hide default sets",
+        name="Hide Default Sets",
         description="Hide default JewelCraft sets from weighting sets menu",
         update=dynamic_list.weighting_set_refresh,
     )
     weighting_set_use_custom_dir: BoolProperty(
-        name="Use custom library folder",
+        name="Use Custom Library Folder",
         description="Set custom asset library folder, if disabled the default library folder will be used",
         update=dynamic_list.weighting_set_refresh,
     )
@@ -168,13 +167,15 @@ class JewelCraftPreferences(AddonPreferences):
     )
     weighting_materials: PointerProperty(type=JewelCraftMaterialsList)
     weighting_list_show_composition: BoolProperty(
-        name="Show composition",
+        name="Show Composition",
         description="Display material composition in the list",
     )
     weighting_list_show_density: BoolProperty(
-        name="Show density",
+        name="Show Density",
         description="Display material density in the list",
     )
+    # Product Report
+    # ------------------------
     product_report_lang: EnumProperty(
         name="Report Language",
         description="Product report language",
@@ -186,28 +187,46 @@ class JewelCraftPreferences(AddonPreferences):
             ("ru_RU", "Russian (Русский)", ""),
         ),
     )
-    product_report_display: BoolProperty(
-        name="Display in a new window",
-        description="Display product report in new window",
-        default=True,
-    )
     product_report_save: BoolProperty(
-        name="Save to file",
+        name="Save To File",
         description="Save product report to file in project folder",
         default=True,
     )
+    product_report_display: BoolProperty(
+        name="New Window",
+        description="Display product report in a new window",
+        default=True,
+    )
     product_report_use_hidden_gems: BoolProperty(
-        name="Hidden gems",
-        description="Show warning if there are hidden gem objects in the scene",
+        name="Hidden Gems",
+        description="Enable or disable given warning",
         default=True,
     )
     product_report_use_overlap: BoolProperty(
-        name="Overlapping gems",
-        description="",
+        name="Overlapping Gems",
+        description="Enable or disable given warning",
         default=True,
     )
+    # Gem Map
+    # ------------------------
+    gem_map_width: IntProperty(
+        name="Width",
+        description="Number of horizontal pixels in the rendered image",
+        default=1200,
+        min=4,
+        subtype="PIXEL",
+    )
+    gem_map_height: IntProperty(
+        name="Height",
+        description="Number of vertical pixels in the rendered image",
+        default=750,
+        min=4,
+        subtype="PIXEL",
+    )
+    # Widget
+    # ------------------------
     widget_show_all: BoolProperty(
-        name="Show all",
+        name="Show All",
         description="Display spacing widget for all visible gems",
     )
     widget_show_in_front: BoolProperty(
@@ -215,7 +234,7 @@ class JewelCraftPreferences(AddonPreferences):
         description="Draw widgets in front of objects",
     )
     widget_use_overrides: BoolProperty(
-        name="Use overrides",
+        name="Use Overrides",
         description="Use object defined widget overrides",
         default=True,
     )
@@ -234,11 +253,6 @@ class JewelCraftPreferences(AddonPreferences):
         soft_max=5.0,
         subtype="PIXEL",
     )
-    widget_font_size: IntProperty(
-        name="Font size",
-        default=16,
-        min=1,
-    )
     widget_spacing: FloatProperty(
         name="Spacing",
         default=0.2,
@@ -247,6 +261,8 @@ class JewelCraftPreferences(AddonPreferences):
         precision=2,
         unit="LENGTH",
     )
+    # Themes
+    # ------------------------
     color_prongs: FloatVectorProperty(
         name="Prongs",
         default=(0.8, 0.8, 0.8, 1.0),
@@ -269,6 +285,26 @@ class JewelCraftPreferences(AddonPreferences):
             ("LIGHT", "Light", ""),
             ("DARK", "Dark", ""),
         ),
+    )
+    view_font_size_report: IntProperty(
+        name="Gem Table",
+        default=19,
+        min=1,
+    )
+    view_font_size_option: IntProperty(
+        name="Options",
+        default=17,
+        min=1,
+    )
+    view_font_size_gem_size: IntProperty(
+        name="Gem Size",
+        default=18,
+        min=1,
+    )
+    view_font_size_distance: IntProperty(
+        name="Distance",
+        default=16,
+        min=1,
     )
 
     def draw(self, context):
@@ -326,13 +362,19 @@ class JewelCraftPreferences(AddonPreferences):
 
         elif self.active_section == "PRODUCT_REPORT":
             col = box.column()
-            col.prop(self, "product_report_display")
             col.prop(self, "product_report_save")
+            col.prop(self, "product_report_display")
             col.prop(self, "product_report_lang")
 
+            box.label(text="Gem Map")
+            col = box.column(align=True)
+            col.prop(self, "gem_map_width", text="Resolution X")
+            col.prop(self, "gem_map_height", text="Y")
+
             box.label(text="Warnings")
-            box.prop(self, "product_report_use_hidden_gems")
-            box.prop(self, "product_report_use_overlap")
+            col = box.column()
+            col.prop(self, "product_report_use_hidden_gems")
+            col.prop(self, "product_report_use_overlap")
 
         elif self.active_section == "THEMES":
             box.label(text="Interface")
@@ -347,12 +389,18 @@ class JewelCraftPreferences(AddonPreferences):
             col.prop(self, "widget_color")
             col.prop(self, "widget_linewidth")
             col.prop(self, "widget_spacing")
-            col.prop(self, "widget_font_size")
 
             box.label(text="Materials")
             col = box.column()
             col.prop(self, "color_prongs")
             col.prop(self, "color_cutter")
+
+            box.label(text="Viewport Text Size")
+            col = box.column()
+            col.prop(self, "view_font_size_report")
+            col.prop(self, "view_font_size_option")
+            col.prop(self, "view_font_size_gem_size")
+            col.prop(self, "view_font_size_distance")
 
         elif self.active_section == "UPDATES":
             mod_update.prefs_ui(self, box)

@@ -20,7 +20,6 @@
 
 
 import os
-import random
 from math import tau, sin, cos
 from functools import lru_cache
 
@@ -97,7 +96,7 @@ def find_nearest(loc1, rad1, coords1, coords2):
     return dis, co1, co2
 
 
-def gem_overlap(data, threshold=0.1, first_match=False):
+def gem_overlap(context, data, threshold, first_match=False):
     kd = kdtree.KDTree(len(data))
 
     for i, (loc, _, _) in enumerate(data):
@@ -105,10 +104,12 @@ def gem_overlap(data, threshold=0.1, first_match=False):
 
     kd.balance()
 
+    UnitScale = unit.Scale(context)
+    from_scene_scale = UnitScale.from_scene
+    to_scene_scale = UnitScale.to_scene
+
     overlap_indices = set()
-    UScale = unit.Scale()
-    _from_scene = UScale.from_scene
-    seek_range = UScale.to_scene(4)
+    seek_range = to_scene_scale(4.0)
 
     for i1, (loc1, rad1, mat1) in enumerate(data):
 
@@ -127,7 +128,7 @@ def gem_overlap(data, threshold=0.1, first_match=False):
 
             girdle2 = girdle_coords(rad2, mat2)
             dis_gap, _, _ = find_nearest(loc1, rad1, girdle1, girdle2)
-            dis_gap = _from_scene(dis_gap)
+            dis_gap = from_scene_scale(dis_gap)
 
             if dis_gap < threshold:
                 if first_match:
@@ -141,11 +142,18 @@ def gem_overlap(data, threshold=0.1, first_match=False):
     return overlap_indices
 
 
+def to_int(x):
+    if x.is_integer():
+        return int(x)
+    return x
+
+
 # Material
 # ------------------------------------
 
 
 def color_rnd():
+    import random
     seq = (0.0, 0.5, 1.0)
     return random.choice(seq), random.choice(seq), random.choice(seq), 1.0
 
@@ -239,7 +247,7 @@ def asset_export(folder="", filename=""):
     bpy.data.libraries.write(filepath, data_blocks, compress=True)
 
 
-def render_preview(filepath="//"):
+def render_preview(width, height, filepath="//", compression=100):
     render = bpy.context.scene.render
     image = render.image_settings
 
@@ -248,8 +256,8 @@ def render_preview(filepath="//"):
 
     settings_render = {
         "filepath": filepath,
-        "resolution_x": 256,
-        "resolution_y": 256,
+        "resolution_x": width,
+        "resolution_y": height,
         "resolution_percentage": 100,
         "alpha_mode": "TRANSPARENT",
     }
@@ -257,7 +265,7 @@ def render_preview(filepath="//"):
     settings_image = {
         "file_format": "PNG",
         "color_mode": "RGBA",
-        "compression": 100,
+        "compression": compression,
     }
 
     for k, v in settings_render.items():
@@ -283,6 +291,49 @@ def render_preview(filepath="//"):
 
     for k, v in settings_image.items():
         setattr(image, k, v)
+
+
+def show_window(width, height, area_type=None, space_data=None):
+    render = bpy.context.scene.render
+
+    # Apply settings
+    # ---------------------------
+
+    settings_render = {
+        "resolution_x": width,
+        "resolution_y": height,
+        "resolution_percentage": 100,
+        "display_mode": "WINDOW",
+    }
+
+    for k, v in settings_render.items():
+        x = getattr(render, k)
+        setattr(render, k, v)
+        settings_render[k] = x
+
+    # Invoke window
+    # ---------------------------
+
+    bpy.ops.render.view_show("INVOKE_DEFAULT")
+
+    # Set window
+    # ---------------------------
+
+    area = bpy.context.window_manager.windows[-1].screen.areas[0]
+
+    if area_type is not None:
+        area.type = area_type
+
+    if space_data is not None:
+        space = area.spaces[0]
+        for k, v in space_data.items():
+            setattr(space, k, v)
+
+    # Revert settings
+    # ---------------------------
+
+    for k, v in settings_render.items():
+        setattr(render, k, v)
 
 
 # Object
