@@ -20,7 +20,7 @@
 
 
 from bpy.types import Operator
-from bpy.props import FloatProperty, FloatVectorProperty, IntProperty
+from bpy.props import FloatProperty, FloatVectorProperty
 
 from .. import var
 

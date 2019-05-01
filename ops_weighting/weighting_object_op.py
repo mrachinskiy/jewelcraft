@@ -41,7 +41,7 @@ class OBJECT_OT_jewelcraft_weight_display(Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         materials = prefs.weighting_materials
 
-        vol = unit.Scale().from_scene(mesh.est_volume(obs), volume=True)
+        vol = unit.Scale(context).from_scene(mesh.est_volume(obs), volume=True)
 
         weight_report = []
 
@@ -55,6 +55,6 @@ class OBJECT_OT_jewelcraft_weight_display(Operator):
                 weight_fmt = "{} {}  {}".format(weight, _("g"), mat.name)
                 weight_report.append(weight_fmt)
 
-        ui_lib.popup_report_batch(self, data=weight_report, title=_("Weighting"))
+        ui_lib.popup_report_batch(self, context, data=weight_report, title=_("Weighting"))
 
         return {"FINISHED"}

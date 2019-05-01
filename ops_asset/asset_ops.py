@@ -69,7 +69,7 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
         filepath = os.path.join(self.folder, self.asset_name)
 
         asset.asset_export(folder=self.folder, filename=self.asset_name + ".blend")
-        asset.render_preview(filepath=filepath + ".png")
+        asset.render_preview(256, 256, filepath=filepath + ".png")
         dynamic_list.asset_list_refresh()
         self.props.asset_list = self.asset_name
 
@@ -209,7 +209,7 @@ class WM_OT_jewelcraft_asset_preview_replace(Operator, Setup):
         return bool(context.window_manager.jewelcraft.asset_list)
 
     def execute(self, context):
-        asset.render_preview(filepath=self.filepath + ".png")
+        asset.render_preview(256, 256, filepath=self.filepath + ".png")
         dynamic_list.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
         context.area.tag_redraw()
         return {"FINISHED"}

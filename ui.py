@@ -40,6 +40,10 @@ class Setup:
         self.scene_props = bpy.context.scene.jewelcraft
         self.wm_props = bpy.context.window_manager.jewelcraft
         self.pcoll = var.preview_collections["icons"]
+        self.icon_theme = self.prefs.theme_icon
+
+    def icon_get(self, name):
+        return self.pcoll[self.icon_theme + name].icon_id
 
 
 # Lists
@@ -138,22 +142,6 @@ class VIEW3D_MT_jewelcraft_weighting_list(Menu, Setup):
         layout.prop(self.prefs, "weighting_list_show_density")
 
 
-class VIEW3D_MT_jewelcraft_product_report(Menu, Setup):
-    bl_label = ""
-
-    def draw(self, context):
-        layout = self.layout
-        layout.prop(self.prefs, "product_report_display")
-        layout.prop(self.prefs, "product_report_save")
-        layout.separator()
-        layout.label(text="Report Language")
-        layout.prop(self.prefs, "product_report_lang", text="")
-        layout.separator()
-        layout.label(text="Warnings")
-        layout.prop(self.prefs, "product_report_use_hidden_gems")
-        layout.prop(self.prefs, "product_report_use_overlap")
-
-
 # Panels
 # ---------------------------
 
@@ -214,11 +202,10 @@ class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
 
     def draw(self, context):
         layout = self.layout
-        icon_theme = self.prefs.theme_icon
 
         row = layout.row(align=True)
-        row.operator("object.jewelcraft_gem_add", text="Add Gem", icon_value=self.pcoll[icon_theme + "GEM_ADD"].icon_id)
-        row.operator("object.jewelcraft_gem_edit", text="", icon_value=self.pcoll[icon_theme + "GEM_EDIT"].icon_id)
+        row.operator("object.jewelcraft_gem_add", text="Add Gem", icon_value=self.icon_get("GEM_ADD"))
+        row.operator("object.jewelcraft_gem_edit", text="", icon_value=self.icon_get("GEM_EDIT"))
 
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
 
@@ -307,15 +294,14 @@ class VIEW3D_PT_jewelcraft_jeweling(Panel, Setup):
 
     def draw(self, context):
         layout = self.layout
-        icon_theme = self.prefs.theme_icon
 
         col = layout.column(align=True)
-        col.operator("object.jewelcraft_prongs_add", text="Prongs", icon_value=self.pcoll[icon_theme + "PRONGS"].icon_id)
-        col.operator("object.jewelcraft_cutter_add", text="Cutter", icon_value=self.pcoll[icon_theme + "CUTTER"].icon_id)
+        col.operator("object.jewelcraft_prongs_add", text="Prongs", icon_value=self.icon_get("PRONGS"))
+        col.operator("object.jewelcraft_cutter_add", text="Cutter", icon_value=self.icon_get("CUTTER"))
 
         row = layout.row(align=True)
-        row.operator("object.jewelcraft_curve_scatter", text="Curve Scatter", icon_value=self.pcoll[icon_theme + "SCATTER"].icon_id)
-        row.operator("object.jewelcraft_curve_redistribute", text="", icon_value=self.pcoll[icon_theme + "REDISTRIBUTE"].icon_id)
+        row.operator("object.jewelcraft_curve_scatter", text="Curve Scatter", icon_value=self.icon_get("SCATTER"))
+        row.operator("object.jewelcraft_curve_redistribute", text="", icon_value=self.icon_get("REDISTRIBUTE"))
 
 
 class VIEW3D_PT_jewelcraft_object(Panel, Setup):
@@ -325,17 +311,16 @@ class VIEW3D_PT_jewelcraft_object(Panel, Setup):
 
     def draw(self, context):
         layout = self.layout
-        icon_theme = self.prefs.theme_icon
 
         col = layout.column(align=True)
-        col.operator("object.jewelcraft_mirror", text="Mirror", icon_value=self.pcoll[icon_theme + "MIRROR"].icon_id)
-        col.operator("object.jewelcraft_make_dupliface", text="Make Dupli-face", icon_value=self.pcoll[icon_theme + "DUPLIFACE"].icon_id)
+        col.operator("object.jewelcraft_mirror", text="Mirror", icon_value=self.icon_get("MIRROR"))
+        col.operator("object.jewelcraft_make_dupliface", text="Make Dupli-face", icon_value=self.icon_get("DUPLIFACE"))
 
-        layout.operator("object.jewelcraft_resize", text="Resize", icon_value=self.pcoll[icon_theme + "RESIZE"].icon_id)
+        layout.operator("object.jewelcraft_resize", text="Resize", icon_value=self.icon_get("RESIZE"))
 
         col = layout.column(align=True)
-        col.operator("object.jewelcraft_lattice_project", text="Lattice Project", icon_value=self.pcoll[icon_theme + "LATTICE_PROJECT"].icon_id,)
-        col.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.pcoll[icon_theme + "LATTICE_PROFILE"].icon_id,)
+        col.operator("object.jewelcraft_lattice_project", text="Lattice Project", icon_value=self.icon_get("LATTICE_PROJECT"))
+        col.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.icon_get("LATTICE_PROFILE"))
 
 
 class VIEW3D_PT_jewelcraft_curve(Panel, Setup):
@@ -345,17 +330,16 @@ class VIEW3D_PT_jewelcraft_curve(Panel, Setup):
 
     def draw(self, context):
         layout = self.layout
-        icon_theme = self.prefs.theme_icon
 
-        layout.operator("curve.jewelcraft_size_curve_add", text="Size Curve", icon_value=self.pcoll[icon_theme + "SIZE_CURVE"].icon_id)
+        layout.operator("curve.jewelcraft_size_curve_add", text="Size Curve", icon_value=self.icon_get("SIZE_CURVE"))
 
         row = layout.row()
-        row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=self.pcoll[icon_theme + "STRETCH"].icon_id)
+        row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=self.icon_get("STRETCH"))
         sub = row.row(align=True)
-        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll[icon_theme + "OVER"].icon_id)
-        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll[icon_theme + "UNDER"].icon_id).under = True
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.icon_get("OVER"))
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.icon_get("UNDER")).under = True
 
-        layout.operator("curve.jewelcraft_length_display", text="Curve Length", icon_value=self.pcoll[icon_theme + "CURVE_LENGTH"].icon_id)
+        layout.operator("curve.jewelcraft_length_display", text="Curve Length", icon_value=self.icon_get("CURVE_LENGTH"))
 
 
 class VIEW3D_PT_jewelcraft_curve_editmesh(Panel, Setup):
@@ -364,13 +348,12 @@ class VIEW3D_PT_jewelcraft_curve_editmesh(Panel, Setup):
 
     def draw(self, context):
         layout = self.layout
-        icon_theme = self.prefs.theme_icon
 
         row = layout.row()
-        row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=self.pcoll[icon_theme + "STRETCH"].icon_id)
+        row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=self.icon_get("STRETCH"))
         sub = row.row(align=True)
-        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll[icon_theme + "OVER"].icon_id)
-        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.pcoll[icon_theme + "UNDER"].icon_id).under = True
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.icon_get("OVER"))
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.icon_get("UNDER")).under = True
 
 
 class VIEW3D_PT_jewelcraft_weighting(Panel, Setup):
@@ -430,9 +413,40 @@ class VIEW3D_PT_jewelcraft_product_report(Panel, Setup):
         col = layout.column()
         col.prop(self.scene_props, "product_report_ob_size")
         col.prop(self.scene_props, "product_report_ob_shank")
-        col.prop(self.scene_props, "product_report_ob_dim")
+        col.prop(self.scene_props, "product_report_ob_dim", text="Dimensions", text_ctxt="JewelCraft")
         col.prop(self.scene_props, "product_report_ob_weight")
 
-        row = layout.row(align=True)
-        row.operator("wm.jewelcraft_product_report", text="Product Report")
-        row.menu("VIEW3D_MT_jewelcraft_product_report", icon="DOWNARROW_HLT")
+        layout.separator()
+
+        layout.operator("wm.jewelcraft_product_report", text="Product Report")
+        layout.operator("view3d.jewelcraft_gem_map", text="Gem Map")
+
+
+class VIEW3D_PT_jewelcraft_product_report_options(Panel, Setup):
+    bl_label = "Options"
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_parent_id = "VIEW3D_PT_jewelcraft_product_report"
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        col = layout.column()
+        col.prop(self.prefs, "product_report_save")
+        col.prop(self.prefs, "product_report_display")
+        col.prop(self.prefs, "product_report_lang", text="Language")
+
+        layout.separator()
+
+        layout.label(text="Gem Map")
+        col = layout.column(align=True)
+        col.prop(self.prefs, "gem_map_width", text="Resolution X")
+        col.prop(self.prefs, "gem_map_height", text="Y")
+
+        layout.separator()
+
+        layout.label(text="Warnings")
+        col = layout.column()
+        col.prop(self.prefs, "product_report_use_hidden_gems")
+        col.prop(self.prefs, "product_report_use_overlap")

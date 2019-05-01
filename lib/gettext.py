@@ -19,29 +19,27 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from . import (
-    es,
-    fr,
-    ru,
-)
+import bpy
+
+from .. import var
+from ..localization import DICTIONARY
 
 
-def _translation_dict(dictionary):
-    d = {}
+class GetText:
 
-    for ctxt, msgs in dictionary.items():
-        for msg_key, msg_translation in msgs.items():
-            d[(ctxt, msg_key)] = msg_translation
+    def __init__(self, context):
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        self.lang = prefs.product_report_lang
 
-    return d
+        if self.lang == "AUTO":
+            self.lang = bpy.app.translations.locale
 
+        if self.lang == "es_ES":
+            self.lang = "es"
 
-DICTIONARY = {
-    "es": _translation_dict(es.dictionary),
-    "fr_FR": _translation_dict(fr.dictionary),
-    "ru_RU": _translation_dict(ru.dictionary),
-}
+        self.use_gettext = self.lang in DICTIONARY.keys()
 
-es.dictionary.clear()
-fr.dictionary.clear()
-ru.dictionary.clear()
+    def gettext(self, text, ctxt="*"):
+        if self.use_gettext:
+            return DICTIONARY[self.lang].get((ctxt, text), text)
+        return text
