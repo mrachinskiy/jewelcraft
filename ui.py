@@ -37,22 +37,23 @@ class Setup:
 
     def __init__(self):
         self.prefs = bpy.context.preferences.addons[__package__].preferences
-        self.scene_props = bpy.context.scene.jewelcraft
         self.wm_props = bpy.context.window_manager.jewelcraft
         self.pcoll = var.preview_collections["icons"]
-        self.icon_theme = self.prefs.theme_icon
+        self.theme = self.prefs.theme_icon
 
     def icon_get(self, name):
-        return self.pcoll[self.icon_theme + name].icon_id
+        return self.pcoll[self.theme + name].icon_id
 
 
 # Lists
 # ---------------------------
 
 
-class VIEW3D_UL_jewelcraft_weighting_set(UIList, Setup):
+class VIEW3D_UL_jewelcraft_weighting_set(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        prefs = context.preferences.addons[__package__].preferences
+
         row = layout.row(align=True)
         row.prop(item, "enabled", text="")
 
@@ -60,12 +61,12 @@ class VIEW3D_UL_jewelcraft_weighting_set(UIList, Setup):
         row.active = item.enabled
         row.prop(item, "name", text="", emboss=False)
 
-        if self.prefs.weighting_list_show_composition:
+        if prefs.weighting_list_show_composition:
             sub = row.row(align=True)
             sub.scale_x = 1.5
             sub.prop(item, "composition", text="", emboss=False)
 
-        if self.prefs.weighting_list_show_density:
+        if prefs.weighting_list_show_density:
             sub = row.row(align=True)
             sub.scale_x = 0.5
             sub.prop(item, "density", text="", emboss=False)
@@ -131,15 +132,16 @@ class VIEW3D_MT_jewelcraft_weighting_set(Menu):
         layout.operator("wm.jewelcraft_weighting_set_refresh", icon="FILE_REFRESH")
 
 
-class VIEW3D_MT_jewelcraft_weighting_list(Menu, Setup):
+class VIEW3D_MT_jewelcraft_weighting_list(Menu):
     bl_label = ""
 
     def draw(self, context):
+        prefs = context.preferences.addons[__package__].preferences
         layout = self.layout
         layout.operator("wm.jewelcraft_ul_item_clear", icon="X")
         layout.separator()
-        layout.prop(self.prefs, "weighting_list_show_composition")
-        layout.prop(self.prefs, "weighting_list_show_density")
+        layout.prop(prefs, "weighting_list_show_composition")
+        layout.prop(prefs, "weighting_list_show_density")
 
 
 # Panels
@@ -406,15 +408,16 @@ class VIEW3D_PT_jewelcraft_product_report(Panel, Setup):
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
+        scene_props = context.scene.jewelcraft
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
 
         col = layout.column()
-        col.prop(self.scene_props, "product_report_ob_size")
-        col.prop(self.scene_props, "product_report_ob_shank")
-        col.prop(self.scene_props, "product_report_ob_dim", text="Dimensions", text_ctxt="JewelCraft")
-        col.prop(self.scene_props, "product_report_ob_weight")
+        col.prop(scene_props, "product_report_ob_size")
+        col.prop(scene_props, "product_report_ob_shank")
+        col.prop(scene_props, "product_report_ob_dim", text="Dimensions", text_ctxt="JewelCraft")
+        col.prop(scene_props, "product_report_ob_weight")
 
         layout.separator()
 
