@@ -134,5 +134,4 @@ def render_map(self, context):
     # Show in a new window
     # ----------------------------
 
-    if self.prefs.product_report_display:
-        asset.show_window(width, height, space_data={"image": image})
+    asset.show_window(width, height, space_data={"image": image})

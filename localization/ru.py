@@ -102,7 +102,6 @@ dictionary = {
         "Set of base metal alloys, physical properties taken directly from suppliers":
             "Сплавы из недрагоценных металлов, физические свойства взяты напрямую у поставщиков",
 
-        "Display product report in a new window": "Отобразить отчёт изделия в новом окне",
         "Save product report to file in project folder": "Сохранить отчёт изделия в файл в каталоге проекта",
         "Product report language": "Язык отчёта изделия",
         "Use user preferences language setting": "Использовать язык заданный в настройках пользователя",
@@ -256,12 +255,6 @@ dictionary = {
 
         "Curve Length": "Длина кривой",
 
-        "Text file successfully created in the project folder":
-            "Текстовый файл успешно создан в каталоге проекта",
-
-        "Could not create text file, project folder does not exist":
-            "Не удалось создать текстовый файл, каталог проекта не существует",
-
         "At least two objects must be selected": "Как минимум два объекта должны быть выделены",
         "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
         "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
@@ -355,6 +348,7 @@ dictionary = {
         "Gem": "Камень",
         "Cut": "Огранка",
         "Qty": "Количество",
+        "Carats": "Караты",
         # Units
         "pcs": "шт.",
         "mm": "мм",

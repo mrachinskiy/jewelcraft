@@ -105,7 +105,6 @@ dictionary = {
         "Set of base metal alloys, physical properties taken directly from suppliers":
             "Conjunto de aleaciones de metales comunes, propiedades físicas tomadas directamente de los proveedores",
 
-        "Display product report in a new window": "Mostrar informe del producto en una nueva ventana",
         "Save product report to file in project folder": "Guardar el informe del producto en un archivo en la carpeta del proyecto",
         "Product report language": "Idioma del informe del producto",
         "Use user preferences language setting": "Usar los ajustes de preferencias de usuario del idioma",
@@ -251,12 +250,6 @@ dictionary = {
 
         "Curve Length": "Longitud de Curva",
 
-        "Text file successfully created in the project folder":
-            "Archivo de texto creado con éxito en la carpeta del proyecto",
-
-        "Could not create text file, project folder does not exist":
-            "No se pudo crear el archivo de texto, la carpeta del proyecto no existe",
-
         "At least two objects must be selected": "Al menos dos objetos deben ser seleccionados",
         "At least one gem object must be selected": "Al menos un objeto gema debe ser seleccionado",
         "At least one mesh object must be selected": "Al menos un objeto de malla debe ser seleccionado",
@@ -353,6 +346,10 @@ dictionary = {
         "Gem": "Gema",
         "Cut": "Corte",
         "Qty": "Cantidad",
+
+        # TODO
+        # "Carats": "",
+
         # Units
         "pcs": "piezas",
         "mm": "mm",

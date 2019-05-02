@@ -25,7 +25,7 @@ from .. import var
 from ..lib import unit, asset, gettext
 
 
-def _ct_calc(stone, cut, l, w, h):
+def _ct_calc(stone, cut, size):
     dens = var.STONE_DENSITY.get(stone)
     corr = var.CUT_VOLUME_CORRECTION.get(cut)
 
@@ -33,6 +33,9 @@ def _ct_calc(stone, cut, l, w, h):
         return 0
 
     dens = unit.convert(dens, "CM3_TO_MM3")
+    l = size[1]
+    w = size[0]
+    h = size[2]
 
     if cut in {"ROUND", "OVAL", "PEAR", "MARQUISE", "OCTAGON", "HEART"}:
         vol = pi * (l / 2) * (w / 2) * (h / 3)  # Cone
@@ -57,8 +60,6 @@ def data_format(context, data):
     _ = gettext.GetText(context).gettext
     _mm = _("mm")
     _g = _("g")
-    _pcs = _("pcs")
-    _ct = _("ct.")
     report = ""
 
     if data["size"]:
@@ -107,8 +108,8 @@ def data_format(context, data):
     if data["gems"]:
 
         gemsf = []
-        table_heading = (_("Gem"), _("Cut"), _("Size"), _("Qty"))
-        cols_width = [len(x) for x in table_heading]
+        table_heading = (_("Gem"), _("Cut"), _("Size"), _("Carats"), _("Qty"))
+        col_width = [len(x) for x in table_heading]
 
         for (stone, cut, size), qty in sorted(
             data["gems"].items(),
@@ -117,42 +118,40 @@ def data_format(context, data):
             # Values
             # ---------------------------
 
-            ct = _ct_calc(stone, cut, l=size[1], w=size[0], h=size[2])
-            qty_ct = round(qty * ct, 3)
+            ct = _ct_calc(stone, cut, size)
+            l = asset.to_int(size[1])
+            w = asset.to_int(size[0])
 
             # Format
             # ---------------------------
 
-            l = asset.to_int(size[1])
-            w = asset.to_int(size[0])
-
             stonef = _(asset.get_name(stone))
             cutf = _(asset.get_name(cut))
-            qtyf = "{} {} ({} {})".format(qty, _pcs, qty_ct, _ct)
+            ctf = f"{ct}"
+            qtyf = f"{qty}"
 
             if cut in var.CUT_SIZE_SINGLE:
-                sizef = "{} {} ({} {})".format(l, _mm, ct, _ct)
+                sizef = f"{l}"
             else:
-                sizef = "{} × {} {} ({} {})".format(l, w, _mm, ct, _ct)
+                sizef = f"{l} × {w}"
 
-            gemf = (stonef, cutf, sizef, qtyf)
+            gemf = (stonef, cutf, sizef, ctf, qtyf)
             gemsf.append(gemf)
 
             # Columns width
             # ---------------------------
 
-            for i, width in enumerate(cols_width):
-                cols_width[i] = max(width, len(gemf[i]))
+            for i, width in enumerate(col_width):
+                col_width[i] = max(width, len(gemf[i]))
 
         # Format table
         # ---------------------------
 
-        row = "    {{:{}}} | {{:{}}} | {{:{}}} | {{}}\n".format(*cols_width)
-        sep = "—" * (sum(cols_width) + 10)
+        row = "    {{:{}}}   {{:{}}}   {{:{}}}   {{:{}}}   {{}}\n".format(*col_width)
 
-        report += _("Settings") + ":\n"
+        report += _("Settings") + ":\n\n"
         report += row.format(*table_heading)
-        report += f"    {sep}\n"
+        report += "\n"
 
         for gemf in gemsf:
             report += row.format(*gemf)
