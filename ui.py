@@ -437,7 +437,6 @@ class VIEW3D_PT_jewelcraft_product_report_options(Panel, Setup):
 
         col = layout.column()
         col.prop(self.prefs, "product_report_save")
-        col.prop(self.prefs, "product_report_display")
         col.prop(self.prefs, "product_report_lang", text="Language")
 
         layout.separator()

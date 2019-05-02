@@ -192,11 +192,6 @@ class JewelCraftPreferences(AddonPreferences):
         description="Save product report to file in project folder",
         default=True,
     )
-    product_report_display: BoolProperty(
-        name="New Window",
-        description="Display product report in a new window",
-        default=True,
-    )
     product_report_use_hidden_gems: BoolProperty(
         name="Hidden Gems",
         description="Enable or disable given warning",
@@ -363,7 +358,6 @@ class JewelCraftPreferences(AddonPreferences):
         elif self.active_section == "PRODUCT_REPORT":
             col = box.column()
             col.prop(self, "product_report_save")
-            col.prop(self, "product_report_display")
             col.prop(self, "product_report_lang")
 
             box.label(text="Gem Map")
