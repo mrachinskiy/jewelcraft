@@ -105,8 +105,10 @@ class JewelCraftPreferences(AddonPreferences):
             ("UPDATES",        "Updates",         ""),
         ),
     )
+
     # Updates
     # ------------------------
+
     update_use_auto_check: BoolProperty(
         name="Automatically check for updates",
         description="Automatically check for updates with specified interval",
@@ -126,8 +128,10 @@ class JewelCraftPreferences(AddonPreferences):
         name="Update to pre-release",
         description="Update add-on to pre-release version if available",
     )
+
     # Asset
     # ------------------------
+
     asset_name_from_obj: BoolProperty(
         name="Name From Active",
         description="Use active object name when creating new asset",
@@ -147,8 +151,10 @@ class JewelCraftPreferences(AddonPreferences):
         name="Display Asset Name",
         description="Display asset name in Tool Shelf",
     )
+
     # Weighting
     # ------------------------
+
     weighting_hide_default_sets: BoolProperty(
         name="Hide Default Sets",
         description="Hide default JewelCraft sets from weighting sets menu",
@@ -174,8 +180,10 @@ class JewelCraftPreferences(AddonPreferences):
         name="Show Density",
         description="Display material density in the list",
     )
+
     # Product Report
     # ------------------------
+
     product_report_lang: EnumProperty(
         name="Report Language",
         description="Product report language",
@@ -202,8 +210,10 @@ class JewelCraftPreferences(AddonPreferences):
         description="Enable or disable given warning",
         default=True,
     )
+
     # Gem Map
     # ------------------------
+
     gem_map_width: IntProperty(
         name="Width",
         description="Number of horizontal pixels in the rendered image",
@@ -218,8 +228,10 @@ class JewelCraftPreferences(AddonPreferences):
         min=4,
         subtype="PIXEL",
     )
+
     # Widget
     # ------------------------
+
     widget_show_all: BoolProperty(
         name="Show All",
         description="Display spacing widget for all visible gems",
@@ -256,8 +268,10 @@ class JewelCraftPreferences(AddonPreferences):
         precision=2,
         unit="LENGTH",
     )
+
     # Themes
     # ------------------------
+
     color_prongs: FloatVectorProperty(
         name="Prongs",
         default=(0.8, 0.8, 0.8, 1.0),
