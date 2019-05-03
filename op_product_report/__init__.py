@@ -77,6 +77,13 @@ class WM_OT_jewelcraft_product_report(Operator):
         # Display
         # ---------------------------
 
-        asset.show_window(800, 540, area_type="TEXT_EDITOR", space_data={"text": txt})
+        space_data = {
+            "show_line_numbers": False,
+            "show_word_wrap": False,
+            "show_syntax_highlight": False,
+            "text": txt,
+        }
+
+        asset.show_window(800, 540, area_type="TEXT_EDITOR", space_data=space_data)
 
         return {"FINISHED"}
