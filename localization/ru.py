@@ -239,8 +239,8 @@ dictionary = {
         "Compose gem table and map it to gems in the scene":
             "Составить таблицу камней и сопоставить её с камнями в сцене",
 
-        "Present summary information about product, including sizes, weight and used gems":
-            "Предоставить суммарную информацию об изделии, включая размеры, вес и используемые камни",
+        "Present summary information about the product, including gems, sizes and weight":
+            "Предоставить суммарную информацию об изделии, включая камни, размеры и вес",
 
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",

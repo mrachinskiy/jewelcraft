@@ -32,7 +32,7 @@ from ..lib import asset
 
 class WM_OT_jewelcraft_product_report(Operator):
     bl_label = "JewelCraft Product Report"
-    bl_description = "Present summary information about product, including sizes, weight and used gems"
+    bl_description = "Present summary information about the product, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_product_report"
 
     def execute(self, context):

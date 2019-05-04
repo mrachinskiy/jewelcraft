@@ -236,7 +236,7 @@ dictionary = {
         # "Set optimal unit settings for jewelry modelling": "",
         # "Enable or disable given warning": "",
         # "Compose gem table and map it to gems in the scene": "",
-        # "Present summary information about product, including sizes, weight and used gems": "",
+        # "Present summary information about the product, including gems, sizes and weight": "",
 
         # Reports
         "WARNING": "AVERTISSEMENT",

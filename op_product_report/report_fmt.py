@@ -119,8 +119,8 @@ def data_format(context, data):
             # ---------------------------
 
             ct = _ct_calc(stone, cut, size)
-            l = asset.to_int(size[1])
-            w = asset.to_int(size[0])
+            l = size[1]
+            w = size[0]
 
             # Format
             # ---------------------------
