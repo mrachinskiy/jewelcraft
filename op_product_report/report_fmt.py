@@ -60,50 +60,7 @@ def data_format(context, data):
     _ = gettext.GetText(context).gettext
     _mm = _("mm")
     _g = _("g")
-    report = ""
-
-    if data["size"]:
-        report += _("Size") + ":\n"
-        report += "    {} {}\n\n".format(round(data["size"], 2), _mm)
-
-    if data["shank"]:
-        report += _("Shank") + ":\n"
-        report += "    {} × {} {}\n\n".format(*[round(x, 2) for x in data["shank"]], _mm)
-
-    if data["dim"]:
-        report += _("Dimensions") + ":\n"
-        report += "    {} × {} × {} {}\n\n".format(*[round(x, 2) for x in data["dim"]], _mm)
-
-    if data["weight"]:
-
-        vol = data["weight"]
-
-        # Format values
-        # ---------------------------
-
-        volf = "{} {}".format(round(vol, 4), _("mm³"))
-
-        materialsf = [(volf, _("Volume"))]
-        col_width = len(volf)
-
-        for mat in prefs.weighting_materials.values():
-            if mat.enabled:
-                density = unit.convert(mat.density, "CM3_TO_MM3")
-                weight = round(vol * density, 2)
-                weightf = f"{weight} {_g}"
-
-                materialsf.append((weightf, mat.name))
-                col_width = max(col_width, len(weightf))
-
-        # Format list
-        # ---------------------------
-
-        report += _("Weight") + ":\n"
-
-        for value, name in materialsf:
-            report += f"    {value:{col_width}}  {name}\n"
-
-        report += "\n"
+    report = []
 
     if data["gems"]:
 
@@ -122,7 +79,7 @@ def data_format(context, data):
             l = size[1]
             w = size[0]
 
-            # Format
+            # Format values
             # ---------------------------
 
             stonef = _(asset.get_name(stone))
@@ -144,16 +101,77 @@ def data_format(context, data):
             for i, width in enumerate(col_width):
                 col_width[i] = max(width, len(gemf[i]))
 
-        # Format table
+        # Format report
         # ---------------------------
 
         row = "    {{:{}}}   {{:{}}}   {{:{}}}   {{:{}}}   {{}}\n".format(*col_width)
 
-        report += _("Settings") + ":\n\n"
-        report += row.format(*table_heading)
-        report += "\n"
+        report_gems = _("Settings") + "\n\n"
+        report_gems += row.format(*table_heading)
+        report_gems += "\n"
 
         for gemf in gemsf:
-            report += row.format(*gemf)
+            report_gems += row.format(*gemf)
 
-    return report
+        report.append(report_gems)
+
+    if data["volume"]:
+
+        vol = data["volume"]
+
+        # Format values
+        # ---------------------------
+
+        volf = "{} {}".format(round(vol, 4), _("mm³"))
+
+        materialsf = [(volf, _("Volume"))]
+        col_width = len(volf)
+
+        for mat in prefs.weighting_materials.values():
+            if mat.enabled:
+                density = unit.convert(mat.density, "CM3_TO_MM3")
+                weight = round(vol * density, 2)
+                weightf = f"{weight} {_g}"
+
+                materialsf.append((weightf, mat.name))
+                col_width = max(col_width, len(weightf))
+
+        # Format report
+        # ---------------------------
+
+        report_weight = _("Weight") + "\n\n"
+
+        for value, name in materialsf:
+            report_weight += f"    {value:{col_width}}  {name}\n"
+
+        report.append(report_weight)
+
+    if data["notes"]:
+
+        # Format values
+        # ---------------------------
+
+        sizesf = []
+        col_width = 0
+
+        for name, value in data["notes"]:
+
+            if isinstance(value, float):
+                valuef = f"{round(value, 2)}"
+            else:
+                valuef = " × ".join([str(round(x, 2)) for x in value])
+
+            sizesf.append((name, valuef))
+            col_width = max(col_width, len(name))
+
+        # Format report
+        # ---------------------------
+
+        report_notes = _("Additional Notes") + "\n\n"
+
+        for name, value in sizesf:
+            report_notes += f"    {name:{col_width}}  {value} {_mm}\n"
+
+        report.append(report_notes)
+
+    return "\n\n".join(report)

@@ -30,7 +30,7 @@ class Scale:
 
     def __init__(self, context):
         unit = context.scene.unit_settings
-        self.scale = unit.scale_length
+        self.scale = round(unit.scale_length, 4)
         self.use_conversion = unit.system == "METRIC" and self.scale != 0.001
 
     def from_scene(self, x, volume=False, batch=False):

@@ -38,52 +38,39 @@ def data_collect(context, gem_map=False):
     prefs = context.preferences.addons[var.ADDON_ID].preferences
     props = scene.jewelcraft
     data = {
-        "size": 0.0,
-        "shank": [],
-        "dim": [],
-        "weight": 0.0,
         "gems": collections.defaultdict(int),
         "warn": [],
+        "notes": [],
+        "volume": 0.0,
     }
 
     if not gem_map:
 
-        # Size
-        # ---------------------------
+        for item in props.measurements.coll:
 
-        if props.product_report_ob_size:
-            ob = props.product_report_ob_size
-            size = max(ob.dimensions)
-            data["size"] = from_scene_scale(size)
+            if not item.object:
+                continue
 
-        # Shank
-        # ---------------------------
+            if item.type == "VOLUME":
+                if item.object.type == "MESH":
+                    data["volume"] += from_scene_scale(mesh.est_volume((item.object,)), volume=True)
+            else:
+                axes = []
+                if item.x: axes.append(0)
+                if item.y: axes.append(1)
+                if item.z: axes.append(2)
 
-        if props.product_report_ob_shank:
-            ob = props.product_report_ob_shank
+                if not axes:
+                    continue
 
-            asset.mod_curve_off(ob, reverse=True)
-            dim = list(ob.dimensions)
-            scene.update()
+                dim = item.object.dimensions
 
-            dim.remove(max(dim))
-            data["shank"] = from_scene_scale(dim, batch=True)
+                if len(axes) == 1:
+                    value = from_scene_scale(dim[axes[0]])
+                else:
+                    value = from_scene_scale(tuple(dim[x] for x in axes), batch=True)
 
-        # Dimensions
-        # ---------------------------
-
-        if props.product_report_ob_dim:
-            ob = props.product_report_ob_dim
-            data["dim"] = from_scene_scale(ob.dimensions.to_tuple(), batch=True)
-
-        # Weight
-        # ---------------------------
-
-        if props.product_report_ob_weight:
-            ob = props.product_report_ob_weight
-
-            if ob.type == "MESH":
-                data["weight"] = from_scene_scale(mesh.est_volume((ob,)), volume=True)
+                data["notes"].append((item.name, value))
 
     # Gems
     # ---------------------------

@@ -30,13 +30,13 @@ class Setup:
 
     def __init__(self):
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        self.materials = prefs.weighting_materials
+        self.list = prefs.weighting_materials
 
 
-class WM_OT_jewelcraft_ul_item_add(Operator, Setup):
+class WM_OT_jewelcraft_ul_materials_add(Operator, Setup):
     bl_label = "Add New Material"
     bl_description = "Add new material to the list"
-    bl_idname = "wm.jewelcraft_ul_item_add"
+    bl_idname = "wm.jewelcraft_ul_materials_add"
     bl_options = {"INTERNAL"}
 
     name: StringProperty(
@@ -71,13 +71,15 @@ class WM_OT_jewelcraft_ul_item_add(Operator, Setup):
         layout.separator()
 
     def execute(self, context):
-        item = self.materials.add()
+        item = self.list.add()
 
         if self.name:
             item.name = self.name
         if self.composition:
             item.composition = self.composition
         item.density = self.density
+
+        context.area.tag_redraw()
 
         return {"FINISHED"}
 
@@ -86,36 +88,36 @@ class WM_OT_jewelcraft_ul_item_add(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_jewelcraft_ul_item_del(Operator, Setup):
-    bl_label = "Remove Material"
-    bl_description = "Remove material from the list"
-    bl_idname = "wm.jewelcraft_ul_item_del"
+class WM_OT_jewelcraft_ul_materials_del(Operator, Setup):
+    bl_label = "Remove Item"
+    bl_description = "Remove selected item"
+    bl_idname = "wm.jewelcraft_ul_materials_del"
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        self.materials.remove()
+        self.list.remove()
         return {"FINISHED"}
 
 
-class WM_OT_jewelcraft_ul_item_clear(Operator, Setup):
+class WM_OT_jewelcraft_ul_materials_clear(Operator, Setup):
     bl_label = "Clear List"
-    bl_description = "Clear materials list"
-    bl_idname = "wm.jewelcraft_ul_item_clear"
+    bl_description = "Remove all list items"
+    bl_idname = "wm.jewelcraft_ul_materials_clear"
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        self.materials.clear()
+        self.list.clear()
         return {"FINISHED"}
 
 
-class WM_OT_jewelcraft_ul_item_move(Operator, Setup):
-    bl_label = "Move List Item"
-    bl_description = "Move the active material up/down in the list"
-    bl_idname = "wm.jewelcraft_ul_item_move"
+class WM_OT_jewelcraft_ul_materials_move(Operator, Setup):
+    bl_label = "Move Item"
+    bl_description = "Move selected item up/down in the list"
+    bl_idname = "wm.jewelcraft_ul_materials_move"
     bl_options = {"INTERNAL"}
 
     move_up: BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        self.materials.move(self.move_up)
+        self.list.move(self.move_up)
         return {"FINISHED"}

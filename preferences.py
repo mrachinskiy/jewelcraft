@@ -39,16 +39,8 @@ from .lib import widget, dynamic_list
 # ------------------------------------------
 
 
-class JewelCraftMaterialsCollection(PropertyGroup):
-    enabled: BoolProperty(description="Enable material for weighting and product report", default=True)
-    name: StringProperty(default="Untitled")
-    composition: StringProperty(default="Unknown")
-    density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
-
-
-class JewelCraftMaterialsList(PropertyGroup):
+class ListProperty:
     index: IntProperty()
-    coll: CollectionProperty(type=JewelCraftMaterialsCollection)
 
     def add(self):
         item = self.coll.add()
@@ -84,7 +76,39 @@ class JewelCraftMaterialsList(PropertyGroup):
         return self.coll.values()
 
 
-# Add-on preferences
+class JewelCraftMaterialsCollection(PropertyGroup):
+    enabled: BoolProperty(description="Enable material for weighting and product report", default=True)
+    name: StringProperty(default="Untitled")
+    composition: StringProperty(default="Unknown")
+    density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
+
+
+class JewelCraftMeasurementsCollection(PropertyGroup):
+    name: StringProperty(name="Name", default="Untitled")
+    object: PointerProperty(name="Object", description="Measured object", type=Object)
+    type: EnumProperty(
+        name="Type",
+        description="Measurement type",
+        items=(
+            ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
+            ("VOLUME", "Volume", "", "VOLUME", 1),
+        ),
+        default="DIMENSIONS",
+    )
+    x: BoolProperty(name="X", default=True)
+    y: BoolProperty(name="Y", default=True)
+    z: BoolProperty(name="Z", default=True)
+
+
+class JewelCraftMaterialsList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=JewelCraftMaterialsCollection)
+
+
+class JewelCraftMeasurementsList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=JewelCraftMeasurementsCollection)
+
+
+# Preferences
 # ------------------------------------------
 
 
@@ -132,10 +156,6 @@ class JewelCraftPreferences(AddonPreferences):
     # Asset
     # ------------------------
 
-    asset_name_from_obj: BoolProperty(
-        name="Name From Active",
-        description="Use active object name when creating new asset",
-    )
     use_custom_asset_dir: BoolProperty(
         name="Use Custom Library Folder",
         description="Set custom asset library folder, if disabled the default library folder will be used",
@@ -331,7 +351,6 @@ class JewelCraftPreferences(AddonPreferences):
 
         if self.active_section == "ASSET_MANAGER":
             col = box.column()
-            col.prop(self, "asset_name_from_obj")
             col.prop(self, "display_asset_name")
             col.prop(self, "use_custom_asset_dir")
             sub = col.row()
@@ -359,11 +378,11 @@ class JewelCraftPreferences(AddonPreferences):
             )
 
             col = row.column(align=True)
-            col.operator("wm.jewelcraft_ul_item_add", text="", icon="ADD")
-            col.operator("wm.jewelcraft_ul_item_del", text="", icon="REMOVE")
+            col.operator("wm.jewelcraft_ul_materials_add", text="", icon="ADD")
+            col.operator("wm.jewelcraft_ul_materials_del", text="", icon="REMOVE")
             col.separator()
-            col.operator("wm.jewelcraft_ul_item_move", text="", icon="TRIA_UP").move_up = True
-            col.operator("wm.jewelcraft_ul_item_move", text="", icon="TRIA_DOWN")
+            col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_UP").move_up = True
+            col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_DOWN")
 
             col = box.column()
             col.prop(self, "weighting_list_show_composition")
@@ -447,23 +466,4 @@ class JewelCraftPropertiesWm(PropertyGroup):
 
 
 class JewelCraftPropertiesScene(PropertyGroup):
-    product_report_ob_size: PointerProperty(
-        type=Object,
-        name="Size",
-        description="Object for ring inner diameter reference",
-    )
-    product_report_ob_shank: PointerProperty(
-        type=Object,
-        name="Shank",
-        description="Object for shank width and height reference",
-    )
-    product_report_ob_dim: PointerProperty(
-        type=Object,
-        name="Dimensions",
-        description="Object for dimensions reference",
-    )
-    product_report_ob_weight: PointerProperty(
-        type=Object,
-        name="Weight",
-        description="Object for weight reference",
-    )
+    measurements: PointerProperty(type=JewelCraftMeasurementsList)

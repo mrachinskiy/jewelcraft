@@ -72,6 +72,19 @@ class VIEW3D_UL_jewelcraft_weighting_set(UIList):
             sub.prop(item, "density", text="", emboss=False)
 
 
+class VIEW3D_UL_jewelcraft_measurements(UIList):
+    icons = {
+        "VOLUME": "VOLUME",
+        "DIMENSIONS": "SHADING_BBOX",
+    }
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        row = layout.row(align=True)
+        row.active = item.object is not None
+        row.label(icon=self.icons[item.type])
+        row.prop(item, "name", text="", emboss=False)
+
+
 # Menus
 # ---------------------------
 
@@ -99,7 +112,7 @@ class VIEW3D_MT_jewelcraft_folder(Menu):
         library_folder = asset.user_asset_library_folder_object()
         layout = self.layout
         layout.operator("wm.jewelcraft_asset_folder_create", icon="ADD")
-        layout.operator("wm.jewelcraft_asset_folder_rename", text="Rename", icon="OUTLINER_DATA_FONT")
+        layout.operator("wm.jewelcraft_asset_folder_rename", text="Rename")
         layout.separator()
         layout.operator("wm.path_open", text="Open Library Folder", icon="FILE_FOLDER").filepath = library_folder
         layout.separator()
@@ -111,8 +124,8 @@ class VIEW3D_MT_jewelcraft_asset(Menu):
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("wm.jewelcraft_asset_rename", text="Rename", icon="OUTLINER_DATA_FONT")
-        layout.operator("wm.jewelcraft_asset_replace", icon="ASSET_MANAGER")
+        layout.operator("wm.jewelcraft_asset_rename", text="Rename")
+        layout.operator("wm.jewelcraft_asset_replace")
         layout.operator("wm.jewelcraft_asset_preview_replace", text="Replace Preview", icon="IMAGE_DATA")
 
 
@@ -124,8 +137,8 @@ class VIEW3D_MT_jewelcraft_weighting_set(Menu):
         layout = self.layout
         layout.operator("wm.jewelcraft_weighting_set_add", icon="ADD")
         layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", icon="REMOVE")
-        layout.operator("wm.jewelcraft_weighting_set_rename", text="Rename", icon="OUTLINER_DATA_FONT")
-        layout.operator("wm.jewelcraft_weighting_set_replace", text="Replace", icon="DUPLICATE")
+        layout.operator("wm.jewelcraft_weighting_set_rename", text="Rename")
+        layout.operator("wm.jewelcraft_weighting_set_replace")
         layout.separator()
         layout.operator("wm.path_open", text="Open Library Folder", icon="FILE_FOLDER").filepath = library_folder
         layout.separator()
@@ -138,7 +151,7 @@ class VIEW3D_MT_jewelcraft_weighting_list(Menu):
     def draw(self, context):
         prefs = context.preferences.addons[__package__].preferences
         layout = self.layout
-        layout.operator("wm.jewelcraft_ul_item_clear", icon="X")
+        layout.operator("wm.jewelcraft_ul_materials_clear", icon="X")
         layout.separator()
         layout.prop(prefs, "weighting_list_show_composition")
         layout.prop(prefs, "weighting_list_show_density")
@@ -164,28 +177,21 @@ class VIEW3D_PT_jewelcraft_warning(Panel, Setup):
 
     @classmethod
     def poll(cls, context):
-        unit_settings = context.scene.unit_settings
-        is_scale = (
-            unit_settings.system == "METRIC" and
-            round(unit_settings.scale_length, 5) != 0.001
-        )
-        is_imperial = unit_settings.system == "IMPERIAL"
+        unit = context.scene.unit_settings
+        is_scale = unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001
+        is_imperial = unit.system == "IMPERIAL"
 
         return is_scale or is_imperial
 
     def draw(self, context):
-        layout = self.layout
+        unit = context.scene.unit_settings
+        is_scale = unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001
+        is_imperial = unit.system == "IMPERIAL"
 
-        unit_settings = context.scene.unit_settings
-        is_scale = (
-            unit_settings.system == "METRIC" and
-            round(unit_settings.scale_length, 5) != 0.001
-        )
-        is_imperial = unit_settings.system == "IMPERIAL"
+        layout = self.layout
 
         if is_scale:
             layout.label(text="Scene scale is not optimal", icon="ERROR")
-
         elif is_imperial:
             layout.label(text="Unsupported unit system", icon="ERROR")
 
@@ -364,8 +370,9 @@ class VIEW3D_PT_jewelcraft_weighting(Panel, Setup):
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
-        layout = self.layout
         material_list = self.prefs.weighting_materials
+
+        layout = self.layout
 
         row = layout.row(align=True)
         row.prop(self.wm_props, "weighting_set", text="")
@@ -391,13 +398,13 @@ class VIEW3D_PT_jewelcraft_weighting(Panel, Setup):
         )
 
         col = row.column(align=True)
-        col.operator("wm.jewelcraft_ul_item_add", text="", icon="ADD")
-        col.operator("wm.jewelcraft_ul_item_del", text="", icon="REMOVE")
+        col.operator("wm.jewelcraft_ul_materials_add", text="", icon="ADD")
+        col.operator("wm.jewelcraft_ul_materials_del", text="", icon="REMOVE")
         col.separator()
         col.menu("VIEW3D_MT_jewelcraft_weighting_list", icon="DOWNARROW_HLT")
         col.separator()
-        col.operator("wm.jewelcraft_ul_item_move", text="", icon="TRIA_UP").move_up = True
-        col.operator("wm.jewelcraft_ul_item_move", text="", icon="TRIA_DOWN")
+        col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_UP").move_up = True
+        col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_DOWN")
 
         layout.operator("object.jewelcraft_weight_display", text="Calculate")
 
@@ -408,19 +415,7 @@ class VIEW3D_PT_jewelcraft_product_report(Panel, Setup):
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
-        scene_props = context.scene.jewelcraft
         layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
-
-        col = layout.column()
-        col.prop(scene_props, "product_report_ob_size")
-        col.prop(scene_props, "product_report_ob_shank")
-        col.prop(scene_props, "product_report_ob_dim", text="Dimensions", text_ctxt="JewelCraft")
-        col.prop(scene_props, "product_report_ob_weight")
-
-        layout.separator()
-
         layout.operator("wm.jewelcraft_product_report", text="Product Report")
         layout.operator("view3d.jewelcraft_gem_map", text="Gem Map")
 
@@ -452,3 +447,49 @@ class VIEW3D_PT_jewelcraft_product_report_options(Panel, Setup):
         col = layout.column()
         col.prop(self.prefs, "product_report_use_hidden_gems")
         col.prop(self.prefs, "product_report_use_overlap")
+
+
+class VIEW3D_PT_jewelcraft_measurement(Panel, Setup):
+    bl_label = "Measurement"
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_parent_id = "VIEW3D_PT_jewelcraft_product_report"
+
+    def draw(self, context):
+        measures_list = context.scene.jewelcraft.measurements
+
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        row = layout.row()
+
+        col = row.column()
+        col.template_list(
+            "VIEW3D_UL_jewelcraft_measurements",
+            "",
+            measures_list,
+            "coll",
+            measures_list,
+            "index",
+            rows=3,
+        )
+
+        col = row.column(align=True)
+        col.operator("wm.jewelcraft_ul_measurements_add", text="", icon="ADD")
+        col.operator("wm.jewelcraft_ul_measurements_del", text="", icon="REMOVE")
+        col.separator()
+        col.operator("wm.jewelcraft_ul_measurements_move", text="", icon="TRIA_UP").move_up = True
+        col.operator("wm.jewelcraft_ul_measurements_move", text="", icon="TRIA_DOWN")
+
+        if measures_list.coll:
+            item = measures_list.coll[measures_list.index]
+
+            col = layout.column()
+            col.prop(item, "object", text="")
+            col.prop(item, "type", text="")
+
+            if item.type == "DIMENSIONS":
+                col = layout.column(align=True)
+                col.prop(item, "x")
+                col.prop(item, "y")
+                col.prop(item, "z")
