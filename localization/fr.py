@@ -23,7 +23,6 @@ dictionary = {
     "*": {
         # Interface
         "Asset Manager": "Navigateur de ressources",
-        "Name From Active": "Nom de ressource de l'objet actif",
         "Display Asset Name": "Affiche le nom de la Ressource",
         "Product Report": "Rapport de produit",
         "Report Language": "Langue du rapport",
@@ -40,7 +39,6 @@ dictionary = {
         "[JewelCraft] Precious": "[Joaillerie] Précieux",
         "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[Joaillerie] Précieux RU (ГОСТ 30649-99)",
         "[JewelCraft] Base": "[Joaillerie] Base",
-        "Sizes": "Tailles",
         "Prongs": "Fourches",
         "Cutter": "Couteaux",
         "Library Folder Path": "Chemin du dossier de librairie",
@@ -109,10 +107,6 @@ dictionary = {
         "Save product report to file in project folder": "Enregistrer le rapport de produit dans un fichier dans le dossier du projet",
         "Product report language": "Langue du rapport du produit",
         "Use user preferences language setting": "Utiliser les paramètres de langue des préférences utilisateur",
-        "Object for ring inner diameter reference": "Objet pour référence de diamètre intérieur de bague",
-        "Object for shank width and height reference": "Objet pour référence de largeur et hauteur de tige",
-        "Object for dimensions reference": "Objet pour référence de dimensions",
-        "Object for weight reference": "Objet pour référence de poids",
         "Select gems by trait": "Sélectionnez des pierres par trait",
         "Search stone by name": "Chercher les pierres par nom",
         "Search asset by name": "Chercher les ressources par nom",
@@ -173,10 +167,6 @@ dictionary = {
 
         "Custom library folder path": "Chemin du dossier de la bibliothèque personnalisée",
         "Display asset name in Tool Shelf": "Display asset name in Tool Shelf",
-
-        "Use active object name when creating new asset":
-            "Utiliser le nom de l'objet actif pour la création d'une nouvelle ressource",
-
         "Enable widgets drawing": "Activer le dessin des widgets",
         "Use object defined widget overrides": "Utiliser les substitutions de widget définis par un objet",
 
@@ -189,7 +179,6 @@ dictionary = {
             "Supprimer les propriétés de substitution de widget des objets sélectionnés",
 
         "Add new material to the list": "Ajouter un nouveau matériau à la liste",
-        "Remove material from the list": "Supprimer le matériau de la liste",
         "Display material density in the list": "Afficher la densité de matière dans la liste",
         "Display material composition in the list": "Afficher la composition du matériau dans la liste",
         "Create weighting set from materials list": "Créer un jeu de pondération à partir de la liste des matériaux",
@@ -223,8 +212,6 @@ dictionary = {
         "Enable material for weighting and product report":
             "Activer le matériau pour la pondération et le rapport de produit",
 
-        "Clear materials list": "Effacer la liste des matériaux",
-
         "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": (
             "Parenter la ressource importée pour les objets sélectionnés "
             "(Raccourcie: Alt en utilisant l'outil)"
@@ -237,6 +224,12 @@ dictionary = {
         # "Enable or disable given warning": "",
         # "Compose gem table and map it to gems in the scene": "",
         # "Present summary information about the product, including gems, sizes and weight": "",
+        # "Add a new measurement": "",
+        # "Remove selected item": "",
+        # "Remove all list items": "",
+        # "Move selected item up/down in the list": "",
+        # "Measured object": "",
+        # "Measurement type": "",
 
         # Reports
         "WARNING": "AVERTISSEMENT",
@@ -338,29 +331,26 @@ dictionary = {
         "Steel Stainless": "Acier Inoxydable",
         "Titanium": "Titane",
         # Product report
-        "Size": "Taille",
-        "Shank": "Jarret",
-        "Dimensions": "Dimensions",
-        "Weight": "Poid",
-        "Volume": "Volume",
         "Settings": "Réglages",
         "Gem": "Pierre",
         "Cut": "Coupe",
         "Qty": "Qté",
+        "Weight": "Poid",
+        "Volume": "Volume",
 
         # TODO
         # "Carats": "",
+        # "Additional Notes": "",
 
         # Units
-        "pcs": "pcs",
         "mm": "mm",
         "mm³": "mm³",
         "g": "g",
         "ct.": "ct.",
+        "pcs": "pcs",
     },
     "JewelCraft": {
         "Cut": "Coupe",
-        "Dimensions": "Dimensions",
         "Round": "Arrondi",
 
         # TODO
@@ -406,5 +396,6 @@ dictionary = {
         # "Set Units": "",
         # "Gem Map": "",
         # "Append": "",
+        # "Add New Measurement": "",
     },
 }

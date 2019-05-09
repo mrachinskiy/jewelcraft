@@ -26,7 +26,6 @@ from bpy.types import Operator
 from bpy.props import StringProperty, BoolProperty
 import bpy.utils.previews
 
-from .. import var
 from ..lib import asset, dynamic_list
 
 
@@ -78,12 +77,10 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        if not context.selected_objects:
+            return {"CANCELLED"}
 
-        if prefs.asset_name_from_obj:
-            self.asset_name = context.object.name
-        else:
-            self.asset_name = ""
+        self.asset_name = context.object.name
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
