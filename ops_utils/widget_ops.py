@@ -80,11 +80,12 @@ class OBJECT_OT_jewelcraft_widget_override_set(Operator):
 
     def invoke(self, context, event):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
+        props = context.scene.jewelcraft
 
         default_settings = {
             "color": prefs.widget_color,
             "linewidth": prefs.widget_linewidth,
-            "spacing": prefs.widget_spacing,
+            "spacing": props.widget_spacing,
         }
 
         ovrd = context.object.get("jewelcraft_widget")
