@@ -153,6 +153,9 @@ class VIEW3D_MT_jewelcraft_weighting_list(Menu):
         layout = self.layout
         layout.operator("wm.jewelcraft_ul_materials_clear", icon="X")
         layout.separator()
+        layout.operator("wm.jewelcraft_ul_materials_save", icon="EXPORT")
+        layout.operator("wm.jewelcraft_ul_materials_load", icon="IMPORT")
+        layout.separator()
         layout.prop(prefs, "weighting_list_show_composition")
         layout.prop(prefs, "weighting_list_show_density")
 
@@ -232,27 +235,22 @@ class VIEW3D_PT_jewelcraft_widgets(Panel, Setup):
         layout.prop(self.wm_props, "widget_toggle", text="")
 
     def draw(self, context):
+        props = context.scene.jewelcraft
+
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
         layout.active = self.wm_props.widget_toggle
 
         col = layout.column()
-        col.prop(self.prefs, "widget_show_all")
-        col.prop(self.prefs, "widget_show_in_front")
-        col.prop(self.prefs, "widget_use_overrides")
+        col.prop(props, "widget_show_all")
+        col.prop(props, "widget_show_in_front")
+        col.prop(props, "widget_use_overrides")
+        col.prop(props, "widget_spacing", text="Spacing", text_ctxt="JewelCraft")
 
-        col.separator()
-
-        col.prop(self.prefs, "widget_color")
-        col.prop(self.prefs, "widget_linewidth")
-        col.prop(self.prefs, "widget_spacing", text="Spacing", text_ctxt="JewelCraft")
-
-        col.separator()
-
-        row = col.row(align=True)
-        row.operator("object.jewelcraft_widgets_overrides_set")
-        row.operator("object.jewelcraft_widgets_overrides_del")
+        row = layout.row(align=True)
+        row.operator("object.jewelcraft_widget_override_set")
+        row.operator("object.jewelcraft_widget_override_del")
 
 
 class VIEW3D_PT_jewelcraft_assets(Panel, Setup):
@@ -370,7 +368,7 @@ class VIEW3D_PT_jewelcraft_weighting(Panel, Setup):
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
-        material_list = self.prefs.weighting_materials
+        material_list = context.scene.jewelcraft.weighting_materials
 
         layout = self.layout
 
@@ -418,35 +416,6 @@ class VIEW3D_PT_jewelcraft_product_report(Panel, Setup):
         layout = self.layout
         layout.operator("wm.jewelcraft_product_report", text="Product Report")
         layout.operator("view3d.jewelcraft_gem_map", text="Gem Map")
-
-
-class VIEW3D_PT_jewelcraft_product_report_options(Panel, Setup):
-    bl_label = "Options"
-    bl_options = {"DEFAULT_CLOSED"}
-    bl_parent_id = "VIEW3D_PT_jewelcraft_product_report"
-
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
-
-        col = layout.column()
-        col.prop(self.prefs, "product_report_save")
-        col.prop(self.prefs, "product_report_lang", text="Language")
-
-        layout.separator()
-
-        layout.label(text="Gem Map")
-        col = layout.column(align=True)
-        col.prop(self.prefs, "gem_map_width", text="Resolution X")
-        col.prop(self.prefs, "gem_map_height", text="Y")
-
-        layout.separator()
-
-        layout.label(text="Warnings")
-        col = layout.column()
-        col.prop(self.prefs, "product_report_use_hidden_gems")
-        col.prop(self.prefs, "product_report_use_overlap")
 
 
 class VIEW3D_PT_jewelcraft_measurement(Panel, Setup):

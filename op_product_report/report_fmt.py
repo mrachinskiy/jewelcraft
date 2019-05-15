@@ -55,9 +55,8 @@ def _ct_calc(stone, cut, size):
     return round(ct, 3)
 
 
-def data_format(context, data):
-    prefs = context.preferences.addons[var.ADDON_ID].preferences
-    _ = gettext.GetText(context).gettext
+def data_format(self, context, data):
+    _ = gettext.GetText(context, self.lang).gettext
     _mm = _("mm")
     _g = _("g")
     report = []
@@ -118,6 +117,7 @@ def data_format(context, data):
     if data["volume"]:
 
         vol = data["volume"]
+        materials = context.scene.jewelcraft.weighting_materials
 
         # Format values
         # ---------------------------
@@ -127,7 +127,7 @@ def data_format(context, data):
         materialsf = [(volf, _("Volume"))]
         col_width = len(volf)
 
-        for mat in prefs.weighting_materials.values():
+        for mat in materials.values():
             if mat.enabled:
                 density = unit.convert(mat.density, "CM3_TO_MM3")
                 weight = round(vol * density, 2)

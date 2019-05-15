@@ -35,7 +35,7 @@ class Setup:
     def __init__(self):
         self.prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
         self.props = bpy.context.window_manager.jewelcraft
-        self.materials = self.prefs.weighting_materials
+        self.materials = bpy.context.scene.jewelcraft.weighting_materials
         self.filename = self.props.weighting_set
         self.folder = asset.user_asset_library_folder_weighting()
         self.filepath = os.path.join(self.folder, self.filename)
@@ -225,8 +225,7 @@ class WeightingSetLoad:
             self.materials.clear()
 
         if self.filename.startswith("JCASSET"):
-            for mat in var.DEFAULT_WEIGHTING_SETS[self.filename]:
-                name, dens, comp = mat
+            for name, dens, comp in var.DEFAULT_WEIGHTING_SETS[self.filename]:
                 item = self.materials.add()
                 item.name = _(name)
                 item.composition = comp

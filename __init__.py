@@ -75,6 +75,7 @@ else:
         ops_utils,
         ops_weighting,
     )
+    from .lib import on_load
 
 
 var.UPDATE_CURRENT_VERSION = bl_info["version"]
@@ -106,7 +107,6 @@ classes = (
     ui.VIEW3D_PT_jewelcraft_weighting,
     ui.VIEW3D_PT_jewelcraft_product_report,
     ui.VIEW3D_PT_jewelcraft_measurement,
-    ui.VIEW3D_PT_jewelcraft_product_report_options,
     mod_update.WM_OT_jewelcraft_update_check,
     mod_update.WM_OT_jewelcraft_update_download,
     mod_update.WM_OT_jewelcraft_update_whats_new,
@@ -145,12 +145,14 @@ classes = (
     ops_object.OBJECT_OT_jewelcraft_resize,
     ops_utils.SCENE_OT_jewelcraft_scene_units_set,
     ops_utils.VIEW3D_OT_jewelcraft_search_asset,
-    ops_utils.OBJECT_OT_jewelcraft_widgets_overrides_set,
-    ops_utils.OBJECT_OT_jewelcraft_widgets_overrides_del,
+    ops_utils.OBJECT_OT_jewelcraft_widget_override_set,
+    ops_utils.OBJECT_OT_jewelcraft_widget_override_del,
     ops_weighting.WM_OT_jewelcraft_ul_materials_add,
     ops_weighting.WM_OT_jewelcraft_ul_materials_del,
     ops_weighting.WM_OT_jewelcraft_ul_materials_clear,
     ops_weighting.WM_OT_jewelcraft_ul_materials_move,
+    ops_weighting.WM_OT_jewelcraft_ul_materials_save,
+    ops_weighting.WM_OT_jewelcraft_ul_materials_load,
     ops_weighting.OBJECT_OT_jewelcraft_weight_display,
     ops_weighting.WM_OT_jewelcraft_weighting_set_add,
     ops_weighting.WM_OT_jewelcraft_weighting_set_replace,
@@ -199,6 +201,14 @@ def register():
 
     var.preview_collections["icons"] = pcoll
 
+    # On load
+    # ---------------------------
+
+    on_load.handler_add()
+
+    # mod_update
+    # ---------------------------
+
     mod_update.update_init_check()
 
 
@@ -222,10 +232,11 @@ def unregister():
     var.preview_collections.clear()
     dynamic_list._cache.clear()
 
-    # Widgets
+    # Handlers
     # ---------------------------
 
     widget.handler_del()
+    on_load.handler_del()
 
 
 if __name__ == "__main__":

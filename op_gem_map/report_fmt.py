@@ -33,7 +33,7 @@ def data_format(self, context, data):
     col_cut = 0
     col_size = 0
     color_var = Color((0.85, 0.35, 0.35))
-    _ = gettext.GetText(context).gettext
+    _ = gettext.GetText(context, self.lang).gettext
     _pcs = _("pcs")
     _mm = _("mm")
 

@@ -75,6 +75,14 @@ class ListProperty:
     def values(self):
         return self.coll.values()
 
+    def copy_from(self, x):
+        self.clear()
+
+        for value in x.values():
+            item = self.add()
+            for k, v in value.items():
+                setattr(item, k, v)
+
 
 class JewelCraftMaterialsCollection(PropertyGroup):
     enabled: BoolProperty(description="Enable material for weighting and product report", default=True)
@@ -119,16 +127,6 @@ def update_asset_refresh(self, context):
 
 class JewelCraftPreferences(AddonPreferences):
     bl_idname = __package__
-
-    active_section: EnumProperty(
-        items=(
-            ("ASSET_MANAGER",  "Asset Manager",  ""),
-            ("WEIGHTING",      "Weighting",      ""),
-            ("PRODUCT_REPORT", "Product Report", ""),
-            ("THEMES",         "Themes",         ""),
-            ("UPDATES",        "Updates",         ""),
-        ),
-    )
 
     # Updates
     # ------------------------
@@ -252,19 +250,6 @@ class JewelCraftPreferences(AddonPreferences):
     # Widget
     # ------------------------
 
-    widget_show_all: BoolProperty(
-        name="Show All",
-        description="Display spacing widget for all visible gems",
-    )
-    widget_show_in_front: BoolProperty(
-        name="In Front",
-        description="Draw widgets in front of objects",
-    )
-    widget_use_overrides: BoolProperty(
-        name="Use Overrides",
-        description="Use object defined widget overrides",
-        default=True,
-    )
     widget_color: FloatVectorProperty(
         name="Color",
         default=(0.9, 0.9, 0.9, 1.0),
@@ -279,14 +264,6 @@ class JewelCraftPreferences(AddonPreferences):
         min=1.0,
         soft_max=5.0,
         subtype="PIXEL",
-    )
-    widget_spacing: FloatProperty(
-        name="Spacing",
-        default=0.2,
-        min=0.0,
-        step=1,
-        precision=2,
-        unit="LENGTH",
     )
 
     # Themes
@@ -337,6 +314,9 @@ class JewelCraftPreferences(AddonPreferences):
     )
 
     def draw(self, context):
+        props_wm = context.window_manager.jewelcraft
+        active_tab = props_wm.prefs_active_tab
+
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
@@ -345,11 +325,11 @@ class JewelCraftPreferences(AddonPreferences):
         col = split.column()
         col.use_property_split = False
         col.scale_y = 1.3
-        col.prop(self, "active_section", expand=True)
+        col.prop(props_wm, "prefs_active_tab", expand=True)
 
         box = split.box()
 
-        if self.active_section == "ASSET_MANAGER":
+        if active_tab == "ASSET_MANAGER":
             col = box.column()
             col.prop(self, "display_asset_name")
             col.prop(self, "use_custom_asset_dir")
@@ -357,7 +337,7 @@ class JewelCraftPreferences(AddonPreferences):
             sub.active = self.use_custom_asset_dir
             sub.prop(self, "custom_asset_dir")
 
-        elif self.active_section == "WEIGHTING":
+        elif active_tab == "WEIGHTING":
             col = box.column()
             col.prop(self, "weighting_hide_default_sets")
             col.prop(self, "weighting_set_use_custom_dir")
@@ -367,8 +347,7 @@ class JewelCraftPreferences(AddonPreferences):
 
             box.label(text="Materials list")
 
-            row = box.row()
-            row.template_list(
+            box.template_list(
                 "VIEW3D_UL_jewelcraft_weighting_set",
                 "",
                 self.weighting_materials,
@@ -377,18 +356,11 @@ class JewelCraftPreferences(AddonPreferences):
                 "index",
             )
 
-            col = row.column(align=True)
-            col.operator("wm.jewelcraft_ul_materials_add", text="", icon="ADD")
-            col.operator("wm.jewelcraft_ul_materials_del", text="", icon="REMOVE")
-            col.separator()
-            col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_UP").move_up = True
-            col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_DOWN")
-
             col = box.column()
             col.prop(self, "weighting_list_show_composition")
             col.prop(self, "weighting_list_show_density")
 
-        elif self.active_section == "PRODUCT_REPORT":
+        elif active_tab == "PRODUCT_REPORT":
             col = box.column()
             col.prop(self, "product_report_save")
             col.prop(self, "product_report_lang")
@@ -403,19 +375,15 @@ class JewelCraftPreferences(AddonPreferences):
             col.prop(self, "product_report_use_hidden_gems")
             col.prop(self, "product_report_use_overlap")
 
-        elif self.active_section == "THEMES":
+        elif active_tab == "THEMES":
             box.label(text="Interface")
             col = box.column()
             col.prop(self, "theme_icon")
 
             box.label(text="Widgets")
             col = box.column()
-            col.prop(self, "widget_show_all")
-            col.prop(self, "widget_show_in_front")
-            col.prop(self, "widget_use_overrides")
             col.prop(self, "widget_color")
             col.prop(self, "widget_linewidth")
-            col.prop(self, "widget_spacing")
 
             box.label(text="Materials")
             col = box.column()
@@ -429,7 +397,7 @@ class JewelCraftPreferences(AddonPreferences):
             col.prop(self, "view_font_size_gem_size")
             col.prop(self, "view_font_size_distance")
 
-        elif self.active_section == "UPDATES":
+        elif active_tab == "UPDATES":
             mod_update.prefs_ui(self, box)
 
 
@@ -446,6 +414,15 @@ def update_asset_list(self, context):
 
 
 class JewelCraftPropertiesWm(PropertyGroup):
+    prefs_active_tab: EnumProperty(
+        items=(
+            ("ASSET_MANAGER",  "Asset Manager",  ""),
+            ("WEIGHTING",      "Weighting",      ""),
+            ("PRODUCT_REPORT", "Product Report", ""),
+            ("THEMES",         "Themes",         ""),
+            ("UPDATES",        "Updates",         ""),
+        ),
+    )
     widget_toggle: BoolProperty(description="Enable widgets drawing", update=widget.handler_toggle)
     asset_folder: EnumProperty(
         name="Category",
@@ -466,4 +443,26 @@ class JewelCraftPropertiesWm(PropertyGroup):
 
 
 class JewelCraftPropertiesScene(PropertyGroup):
+    weighting_materials: PointerProperty(type=JewelCraftMaterialsList)
     measurements: PointerProperty(type=JewelCraftMeasurementsList)
+    widget_show_all: BoolProperty(
+        name="Show All",
+        description="Display spacing widget for all visible gems",
+    )
+    widget_show_in_front: BoolProperty(
+        name="In Front",
+        description="Draw widgets in front of objects",
+    )
+    widget_use_overrides: BoolProperty(
+        name="Use Overrides",
+        description="Use object defined widget overrides",
+        default=True,
+    )
+    widget_spacing: FloatProperty(
+        name="Spacing",
+        default=0.2,
+        min=0.0,
+        step=1,
+        precision=2,
+        unit="LENGTH",
+    )

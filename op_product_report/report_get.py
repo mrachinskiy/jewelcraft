@@ -21,12 +21,11 @@
 
 from mathutils import Matrix
 
-
 from .. import var
 from ..lib import unit, mesh, asset
 
 
-def data_collect(context, gem_map=False):
+def data_collect(self, context, gem_map=False):
     import collections
 
     UnitScale = unit.Scale(context)
@@ -35,7 +34,6 @@ def data_collect(context, gem_map=False):
 
     scene = context.scene
     depsgraph = context.depsgraph
-    prefs = context.preferences.addons[var.ADDON_ID].preferences
     props = scene.jewelcraft
     data = {
         "gems": collections.defaultdict(int),
@@ -137,7 +135,7 @@ def data_collect(context, gem_map=False):
 
     overlaps = False
 
-    if prefs.product_report_use_overlap:
+    if self.use_overlap:
         threshold = to_scene_scale(0.1)
         overlaps = asset.gem_overlap(context, ob_data, threshold, first_match=True)
 
@@ -146,7 +144,7 @@ def data_collect(context, gem_map=False):
 
     hidden = False
 
-    if prefs.product_report_use_hidden_gems:
+    if self.use_hidden_gems:
         for ob in scene.objects:
             if "gem" in ob and not ob.visible_get():
                 hidden = True
