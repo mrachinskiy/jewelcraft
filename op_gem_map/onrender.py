@@ -35,8 +35,8 @@ def render_map(self, context):
     import tempfile
 
     image_name = "Gem Map"
-    width = self.prefs.gem_map_width
-    height = self.prefs.gem_map_height
+    width = self.width
+    height = self.height
     ratio_w = width / self.region.width
     ratio_h = height / self.region.height
     padding = 30
@@ -111,7 +111,7 @@ def render_map(self, context):
     image.scale(width, height)
     image.pixels = [v / 255 for v in buffer]
 
-    if self.prefs.product_report_save and bpy.data.is_saved:
+    if self.use_save and bpy.data.is_saved:
         filepath = bpy.data.filepath
         filename = os.path.splitext(os.path.basename(filepath))[0]
         save_path = os.path.join(os.path.dirname(filepath), filename + " Gem Map.png")

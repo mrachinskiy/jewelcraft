@@ -23,6 +23,7 @@ import os
 
 import bpy
 from bpy.types import Operator
+from bpy.props import EnumProperty, BoolProperty
 from bpy.app.translations import pgettext_tip as _
 
 from . import report_fmt, report_get
@@ -35,10 +36,54 @@ class WM_OT_jewelcraft_product_report(Operator):
     bl_description = "Present summary information about the product, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_product_report"
 
+    lang: EnumProperty(
+        name="Report Language",
+        description="Product report language",
+        items=(
+            ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
+            ("en_US", "English (English)", ""),
+            ("es", "Spanish (Español)", ""),
+            ("fr_FR", "French (Français)", ""),
+            ("ru_RU", "Russian (Русский)", ""),
+        ),
+    )
+    use_save: BoolProperty(
+        name="Save To File",
+        description="Save product report to file in project folder",
+        default=True,
+    )
+    use_hidden_gems: BoolProperty(
+        name="Hidden Gems",
+        description="Enable or disable given warning",
+        default=True,
+    )
+    use_overlap: BoolProperty(
+        name="Overlapping Gems",
+        description="Enable or disable given warning",
+        default=True,
+    )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+
+        col = layout.column()
+        col.prop(self, "lang")
+        col.prop(self, "use_save")
+
+        layout.label(text="Warnings")
+        col = layout.column()
+        col.prop(self, "use_hidden_gems")
+        col.prop(self, "use_overlap")
+
+        layout.separator()
+
     def execute(self, context):
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        data_raw = report_get.data_collect(context)
-        data_fmt = report_fmt.data_format(context, data_raw)
+        data_raw = report_get.data_collect(self, context)
+        data_fmt = report_fmt.data_format(self, context, data_raw)
 
         # Compose text datablock
         # ---------------------------
@@ -66,7 +111,7 @@ class WM_OT_jewelcraft_product_report(Operator):
         # Save to file
         # ---------------------------
 
-        if prefs.product_report_save and bpy.data.is_saved:
+        if self.use_save and bpy.data.is_saved:
             filepath = bpy.data.filepath
             filename = os.path.splitext(os.path.basename(filepath))[0]
             save_path = os.path.join(os.path.dirname(filepath), filename + " Report.txt")
@@ -74,16 +119,35 @@ class WM_OT_jewelcraft_product_report(Operator):
             with open(save_path, "w", encoding="utf-8") as file:
                 file.write(data_fmt)
 
-        # Display
+        # Display, workaround for T64439
         # ---------------------------
 
+        self.txt = txt
+        context.window_manager.modal_handler_add(self)
+
+        return {"RUNNING_MODAL"}
+
+    def modal(self, context, event):
         space_data = {
             "show_line_numbers": False,
             "show_word_wrap": False,
             "show_syntax_highlight": False,
-            "text": txt,
+            "text": self.txt,
         }
 
         asset.show_window(800, 540, area_type="TEXT_EDITOR", space_data=space_data)
 
         return {"FINISHED"}
+
+    def invoke(self, context, event):
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        self.lang = prefs.product_report_lang
+        self.use_save = prefs.product_report_save
+        self.use_hidden_gems = prefs.product_report_use_hidden_gems
+        self.use_overlap = prefs.product_report_use_overlap
+
+        if event.ctrl:
+            wm = context.window_manager
+            return wm.invoke_props_dialog(self)
+
+        return self.execute(context)

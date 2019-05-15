@@ -29,15 +29,14 @@ from .. import var
 class Setup:
 
     def __init__(self):
-        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        self.list = prefs.weighting_materials
+        self.list = bpy.context.scene.jewelcraft.weighting_materials
 
 
 class WM_OT_jewelcraft_ul_materials_add(Operator, Setup):
     bl_label = "Add New Material"
     bl_description = "Add new material to the list"
     bl_idname = "wm.jewelcraft_ul_materials_add"
-    bl_options = {"INTERNAL"}
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     name: StringProperty(
         name="Name",
@@ -92,7 +91,7 @@ class WM_OT_jewelcraft_ul_materials_del(Operator, Setup):
     bl_label = "Remove Item"
     bl_description = "Remove selected item"
     bl_idname = "wm.jewelcraft_ul_materials_del"
-    bl_options = {"INTERNAL"}
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     def execute(self, context):
         self.list.remove()
@@ -103,7 +102,7 @@ class WM_OT_jewelcraft_ul_materials_clear(Operator, Setup):
     bl_label = "Clear List"
     bl_description = "Remove all list items"
     bl_idname = "wm.jewelcraft_ul_materials_clear"
-    bl_options = {"INTERNAL"}
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     def execute(self, context):
         self.list.clear()
@@ -114,10 +113,34 @@ class WM_OT_jewelcraft_ul_materials_move(Operator, Setup):
     bl_label = "Move Item"
     bl_description = "Move selected item up/down in the list"
     bl_idname = "wm.jewelcraft_ul_materials_move"
-    bl_options = {"INTERNAL"}
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     move_up: BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
         self.list.move(self.move_up)
+        return {"FINISHED"}
+
+
+class WM_OT_jewelcraft_ul_materials_save(Operator, Setup):
+    bl_label = "Save To Preferences"
+    bl_description = ""
+    bl_idname = "wm.jewelcraft_ul_materials_save"
+    bl_options = {"INTERNAL"}
+
+    def execute(self, context):
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        prefs.weighting_materials.copy_from(self.list)
+        return {"FINISHED"}
+
+
+class WM_OT_jewelcraft_ul_materials_load(Operator, Setup):
+    bl_label = "Load From Preferences"
+    bl_description = ""
+    bl_idname = "wm.jewelcraft_ul_materials_load"
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
+
+    def execute(self, context):
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        self.list.copy_from(prefs.weighting_materials)
         return {"FINISHED"}

@@ -20,23 +20,34 @@
 
 
 import bpy
+from bpy.app.handlers import persistent
 
-from ..localization import DICTIONARY
+from .. import var
 
 
-class GetText:
+def handler_add():
+    bpy.app.handlers.load_post.append(_execute)
 
-    def __init__(self, context, lang):
-        if lang == "AUTO":
-            lang = bpy.app.translations.locale
 
-        if lang == "es_ES":
-            lang = "es"
+def handler_del():
+    bpy.app.handlers.load_post.remove(_execute)
 
-        self.use_gettext = lang in DICTIONARY.keys()
-        self.lang = lang
 
-    def gettext(self, text, ctxt="*"):
-        if self.use_gettext:
-            return DICTIONARY[self.lang].get((ctxt, text), text)
-        return text
+@persistent
+def _execute(dummy):
+    materials = bpy.context.scene.jewelcraft.weighting_materials
+
+    if materials.coll:
+        return
+
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+    prefs_mats = prefs.weighting_materials
+
+    if prefs_mats.coll:
+        materials.copy_from(prefs_mats)
+    else:
+        for name, dens, comp in var.DEFAULT_WEIGHTING_SETS["JCASSET_PRECIOUS"]:
+            item = materials.add()
+            item.name = name
+            item.composition = comp
+            item.density = dens

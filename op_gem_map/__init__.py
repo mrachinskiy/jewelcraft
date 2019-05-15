@@ -21,7 +21,7 @@
 
 import bpy
 from bpy.types import Operator
-from bpy.props import BoolProperty
+from bpy.props import EnumProperty, BoolProperty, IntProperty
 from bpy.app.translations import pgettext_iface as _
 
 from . import (
@@ -40,10 +40,72 @@ class VIEW3D_OT_jewelcraft_gem_map(Operator, Offscreen, OnscreenText):
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
 
-    use_select: BoolProperty()
-
     TYPE_BOOL = 0
     TYPE_RENDER = 1
+
+    use_select: BoolProperty()
+    lang: EnumProperty(
+        name="Report Language",
+        description="Product report language",
+        items=(
+            ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
+            ("en_US", "English (English)", ""),
+            ("es", "Spanish (Español)", ""),
+            ("fr_FR", "French (Français)", ""),
+            ("ru_RU", "Russian (Русский)", ""),
+        ),
+    )
+    use_save: BoolProperty(
+        name="Save To File",
+        description="Save product report to file in project folder",
+        default=True,
+    )
+    use_hidden_gems: BoolProperty(
+        name="Hidden Gems",
+        description="Enable or disable given warning",
+        default=True,
+    )
+    use_overlap: BoolProperty(
+        name="Overlapping Gems",
+        description="Enable or disable given warning",
+        default=True,
+    )
+    width: IntProperty(
+        name="Width",
+        description="Number of horizontal pixels in the rendered image",
+        default=1200,
+        min=4,
+        subtype="PIXEL",
+    )
+    height: IntProperty(
+        name="Height",
+        description="Number of vertical pixels in the rendered image",
+        default=750,
+        min=4,
+        subtype="PIXEL",
+    )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+
+        col = layout.column()
+        col.prop(self, "lang")
+        col.prop(self, "use_save")
+
+        col = layout.column(align=True)
+        col.prop(self, "width", text="Resolution X")
+        col.prop(self, "height", text="Y")
+
+        layout.label(text="Warnings")
+        col = layout.column()
+        col.prop(self, "use_hidden_gems")
+        col.prop(self, "use_overlap")
+
+        layout.separator()
 
     def modal(self, context, event):
         import time
@@ -97,8 +159,14 @@ class VIEW3D_OT_jewelcraft_gem_map(Operator, Offscreen, OnscreenText):
 
         return {"PASS_THROUGH"}
 
+    def execute(self, context):
+        self.offscreen_refresh(context)
+        self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_handler.draw, (self, context), "WINDOW", "POST_PIXEL")
+        context.window_manager.modal_handler_add(self)
+        return {"RUNNING_MODAL"}
+
     def invoke(self, context, event):
-        data = report_get.data_collect(context, gem_map=True)
+        data = report_get.data_collect(self, context, gem_map=True)
 
         if context.area.type != "VIEW_3D":
             self.report({"ERROR"}, "Area type is not 3D View")
@@ -110,9 +178,16 @@ class VIEW3D_OT_jewelcraft_gem_map(Operator, Offscreen, OnscreenText):
 
         import time
 
+        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
+        self.lang = self.prefs.product_report_lang
+        self.use_save = self.prefs.product_report_save
+        self.use_hidden_gems = self.prefs.product_report_use_hidden_gems
+        self.use_overlap = self.prefs.product_report_use_overlap
+        self.width = self.prefs.gem_map_width
+        self.height = self.prefs.gem_map_height
+
         self.region = context.region
         self.region_3d = context.space_data.region_3d
-        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.view_mat = self.region_3d.perspective_matrix.copy()
         self.offscreen = None
         self.handler = None
@@ -162,14 +237,11 @@ class VIEW3D_OT_jewelcraft_gem_map(Operator, Offscreen, OnscreenText):
         self.option_col_1_max = max(self.option_list, key=lambda x: len(x[0]))[0]
         self.option_col_2_max = max(self.option_list, key=lambda x: len(x[1]))[1]
 
-        # Handlers
-        # ----------------------------
+        if event.ctrl:
+            wm = context.window_manager
+            return wm.invoke_props_dialog(self)
 
-        self.offscreen_refresh(context)
-        self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_handler.draw, (self, context), "WINDOW", "POST_PIXEL")
-        context.window_manager.modal_handler_add(self)
-
-        return {"RUNNING_MODAL"}
+        return self.execute(context)
 
     def rect_coords(self, x, y, dim_x, dim_y):
         return (

@@ -45,8 +45,8 @@ def handler_add(self, context):
     global _handler_font
 
     if _handler is None:
-        _handler = bpy.types.SpaceView3D.draw_handler_add(draw, (self, context), "WINDOW", "POST_VIEW")
-        _handler_font = bpy.types.SpaceView3D.draw_handler_add(draw_font, (self, context), "WINDOW", "POST_PIXEL")
+        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context), "WINDOW", "POST_VIEW")
+        _handler_font = bpy.types.SpaceView3D.draw_handler_add(_draw_font, (self, context), "WINDOW", "POST_PIXEL")
 
 
 def handler_del():
@@ -68,7 +68,7 @@ def handler_toggle(self, context):
             handler_del()
 
 
-def draw(self, context):
+def _draw(self, context):
     if (
         not context.window_manager.jewelcraft.widget_toggle or
         not context.space_data.overlay.show_overlays
@@ -78,12 +78,13 @@ def draw(self, context):
     global _font_loc
 
     prefs = context.preferences.addons[var.ADDON_ID].preferences
-    show_all = prefs.widget_show_all
-    use_ovrd = prefs.widget_use_overrides
-    is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
+    props = context.scene.jewelcraft
+    show_all = props.widget_show_all
+    use_ovrd = props.widget_use_overrides
+    default_spacing = props.widget_spacing
     default_color = prefs.widget_color
     default_linewidth = prefs.widget_linewidth
-    default_spacing = prefs.widget_spacing
+    is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
     diplay_thold = default_spacing + 0.5
 
     if is_df:
@@ -147,7 +148,7 @@ def draw(self, context):
     bgl.glEnable(bgl.GL_LINE_SMOOTH)
     bgl.glDepthMask(bgl.GL_FALSE)
 
-    if prefs.widget_show_in_front:
+    if props.widget_show_in_front:
         bgl.glDisable(bgl.GL_DEPTH_TEST)
 
     for dup in context.depsgraph.object_instances:
@@ -251,7 +252,7 @@ def draw(self, context):
     bgl.glLineWidth(1.0)
 
 
-def draw_font(self, context):
+def _draw_font(self, context):
     global _font_loc
 
     if not _font_loc:

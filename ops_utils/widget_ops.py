@@ -25,10 +25,10 @@ from bpy.props import FloatProperty, FloatVectorProperty
 from .. import var
 
 
-class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
+class OBJECT_OT_jewelcraft_widget_override_set(Operator):
     bl_label = "Override"
     bl_description = "Override widget display properties for selected objects"
-    bl_idname = "object.jewelcraft_widgets_overrides_set"
+    bl_idname = "object.jewelcraft_widget_override_set"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     color: FloatVectorProperty(
@@ -99,10 +99,10 @@ class OBJECT_OT_jewelcraft_widgets_overrides_set(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_jewelcraft_widgets_overrides_del(Operator):
+class OBJECT_OT_jewelcraft_widget_override_del(Operator):
     bl_label = "Clear"
     bl_description = "Remove widget override properties from selected objects"
-    bl_idname = "object.jewelcraft_widgets_overrides_del"
+    bl_idname = "object.jewelcraft_widget_override_del"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     def execute(self, context):

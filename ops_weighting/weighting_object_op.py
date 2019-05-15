@@ -22,7 +22,6 @@
 from bpy.types import Operator
 from bpy.app.translations import pgettext_iface as _
 
-from .. import var
 from ..lib import unit, mesh, ui_lib
 
 
@@ -38,9 +37,7 @@ class OBJECT_OT_jewelcraft_weight_display(Operator):
             self.report({"ERROR"}, "At least one mesh object must be selected")
             return {"CANCELLED"}
 
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        materials = prefs.weighting_materials
-
+        materials = context.scene.jewelcraft.weighting_materials
         vol = unit.Scale(context).from_scene(mesh.est_volume(obs), volume=True)
 
         weight_report = []
