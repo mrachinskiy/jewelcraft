@@ -23,6 +23,8 @@ import bpy
 from bpy.types import Operator
 from bpy.props import BoolProperty, StringProperty, EnumProperty
 
+from ..lib import dynamic_list
+
 
 class Setup:
 
@@ -43,9 +45,13 @@ class WM_OT_jewelcraft_ul_measurements_add(Operator, Setup):
         description="Measurement type",
         items=(
             ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
-            ("VOLUME", "Volume", "", "VOLUME", 1),
+            ("WEIGHT", "Weight", "", "VOLUME", 1),
         ),
-        default="DIMENSIONS",
+    )
+    material: EnumProperty(
+        name="Material",
+        description="",
+        items=dynamic_list.materials_dropdown,
         options={"SKIP_SAVE"},
     )
     x: BoolProperty(name="X", default=True, options={"SKIP_SAVE"})
@@ -67,6 +73,8 @@ class WM_OT_jewelcraft_ul_measurements_add(Operator, Setup):
             col.prop(self, "x")
             col.prop(self, "y")
             col.prop(self, "z")
+        elif self.type == "WEIGHT":
+            layout.prop(self, "material")
 
         layout.separator()
 
@@ -81,6 +89,11 @@ class WM_OT_jewelcraft_ul_measurements_add(Operator, Setup):
             item.x = self.x
             item.y = self.y
             item.z = self.z
+        elif self.type == "WEIGHT":
+            materials = context.scene.jewelcraft.weighting_materials
+            mat = materials.values()[int(self.material)]
+            item.material_name = mat.name
+            item.material_density = mat.density
 
         context.area.tag_redraw()
 
@@ -91,7 +104,48 @@ class WM_OT_jewelcraft_ul_measurements_add(Operator, Setup):
             self.report({"ERROR"}, "No active object")
             return {"CANCELLED"}
 
+        dynamic_list.materials_dropdown_refresh()
         self.item_name = context.object.name
+
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+
+class WM_OT_jewelcraft_ul_measurements_material_select(Operator, Setup):
+    bl_label = "Select Material"
+    bl_description = "Select material"
+    bl_idname = "wm.jewelcraft_ul_measurements_material_select"
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
+
+    material: EnumProperty(
+        name="Material",
+        items=dynamic_list.materials_dropdown,
+        options={"SKIP_SAVE"},
+    )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+        layout.prop(self, "material")
+        layout.separator()
+
+    def execute(self, context):
+        item = self.list.values()[self.list.index]
+
+        materials = context.scene.jewelcraft.weighting_materials
+        mat = materials.values()[int(self.material)]
+        item.material_name = mat.name
+        item.material_density = mat.density
+
+        context.area.tag_redraw()
+
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        dynamic_list.materials_dropdown_refresh()
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)

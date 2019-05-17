@@ -51,6 +51,7 @@ dictionary = {
         "Composition": "Composición",
         "Warnings": "Alertas",
         "Hidden Gems": "Gemas Ocultas",
+        "Weight": "Peso",
 
         # TODO
         # "Show All": "",
@@ -64,12 +65,11 @@ dictionary = {
         # "Gem Size": "",
         # "Viewport Text Size": "",
 
-        # Popup dialogs
+        # Operator popup
         "Asset Name": "Nombre de Activo",
         "Category Name": "Nombre de Categoría",
         "Set Name": "Ajustar Nombre",
         "Curvature Scale": "Escala de Curvatura",
-        # Operator redo
         "Use Automated Presets": "Usar Preajustes Automáticos",
         "Prong Number": "Número de Clavijas",
         "Detalization": "Detallado",
@@ -229,6 +229,7 @@ dictionary = {
         # "Move selected item up/down in the list": "",
         # "Measured object": "",
         # "Measurement type": "",
+        # "Select material": "",
 
         # Reports
         "WARNING": "ADVERTENCIA",
@@ -253,8 +254,16 @@ dictionary = {
 
         "File not found": "Archivo no encontrado",
         "Name must be specified": "El nombre debe ser especificado",
+        "Volume": "Volumen",
+        "Settings": "Ajustes",
+        "Gem": "Gema",
+        "Cut": "Corte",
+        "Qty": "Cantidad",
 
         # TODO
+        # "Carats": "",
+        # "Materials": "",
+        # "Additional Notes": "",
         # "Overlapping gems": "",
         # "{} overlaps found": "",
         # "Optimal unit settings are in use": "",
@@ -329,18 +338,6 @@ dictionary = {
         "Bronze": "Bronce",
         "Steel Stainless": "Acero Inoxidable",
         "Titanium": "Titanio",
-        # Product report
-        "Settings": "Ajustes",
-        "Gem": "Gema",
-        "Cut": "Corte",
-        "Qty": "Cantidad",
-        "Weight": "Peso",
-        "Volume": "Volumen",
-
-        # TODO
-        # "Carats": "",
-        # "Additional Notes": "",
-
         # Units
         "mm": "mm",
         "mm³": "mm³",

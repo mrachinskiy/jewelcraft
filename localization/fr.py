@@ -52,6 +52,7 @@ dictionary = {
         "Composition": "Composition",
         "Warnings": "Avertissements",
         "Hidden Gems": "Cacher les pierres",
+        "Weight": "Poid",
 
         # TODO
         # "Show All": "",
@@ -65,12 +66,11 @@ dictionary = {
         # "Gem Size": "",
         # "Viewport Text Size": "",
 
-        # Popup dialogs
+        # Operator popup
         "Asset Name": "Nom de ressources",
         "Category Name": "Nom des catégories",
         "Set Name": "Donner le nom",
         "Curvature Scale": "Echelle de la courbe",
-        # Operator redo
         "Use Automated Presets": "Utiliser des réglages automatiques",
         "Prong Number": "Nombre de broche",
         "Detalization": "Detalization",
@@ -230,6 +230,7 @@ dictionary = {
         # "Move selected item up/down in the list": "",
         # "Measured object": "",
         # "Measurement type": "",
+        # "Select material": "",
 
         # Reports
         "WARNING": "AVERTISSEMENT",
@@ -254,8 +255,16 @@ dictionary = {
 
         "File not found": "Fichier non trouvé",
         "Name must be specified": "Le nom doit être spécifié",
+        "Volume": "Volume",
+        "Settings": "Réglages",
+        "Gem": "Pierre",
+        "Cut": "Coupe",
+        "Qty": "Qté",
 
         # TODO
+        # "Carats": "",
+        # "Materials": "",
+        # "Additional Notes": "",
         # "Overlapping gems": "",
         # "{} overlaps found": "",
         # "Optimal unit settings are in use": "",
@@ -330,18 +339,6 @@ dictionary = {
         "Bronze": "Bronze",
         "Steel Stainless": "Acier Inoxydable",
         "Titanium": "Titane",
-        # Product report
-        "Settings": "Réglages",
-        "Gem": "Pierre",
-        "Cut": "Coupe",
-        "Qty": "Qté",
-        "Weight": "Poid",
-        "Volume": "Volume",
-
-        # TODO
-        # "Carats": "",
-        # "Additional Notes": "",
-
         # Units
         "mm": "mm",
         "mm³": "mm³",

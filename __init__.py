@@ -132,6 +132,7 @@ classes = (
     ops_gem.OBJECT_OT_jewelcraft_select_gems_by_trait,
     ops_gem.OBJECT_OT_jewelcraft_select_overlapping,
     ops_measurement.WM_OT_jewelcraft_ul_measurements_add,
+    ops_measurement.WM_OT_jewelcraft_ul_measurements_material_select,
     ops_measurement.WM_OT_jewelcraft_ul_measurements_del,
     ops_measurement.WM_OT_jewelcraft_ul_measurements_move,
     ops_object.CURVE_OT_jewelcraft_size_curve_add,

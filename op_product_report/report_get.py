@@ -37,9 +37,9 @@ def data_collect(self, context, gem_map=False):
     props = scene.jewelcraft
     data = {
         "gems": collections.defaultdict(int),
+        "materials": collections.defaultdict(float),
         "warn": [],
         "notes": [],
-        "volume": 0.0,
     }
 
     if not gem_map:
@@ -49,9 +49,13 @@ def data_collect(self, context, gem_map=False):
             if not item.object:
                 continue
 
-            if item.type == "VOLUME":
+            if item.type == "WEIGHT":
                 if item.object.type == "MESH":
-                    data["volume"] += from_scene_scale(mesh.est_volume((item.object,)), volume=True)
+                    name = item.material_name
+                    density = round(item.material_density, 2)
+                    vol = from_scene_scale(mesh.est_volume((item.object,)), volume=True)
+
+                    data["materials"][(name, density)] += vol
             else:
                 axes = []
                 if item.x: axes.append(0)

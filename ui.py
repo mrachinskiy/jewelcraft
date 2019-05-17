@@ -74,7 +74,7 @@ class VIEW3D_UL_jewelcraft_weighting_set(UIList):
 
 class VIEW3D_UL_jewelcraft_measurements(UIList):
     icons = {
-        "VOLUME": "VOLUME",
+        "WEIGHT": "VOLUME",
         "DIMENSIONS": "SHADING_BBOX",
     }
 
@@ -462,3 +462,8 @@ class VIEW3D_PT_jewelcraft_measurement(Panel, Setup):
                 col.prop(item, "x")
                 col.prop(item, "y")
                 col.prop(item, "z")
+            elif item.type == "WEIGHT":
+                box = layout.box()
+                row = box.row(align=True)
+                row.label(text=item.material_name, translate=False)
+                row.operator("wm.jewelcraft_ul_measurements_material_select", text="", icon="DOWNARROW_HLT", emboss=False)
