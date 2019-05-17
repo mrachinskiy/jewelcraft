@@ -180,7 +180,7 @@ class OBJECT_OT_jewelcraft_move_over_under(Operator):
             if not ob:
                 return {"CANCELLED"}
 
-            context.scene.update()
+            context.view_layer.update()
             bbox, curve = asset.mod_curve_off(ob)
             bbox = [ob.matrix_world @ Vector(x) for x in bbox]
 

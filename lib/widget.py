@@ -86,6 +86,7 @@ def _draw(self, context):
     default_linewidth = prefs.widget_linewidth
     is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
     diplay_thold = default_spacing + 0.5
+    depsgraph = context.evaluated_depsgraph_get()
 
     if is_df:
         df = context.edit_object
@@ -117,13 +118,14 @@ def _draw(self, context):
             df.update_from_editmode()
 
             if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
-                me = df.to_mesh(context.depsgraph, True)
-                poly = me.polygons[df.data.polygons.active]
+                df_eval = df.evaluated_get(depsgraph)
+                polys = df_eval.to_mesh().polygons
+                poly = polys[polys.active]
 
                 ob_act_loc = df.matrix_world @ poly.center
                 mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
 
-                bpy.data.meshes.remove(me)
+                df_eval.to_mesh_clear()
             else:
                 polys = df.data.polygons
                 poly = polys[polys.active]
@@ -151,7 +153,7 @@ def _draw(self, context):
     if props.widget_show_in_front:
         bgl.glDisable(bgl.GL_DEPTH_TEST)
 
-    for dup in context.depsgraph.object_instances:
+    for dup in depsgraph.object_instances:
 
         if dup.is_instance:
             ob = dup.instance_object.original
