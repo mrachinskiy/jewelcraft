@@ -99,13 +99,15 @@ class JewelCraftMeasurementsCollection(PropertyGroup):
         description="Measurement type",
         items=(
             ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
-            ("VOLUME", "Volume", "", "VOLUME", 1),
+            ("WEIGHT", "Weight", "", "VOLUME", 1),
         ),
         default="DIMENSIONS",
     )
     x: BoolProperty(name="X", default=True)
     y: BoolProperty(name="Y", default=True)
     z: BoolProperty(name="Z", default=True)
+    material_name: StringProperty(name="Material", default="Untitled")
+    material_density: FloatProperty(default=0.01, min=0.01)
 
 
 class JewelCraftMaterialsList(ListProperty, PropertyGroup):

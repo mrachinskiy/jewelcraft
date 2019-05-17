@@ -114,37 +114,31 @@ def data_format(self, context, data):
 
         report.append(report_gems)
 
-    if data["volume"]:
-
-        vol = data["volume"]
-        materials = context.scene.jewelcraft.weighting_materials
+    if data["materials"]:
 
         # Format values
         # ---------------------------
 
-        volf = "{} {}".format(round(vol, 4), _("mm³"))
+        materialsf = []
+        col_width = 0
 
-        materialsf = [(volf, _("Volume"))]
-        col_width = len(volf)
+        for (mat_name, mat_density), vol in data["materials"].items():
+            density = unit.convert(mat_density, "CM3_TO_MM3")
+            weight = round(vol * density, 2)
+            weightf = f"{weight} {_g}"
 
-        for mat in materials.values():
-            if mat.enabled:
-                density = unit.convert(mat.density, "CM3_TO_MM3")
-                weight = round(vol * density, 2)
-                weightf = f"{weight} {_g}"
-
-                materialsf.append((weightf, mat.name))
-                col_width = max(col_width, len(weightf))
+            materialsf.append((mat_name, weightf))
+            col_width = max(col_width, len(mat_name))
 
         # Format report
         # ---------------------------
 
-        report_weight = _("Weight") + "\n\n"
+        report_materials = _("Materials") + "\n\n"
 
-        for value, name in materialsf:
-            report_weight += f"    {value:{col_width}}  {name}\n"
+        for name, value in materialsf:
+            report_materials += f"    {name:{col_width}}   {value}\n"
 
-        report.append(report_weight)
+        report.append(report_materials)
 
     if data["notes"]:
 

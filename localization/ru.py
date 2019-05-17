@@ -61,12 +61,12 @@ dictionary = {
         "Gem Table": "Таблица камней",
         "Gem Size": "Размер камня",
         "Viewport Text Size": "Размер текста вьюпорта",
-        # Popup dialogs
+        "Weight": "Вес",
+        # Operator popup
         "Asset Name": "Название ассета",
         "Category Name": "Название категории",
         "Set Name": "Название набора",
         "Curvature Scale": "Масштаб кривизны",
-        # Operator redo
         "Use Automated Presets": "Использовать автоматические пресеты",
         "Prong Number": "Количество корнеров",
         "Detalization": "Детализация",
@@ -235,7 +235,7 @@ dictionary = {
         "Move selected item up/down in the list": "Переместить выбранный элемент вверх/вниз по списку",
         "Measured object": "Измеряемый объект",
         "Measurement type": "Тип замера",
-
+        "Select material": "Выбрать материал",
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
@@ -262,6 +262,14 @@ dictionary = {
         "Overlapping gems": "Пересекающиеся камни",
         "{} overlaps found": "{} пересечений обнаружено",
         "Optimal unit settings are in use": "Используются оптимальные настройки единиц измерения",
+        "Volume": "Объём",
+        "Settings": "Вставки",
+        "Gem": "Камень",
+        "Cut": "Огранка",
+        "Qty": "Количество",
+        "Carats": "Караты",
+        "Materials": "Материалы",
+        "Additional Notes": "Дополнительные примечания",
         # Cuts
         "Round": "Кр-57",
         "Oval": "Овал",
@@ -332,15 +340,6 @@ dictionary = {
         "Bronze": "Бронза",
         "Steel Stainless": "Сталь нержавеющая",
         "Titanium": "Титан",
-        # Product report
-        "Settings": "Вставки",
-        "Gem": "Камень",
-        "Cut": "Огранка",
-        "Qty": "Количество",
-        "Carats": "Караты",
-        "Weight": "Вес",
-        "Volume": "Объём",
-        "Additional Notes": "Дополнительные примечания",
         # Units
         "mm": "мм",
         "mm³": "мм³",
