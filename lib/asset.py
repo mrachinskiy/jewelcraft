@@ -430,7 +430,7 @@ def mod_curve_off(ob, reverse=False):
         if mod.type == "CURVE" and mod.object:
             if mod.show_viewport:
                 mod.show_viewport = False
-                bpy.context.scene.update()
+                bpy.context.view_layer.update()
                 mod.show_viewport = True
 
             return ob.bound_box, mod.object

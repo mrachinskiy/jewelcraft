@@ -33,7 +33,7 @@ def data_collect(self, context, gem_map=False):
     to_scene_scale = UnitScale.to_scene
 
     scene = context.scene
-    depsgraph = context.depsgraph
+    depsgraph = context.evaluated_depsgraph_get()
     props = scene.jewelcraft
     data = {
         "gems": collections.defaultdict(int),

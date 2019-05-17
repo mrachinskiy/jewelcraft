@@ -21,7 +21,6 @@
 
 from math import pi
 
-import bpy
 from bpy_extras.view3d_utils import location_3d_to_region_2d
 import bgl
 import blf
@@ -73,7 +72,7 @@ class Offscreen:
         blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
 
         shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
-        depsgraph = context.depsgraph
+        depsgraph = context.evaluated_depsgraph_get()
 
         for dup in depsgraph.object_instances:
 
@@ -96,7 +95,8 @@ class Offscreen:
                     shader.uniform_float("color", color)
                     break
 
-            me = ob.to_mesh(depsgraph, True)
+            ob_eval = ob.evaluated_get(depsgraph)
+            me = ob_eval.to_mesh()
             me.transform(dup.matrix_world)
             verts = me.vertices
 
@@ -109,7 +109,7 @@ class Offscreen:
                     batch = batch_for_shader(shader, "TRI_FAN", {"pos": cos})
                     batch.draw(shader)
 
-            bpy.data.meshes.remove(me)
+            ob_eval.to_mesh_clear()
 
             # Size
             # -----------------------------

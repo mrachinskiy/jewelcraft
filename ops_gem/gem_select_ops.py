@@ -145,10 +145,9 @@ class OBJECT_OT_jewelcraft_select_overlapping(Operator):
     def execute(self, context):
         obs = []
         ob_data = []
+        depsgraph = context.evaluated_depsgraph_get()
 
-        context.scene.update()
-
-        for dup in context.depsgraph.object_instances:
+        for dup in depsgraph.object_instances:
 
             if dup.is_instance:
                 ob = dup.instance_object.original
