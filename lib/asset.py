@@ -259,7 +259,7 @@ def render_preview(width, height, filepath="//", compression=100):
         "resolution_x": width,
         "resolution_y": height,
         "resolution_percentage": 100,
-        "alpha_mode": "TRANSPARENT",
+        "film_transparent": True,
     }
 
     settings_image = {
