@@ -51,7 +51,7 @@ class WM_OT_jewelcraft_ul_measurements_add(Operator, Setup):
     material: EnumProperty(
         name="Material",
         description="",
-        items=dynamic_list.materials_dropdown,
+        items=dynamic_list.weighting_materials,
         options={"SKIP_SAVE"},
     )
     x: BoolProperty(name="X", default=True, options={"SKIP_SAVE"})
@@ -104,7 +104,7 @@ class WM_OT_jewelcraft_ul_measurements_add(Operator, Setup):
             self.report({"ERROR"}, "No active object")
             return {"CANCELLED"}
 
-        dynamic_list.materials_dropdown_refresh()
+        dynamic_list.weighting_materials_refresh()
         self.item_name = context.object.name
 
         wm = context.window_manager
@@ -119,7 +119,7 @@ class WM_OT_jewelcraft_ul_measurements_material_select(Operator, Setup):
 
     material: EnumProperty(
         name="Material",
-        items=dynamic_list.materials_dropdown,
+        items=dynamic_list.weighting_materials,
         options={"SKIP_SAVE"},
     )
 
@@ -145,7 +145,7 @@ class WM_OT_jewelcraft_ul_measurements_material_select(Operator, Setup):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        dynamic_list.materials_dropdown_refresh()
+        dynamic_list.weighting_materials_refresh()
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
