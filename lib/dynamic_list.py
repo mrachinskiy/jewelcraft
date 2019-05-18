@@ -167,10 +167,10 @@ def weighting_set(self, context):
     return list_
 
 
-def materials_dropdown(self, context):
+def weighting_materials(self, context):
 
-    if "materials_dropdown__list" in _cache:
-        return _cache["materials_dropdown__list"]
+    if "weighting_materials__list" in _cache:
+        return _cache["weighting_materials__list"]
 
     props = context.scene.jewelcraft
     list_ = []
@@ -183,7 +183,7 @@ def materials_dropdown(self, context):
     if not list_:
         list_ = [("", "", "")]
 
-    _cache["materials_dropdown__list"] = list_
+    _cache["weighting_materials__list"] = list_
 
     return list_
 
@@ -193,9 +193,9 @@ def weighting_set_refresh(self=None, context=None):
         del _cache["weighting_set__list"]
 
 
-def materials_dropdown_refresh(self=None, context=None):
-    if "materials_dropdown__list" in _cache:
-        del _cache["materials_dropdown__list"]
+def weighting_materials_refresh(self=None, context=None):
+    if "weighting_materials__list" in _cache:
+        del _cache["weighting_materials__list"]
 
 
 # Assets
