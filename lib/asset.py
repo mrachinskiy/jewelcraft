@@ -411,13 +411,8 @@ def ob_copy_to_faces(ob):
 
 
 def apply_scale(ob):
-    mat = Matrix()
-    mat[0][0] = ob.scale[0]
-    mat[1][1] = ob.scale[1]
-    mat[2][2] = ob.scale[2]
-
+    mat = Matrix.Diagonal(ob.scale).to_4x4()
     ob.data.transform(mat)
-
     ob.scale = (1.0, 1.0, 1.0)
 
 
