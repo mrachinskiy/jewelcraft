@@ -95,12 +95,8 @@ class Scatter:
 
         if self.is_scatter:
 
-            mat = Matrix()
-            mat[0][0] = ob.scale[0]
-            mat[1][1] = ob.scale[1]
-            mat[2][2] = ob.scale[2]
-
-            ob.matrix_world = mat
+            mat_sca = Matrix.Diagonal(ob.scale).to_4x4()
+            ob.matrix_world = mat_sca
 
             if self.rot_y:
                 mat_rot = Matrix.Rotation(self.rot_y, 4, "Y")
