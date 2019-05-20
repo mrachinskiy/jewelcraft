@@ -33,23 +33,29 @@ bl_info = {
 
 
 if "bpy" in locals():
-    import importlib
 
-    for entry in os.scandir(var.ADDON_DIR):
+    def walk(path, parent_dir=None):
+        import importlib
 
-        if entry.is_file() and entry.name.endswith(".py") and not entry.name.startswith("__"):
-            module = os.path.splitext(entry.name)[0]
-            importlib.reload(eval(module))
+        for entry in os.scandir(path):
 
-        elif entry.is_dir() and not entry.name.startswith((".", "__")):
+            if entry.is_file() and entry.name.endswith(".py"):
+                is_init = entry.name == "__init__.py"
+                filename, _ = os.path.splitext(entry.name)
 
-            for subentry in os.scandir(entry.path):
-                if subentry.is_file() and subentry.name.endswith(".py"):
-                    if subentry.name == "__init__.py":
-                        module = os.path.splitext(entry.name)[0]
-                    else:
-                        module = entry.name + "." + os.path.splitext(subentry.name)[0]
-                    importlib.reload(eval(module))
+                if parent_dir:
+                    module = parent_dir if is_init else f"{parent_dir}.{filename}"
+                elif not is_init:
+                    module = filename
+
+                importlib.reload(eval(module))
+
+            elif entry.is_dir() and not entry.name.startswith((".", "__")):
+                dirname = f"{parent_dir}.{entry.name}" if parent_dir else entry.name
+                walk(entry.path, parent_dir=dirname)
+
+    walk(var.ADDON_DIR)
+
 else:
     import os
 
