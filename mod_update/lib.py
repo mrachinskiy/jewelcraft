@@ -84,7 +84,10 @@ def _update_check(use_force_check):
     if save_state["update_available"]:
         use_force_check = True
 
-    if not use_force_check and (var.update_days_passed and var.update_days_passed < int(prefs.update_interval)):
+    if not use_force_check and (
+        var.update_days_passed is not None and
+        var.update_days_passed < int(prefs.update_interval)
+    ):
         return
 
     _runtime_state_set(in_progress=True)
