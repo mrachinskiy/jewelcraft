@@ -171,8 +171,8 @@ preview_collections = {}
 # --------------------------------
 
 
-UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_DIR, "update_state.json")
 UPDATE_OPERATOR_ID_AFFIX = "jewelcraft"
+UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_DIR, "update_state.json")
 UPDATE_RELEASES_URL = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
 UPDATE_MAX_VERSION = None
 UPDATE_CURRENT_VERSION = None
