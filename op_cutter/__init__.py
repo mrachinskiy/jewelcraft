@@ -37,7 +37,7 @@ def update_coords_hole(self, context):
     self.hole_z_top, self.culet_z = self.culet_z, self.hole_z_top
 
 
-class OBJECT_OT_jewelcraft_cutter_add(UI, Operator):
+class OBJECT_OT_cutter_add(UI, Operator):
     bl_label = "JewelCraft Make Cutter"
     bl_description = "Create cutter for selected gems"
     bl_idname = "object.jewelcraft_cutter_add"

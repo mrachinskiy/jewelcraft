@@ -84,14 +84,14 @@ class ListProperty:
                 setattr(item, k, v)
 
 
-class JewelCraftMaterialsCollection(PropertyGroup):
+class MaterialCollection(PropertyGroup):
     enabled: BoolProperty(description="Enable material for weighting and product report", default=True)
     name: StringProperty(default="Untitled")
     composition: StringProperty(default="Unknown")
     density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
 
 
-class JewelCraftMeasurementsCollection(PropertyGroup):
+class MeasurementCollection(PropertyGroup):
     name: StringProperty(name="Name", default="Untitled")
     object: PointerProperty(name="Object", description="Measured object", type=Object)
     type: EnumProperty(
@@ -110,12 +110,12 @@ class JewelCraftMeasurementsCollection(PropertyGroup):
     material_density: FloatProperty(default=0.01, min=0.01)
 
 
-class JewelCraftMaterialsList(ListProperty, PropertyGroup):
-    coll: CollectionProperty(type=JewelCraftMaterialsCollection)
+class MaterialsList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=MaterialCollection)
 
 
-class JewelCraftMeasurementsList(ListProperty, PropertyGroup):
-    coll: CollectionProperty(type=JewelCraftMeasurementsCollection)
+class MeasurementsList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=MeasurementCollection)
 
 
 # Preferences
@@ -191,7 +191,7 @@ class JewelCraftPreferences(AddonPreferences):
         subtype="DIR_PATH",
         update=dynamic_list.weighting_set_refresh,
     )
-    weighting_materials: PointerProperty(type=JewelCraftMaterialsList)
+    weighting_materials: PointerProperty(type=MaterialsList)
     weighting_list_show_composition: BoolProperty(
         name="Show Composition",
         description="Display material composition in the list",
@@ -415,7 +415,7 @@ def update_asset_list(self, context):
         self.asset_list = item_id
 
 
-class JewelCraftPropertiesWm(PropertyGroup):
+class WmProperties(PropertyGroup):
     prefs_active_tab: EnumProperty(
         items=(
             ("ASSET_MANAGER",  "Asset Manager",  ""),
@@ -444,9 +444,9 @@ class JewelCraftPropertiesWm(PropertyGroup):
 # ------------------------------------------
 
 
-class JewelCraftPropertiesScene(PropertyGroup):
-    weighting_materials: PointerProperty(type=JewelCraftMaterialsList)
-    measurements: PointerProperty(type=JewelCraftMeasurementsList)
+class SceneProperties(PropertyGroup):
+    weighting_materials: PointerProperty(type=MaterialsList)
+    measurements: PointerProperty(type=MeasurementsList)
     widget_show_all: BoolProperty(
         name="Show All",
         description="Display spacing widget for all visible gems",

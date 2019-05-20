@@ -31,7 +31,7 @@ from mathutils import Matrix, Vector
 from ..lib import asset, unit, mesh, ui_lib
 
 
-class CURVE_OT_jewelcraft_size_curve_add(Operator):
+class CURVE_OT_size_curve_add(Operator):
     bl_label = "JewelCraft Make Size Curve"
     bl_description = "Create size curve"
     bl_idname = "curve.jewelcraft_size_curve_add"
@@ -68,7 +68,7 @@ class CURVE_OT_jewelcraft_size_curve_add(Operator):
         return {"FINISHED"}
 
 
-class CURVE_OT_jewelcraft_length_display(Operator):
+class CURVE_OT_length_display(Operator):
     bl_label = "JewelCraft Display Length"
     bl_description = "Display curve length"
     bl_idname = "curve.jewelcraft_length_display"
@@ -111,7 +111,7 @@ class CURVE_OT_jewelcraft_length_display(Operator):
         return {"FINISHED"}
 
 
-class OBJECT_OT_jewelcraft_stretch_along_curve(Operator):
+class OBJECT_OT_stretch_along_curve(Operator):
     bl_label = "JewelCraft Stretch Along Curve"
     bl_description = (
         "Stretch deformed objects along curve on X axis, "
@@ -163,7 +163,7 @@ class OBJECT_OT_jewelcraft_stretch_along_curve(Operator):
         return {"FINISHED"}
 
 
-class OBJECT_OT_jewelcraft_move_over_under(Operator):
+class OBJECT_OT_move_over_under(Operator):
     bl_label = "JewelCraft Move Over/Under"
     bl_description = "Move deformed object over or under the curve"
     bl_idname = "object.jewelcraft_move_over_under"

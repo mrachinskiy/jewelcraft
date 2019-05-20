@@ -39,7 +39,7 @@ class Setup:
         self.filepath = os.path.join(self.folder, self.asset_name)
 
 
-class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
+class WM_OT_asset_add_to_library(Operator, Setup):
     bl_label = "Add To Library"
     bl_description = "Add selected objects to asset library"
     bl_idname = "wm.jewelcraft_asset_add_to_library"
@@ -86,7 +86,7 @@ class WM_OT_jewelcraft_asset_add_to_library(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_jewelcraft_asset_remove_from_library(Operator, Setup):
+class WM_OT_asset_remove_from_library(Operator, Setup):
     bl_label = "Remove Asset"
     bl_description = "Remove asset from library"
     bl_idname = "wm.jewelcraft_asset_remove_from_library"
@@ -121,7 +121,7 @@ class WM_OT_jewelcraft_asset_remove_from_library(Operator, Setup):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_jewelcraft_asset_rename(Operator, Setup):
+class WM_OT_asset_rename(Operator, Setup):
     bl_label = "Rename Asset"
     bl_description = "Rename asset"
     bl_idname = "wm.jewelcraft_asset_rename"
@@ -176,7 +176,7 @@ class WM_OT_jewelcraft_asset_rename(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_jewelcraft_asset_replace(Operator, Setup):
+class WM_OT_asset_replace(Operator, Setup):
     bl_label = "Replace Asset"
     bl_description = "Replace current asset with selected objects"
     bl_idname = "wm.jewelcraft_asset_replace"
@@ -195,7 +195,7 @@ class WM_OT_jewelcraft_asset_replace(Operator, Setup):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_jewelcraft_asset_preview_replace(Operator, Setup):
+class WM_OT_asset_preview_replace(Operator, Setup):
     bl_label = "Replace Asset Preview"
     bl_description = "Replace asset preview image"
     bl_idname = "wm.jewelcraft_asset_preview_replace"
@@ -216,7 +216,7 @@ class WM_OT_jewelcraft_asset_preview_replace(Operator, Setup):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_jewelcraft_asset_import(Operator, Setup):
+class WM_OT_asset_import(Operator, Setup):
     bl_label = "JewelCraft Import Asset"
     bl_description = "Import selected asset"
     bl_idname = "wm.jewelcraft_asset_import"

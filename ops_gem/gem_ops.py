@@ -27,7 +27,7 @@ from .. import var
 from ..lib import asset, dynamic_list
 
 
-class OBJECT_OT_jewelcraft_gem_add(Operator):
+class OBJECT_OT_gem_add(Operator):
     bl_label = "JewelCraft Make Gem"
     bl_description = "Add gemstone to the scene"
     bl_idname = "object.jewelcraft_gem_add"
@@ -95,7 +95,7 @@ class OBJECT_OT_jewelcraft_gem_add(Operator):
         return wm.invoke_props_dialog(self)
 
 
-class OBJECT_OT_jewelcraft_gem_edit(Operator):
+class OBJECT_OT_gem_edit(Operator):
     bl_label = "JewelCraft Edit Gem"
     bl_description = "Edit selected gems"
     bl_idname = "object.jewelcraft_gem_edit"
@@ -176,7 +176,7 @@ class OBJECT_OT_jewelcraft_gem_edit(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_jewelcraft_gem_id_add(Operator):
+class OBJECT_OT_gem_id_add(Operator):
     bl_label = "JewelCraft Add Gem ID"
     bl_description = "Add gem identifiers to selected objects"
     bl_idname = "object.jewelcraft_gem_id_add"
@@ -207,7 +207,7 @@ class OBJECT_OT_jewelcraft_gem_id_add(Operator):
         return wm.invoke_props_dialog(self)
 
 
-class OBJECT_OT_jewelcraft_gem_id_convert_deprecated(Operator):
+class OBJECT_OT_gem_id_convert_deprecated(Operator):
     bl_label = "JewelCraft Convert Deprecated Gem IDs"
     bl_description = "Convert deprecated gem identifiers to compatible for all objects in the scene"
     bl_idname = "object.jewelcraft_gem_id_convert_deprecated"

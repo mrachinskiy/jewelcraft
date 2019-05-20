@@ -29,7 +29,7 @@ from mathutils import Matrix
 from ..lib import asset
 
 
-class OBJECT_OT_jewelcraft_mirror(Operator):
+class OBJECT_OT_mirror(Operator):
     bl_label = "JewelCraft Mirror"
     bl_description = "Mirror selected objects around one or more axes, keeping object data linked"
     bl_idname = "object.jewelcraft_mirror"
@@ -149,7 +149,7 @@ class OBJECT_OT_jewelcraft_mirror(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_jewelcraft_make_dupliface(Operator):
+class OBJECT_OT_make_dupliface(Operator):
     bl_label = "JewelCraft Make Dupli-face"
     bl_description = "Create dupli-face for selected objects"
     bl_idname = "object.jewelcraft_make_dupliface"
@@ -211,7 +211,7 @@ class OBJECT_OT_jewelcraft_make_dupliface(Operator):
         return self.execute(context)
 
 
-class OBJECT_OT_jewelcraft_lattice_project(Operator):
+class OBJECT_OT_lattice_project(Operator):
     bl_label = "JewelCraft Lattice Project"
     bl_description = "Project selected objects onto active object using Lattice"
     bl_idname = "object.jewelcraft_lattice_project"
@@ -331,7 +331,7 @@ class OBJECT_OT_jewelcraft_lattice_project(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_jewelcraft_lattice_profile(Operator):
+class OBJECT_OT_lattice_profile(Operator):
     bl_label = "JewelCraft Lattice Profile"
     bl_description = "Deform active object profile with Lattice"
     bl_idname = "object.jewelcraft_lattice_profile"
@@ -466,7 +466,7 @@ def update_size(self, context):
     self.size = context.object.dimensions[int(self.axis)]
 
 
-class OBJECT_OT_jewelcraft_resize(Operator):
+class OBJECT_OT_resize(Operator):
     bl_label = "JewelCraft Resize"
     bl_description = "Scale selected objects to given size"
     bl_idname = "object.jewelcraft_resize"
