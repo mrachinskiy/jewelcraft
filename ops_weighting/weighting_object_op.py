@@ -25,7 +25,7 @@ from bpy.app.translations import pgettext_iface as _
 from ..lib import unit, mesh, ui_lib
 
 
-class OBJECT_OT_jewelcraft_weight_display(Operator):
+class OBJECT_OT_weight_display(Operator):
     bl_label = "JewelCraft Display Weight"
     bl_description = "Display weight and volume for selected mesh objects"
     bl_idname = "object.jewelcraft_weight_display"

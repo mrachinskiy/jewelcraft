@@ -36,7 +36,7 @@ class Setup:
         self.folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
 
 
-class WM_OT_jewelcraft_asset_folder_create(Operator, Setup):
+class WM_OT_asset_folder_create(Operator, Setup):
     bl_label = "Create Category"
     bl_description = "Create category"
     bl_idname = "wm.jewelcraft_asset_folder_create"
@@ -72,7 +72,7 @@ class WM_OT_jewelcraft_asset_folder_create(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_jewelcraft_asset_folder_rename(Operator, Setup):
+class WM_OT_asset_folder_rename(Operator, Setup):
     bl_label = "Rename Category"
     bl_description = "Rename category"
     bl_idname = "wm.jewelcraft_asset_folder_rename"
@@ -108,7 +108,7 @@ class WM_OT_jewelcraft_asset_folder_rename(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_jewelcraft_asset_ui_refresh(Operator):
+class WM_OT_asset_ui_refresh(Operator):
     bl_label = "Refresh"
     bl_description = "Refresh asset UI"
     bl_idname = "wm.jewelcraft_asset_ui_refresh"

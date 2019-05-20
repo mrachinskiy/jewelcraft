@@ -25,10 +25,15 @@ from .. import var
 from . import lib
 
 
-class WM_OT_jewelcraft_update_check(Operator):
+OP_IDNAME_CHECK = f"wm.{var.UPDATE_OPERATOR_ID_AFFIX}_update_check"
+OP_IDNAME_DOWNLOAD = f"wm.{var.UPDATE_OPERATOR_ID_AFFIX}_update_download"
+OP_IDNAME_WHATS_NEW = f"wm.{var.UPDATE_OPERATOR_ID_AFFIX}_update_whats_new"
+
+
+class WM_OT_update_check(Operator):
     bl_label = "Check for Updates"
     bl_description = "Check for new add-on release"
-    bl_idname = "wm.jewelcraft_update_check"
+    bl_idname = OP_IDNAME_CHECK
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
@@ -40,10 +45,10 @@ class WM_OT_jewelcraft_update_check(Operator):
         return {"FINISHED"}
 
 
-class WM_OT_jewelcraft_update_download(Operator):
+class WM_OT_update_download(Operator):
     bl_label = "Install Update"
     bl_description = "Download and install new version of the add-on"
-    bl_idname = "wm.jewelcraft_update_download"
+    bl_idname = OP_IDNAME_DOWNLOAD
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
@@ -55,18 +60,13 @@ class WM_OT_jewelcraft_update_download(Operator):
         return {"FINISHED"}
 
 
-class WM_OT_jewelcraft_update_whats_new(Operator):
+class WM_OT_update_whats_new(Operator):
     bl_label = "See What's New"
     bl_description = "Open release notes in web browser"
-    bl_idname = "wm.jewelcraft_update_whats_new"
+    bl_idname = OP_IDNAME_WHATS_NEW
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
         import webbrowser
         webbrowser.open(var.update_html_url)
         return {"FINISHED"}
-
-
-OP_IDNAME_CHECK = WM_OT_jewelcraft_update_check.bl_idname
-OP_IDNAME_DOWNLOAD = WM_OT_jewelcraft_update_download.bl_idname
-OP_IDNAME_WHATS_NEW = WM_OT_jewelcraft_update_whats_new.bl_idname

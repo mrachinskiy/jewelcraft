@@ -22,7 +22,7 @@
 from bpy.types import Operator
 
 
-class SCENE_OT_jewelcraft_scene_units_set(Operator):
+class SCENE_OT_scene_units_set(Operator):
     bl_label = "Set Units"
     bl_description = "Set optimal unit settings for jewelry modelling"
     bl_idname = "scene.jewelcraft_scene_units_set"

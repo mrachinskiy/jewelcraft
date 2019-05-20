@@ -31,7 +31,7 @@ from .prongs_presets import init_presets
 from .prongs_mesh import create_prongs
 
 
-class OBJECT_OT_jewelcraft_prongs_add(UI, Operator):
+class OBJECT_OT_prongs_add(UI, Operator):
     bl_label = "JewelCraft Make Prongs"
     bl_description = "Create prongs for selected gems"
     bl_idname = "object.jewelcraft_prongs_add"

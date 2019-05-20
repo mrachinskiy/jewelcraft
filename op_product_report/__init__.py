@@ -31,7 +31,7 @@ from .. import var
 from ..lib import asset
 
 
-class WM_OT_jewelcraft_product_report(Operator):
+class WM_OT_product_report(Operator):
     bl_label = "JewelCraft Product Report"
     bl_description = "Present summary information about the product, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_product_report"

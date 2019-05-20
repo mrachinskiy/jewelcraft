@@ -73,7 +73,7 @@ def materials_export_to_file(materials, filepath):
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-class WM_OT_jewelcraft_weighting_set_add(Operator, Setup):
+class WM_OT_weighting_set_add(Operator, Setup):
     bl_label = "Create Set"
     bl_description = "Create weighting set from materials list"
     bl_idname = "wm.jewelcraft_weighting_set_add"
@@ -113,7 +113,7 @@ class WM_OT_jewelcraft_weighting_set_add(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_jewelcraft_weighting_set_replace(Operator, Setup, EditCheck):
+class WM_OT_weighting_set_replace(Operator, Setup, EditCheck):
     bl_label = "Replace Set"
     bl_description = "Replace selected weighting set with current materials list"
     bl_idname = "wm.jewelcraft_weighting_set_replace"
@@ -129,7 +129,7 @@ class WM_OT_jewelcraft_weighting_set_replace(Operator, Setup, EditCheck):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_jewelcraft_weighting_set_del(Operator, Setup, EditCheck):
+class WM_OT_weighting_set_del(Operator, Setup, EditCheck):
     bl_label = "Remove Set"
     bl_description = "Remove weighting set"
     bl_idname = "wm.jewelcraft_weighting_set_del"
@@ -155,7 +155,7 @@ class WM_OT_jewelcraft_weighting_set_del(Operator, Setup, EditCheck):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_jewelcraft_weighting_set_rename(Operator, Setup, EditCheck):
+class WM_OT_weighting_set_rename(Operator, Setup, EditCheck):
     bl_label = "Rename Set"
     bl_description = "Rename weighting set"
     bl_idname = "wm.jewelcraft_weighting_set_rename"
@@ -199,7 +199,7 @@ class WM_OT_jewelcraft_weighting_set_rename(Operator, Setup, EditCheck):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_jewelcraft_weighting_set_refresh(Operator):
+class WM_OT_weighting_set_refresh(Operator):
     bl_label = "Refresh"
     bl_description = "Refresh asset UI"
     bl_idname = "wm.jewelcraft_weighting_set_refresh"
@@ -245,7 +245,7 @@ class WeightingSetLoad:
         return {"FINISHED"}
 
 
-class WM_OT_jewelcraft_weighting_set_load(Operator, Setup, WeightingSetLoad):
+class WM_OT_weighting_set_load(Operator, Setup, WeightingSetLoad):
     bl_label = "Load"
     bl_description = "Load weighting set to the materials list by replacing existing materials"
     bl_idname = "wm.jewelcraft_weighting_set_load"
@@ -253,7 +253,7 @@ class WM_OT_jewelcraft_weighting_set_load(Operator, Setup, WeightingSetLoad):
     clear_materials = True
 
 
-class WM_OT_jewelcraft_weighting_set_load_append(Operator, Setup, WeightingSetLoad):
+class WM_OT_weighting_set_load_append(Operator, Setup, WeightingSetLoad):
     bl_label = "Append"
     bl_description = "Append weighting set at the end of the current materials list"
     bl_idname = "wm.jewelcraft_weighting_set_load_append"

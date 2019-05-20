@@ -25,7 +25,7 @@ from bpy.props import EnumProperty
 from ..lib import dynamic_list
 
 
-class VIEW3D_OT_jewelcraft_search_asset(Operator):
+class VIEW3D_OT_search_asset(Operator):
     bl_label = "Search Asset"
     bl_description = "Search asset by name"
     bl_idname = "view3d.jewelcraft_search_asset"
