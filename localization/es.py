@@ -393,5 +393,7 @@ dictionary = {
         # "Gem Map": "",
         # "Append": "",
         # "Add New Measurement": "",
+        # "Save To Preferences": "",
+        # "Load From Preferences": "",
     },
 }
