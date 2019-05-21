@@ -40,12 +40,14 @@ if "bpy" in locals():
         for entry in os.scandir(path):
 
             if entry.is_file() and entry.name.endswith(".py"):
-                is_init = entry.name == "__init__.py"
                 filename, _ = os.path.splitext(entry.name)
+                is_init = filename == "__init__"
 
                 if parent_dir:
                     module = parent_dir if is_init else f"{parent_dir}.{filename}"
-                elif not is_init:
+                else:
+                    if is_init:
+                        continue
                     module = filename
 
                 importlib.reload(eval(module))
