@@ -192,14 +192,6 @@ class JewelCraftPreferences(AddonPreferences):
         update=dynamic_list.weighting_set_refresh,
     )
     weighting_materials: PointerProperty(type=MaterialsList)
-    weighting_list_show_composition: BoolProperty(
-        name="Show Composition",
-        description="Display material composition in the list",
-    )
-    weighting_list_show_density: BoolProperty(
-        name="Show Density",
-        description="Display material density in the list",
-    )
 
     # Product Report
     # ------------------------
@@ -348,7 +340,6 @@ class JewelCraftPreferences(AddonPreferences):
             sub.prop(self, "weighting_set_custom_dir")
 
             box.label(text="Materials list")
-
             box.template_list(
                 "VIEW3D_UL_jewelcraft_weighting_set",
                 "",
@@ -357,10 +348,6 @@ class JewelCraftPreferences(AddonPreferences):
                 self.weighting_materials,
                 "index",
             )
-
-            col = box.column()
-            col.prop(self, "weighting_list_show_composition")
-            col.prop(self, "weighting_list_show_density")
 
         elif active_tab == "PRODUCT_REPORT":
             col = box.column()
@@ -446,6 +433,14 @@ class WmProperties(PropertyGroup):
 
 class SceneProperties(PropertyGroup):
     weighting_materials: PointerProperty(type=MaterialsList)
+    weighting_show_composition: BoolProperty(
+        name="Show Composition",
+        description="Display material composition in the list",
+    )
+    weighting_show_density: BoolProperty(
+        name="Show Density",
+        description="Display material density in the list",
+    )
     measurements: PointerProperty(type=MeasurementsList)
     widget_show_all: BoolProperty(
         name="Show All",
