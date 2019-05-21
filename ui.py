@@ -52,7 +52,7 @@ class Setup:
 class VIEW3D_UL_jewelcraft_weighting_set(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        prefs = context.preferences.addons[__package__].preferences
+        props = context.scene.jewelcraft
 
         row = layout.row(align=True)
         row.prop(item, "enabled", text="")
@@ -61,14 +61,14 @@ class VIEW3D_UL_jewelcraft_weighting_set(UIList):
         row.active = item.enabled
         row.prop(item, "name", text="", emboss=False)
 
-        if prefs.weighting_list_show_composition:
+        if props.weighting_show_composition:
             sub = row.row(align=True)
             sub.scale_x = 1.5
             sub.prop(item, "composition", text="", emboss=False)
 
-        if prefs.weighting_list_show_density:
+        if props.weighting_show_density:
             sub = row.row(align=True)
-            sub.scale_x = 0.5
+            sub.scale_x = 0.7
             sub.prop(item, "density", text="", emboss=False)
 
 
@@ -149,15 +149,15 @@ class VIEW3D_MT_jewelcraft_weighting_list(Menu):
     bl_label = ""
 
     def draw(self, context):
-        prefs = context.preferences.addons[__package__].preferences
+        props = context.scene.jewelcraft
         layout = self.layout
         layout.operator("wm.jewelcraft_ul_materials_clear", icon="X")
         layout.separator()
         layout.operator("wm.jewelcraft_ul_materials_save", icon="EXPORT")
         layout.operator("wm.jewelcraft_ul_materials_load", icon="IMPORT")
         layout.separator()
-        layout.prop(prefs, "weighting_list_show_composition")
-        layout.prop(prefs, "weighting_list_show_density")
+        layout.prop(props, "weighting_show_composition")
+        layout.prop(props, "weighting_show_density")
 
 
 # Panels
