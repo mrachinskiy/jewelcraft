@@ -391,5 +391,7 @@ dictionary = {
         "Gem Map": "Карта Камней",
         "Append": "Добавить",
         "Add New Measurement": "Добавить новый замер",
+        "Save To Preferences": "Сохранить в настройках",
+        "Load From Preferences": "Загрузить из настроек",
     },
 }
