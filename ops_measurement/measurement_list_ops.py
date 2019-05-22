@@ -45,7 +45,7 @@ class WM_OT_ul_measurements_add(Operator, Setup):
         description="Measurement type",
         items=(
             ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
-            ("WEIGHT", "Weight", "", "VOLUME", 1),
+            ("WEIGHT", "Weight", "", "FILE_3D", 1),
         ),
     )
     material: EnumProperty(

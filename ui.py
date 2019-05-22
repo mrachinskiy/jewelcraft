@@ -74,7 +74,7 @@ class VIEW3D_UL_jewelcraft_weighting_set(UIList):
 
 class VIEW3D_UL_jewelcraft_measurements(UIList):
     icons = {
-        "WEIGHT": "VOLUME",
+        "WEIGHT": "FILE_3D",
         "DIMENSIONS": "SHADING_BBOX",
     }
 
