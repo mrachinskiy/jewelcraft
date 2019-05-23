@@ -57,7 +57,6 @@ if "bpy" in locals():
                 walk(entry.path, parent_dir=dirname)
 
     walk(var.ADDON_DIR)
-
 else:
     import os
 
