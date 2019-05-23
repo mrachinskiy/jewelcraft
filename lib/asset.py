@@ -247,14 +247,14 @@ def asset_export(folder="", filename=""):
     bpy.data.libraries.write(filepath, data_blocks, compress=True)
 
 
-def render_preview(width, height, filepath="//", compression=100):
-    render = bpy.context.scene.render
-    image = render.image_settings
+def render_preview(width, height, filepath="//", compression=100, gamma=1.0):
+    scene = bpy.context.scene
+    render_props = scene.render
+    image_props = render_props.image_settings
+    view_props = scene.view_settings
+    shading_type = bpy.context.space_data.shading.type
 
-    # Apply settings
-    # ---------------------------
-
-    settings_render = {
+    render_config = {
         "filepath": filepath,
         "resolution_x": width,
         "resolution_y": height,
@@ -262,21 +262,34 @@ def render_preview(width, height, filepath="//", compression=100):
         "film_transparent": True,
     }
 
-    settings_image = {
+    image_config = {
         "file_format": "PNG",
         "color_mode": "RGBA",
         "compression": compression,
     }
 
-    for k, v in settings_render.items():
-        x = getattr(render, k)
-        setattr(render, k, v)
-        settings_render[k] = x
+    view_config = {
+        "gamma": gamma,
+    }
 
-    for k, v in settings_image.items():
-        x = getattr(image, k)
-        setattr(image, k, v)
-        settings_image[k] = x
+    if shading_type in {"WIREFRAME", "SOLID"}:
+        view_config["view_transform"] = "Standard"
+        view_config["look"] = "None"
+
+    configs = [
+        [render_props, render_config],
+        [image_props, image_config],
+        [view_props, view_config],
+    ]
+
+    # Apply settings
+    # ---------------------------
+
+    for props, config in configs:
+        for k, v in config.items():
+            x = getattr(props, k)
+            setattr(props, k, v)
+            config[k] = x
 
     # Render and save
     # ---------------------------
@@ -286,30 +299,28 @@ def render_preview(width, height, filepath="//", compression=100):
     # Revert settings
     # ---------------------------
 
-    for k, v in settings_render.items():
-        setattr(render, k, v)
-
-    for k, v in settings_image.items():
-        setattr(image, k, v)
+    for props, config in configs:
+        for k, v in config.items():
+            setattr(props, k, v)
 
 
 def show_window(width, height, area_type=None, space_data=None):
     render = bpy.context.scene.render
 
-    # Apply settings
-    # ---------------------------
-
-    settings_render = {
+    render_config = {
         "resolution_x": width,
         "resolution_y": height,
         "resolution_percentage": 100,
         "display_mode": "WINDOW",
     }
 
-    for k, v in settings_render.items():
+    # Apply settings
+    # ---------------------------
+
+    for k, v in render_config.items():
         x = getattr(render, k)
         setattr(render, k, v)
-        settings_render[k] = x
+        render_config[k] = x
 
     # Invoke window
     # ---------------------------
@@ -332,7 +343,7 @@ def show_window(width, height, area_type=None, space_data=None):
     # Revert settings
     # ---------------------------
 
-    for k, v in settings_render.items():
+    for k, v in render_config.items():
         setattr(render, k, v)
 
 

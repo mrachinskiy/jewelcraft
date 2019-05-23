@@ -44,7 +44,7 @@ def render_map(self, context):
     y = height - padding
     temp_filepath = os.path.join(tempfile.gettempdir(), "gem_map_temp.png")
 
-    asset.render_preview(width, height, filepath=temp_filepath, compression=15)
+    asset.render_preview(width, height, filepath=temp_filepath, compression=15, gamma=2.2)
     render_image = load_image(temp_filepath)
     render_image.gl_load()
 
