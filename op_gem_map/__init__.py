@@ -92,9 +92,8 @@ class VIEW3D_OT_gem_map(Operator, Offscreen, OnscreenText):
 
         layout.separator()
 
-        col = layout.column()
-        col.prop(self, "lang")
-        col.prop(self, "use_save")
+        layout.prop(self, "use_save")
+        layout.prop(self, "lang")
 
         col = layout.column(align=True)
         col.prop(self, "width", text="Resolution X")

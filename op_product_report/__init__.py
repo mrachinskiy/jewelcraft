@@ -70,9 +70,8 @@ class WM_OT_product_report(Operator):
 
         layout.separator()
 
-        col = layout.column()
-        col.prop(self, "lang")
-        col.prop(self, "use_save")
+        layout.prop(self, "use_save")
+        layout.prop(self, "lang")
 
         layout.label(text="Warnings")
         col = layout.column()
