@@ -177,7 +177,6 @@ class OBJECT_OT_radial_instance(Operator):
     angle: FloatProperty(name="Angle", default=tau, step=10, unit="ROTATION", options={"SKIP_SAVE"})
     use_cursor: BoolProperty(name="Use 3D Cursor")
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
-    new_collection_name: StringProperty(name="Collection Name", options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
@@ -187,7 +186,7 @@ class OBJECT_OT_radial_instance(Operator):
         layout.separator()
 
         if self.use_new:
-            layout.prop(self, "new_collection_name")
+            layout.prop(self, "collection_name", text="Collection Name")
         else:
             layout.prop_search(self, "collection_name", bpy.data, "collections")
         layout.prop(self, "number")
@@ -198,21 +197,18 @@ class OBJECT_OT_radial_instance(Operator):
         layout.prop(self, "use_cursor")
 
     def execute(self, context):
-        if self.number == 1 or (not self.use_new and not self.collection_name):
+        if self.number == 1 or not self.collection_name:
             return {"FINISHED"}
 
         if self.use_new:
-            obs = context.selected_objects
-
-            for ob in obs:
-                for coll in ob.users_collection:
-                    coll.objects.unlink(ob)
-
-            coll = bpy.data.collections.new(self.new_collection_name)
+            coll = bpy.data.collections.new(self.collection_name)
             context.scene.collection.children.link(coll)
 
-            for ob in obs:
+            for ob in context.selected_objects:
+                for coll_orig in ob.users_collection:
+                    coll_orig.objects.unlink(ob)
                 coll.objects.link(ob)
+                ob.select_set(False)
         else:
             coll = bpy.data.collections[self.collection_name]
 
@@ -220,24 +216,18 @@ class OBJECT_OT_radial_instance(Operator):
         is_cyclic = round(self.angle, 2) == round(tau, 2)
         angle_offset = self.angle / (self.number if is_cyclic else dup_number)
         i = int(self.axis)
-        rot = [0.0, 0.0, 0.0]
-        rot[i] = angle_offset
-        obs = []
+        angle = angle_offset
 
         for _ in range(dup_number):
-            bpy.ops.object.add(type="EMPTY", rotation=rot)
+            ob = bpy.data.objects.new(coll.name, None)
+            context.collection.objects.link(ob)
 
-            ob = context.object
-            ob.name = coll.name
             ob.instance_type = "COLLECTION"
             ob.instance_collection = coll
-
-            obs.append(ob)
-
-            rot[i] += angle_offset
-
-        for ob in obs:
+            ob.rotation_euler[i] = angle
             ob.select_set(True)
+
+            angle += angle_offset
 
         return {"FINISHED"}
 
@@ -247,7 +237,7 @@ class OBJECT_OT_radial_instance(Operator):
         if self.use_new:
             if not context.selected_objects:
                 return {"CANCELLED"}
-            self.new_collection_name = f"Radial {context.object.name}"
+            self.collection_name = context.object.name
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
