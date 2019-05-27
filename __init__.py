@@ -147,6 +147,7 @@ classes = (
     ops_object.OBJECT_OT_stretch_along_curve,
     ops_object.OBJECT_OT_move_over_under,
     ops_object.OBJECT_OT_mirror,
+    ops_object.OBJECT_OT_radial_instance,
     ops_object.OBJECT_OT_make_dupliface,
     ops_object.OBJECT_OT_lattice_project,
     ops_object.OBJECT_OT_lattice_profile,

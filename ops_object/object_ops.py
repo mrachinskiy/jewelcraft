@@ -19,11 +19,17 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from math import pi
+from math import pi, tau
 
 import bpy
 from bpy.types import Operator
-from bpy.props import FloatProperty, BoolProperty, EnumProperty
+from bpy.props import (
+    FloatProperty,
+    IntProperty,
+    BoolProperty,
+    EnumProperty,
+    StringProperty,
+)
 from mathutils import Matrix
 
 from ..lib import asset
@@ -38,7 +44,6 @@ class OBJECT_OT_mirror(Operator):
     x: BoolProperty(name="X", options={"SKIP_SAVE"})
     y: BoolProperty(name="Y", options={"SKIP_SAVE"})
     z: BoolProperty(name="Z", options={"SKIP_SAVE"})
-
     use_cursor: BoolProperty(name="Use 3D Cursor")
 
     def draw(self, context):
@@ -50,6 +55,7 @@ class OBJECT_OT_mirror(Operator):
         layout.prop(self, "x")
         layout.prop(self, "y")
         layout.prop(self, "z")
+
         layout.label(text="Pivot Point")
         layout.prop(self, "use_cursor")
 
@@ -76,6 +82,12 @@ class OBJECT_OT_mirror(Operator):
 
             ob = ob_orig.copy()
 
+            duplimap[ob_orig] = ob
+
+            if ob.parent:
+                children[ob] = ob.parent
+                ob.parent = None
+
             if not is_gem and ob.data:
                 ob.data = ob_orig.data.copy()
 
@@ -85,19 +97,13 @@ class OBJECT_OT_mirror(Operator):
             if use_local_view:
                 ob.local_view_set(space_data, True)
 
-            ob.select_set(True)
-            ob_orig.select_set(False)
-            ob.matrix_world = ob_orig.matrix_world
-
-            duplimap[ob_orig] = ob
-
-            if ob.parent:
-                children[ob] = ob.parent
-                ob.parent = None
-
             if ob.constraints:
                 for con in ob.constraints:
                     ob.constraints.remove(con)
+
+            ob.select_set(True)
+            ob_orig.select_set(False)
+            ob.matrix_world = ob_orig.matrix_world
 
             for i in axes:
 
@@ -144,6 +150,104 @@ class OBJECT_OT_mirror(Operator):
     def invoke(self, context, event):
         if not context.selected_objects:
             return {"CANCELLED"}
+
+        wm = context.window_manager
+        return wm.invoke_props_popup(self, event)
+
+
+class OBJECT_OT_radial_instance(Operator):
+    bl_label = "JewelCraft Radial Instance"
+    bl_description = (
+        "Make collection instances in radial order\n"
+        "(Shortcut: hold Alt when using the tool to use existing collection)"
+    )
+    bl_idname = "object.jewelcraft_radial_instance"
+    bl_options = {"REGISTER", "UNDO"}
+
+    axis: EnumProperty(
+        name="Axis",
+        items=(
+            ("0", "X", ""),
+            ("1", "Y", ""),
+            ("2", "Z", ""),
+        ),
+        default="2",
+    )
+    number: IntProperty(name="Number", default=1, min=1, options={"SKIP_SAVE"})
+    angle: FloatProperty(name="Angle", default=tau, step=10, unit="ROTATION", options={"SKIP_SAVE"})
+    use_cursor: BoolProperty(name="Use 3D Cursor")
+    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    new_collection_name: StringProperty(name="Collection Name", options={"SKIP_SAVE"})
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+
+        if self.use_new:
+            layout.prop(self, "new_collection_name")
+        else:
+            layout.prop_search(self, "collection_name", bpy.data, "collections")
+        layout.prop(self, "number")
+        layout.prop(self, "angle")
+        layout.row().prop(self, "axis", expand=True)
+
+        layout.label(text="Pivot Point")
+        layout.prop(self, "use_cursor")
+
+    def execute(self, context):
+        if self.number == 1 or (not self.use_new and not self.collection_name):
+            return {"FINISHED"}
+
+        if self.use_new:
+            obs = context.selected_objects
+
+            for ob in obs:
+                for coll in ob.users_collection:
+                    coll.objects.unlink(ob)
+
+            coll = bpy.data.collections.new(self.new_collection_name)
+            context.scene.collection.children.link(coll)
+
+            for ob in obs:
+                coll.objects.link(ob)
+        else:
+            coll = bpy.data.collections[self.collection_name]
+
+        dup_number = self.number - 1
+        is_cyclic = round(self.angle, 2) == round(tau, 2)
+        angle_offset = self.angle / (self.number if is_cyclic else dup_number)
+        i = int(self.axis)
+        rot = [0.0, 0.0, 0.0]
+        rot[i] = angle_offset
+        obs = []
+
+        for _ in range(dup_number):
+            bpy.ops.object.add(type="EMPTY", rotation=rot)
+
+            ob = context.object
+            ob.name = coll.name
+            ob.instance_type = "COLLECTION"
+            ob.instance_collection = coll
+
+            obs.append(ob)
+
+            rot[i] += angle_offset
+
+        for ob in obs:
+            ob.select_set(True)
+
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        self.use_new = not event.alt
+
+        if self.use_new:
+            if not context.selected_objects:
+                return {"CANCELLED"}
+            self.new_collection_name = f"Radial {context.object.name}"
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)

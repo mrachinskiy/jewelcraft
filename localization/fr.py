@@ -92,6 +92,8 @@ dictionary = {
         "Mirror Axis": "Axe du miroir",
         "Select Children": "Sélectionner l'enfant",
         "Parent to selected": "Parent vers sélection",
+        # "Use 3D Cursor": "",
+
         # Tooltips
         "Add gemstone to the scene": "Ajouter des pierres précieuses à la scène",
         "Edit selected gems": "Editer les pierres sélectionnées",
@@ -231,6 +233,9 @@ dictionary = {
         # "Measured object": "",
         # "Measurement type": "",
         # "Select material": "",
+
+        # "Make collection instances in radial order\n"
+        # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
 
         # Reports
         "WARNING": "AVERTISSEMENT",

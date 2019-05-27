@@ -88,6 +88,7 @@ dictionary = {
         "Mirror Axis": "Оси отражения",
         "Select Children": "Выделить потомков",
         "Parent to selected": "Привязать к выделению",
+        "Use 3D Cursor": "Использовать 3D курсор",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
@@ -236,6 +237,13 @@ dictionary = {
         "Measured object": "Измеряемый объект",
         "Measurement type": "Тип замера",
         "Select material": "Выбрать материал",
+
+        "Make collection instances in radial order\n"
+        "(Shortcut: hold Alt when using the tool to use existing collection)":
+            "Создать экземпляры коллекции в радиальном порядке\n"
+            "(Горячая клавиша: удерживайте клавишу Alt при использовании инструмента "
+            "для использования существующей коллекции)",
+
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
