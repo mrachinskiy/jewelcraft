@@ -91,6 +91,8 @@ dictionary = {
         "Mirror Axis": "Eje de Simetría",
         "Select Children": "Seleccionar Hijos",
         "Parent to selected": "Padre a Seleccionado",
+        # "Use 3D Cursor": "",
+
         # Tooltips
         "Add gemstone to the scene": "Añadir gema a la escena",
         "Edit selected gems": "Editar gemas seleccionadas",
@@ -230,6 +232,9 @@ dictionary = {
         # "Measured object": "",
         # "Measurement type": "",
         # "Select material": "",
+
+        # "Make collection instances in radial order\n"
+        # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
 
         # Reports
         "WARNING": "ADVERTENCIA",
