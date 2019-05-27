@@ -92,6 +92,7 @@ dictionary = {
         "Select Children": "Seleccionar Hijos",
         "Parent to selected": "Padre a Seleccionado",
         # "Use 3D Cursor": "",
+        # "Collection Name": "",
 
         # Tooltips
         "Add gemstone to the scene": "Añadir gema a la escena",

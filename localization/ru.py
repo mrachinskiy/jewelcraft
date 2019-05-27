@@ -89,6 +89,7 @@ dictionary = {
         "Select Children": "Выделить потомков",
         "Parent to selected": "Привязать к выделению",
         "Use 3D Cursor": "Использовать 3D курсор",
+        "Collection Name": "Имя коллекции",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
