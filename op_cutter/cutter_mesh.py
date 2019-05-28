@@ -173,15 +173,15 @@ def create_cutter(self):
             bv_off_t = "PERCENT"
             bv_off = self.bevel_corners_percent
 
-            base_coords = [
+            base_coords = (
                 (handle_w_size, handle_l_size),
                 (girdle_w_size, girdle_l_size),
                 (hole_w_size, hole_l_size),
-            ]
+            )
 
             coords = []
 
-            for x, y, z in base_coords:
+            for x, y in base_coords:
                 v_profile = make_tri(bm, x, y, 0.0)
                 make_edges(bm, v_profile)
 
