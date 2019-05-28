@@ -90,22 +90,20 @@ def _draw(self, context):
 
     if is_df:
         df = context.edit_object
+        is_gem = False
         for ob_act in df.children:
             if "gem" in ob_act:
-                is_act_gem = True
+                is_gem = True
                 break
-        else:
-            is_act_gem = False
-            if not show_all:
-                return
     else:
         ob_act = context.object
-        is_act_gem = "gem" in ob_act if ob_act else False
+        if ob_act:
+            is_gem = "gem" in ob_act
 
-        if not (show_all or is_act_gem):
-            return
+    if not (show_all or is_gem):
+        return
 
-    if is_act_gem:
+    if is_gem:
         if use_ovrd and "jewelcraft_widget" in ob_act:
             ob_act_spacing = ob_act["jewelcraft_widget"].get("spacing", default_spacing)
         else:
@@ -167,7 +165,7 @@ def _draw(self, context):
         ob_loc = dup.matrix_world.translation
         spacing_thold = False
 
-        if is_act_gem:
+        if is_gem:
             dis_ob = (ob_act_loc - ob_loc).length
             dis_gap = from_scene_scale(dis_ob - (ob_act_rad + ob_rad))
             dis_thold = dis_gap < diplay_thold
@@ -182,7 +180,7 @@ def _draw(self, context):
                     df_pass = is_act = dup.matrix_world.translation == ob_act_loc
             else:
                 if dup.is_instance:
-                    is_act = ob_loc == ob_act_loc
+                    is_act = False
                 else:
                     is_act = ob is ob_act
 
