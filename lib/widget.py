@@ -165,6 +165,7 @@ def _draw(self, context):
 
         ob_rad = max(ob.dimensions[:2]) / 2
         ob_loc = dup.matrix_world.translation
+        spacing_thold = False
 
         if is_act_gem:
             dis_ob = (ob_act_loc - ob_loc).length
@@ -180,14 +181,16 @@ def _draw(self, context):
                 else:
                     df_pass = is_act = dup.matrix_world.translation == ob_act_loc
             else:
-                is_act = ob is ob_act
+                if dup.is_instance:
+                    is_act = ob_loc == ob_act_loc
+                else:
+                    is_act = ob is ob_act
 
             use_diplay_dis = not is_act and dis_thold
         else:
             use_diplay_dis = False
 
         if show_all or use_diplay_dis:
-
             if use_ovrd and "jewelcraft_widget" in ob:
                 _color = ob["jewelcraft_widget"].get("color", default_color)
                 _linewidth = ob["jewelcraft_widget"].get("linewidth", default_linewidth)
@@ -210,7 +213,6 @@ def _draw(self, context):
             mat.freeze()
 
         if use_diplay_dis:
-
             if dis_ob:
                 girdle_ob = girdle_coords(ob_rad, mat)
                 dis_gap, start, end = find_nearest(ob_act_loc, ob_act_rad, girdle_act, girdle_ob)
@@ -227,7 +229,6 @@ def _draw(self, context):
                 start = end = mid = ob_loc.copy()
 
             if dis_thold:
-
                 if dis_gap < 0.1:
                     shader.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
                 elif dis_gap < _spacing:
@@ -238,7 +239,7 @@ def _draw(self, context):
                 batch = batch_for_shader(shader, "LINES", {"pos": (start, end)})
                 batch.draw(shader)
 
-        if show_all or (not is_act and spacing_thold):
+        if show_all or spacing_thold:
             radius = ob_rad + _spacing
             coords = girdle_coords(radius, mat)
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
