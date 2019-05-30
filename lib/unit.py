@@ -27,6 +27,7 @@ def convert(x, units):
 
 
 class Scale:
+    __slots__ = ("scale", "use_conversion")
 
     def __init__(self, context):
         unit = context.scene.unit_settings

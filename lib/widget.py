@@ -90,11 +90,12 @@ def _draw(self, context):
 
     if is_df:
         df = context.edit_object
-        is_gem = False
         for ob_act in df.children:
             if "gem" in ob_act:
                 is_gem = True
                 break
+        else:
+            is_gem = False
     else:
         ob_act = context.object
         if ob_act:
@@ -217,7 +218,7 @@ def _draw(self, context):
 
                 dis_gap = from_scene_scale(dis_gap)
                 dis_thold = dis_gap < diplay_thold
-                spacing_thold = dis_gap < _spacing + 0.3
+                spacing_thold = dis_gap < (_spacing + 0.3)
 
                 if not (show_all or dis_thold):
                     continue

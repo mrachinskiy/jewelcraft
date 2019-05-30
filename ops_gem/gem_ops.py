@@ -66,7 +66,7 @@ class OBJECT_OT_gem_add(Operator):
         for ob in context.selected_objects:
             ob.select_set(False)
 
-        imported = asset.asset_import(filepath=var.GEM_ASSET_FILEPATH, ob_name=cut_name)
+        imported = asset.asset_import(var.GEM_ASSET_FILEPATH, ob_name=cut_name)
         ob = imported.objects[0]
         context.collection.objects.link(ob)
 
@@ -120,7 +120,7 @@ class OBJECT_OT_gem_edit(Operator):
         if self.cut != self.cut_orig:
 
             cut_name = asset.get_name(self.cut)
-            imported = asset.asset_import(filepath=var.GEM_ASSET_FILEPATH, me_name=cut_name)
+            imported = asset.asset_import(var.GEM_ASSET_FILEPATH, me_name=cut_name)
             me = imported.meshes[0]
 
             for ob in obs:

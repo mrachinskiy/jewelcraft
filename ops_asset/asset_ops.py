@@ -67,7 +67,7 @@ class WM_OT_asset_add_to_library(Operator, Setup):
 
         filepath = os.path.join(self.folder, self.asset_name)
 
-        asset.asset_export(folder=self.folder, filename=self.asset_name + ".blend")
+        asset.asset_export(filepath + ".blend")
         asset.render_preview(256, 256, filepath + ".png")
         dynamic_list.asset_list_refresh()
         self.props.asset_list = self.asset_name
@@ -187,7 +187,8 @@ class WM_OT_asset_replace(Operator, Setup):
         return bool(context.window_manager.jewelcraft.asset_list)
 
     def execute(self, context):
-        asset.asset_export(folder=self.folder, filename=self.asset_name + ".blend")
+        filepath = os.path.join(self.folder, self.asset_name)
+        asset.asset_export(filepath + ".blend")
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -240,7 +241,7 @@ class WM_OT_asset_import(Operator, Setup):
         for ob in selected:
             ob.select_set(False)
 
-        imported = asset.asset_import_batch(filepath=self.filepath + ".blend")
+        imported = asset.asset_import_batch(self.filepath + ".blend")
         obs = imported.objects
 
         for ob in obs:

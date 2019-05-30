@@ -216,7 +216,7 @@ def user_asset_library_folder_weighting():
     return var.USER_ASSET_DIR_WEIGHTING
 
 
-def asset_import(filepath="", ob_name=False, me_name=False):
+def asset_import(filepath, ob_name=False, me_name=False):
 
     with bpy.data.libraries.load(filepath) as (data_from, data_to):
 
@@ -229,7 +229,7 @@ def asset_import(filepath="", ob_name=False, me_name=False):
     return data_to
 
 
-def asset_import_batch(filepath=""):
+def asset_import_batch(filepath):
 
     with bpy.data.libraries.load(filepath) as (data_from, data_to):
         data_to.objects = data_from.objects
@@ -237,8 +237,8 @@ def asset_import_batch(filepath=""):
     return data_to
 
 
-def asset_export(folder="", filename=""):
-    filepath = os.path.join(folder, filename)
+def asset_export(filepath):
+    folder = os.path.dirname(filepath)
     data_blocks = set(bpy.context.selected_objects)
 
     if not os.path.exists(folder):
