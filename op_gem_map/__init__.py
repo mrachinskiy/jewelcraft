@@ -159,31 +159,13 @@ class VIEW3D_OT_gem_map(Operator, Offscreen, OnscreenText):
         return {"PASS_THROUGH"}
 
     def execute(self, context):
-        self.offscreen_refresh(context)
-        self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_handler.draw, (self, context), "WINDOW", "POST_PIXEL")
-        context.window_manager.modal_handler_add(self)
-        return {"RUNNING_MODAL"}
-
-    def invoke(self, context, event):
         data = report_get.data_collect(self, context, gem_map=True)
-
-        if context.area.type != "VIEW_3D":
-            self.report({"ERROR"}, "Area type is not 3D View")
-            return {"CANCELLED"}
 
         if not data["gems"]:
             self.report({"ERROR"}, "No gems in the scene")
             return {"CANCELLED"}
 
         import time
-
-        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.lang = self.prefs.product_report_lang
-        self.use_save = self.prefs.product_report_save
-        self.use_hidden_gems = self.prefs.product_report_use_hidden_gems
-        self.use_overlap = self.prefs.product_report_use_overlap
-        self.width = self.prefs.gem_map_width
-        self.height = self.prefs.gem_map_height
 
         self.region = context.region
         self.region_3d = context.space_data.region_3d
@@ -230,11 +212,33 @@ class VIEW3D_OT_gem_map(Operator, Offscreen, OnscreenText):
         # ----------------------------
 
         self.option_list = (
-            (_("Limit By Selection"), "(S)", "use_select", self.TYPE_BOOL),
-            (_("Save To Image"), "(F12)", "is_rendering", self.TYPE_RENDER),
+            (_("Limit By Selection"), "(S)",   "use_select",   self.TYPE_BOOL),
+            (_("Save To Image"),      "(F12)", "is_rendering", self.TYPE_RENDER),
         )
         self.option_col_1_max = max(self.option_list, key=lambda x: len(x[0]))[0]
         self.option_col_2_max = max(self.option_list, key=lambda x: len(x[1]))[1]
+
+        # Handlers
+        # ----------------------------
+
+        self.offscreen_refresh(context)
+        self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_handler.draw, (self, context), "WINDOW", "POST_PIXEL")
+        context.window_manager.modal_handler_add(self)
+
+        return {"RUNNING_MODAL"}
+
+    def invoke(self, context, event):
+        if context.area.type != "VIEW_3D":
+            self.report({"ERROR"}, "Area type is not 3D View")
+            return {"CANCELLED"}
+
+        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
+        self.lang = self.prefs.product_report_lang
+        self.use_save = self.prefs.product_report_save
+        self.use_hidden_gems = self.prefs.product_report_use_hidden_gems
+        self.use_overlap = self.prefs.product_report_use_overlap
+        self.width = self.prefs.gem_map_width
+        self.height = self.prefs.gem_map_height
 
         if event.ctrl:
             wm = context.window_manager
