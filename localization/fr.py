@@ -94,6 +94,10 @@ dictionary = {
         "Parent to selected": "Parent vers sélection",
         # "Use 3D Cursor": "",
         # "Collection Name": "",
+        # "Ring Size": "",
+        # "US": "",
+        # "Japan": "",
+        # "Circumference": "",
 
         # Tooltips
         "Add gemstone to the scene": "Ajouter des pierres précieuses à la scène",
