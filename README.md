@@ -32,8 +32,6 @@ How to install
 Установка
 ==========================
 
-### Blender 2.80
-
 1. Загрузите аддон:<sup>1</sup>
     * Blender 2.80 [JewelCraft v2.3.2 (пре-релиз)][v2_3_2].
     * Blender 2.79 [JewelCraft v2.2.1][v2_2_1].
