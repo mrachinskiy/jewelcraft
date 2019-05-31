@@ -135,6 +135,8 @@ class CURVE_OT_size_curve_add(Operator):
         col.prop(self, "circumference")
         layout.prop(self, "up")
 
+        layout.separator()
+
     def execute(self, context):
         obs = context.selected_objects
 
