@@ -23,12 +23,39 @@ from math import pi
 
 import bpy
 from bpy.types import Operator
-from bpy.props import FloatProperty, BoolProperty
+from bpy.props import FloatProperty, BoolProperty, EnumProperty
 from bpy.app.translations import pgettext_iface as _
 import bmesh
 from mathutils import Matrix, Vector
 
 from ..lib import asset, unit, mesh, ui_lib
+
+
+def up_size(self, context):
+    if self.size_format == "US":
+        size_0 = 11.63
+        step = 0.813
+        diam = size_0 + step * self.size
+    else:
+        size_0 = 12.736
+        step = 0.3185
+        diam = size_0 + step * self.size
+
+    self.diameter = unit.Scale(context).to_scene(round(diam, 2))
+
+
+def up_diameter(self, context):
+    if self.use_unit_conversion:
+        self.circumference = self.diameter * pi
+    else:
+        self.circumference = round(self.diameter * pi, 2)
+
+
+def up_circumference(self, context):
+    if self.use_unit_conversion:
+        self.diameter = self.circumference / pi
+    else:
+        self.diameter = round(self.circumference / pi, 2)
 
 
 class CURVE_OT_size_curve_add(Operator):
@@ -37,18 +64,81 @@ class CURVE_OT_size_curve_add(Operator):
     bl_idname = "curve.jewelcraft_size_curve_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    size: FloatProperty(name="Size", default=15.5, unit="LENGTH")
+    size_format: EnumProperty(
+        name="Format",
+        items=(
+            ("US", "US", ""),
+            ("JP", "Japan", ""),
+        ),
+        update=up_size,
+    )
+    size: FloatProperty(
+        name="Size",
+        default=4.5,
+        min=0.0,
+        step=50,
+        precision=1,
+        update=up_size,
+    )
+    diameter: FloatProperty(
+        name="Diameter",
+        default=15.28,
+        min=0.001,
+        step=10,
+        unit="LENGTH",
+        update=up_diameter,
+    )
+    circumference: FloatProperty(
+        name="Circumference",
+        default=48.0,
+        min=0.001,
+        step=100,
+        precision=1,
+        unit="LENGTH",
+        update=up_circumference,
+    )
     up: BoolProperty(
         name="Start Up",
         description="Make curve start at the top",
         default=True,
         options={"SKIP_SAVE"},
     )
+    use_size: BoolProperty(
+        name="Ring Size",
+        update=up_size,
+    )
+    use_unit_conversion: BoolProperty(
+        options={"HIDDEN", "SKIP_SAVE"}
+    )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+
+        col = layout.column()
+        col.use_property_split = False
+        col.prop(self, "use_size")
+        col = layout.column()
+        col.active = self.use_size
+        col.prop(self, "size_format")
+        col.prop(self, "size")
+
+        layout.separator()
+
+        layout.label(text="Curve")
+        col = layout.column()
+        col.active = not self.use_size
+        col.prop(self, "diameter")
+        col.prop(self, "circumference")
+        layout.prop(self, "up")
 
     def execute(self, context):
         obs = context.selected_objects
 
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.size / 2, rotation=(pi / 2, 0.0, 0.0))
+        bpy.ops.curve.primitive_bezier_circle_add(radius=self.diameter / 2, rotation=(pi / 2, 0.0, 0.0))
 
         curve = context.object
         curve.name = "Size"
@@ -66,6 +156,12 @@ class CURVE_OT_size_curve_add(Operator):
                 md.object = curve
 
         return {"FINISHED"}
+
+    def invoke(self, context, event):
+        self.use_unit_conversion = unit.Scale(context).use_conversion
+
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
 
 
 class CURVE_OT_length_display(Operator):
