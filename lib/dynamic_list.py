@@ -40,6 +40,10 @@ def _iface_lang(context):
     return "DEFAULT"
 
 
+# Gems
+# ---------------------------
+
+
 def cuts(self, context):
     lang = _iface_lang(context)
 
@@ -309,3 +313,19 @@ def asset_list_refresh(preview_id=False, hard=False):
 
     if "assets__list" in _cache:
         del _cache["assets__list"]
+
+
+# Other
+# ---------------------------
+
+
+def abc(self, context):
+    if "abc__list" in _cache:
+        return _cache["abc__list"]
+
+    import string
+
+    list_ = tuple((f"{i}", char + " ", "") for i, char in enumerate(string.ascii_uppercase))
+    _cache["abc__list"] = list_
+
+    return list_

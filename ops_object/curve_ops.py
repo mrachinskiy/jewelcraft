@@ -28,7 +28,13 @@ from bpy.app.translations import pgettext_iface as _
 import bmesh
 from mathutils import Matrix, Vector
 
-from ..lib import asset, unit, mesh, ui_lib
+from ..lib import (
+    asset,
+    unit,
+    mesh,
+    ui_lib,
+    dynamic_list,
+)
 
 
 def up_size(self, context):
@@ -40,11 +46,19 @@ def up_size(self, context):
     if self.size_format == "US":
         size_0 = 11.63
         step = 0.813
+        size = self.size
     elif self.size_format == "JP":
         size_0 = 12.736
         step = 0.3185
+        size = self.size
+    elif self.size_format == "UK":
+        size_0 = 12.04
+        step = 0.4
+        size = float(self.size_abc)
+        if self.use_half_size:
+            size += 0.5
 
-    diam = size_0 + step * self.size
+    diam = size_0 + step * size
     self.diameter = unit.Scale(context).to_scene(round(diam, 2))
 
 
@@ -72,9 +86,15 @@ class CURVE_OT_size_curve_add(Operator):
         name="Format",
         items=(
             ("US", "USA", ""),
+            ("UK", "Britain", ""),
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
         ),
+        update=up_size,
+    )
+    size_abc: EnumProperty(
+        name="Size",
+        items=dynamic_list.abc,
         update=up_size,
     )
     size: FloatProperty(
@@ -112,6 +132,10 @@ class CURVE_OT_size_curve_add(Operator):
         name="Ring Size",
         update=up_size,
     )
+    use_half_size: BoolProperty(
+        name="1/2",
+        update=up_size,
+    )
     use_unit_conversion: BoolProperty(
         options={"HIDDEN", "SKIP_SAVE"}
     )
@@ -126,18 +150,27 @@ class CURVE_OT_size_curve_add(Operator):
         col = layout.column()
         col.use_property_split = False
         col.prop(self, "use_size")
+
         col = layout.column()
         col.active = self.use_size
         col.prop(self, "size_format")
-        col.prop(self, "size")
+
+        if self.size_format == "UK":
+            row = col.row(align=True)
+            row.prop(self, "size_abc")
+            row.prop(self, "use_half_size")
+        else:
+            col.prop(self, "size")
 
         layout.separator()
 
         layout.label(text="Curve")
+
         col = layout.column()
         col.active = not self.use_size
         col.prop(self, "diameter")
         col.prop(self, "circumference")
+
         layout.prop(self, "up")
 
         layout.separator()

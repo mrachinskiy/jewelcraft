@@ -92,6 +92,7 @@ dictionary = {
         "Collection Name": "Имя коллекции",
         "Ring Size": "Размер кольца",
         "USA": "США",
+        "Britain": "Британия",
         "Swiss": "Швейцария",
         "Japan": "Япония",
         "Circumference": "Окружность",

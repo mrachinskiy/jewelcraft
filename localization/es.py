@@ -95,6 +95,7 @@ dictionary = {
         # "Collection Name": "",
         # "Ring Size": "",
         # "USA": "",
+        # "Britain": "",
         # "Swiss": "",
         # "Japan": "",
         # "Circumference": "",
