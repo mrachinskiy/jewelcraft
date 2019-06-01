@@ -94,7 +94,8 @@ dictionary = {
         # "Use 3D Cursor": "",
         # "Collection Name": "",
         # "Ring Size": "",
-        # "US": "",
+        # "USA": "",
+        # "Swiss": "",
         # "Japan": "",
         # "Circumference": "",
 

@@ -91,7 +91,8 @@ dictionary = {
         "Use 3D Cursor": "Использовать 3D курсор",
         "Collection Name": "Имя коллекции",
         "Ring Size": "Размер кольца",
-        "US": "США",
+        "USA": "США",
+        "Swiss": "Швейцария",
         "Japan": "Япония",
         "Circumference": "Окружность",
         # Tooltips

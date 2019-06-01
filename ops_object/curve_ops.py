@@ -32,15 +32,19 @@ from ..lib import asset, unit, mesh, ui_lib
 
 
 def up_size(self, context):
+    if self.size_format == "CH":
+        circ = self.size + 40.0
+        self.circumference = unit.Scale(context).to_scene(round(circ, 2))
+        return
+
     if self.size_format == "US":
         size_0 = 11.63
         step = 0.813
-        diam = size_0 + step * self.size
-    else:
+    elif self.size_format == "JP":
         size_0 = 12.736
         step = 0.3185
-        diam = size_0 + step * self.size
 
+    diam = size_0 + step * self.size
     self.diameter = unit.Scale(context).to_scene(round(diam, 2))
 
 
@@ -67,7 +71,8 @@ class CURVE_OT_size_curve_add(Operator):
     size_format: EnumProperty(
         name="Format",
         items=(
-            ("US", "US", ""),
+            ("US", "USA", ""),
+            ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
         ),
         update=up_size,
