@@ -23,7 +23,12 @@ from math import pi
 
 import bpy
 from bpy.types import Operator
-from bpy.props import FloatProperty, BoolProperty, EnumProperty
+from bpy.props import (
+    FloatProperty,
+    IntProperty,
+    BoolProperty,
+    EnumProperty,
+)
 from bpy.app.translations import pgettext_iface as _
 import bmesh
 from mathutils import Matrix, Vector
@@ -39,18 +44,18 @@ from ..lib import (
 
 def up_size(self, context):
     if self.size_format == "CH":
-        circ = self.size + 40.0
+        circ = self.size_float + 40.0
         self.circumference = unit.Scale(context).to_scene(round(circ, 2))
         return
 
     if self.size_format == "US":
         size_0 = 11.63
         step = 0.813
-        size = self.size
+        size = self.size_float
     elif self.size_format == "JP":
         size_0 = 12.736
         step = 0.3185
-        size = self.size
+        size = self.size_int
     elif self.size_format == "UK":
         size_0 = 12.04
         step = 0.4
@@ -97,7 +102,13 @@ class CURVE_OT_size_curve_add(Operator):
         items=dynamic_list.abc,
         update=up_size,
     )
-    size: FloatProperty(
+    size_int: IntProperty(
+        name="Size",
+        default=8,
+        min=1,
+        update=up_size,
+    )
+    size_float: FloatProperty(
         name="Size",
         default=4.5,
         min=0.0,
@@ -159,8 +170,10 @@ class CURVE_OT_size_curve_add(Operator):
             row = col.row(align=True)
             row.prop(self, "size_abc")
             row.prop(self, "use_half_size")
+        elif self.size_format == "JP":
+            col.prop(self, "size_int")
         else:
-            col.prop(self, "size")
+            col.prop(self, "size_float")
 
         layout.separator()
 
