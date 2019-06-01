@@ -64,16 +64,16 @@ def up_size(self, context):
 
 def up_diameter(self, context):
     if self.use_unit_conversion:
-        self.circumference = self.diameter * pi
+        self["circumference"] = self.diameter * pi
     else:
-        self.circumference = round(self.diameter * pi, 2)
+        self["circumference"] = round(self.diameter * pi, 2)
 
 
 def up_circumference(self, context):
     if self.use_unit_conversion:
-        self.diameter = self.circumference / pi
+        self["diameter"] = self.circumference / pi
     else:
-        self.diameter = round(self.circumference / pi, 2)
+        self["diameter"] = round(self.circumference / pi, 2)
 
 
 class CURVE_OT_size_curve_add(Operator):
