@@ -95,6 +95,7 @@ dictionary = {
         "Britain": "Британия",
         "Swiss": "Швейцария",
         "Japan": "Япония",
+        "Hong Kong": "Гонконг",
         "Circumference": "Окружность",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",

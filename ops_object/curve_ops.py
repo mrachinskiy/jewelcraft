@@ -52,6 +52,16 @@ def up_size(self, context):
         size_0 = 11.63
         step = 0.813
         size = self.size_float
+    elif self.size_format == "UK":
+        size_0 = 12.04
+        step = 0.4
+        size = float(self.size_abc)
+        if self.use_half_size:
+            size += 0.5
+    elif self.size_format == "HK":
+        size_0 = 12.05
+        step = 0.35
+        size = self.size_int
     elif self.size_format == "JP":
         size_0 = 12.74
         step = 0.318
@@ -71,12 +81,6 @@ def up_size(self, context):
         elif size == 1:
             size_0 = 12.45
             size = 0.0
-    elif self.size_format == "UK":
-        size_0 = 12.04
-        step = 0.4
-        size = float(self.size_abc)
-        if self.use_half_size:
-            size += 0.5
 
     diam = size_0 + step * size
     self.diameter = unit.Scale(context).to_scene(round(diam, 2))
@@ -109,6 +113,7 @@ class CURVE_OT_size_curve_add(Operator):
             ("UK", "Britain", ""),
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
+            ("HK", "Hong Kong", ""),
         ),
         update=up_size,
     )
@@ -185,7 +190,7 @@ class CURVE_OT_size_curve_add(Operator):
             row = col.row(align=True)
             row.prop(self, "size_abc")
             row.prop(self, "use_half_size")
-        elif self.size_format == "JP":
+        elif self.size_format in {"JP", "HK"}:
             col.prop(self, "size_int")
         else:
             col.prop(self, "size_float")
