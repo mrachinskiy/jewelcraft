@@ -53,9 +53,24 @@ def up_size(self, context):
         step = 0.813
         size = self.size_float
     elif self.size_format == "JP":
-        size_0 = 12.736
-        step = 0.3185
+        size_0 = 12.74
+        step = 0.318
         size = self.size_int
+        if size >= 22:
+            size_0 += 0.4 + 0.1 * (size - 22)
+        elif size == 21:
+            size_0 += 0.5
+        elif size == 20:
+            size_0 += 0.6
+        elif size >= 15:
+            size_0 += 0.2 + 0.1 * (size - 15)
+        elif size >= 10:
+            size_0 += 0.16
+        elif size == 2:
+            size_0 -= 0.12
+        elif size == 1:
+            size_0 = 12.45
+            size = 0.0
     elif self.size_format == "UK":
         size_0 = 12.04
         step = 0.4
