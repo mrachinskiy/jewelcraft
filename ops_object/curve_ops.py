@@ -42,48 +42,65 @@ from ..lib import (
 )
 
 
+MAP_SIZE_JP_TO_US = (
+    1,
+    2,
+    2.5,
+    3,
+    3.25,
+    3.75,
+    4,
+    4.5,
+    5,
+    5.5,
+    6,
+    6.25,
+    6.5,
+    7,
+    7.5,
+    8,
+    8.5,
+    9,
+    9.5,
+    10,
+    10.25,
+    10.5,
+    11,
+    11.5,
+    12,
+    12.5,
+    13,
+)
+
+
 def up_size(self, context):
     if self.size_format == "CH":
         circ = self.size_float + 40.0
-        self.circumference = unit.Scale(context).to_scene(round(circ, 2))
-        return
 
-    if self.size_format == "US":
-        size_0 = 11.63
-        step = 0.813
-        size = self.size_float
     elif self.size_format == "UK":
-        size_0 = 12.04
-        step = 0.4
+        base = 37.5
+        step = 1.25
         size = float(self.size_abc)
         if self.use_half_size:
             size += 0.5
-    elif self.size_format == "HK":
-        size_0 = 12.05
-        step = 0.35
-        size = self.size_int
-    elif self.size_format == "JP":
-        size_0 = 12.74
-        step = 0.318
-        size = self.size_int
-        if size >= 22:
-            size_0 += 0.4 + 0.1 * (size - 22)
-        elif size == 21:
-            size_0 += 0.5
-        elif size == 20:
-            size_0 += 0.6
-        elif size >= 15:
-            size_0 += 0.2 + 0.1 * (size - 15)
-        elif size >= 10:
-            size_0 += 0.16
-        elif size == 2:
-            size_0 -= 0.12
-        elif size == 1:
-            size_0 = 12.45
-            size = 0.0
+        circ = base + step * size
 
-    diam = size_0 + step * size
-    self.diameter = unit.Scale(context).to_scene(round(diam, 2))
+    elif self.size_format in {"US", "JP"}:
+        base = 36.537
+        step = 2.5535
+        size = self.size_float
+
+        if self.size_format == "JP":
+            map_len = len(MAP_SIZE_JP_TO_US)
+            oversize = self.size_int - map_len
+            if oversize > 0:
+                size = MAP_SIZE_JP_TO_US[map_len - 1] + 0.5 * oversize
+            else:
+                size = MAP_SIZE_JP_TO_US[self.size_int - 1]
+
+        circ = base + step * size
+
+    self.circumference = unit.Scale(context).to_scene(round(circ, 2))
 
 
 def up_diameter(self, context):
@@ -113,7 +130,6 @@ class CURVE_OT_size_curve_add(Operator):
             ("UK", "Britain", ""),
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
-            ("HK", "Hong Kong", ""),
         ),
         update=up_size,
     )

@@ -99,7 +99,6 @@ dictionary = {
         # "Britain": "",
         # "Swiss": "",
         # "Japan": "",
-        # "Hong Kong": "",
         # "Circumference": "",
 
         # Tooltips
