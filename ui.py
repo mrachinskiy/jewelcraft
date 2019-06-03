@@ -74,8 +74,8 @@ class VIEW3D_UL_jewelcraft_weighting_set(UIList):
 
 class VIEW3D_UL_jewelcraft_measurements(UIList):
     icons = {
-        "WEIGHT": "FILE_3D",
         "DIMENSIONS": "SHADING_BBOX",
+        "WEIGHT": "FILE_3D",
     }
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):

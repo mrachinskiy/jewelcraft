@@ -73,9 +73,9 @@ MAP_SIZE_JP_TO_US = (
 )
 
 
-def up_size(self, context):
+def upd_size(self, context):
     if self.size_format == "CH":
-        circ = self.size_float + 40.0
+        cir = self.size_float + 40.0
 
     elif self.size_format == "UK":
         base = 37.5
@@ -83,7 +83,7 @@ def up_size(self, context):
         size = float(self.size_abc)
         if self.use_half_size:
             size += 0.5
-        circ = base + step * size
+        cir = base + step * size
 
     elif self.size_format in {"US", "JP"}:
         base = 36.537
@@ -98,19 +98,19 @@ def up_size(self, context):
             else:
                 size = MAP_SIZE_JP_TO_US[self.size_int - 1]
 
-        circ = base + step * size
+        cir = base + step * size
 
-    self.circumference = unit.Scale(context).to_scene(round(circ, 2))
+    self.circumference = unit.Scale(context).to_scene(round(cir, 2))
 
 
-def up_diameter(self, context):
+def upd_diameter(self, context):
     if self.use_unit_conversion:
         self["circumference"] = self.diameter * pi
     else:
         self["circumference"] = round(self.diameter * pi, 2)
 
 
-def up_circumference(self, context):
+def upd_circumference(self, context):
     if self.use_unit_conversion:
         self["diameter"] = self.circumference / pi
     else:
@@ -131,18 +131,18 @@ class CURVE_OT_size_curve_add(Operator):
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
         ),
-        update=up_size,
+        update=upd_size,
     )
     size_abc: EnumProperty(
         name="Size",
         items=dynamic_list.abc,
-        update=up_size,
+        update=upd_size,
     )
     size_int: IntProperty(
         name="Size",
         default=8,
         min=1,
-        update=up_size,
+        update=upd_size,
     )
     size_float: FloatProperty(
         name="Size",
@@ -150,7 +150,7 @@ class CURVE_OT_size_curve_add(Operator):
         min=0.0,
         step=50,
         precision=1,
-        update=up_size,
+        update=upd_size,
     )
     diameter: FloatProperty(
         name="Diameter",
@@ -158,7 +158,7 @@ class CURVE_OT_size_curve_add(Operator):
         min=0.001,
         step=10,
         unit="LENGTH",
-        update=up_diameter,
+        update=upd_diameter,
     )
     circumference: FloatProperty(
         name="Circumference",
@@ -167,7 +167,7 @@ class CURVE_OT_size_curve_add(Operator):
         step=100,
         precision=1,
         unit="LENGTH",
-        update=up_circumference,
+        update=upd_circumference,
     )
     up: BoolProperty(
         name="Start Up",
@@ -177,11 +177,11 @@ class CURVE_OT_size_curve_add(Operator):
     )
     use_size: BoolProperty(
         name="Ring Size",
-        update=up_size,
+        update=upd_size,
     )
     use_half_size: BoolProperty(
         name="1/2",
-        update=up_size,
+        update=upd_size,
     )
     use_unit_conversion: BoolProperty(
         options={"HIDDEN", "SKIP_SAVE"}
@@ -206,7 +206,7 @@ class CURVE_OT_size_curve_add(Operator):
             row = col.row(align=True)
             row.prop(self, "size_abc")
             row.prop(self, "use_half_size")
-        elif self.size_format in {"JP", "HK"}:
+        elif self.size_format == "JP":
             col.prop(self, "size_int")
         else:
             col.prop(self, "size_float")
