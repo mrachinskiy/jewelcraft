@@ -98,16 +98,35 @@ class MeasurementCollection(PropertyGroup):
         name="Type",
         description="Measurement type",
         items=(
-            ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
-            ("WEIGHT", "Weight", "", "FILE_3D", 1),
+            ("DIMENSIONS", "", "", 0),
+            ("WEIGHT",     "", "", 1),
+            ("RING_SIZE",  "", "", 2),
         ),
-        default="DIMENSIONS",
     )
-    x: BoolProperty(name="X", default=True)
-    y: BoolProperty(name="Y", default=True)
-    z: BoolProperty(name="Z", default=True)
-    material_name: StringProperty(name="Material", default="Untitled")
-    material_density: FloatProperty(default=0.01, min=0.01)
+    ring_size: EnumProperty(
+        name="Format",
+        items=(
+            ("DIA", "Diameter",      "", 0),
+            ("CIR", "Circumference", "", 1),
+            ("US",  "USA",           "", 2),
+            ("UK",  "Britain",       "", 3),
+            ("CH",  "Swiss",         "", 4),
+            ("JP",  "Japan",         "", 5),
+        ),
+    )
+    axis: EnumProperty(
+        name="Axis",
+        items=(
+            ("0", "X", ""),
+            ("1", "Y", ""),
+            ("2", "Z", ""),
+        ),
+    )
+    x: BoolProperty(name="X")
+    y: BoolProperty(name="Y")
+    z: BoolProperty(name="Z")
+    material_name: StringProperty()
+    material_density: FloatProperty()
 
 
 class MaterialsList(ListProperty, PropertyGroup):

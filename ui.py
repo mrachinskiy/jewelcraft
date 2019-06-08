@@ -76,12 +76,13 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
     icons = {
         "DIMENSIONS": "SHADING_BBOX",
         "WEIGHT": "FILE_3D",
+        "RING_SIZE": "MESH_CIRCLE",
     }
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         row = layout.row(align=True)
         row.active = item.object is not None
-        row.label(icon=self.icons[item.type])
+        row.label(icon=self.icons.get(item.type, "BLANK1"))
         row.prop(item, "name", text="", emboss=False)
 
 
@@ -455,9 +456,7 @@ class VIEW3D_PT_jewelcraft_measurement(Panel, Setup):
         if measures_list.coll:
             item = measures_list.coll[measures_list.index]
 
-            col = layout.column()
-            col.prop(item, "object", text="")
-            col.prop(item, "type", text="")
+            layout.prop(item, "object", text="")
 
             if item.type == "DIMENSIONS":
                 col = layout.column(align=True)
@@ -469,3 +468,6 @@ class VIEW3D_PT_jewelcraft_measurement(Panel, Setup):
                 row = box.row(align=True)
                 row.label(text=item.material_name, translate=False)
                 row.operator("wm.jewelcraft_ul_measurements_material_select", text="", icon="DOWNARROW_HLT", emboss=False)
+            elif item.type == "RING_SIZE":
+                layout.prop(item, "ring_size")
+                layout.prop(item, "axis")

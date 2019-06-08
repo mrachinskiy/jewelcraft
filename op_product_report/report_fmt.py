@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from math import pi
+from math import pi, modf
 
 from .. import var
 from ..lib import unit, asset, gettext
@@ -53,6 +53,42 @@ def _ct_calc(stone, cut, size):
     ct = unit.convert(g, "G_TO_CT")
 
     return round(ct, 3)
+
+
+def _to_ring_size(cir, size_format):
+    if size_format in {"US", "JP"}:
+        size = (cir - var.CIR_BASE_US) / var.CIR_STEP_US
+
+        if size_format == "US":
+            return asset.to_int(round(size, 2))
+
+        for i, v in enumerate(var.MAP_SIZE_JP_TO_US):
+            if 0.0 < abs(v - size) < 0.2:
+                return i + 1
+        else:
+            return "*OUT OF BOUNDS"
+
+    if size_format == "UK":
+        import string
+
+        size_raw = (cir - var.CIR_BASE_UK) / var.CIR_STEP_UK
+
+        fraction, integer = modf(size_raw)
+        if fraction > 0.75:
+            integer += 1.0
+        half_size = 0.25 < fraction < 0.75
+
+        if integer > len(string.ascii_uppercase):
+            return "*OUT OF BOUNDS"
+
+        size = string.ascii_uppercase[int(integer)]
+        if half_size:
+            size += " 1/2"
+
+        return size
+
+    if size_format == "CH":
+        return round(cir - 40.0, 2)
 
 
 def data_format(self, context, data):
@@ -122,8 +158,7 @@ def data_format(self, context, data):
         materialsf = []
         col_width = 0
 
-        for (mat_name, mat_density), vol in data["materials"].items():
-            density = unit.convert(mat_density, "CM3_TO_MM3")
+        for (mat_name, density), vol in data["materials"].items():
             weight = round(vol * density, 2)
             weightf = f"{weight} {_g}"
 
@@ -145,17 +180,27 @@ def data_format(self, context, data):
         # Format values
         # ---------------------------
 
-        sizesf = []
+        notesf = []
         col_width = 0
 
-        for name, value in data["notes"]:
+        for item_type, name, values in data["notes"]:
 
-            if isinstance(value, float):
-                valuef = f"{round(value, 2)}"
-            else:
-                valuef = " × ".join([str(round(x, 2)) for x in value])
+            if item_type == "DIMENSIONS":
+                valuef = " × ".join([str(x) for x in values])
+                valuef += f" {_mm}"
 
-            sizesf.append((name, valuef))
+            elif item_type == "RING_SIZE":
+                dia, size_format = values
+                cir = round(dia * pi, 2)
+
+                if size_format == "DIA":
+                    valuef = f"{dia} {_mm}"
+                elif size_format == "CIR":
+                    valuef = f"{cir} {_mm}"
+                else:
+                    valuef = _to_ring_size(cir, size_format)
+
+            notesf.append((name, valuef))
             col_width = max(col_width, len(name))
 
         # Format report
@@ -163,8 +208,8 @@ def data_format(self, context, data):
 
         report_notes = _("Additional Notes") + "\n\n"
 
-        for name, value in sizesf:
-            report_notes += f"    {name:{col_width}}  {value} {_mm}\n"
+        for name, value in notesf:
+            report_notes += f"    {name:{col_width}}  {value}\n"
 
         report.append(report_notes)
 
