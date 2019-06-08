@@ -33,6 +33,7 @@ from bpy.app.translations import pgettext_iface as _
 import bmesh
 from mathutils import Matrix, Vector
 
+from .. import var
 from ..lib import (
     asset,
     unit,
@@ -42,63 +43,25 @@ from ..lib import (
 )
 
 
-MAP_SIZE_JP_TO_US = (
-    1,
-    2,
-    2.5,
-    3,
-    3.25,
-    3.75,
-    4,
-    4.5,
-    5,
-    5.5,
-    6,
-    6.25,
-    6.5,
-    7,
-    7.5,
-    8,
-    8.5,
-    9,
-    9.5,
-    10,
-    10.25,
-    10.5,
-    11,
-    11.5,
-    12,
-    12.5,
-    13,
-)
-
-
 def upd_size(self, context):
     if self.size_format == "CH":
         cir = self.size_float + 40.0
 
     elif self.size_format == "UK":
-        base = 37.5
-        step = 1.25
         size = float(self.size_abc)
         if self.use_half_size:
             size += 0.5
-        cir = base + step * size
+        cir = var.CIR_BASE_UK + var.CIR_STEP_UK * size
 
     elif self.size_format in {"US", "JP"}:
-        base = 36.537
-        step = 2.5535
         size = self.size_float
 
         if self.size_format == "JP":
-            map_len = len(MAP_SIZE_JP_TO_US)
-            oversize = self.size_int - map_len
-            if oversize > 0:
-                size = MAP_SIZE_JP_TO_US[map_len - 1] + 0.5 * oversize
-            else:
-                size = MAP_SIZE_JP_TO_US[self.size_int - 1]
+            if self.size_int > self.map_size_jp:
+                return
+            size = var.MAP_SIZE_JP_TO_US[self.size_int - 1]
 
-        cir = base + step * size
+        cir = var.CIR_BASE_US + var.CIR_STEP_US * size
 
     self.circumference = unit.Scale(context).to_scene(round(cir, 2))
 
@@ -183,9 +146,8 @@ class CURVE_OT_size_curve_add(Operator):
         name="1/2",
         update=upd_size,
     )
-    use_unit_conversion: BoolProperty(
-        options={"HIDDEN", "SKIP_SAVE"}
-    )
+    use_unit_conversion: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
+    map_size_jp: IntProperty(default=len(var.MAP_SIZE_JP_TO_US), options={"HIDDEN", "SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
@@ -208,6 +170,10 @@ class CURVE_OT_size_curve_add(Operator):
             row.prop(self, "use_half_size")
         elif self.size_format == "JP":
             col.prop(self, "size_int")
+            if self.size_int > self.map_size_jp:
+                row = col.row()
+                row.alignment = "RIGHT"
+                row.label(text="Size overflow", icon="ERROR")
         else:
             col.prop(self, "size_float")
 

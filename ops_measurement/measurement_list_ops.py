@@ -46,11 +46,32 @@ class WM_OT_ul_measurements_add(Operator, Setup):
         items=(
             ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
             ("WEIGHT", "Weight", "", "FILE_3D", 1),
+            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 2),
         ),
+    )
+    ring_size: EnumProperty(
+        name="Format",
+        items=(
+            ("DIA", "Diameter", ""),
+            ("CIR", "Circumference", ""),
+            ("US", "USA", ""),
+            ("UK", "Britain", ""),
+            ("CH", "Swiss", ""),
+            ("JP", "Japan", ""),
+        ),
+        options={"SKIP_SAVE"},
+    )
+    axis: EnumProperty(
+        name="Axis",
+        items=(
+            ("0", "X", ""),
+            ("1", "Y", ""),
+            ("2", "Z", ""),
+        ),
+        options={"SKIP_SAVE"},
     )
     material: EnumProperty(
         name="Material",
-        description="",
         items=dynamic_list.weighting_materials,
         options={"SKIP_SAVE"},
     )
@@ -75,6 +96,9 @@ class WM_OT_ul_measurements_add(Operator, Setup):
             col.prop(self, "z")
         elif self.type == "WEIGHT":
             layout.prop(self, "material")
+        elif self.type == "RING_SIZE":
+            layout.prop(self, "ring_size")
+            layout.prop(self, "axis")
 
         layout.separator()
 
@@ -94,6 +118,9 @@ class WM_OT_ul_measurements_add(Operator, Setup):
             mat = materials.values()[int(self.material)]
             item.material_name = mat.name
             item.material_density = mat.density
+        elif self.type == "RING_SIZE":
+            item.ring_size = self.ring_size
+            item.axis = self.axis
 
         context.area.tag_redraw()
 

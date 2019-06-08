@@ -52,11 +52,11 @@ def data_collect(self, context, gem_map=False):
             if item.type == "WEIGHT":
                 if item.object.type == "MESH":
                     name = item.material_name
-                    density = round(item.material_density, 2)
+                    density = unit.convert(item.material_density, "CM3_TO_MM3")
                     vol = from_scene_scale(mesh.est_volume((item.object,)), volume=True)
-
                     data["materials"][(name, density)] += vol
-            else:
+
+            elif item.type == "DIMENSIONS":
                 axes = []
                 if item.x: axes.append(0)
                 if item.y: axes.append(1)
@@ -65,14 +65,14 @@ def data_collect(self, context, gem_map=False):
                 if not axes:
                     continue
 
-                dim = item.object.dimensions
+                dim = from_scene_scale(item.object.dimensions, batch=True)
+                values = tuple(round(dim[x], 2) for x in axes)
+                data["notes"].append((item.type, item.name, values))
 
-                if len(axes) == 1:
-                    value = from_scene_scale(dim[axes[0]])
-                else:
-                    value = from_scene_scale(tuple(dim[x] for x in axes), batch=True)
-
-                data["notes"].append((item.name, value))
+            elif item.type == "RING_SIZE":
+                dim = from_scene_scale(item.object.dimensions[int(item.axis)])
+                values = (round(dim, 2), item.ring_size)
+                data["notes"].append((item.type, item.name, values))
 
     # Gems
     # ---------------------------
