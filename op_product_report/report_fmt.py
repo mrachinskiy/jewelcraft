@@ -65,30 +65,30 @@ def _to_ring_size(cir, size_format):
         for i, v in enumerate(var.MAP_SIZE_JP_TO_US):
             if 0.0 < abs(v - size) < 0.2:
                 return i + 1
-        else:
-            return "*OUT OF BOUNDS"
 
     if size_format == "UK":
         import string
 
         size_raw = (cir - var.CIR_BASE_UK) / var.CIR_STEP_UK
 
-        fraction, integer = modf(size_raw)
-        if fraction > 0.75:
-            integer += 1.0
-        half_size = 0.25 < fraction < 0.75
+        if size_raw >= 0.0:
+            fraction, integer = modf(size_raw)
+            half_size = 0.25 < fraction < 0.75
+            if fraction > 0.75:
+                integer += 1.0
 
-        if integer > len(string.ascii_uppercase):
-            return "*OUT OF BOUNDS"
-
-        size = string.ascii_uppercase[int(integer)]
-        if half_size:
-            size += " 1/2"
-
-        return size
+            if integer < len(string.ascii_uppercase):
+                size = string.ascii_uppercase[int(integer)]
+                if half_size:
+                    size += " 1/2"
+                return size
 
     if size_format == "CH":
-        return round(cir - 40.0, 2)
+        size = round(cir - 40.0, 2)
+        if size >= 0.0:
+            return size
+
+    return "*OUT OF BOUNDS"
 
 
 def data_format(self, context, data):
