@@ -63,14 +63,14 @@ def upd_size(self, context):
 
         cir = var.CIR_BASE_US + var.CIR_STEP_US * size
 
-    self.circumference = unit.Scale(context).to_scene(round(cir, 2))
+    self.circumference = unit.Scale(context).to_scene(round(cir, 4))
 
 
 def upd_diameter(self, context):
     if self.use_unit_conversion:
         self["circumference"] = self.diameter * pi
     else:
-        self["circumference"] = round(self.diameter * pi, 2)
+        self["circumference"] = round(self.diameter * pi, 4)
 
 
 def upd_circumference(self, context):
