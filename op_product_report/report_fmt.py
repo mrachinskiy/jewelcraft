@@ -193,12 +193,12 @@ def data_format(self, context, data):
 
             elif item_type == "RING_SIZE":
                 dia, size_format = values
-                cir = round(dia * pi, 2)
+                cir = dia * pi
 
                 if size_format == "DIA":
                     valuef = f"{dia} {_mm}"
                 elif size_format == "CIR":
-                    valuef = f"{cir} {_mm}"
+                    valuef = f"{round(cir, 2)} {_mm}"
                 else:
                     valuef = _to_ring_size(cir, size_format)
 
