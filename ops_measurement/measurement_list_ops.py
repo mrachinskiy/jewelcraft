@@ -86,8 +86,9 @@ class WM_OT_ul_measurements_add(Operator, Setup):
 
         layout.separator()
 
-        layout.prop(self, "item_name")
-        layout.prop(self, "type")
+        row = layout.row(align=True)
+        row.prop(self, "type", text="Type", icon_only=True)
+        row.prop(self, "item_name", text="")
 
         if self.type == "DIMENSIONS":
             col = layout.column(align=True)
