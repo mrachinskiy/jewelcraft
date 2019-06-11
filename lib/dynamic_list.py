@@ -104,8 +104,8 @@ def stones(self, context):
         ("EMERALD",        _("Emerald"),        "", 6),
         ("GARNET",         _("Garnet"),         "", 7),
         ("MORGANITE",      _("Morganite"),      "", 8),
-        ("QUARTZ",         _("Quartz"),         "", 9),
-        ("PERIDOT",        _("Peridot"),        "", 10),
+        ("PERIDOT",        _("Peridot"),        "", 9),
+        ("QUARTZ",         _("Quartz"),         "", 10),
         ("RUBY",           _("Ruby"),           "", 11),
         ("SAPPHIRE",       _("Sapphire"),       "", 12),
         ("SPINEL",         _("Spinel"),         "", 13),
@@ -325,7 +325,7 @@ def abc(self, context):
 
     import string
 
-    list_ = tuple((f"{i}", char + " ", "") for i, char in enumerate(string.ascii_uppercase))
+    list_ = tuple((str(i), char, "") for i, char in enumerate(string.ascii_uppercase))
     _cache["abc__list"] = list_
 
     return list_
