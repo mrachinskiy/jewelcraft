@@ -245,7 +245,7 @@ dictionary = {
         # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
 
         # Reports
-        "WARNING": "AVERTISSEMENT",
+        "WARNINGS": "AVERTISSEMENTS",
         "Possible gem dupli-face leftovers": "Restes de pierres dupli-face possibles",
         "Hidden gems": "Cacher les pierres",
 

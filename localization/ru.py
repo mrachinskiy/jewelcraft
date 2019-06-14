@@ -252,7 +252,7 @@ dictionary = {
             "для использования существующей коллекции)",
 
         # Reports
-        "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
+        "WARNINGS": "ПРЕДУПРЕЖДЕНИЯ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
         "Hidden gems": "Скрытые камни",
 
