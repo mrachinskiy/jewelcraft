@@ -90,7 +90,7 @@ def _to_ring_size(cir, size_format):
         if size >= 0.0:
             return asset.to_int(size)
 
-    return "*OUT OF BOUNDS"
+    return "[NO CORRESPONDING SIZE]"
 
 
 def data_format(self, context, data):

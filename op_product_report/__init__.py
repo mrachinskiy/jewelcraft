@@ -89,8 +89,8 @@ class WM_OT_product_report(Operator):
 
         if data_raw["warn"]:
             sep = "-" * 30
-            warn_fmt = _("WARNING") + "\n"
             warn_fmt = sep + "\n"
+            warn_fmt += _("WARNINGS") + "\n"
 
             for msg in data_raw["warn"]:
                 warn_fmt += f"* {_(msg)}\n"
