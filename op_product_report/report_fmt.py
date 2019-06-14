@@ -88,7 +88,7 @@ def _to_ring_size(cir, size_format):
     if size_format == "CH":
         size = round(cir - 40.0, 2)
         if size >= 0.0:
-            return size
+            return asset.to_int(size)
 
     return "*OUT OF BOUNDS"
 
