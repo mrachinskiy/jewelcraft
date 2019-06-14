@@ -49,16 +49,16 @@ def upd_size(self, context):
 
     elif self.size_format == "UK":
         size = float(self.size_abc)
+
         if self.use_half_size:
             size += 0.5
+
         cir = var.CIR_BASE_UK + var.CIR_STEP_UK * size
 
     elif self.size_format in {"US", "JP"}:
         size = self.size_float
 
         if self.size_format == "JP":
-            if self.size_int > self.map_size_jp:
-                return
             size = var.MAP_SIZE_JP_TO_US[self.size_int - 1]
 
         cir = var.CIR_BASE_US + var.CIR_STEP_US * size
@@ -105,6 +105,7 @@ class CURVE_OT_size_curve_add(Operator):
         name="Size",
         default=8,
         min=1,
+        max=27,
         update=upd_size,
     )
     size_float: FloatProperty(
@@ -147,7 +148,6 @@ class CURVE_OT_size_curve_add(Operator):
         update=upd_size,
     )
     use_unit_conversion: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
-    map_size_jp: IntProperty(default=len(var.MAP_SIZE_JP_TO_US), options={"HIDDEN", "SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
@@ -170,10 +170,6 @@ class CURVE_OT_size_curve_add(Operator):
             row.prop(self, "use_half_size")
         elif self.size_format == "JP":
             col.prop(self, "size_int")
-            if self.size_int > self.map_size_jp:
-                row = col.row()
-                row.alignment = "RIGHT"
-                row.label(text="Size overflow", icon="ERROR")
         else:
             col.prop(self, "size_float")
 
