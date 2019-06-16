@@ -36,15 +36,15 @@ class OBJECT_OT_curve_scatter(UI, Scatter, Operator):
 
     number: IntProperty(name="Object Number", default=10, min=1, soft_max=100)
 
-    rot_y: FloatProperty(name="Orientation", step=10, unit="ROTATION")
+    rot_x: FloatProperty(name="Orientation", step=10, unit="ROTATION")
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
-    loc_z: FloatProperty(name="Position", unit="LENGTH")
+    loc_z: FloatProperty(name="Position", step=1, unit="LENGTH")
 
-    start: FloatProperty(name="Start")
-    end: FloatProperty(name="End", default=100.0)
+    start: FloatProperty(name="Start", step=5)
+    end: FloatProperty(name="End", default=100.0, step=5)
 
     use_absolute_offset: BoolProperty(name="Absolute Offset")
-    spacing: FloatProperty(name="Spacing", default=0.2, unit="LENGTH")
+    spacing: FloatProperty(name="Spacing", default=0.2, step=1, unit="LENGTH")
 
 
 class OBJECT_OT_curve_redistribute(UI, Scatter, Operator):
@@ -55,12 +55,12 @@ class OBJECT_OT_curve_redistribute(UI, Scatter, Operator):
 
     is_scatter = False
 
-    rot_y: FloatProperty(name="Orientation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
+    rot_x: FloatProperty(name="Orientation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
-    loc_z: FloatProperty(name="Position", unit="LENGTH", options={"SKIP_SAVE"})
+    loc_z: FloatProperty(name="Position", step=1, unit="LENGTH", options={"SKIP_SAVE"})
 
-    start: FloatProperty(name="Start")
-    end: FloatProperty(name="End", default=100.0)
+    start: FloatProperty(name="Start", step=5)
+    end: FloatProperty(name="End", default=100.0, step=5)
 
     use_absolute_offset: BoolProperty(name="Absolute Offset", options={"SKIP_SAVE"})
-    spacing: FloatProperty(name="Spacing", default=0.2, unit="LENGTH")
+    spacing: FloatProperty(name="Spacing", step=1, default=0.2, unit="LENGTH")

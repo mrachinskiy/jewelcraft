@@ -46,19 +46,19 @@ class Scatter:
             context.view_layer.objects.active = ob
 
         else:
-            obs = {}
+            obs = []
 
             for ob in context.selected_objects:
                 con = ob.constraints.get("Follow Path")
                 if con:
-                    obs[ob] = con.offset
+                    obs.append((ob, con.offset))
 
-            obs_sorted = sorted(obs, key=obs.get, reverse=True)
-            num = len(obs_sorted) - 1
+            obs.sort(key=lambda x: x[1], reverse=True)
+            num = len(obs) - 1
             ob = context.object
 
-            if ob not in obs:
-                ob = obs_sorted[0]
+            if "Follow Path" not in ob.constraints:
+                ob = obs[0][0]
 
             curve = ob.constraints["Follow Path"].target
 
@@ -98,8 +98,8 @@ class Scatter:
             mat_sca = Matrix.Diagonal(ob.scale).to_4x4()
             ob.matrix_world = mat_sca
 
-            if self.rot_y:
-                mat_rot = Matrix.Rotation(self.rot_y, 4, "Y")
+            if self.rot_x:
+                mat_rot = Matrix.Rotation(self.rot_x, 4, "X")
                 ob.matrix_world @= mat_rot
 
             if self.rot_z:
@@ -144,10 +144,10 @@ class Scatter:
 
             ofst_fac = start
 
-            for ob in obs_sorted:
+            for ob, _ in obs:
 
-                if self.rot_y:
-                    mat_rot = Matrix.Rotation(self.rot_y, 4, "Y")
+                if self.rot_x:
+                    mat_rot = Matrix.Rotation(self.rot_x, 4, "X")
                     ob.matrix_basis @= mat_rot
 
                 if self.rot_z:
