@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 
 from ..lib import mesh, asset
 
@@ -51,9 +51,9 @@ class Scatter:
             for ob in context.selected_objects:
                 con = ob.constraints.get("Follow Path")
                 if con:
-                    obs.append((ob, con.offset))
+                    obs.append((ob, con, con.offset))
 
-            obs.sort(key=lambda x: x[1], reverse=True)
+            obs.sort(key=lambda x: x[2], reverse=True)
             num = len(obs) - 1
             ob = context.object
 
@@ -144,21 +144,23 @@ class Scatter:
 
             ofst_fac = start
 
-            for ob, _ in obs:
+            for ob, con, _ in obs:
 
                 if self.rot_x:
+                    ob_mat_rot = ob.matrix_basis.to_quaternion().to_matrix().to_4x4()
                     mat_rot = Matrix.Rotation(self.rot_x, 4, "X")
-                    ob.matrix_basis @= mat_rot
+                    ob.matrix_basis @= ob_mat_rot.inverted() @ mat_rot @ ob_mat_rot
 
                 if self.rot_z:
                     mat_rot = Matrix.Rotation(self.rot_z, 4, "Z")
                     ob.matrix_basis @= mat_rot
 
-                if self.loc_z:
-                    mat_loc = Matrix.Translation((0.0, 0.0, self.loc_z))
-                    ob.matrix_basis @= mat_loc
+                if self.rot_x or self.loc_z:
+                    dist = (ob.matrix_basis.translation - Vector()).length
+                    mat_rot = ob.matrix_basis.to_quaternion().to_matrix()
+                    ob.matrix_basis.translation = mat_rot @ Vector((0.0, 0.0, dist + self.loc_z))
 
-                ob.constraints["Follow Path"].offset = -ofst_fac
+                con.offset = -ofst_fac
                 ofst_fac += ofst
 
         return {"FINISHED"}
