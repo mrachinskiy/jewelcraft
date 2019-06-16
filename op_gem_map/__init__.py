@@ -206,7 +206,7 @@ class VIEW3D_OT_gem_map(Operator, Offscreen, OnscreenText):
         self.show_warn = bool(data["warn"])
 
         if self.show_warn:
-            self.warn = [_("WARNINGS")] + [f"* {_(x)}" for x in data["warn"]]
+            self.warn = [_("WARNING")] + [f"* {_(x)}" for x in data["warn"]]
 
         # Options
         # ----------------------------

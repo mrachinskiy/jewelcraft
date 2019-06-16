@@ -32,7 +32,7 @@ class UI:
 
         layout.label(text="Transforms")
         col = layout.column(align=True)
-        col.prop(self, "rot_y")
+        col.prop(self, "rot_x")
         col.prop(self, "rot_z")
         col.prop(self, "loc_z")
 
