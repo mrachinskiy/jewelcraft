@@ -86,4 +86,6 @@ class OBJECT_OT_prongs_add(UI, Operator):
         if self.auto_presets:
             init_presets(self)
 
+        wm = context.window_manager
+        wm.invoke_props_popup(self, event)
         return self.execute(context)

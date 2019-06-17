@@ -553,6 +553,8 @@ class OBJECT_OT_lattice_profile(Operator):
 
         self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox((ob,))
 
+        wm = context.window_manager
+        wm.invoke_props_popup(self, event)
         return self.execute(context)
 
 
@@ -584,6 +586,8 @@ class OBJECT_OT_resize(Operator):
 
         layout.row().prop(self, "axis", expand=True)
         layout.prop(self, "size")
+
+        layout.separator()
 
     def execute(self, context):
         scale = self.size / self.dim_orig[int(self.axis)]

@@ -143,6 +143,7 @@ class Scatter:
         else:
 
             ofst_fac = start
+            world_loc = Vector()
 
             for ob, con, _ in obs:
 
@@ -156,7 +157,7 @@ class Scatter:
                     ob.matrix_basis @= mat_rot
 
                 if self.rot_x or self.loc_z:
-                    dist = (ob.matrix_basis.translation - Vector()).length
+                    dist = (ob.matrix_basis.translation - world_loc).length
                     mat_rot = ob.matrix_basis.to_quaternion().to_matrix()
                     ob.matrix_basis.translation = mat_rot @ Vector((0.0, 0.0, dist + self.loc_z))
 
@@ -166,6 +167,7 @@ class Scatter:
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        wm = context.window_manager
 
         if self.is_scatter:
 
@@ -182,6 +184,7 @@ class Scatter:
             self.cyclic = curve.data.splines[0].use_cyclic_u
             self.curve_length = mesh.curve_length(curve)
 
+            wm.invoke_props_popup(self, event)
             return self.execute(context)
 
         values = []
@@ -203,5 +206,4 @@ class Scatter:
         self.cyclic = curve.data.splines[0].use_cyclic_u
         self.curve_length = mesh.curve_length(curve)
 
-        wm = context.window_manager
         return wm.invoke_props_popup(self, event)
