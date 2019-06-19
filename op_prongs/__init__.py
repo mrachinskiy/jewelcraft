@@ -37,10 +37,9 @@ class OBJECT_OT_prongs_add(UI, Operator):
     bl_idname = "object.jewelcraft_prongs_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    auto_presets: BoolProperty(
-        name="Use Automated Presets",
-        description="Use automatically generated presets, discards user edits or presets",
-        default=True,
+    use_save_edits: BoolProperty(
+        name="Remember Changes",
+        description="Remember user changes to properties",
     )
 
     number: IntProperty(name="Prong Number", default=4, min=1, soft_max=10)
@@ -83,7 +82,7 @@ class OBJECT_OT_prongs_add(UI, Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_prongs
 
-        if self.auto_presets:
+        if not self.use_save_edits:
             init_presets(self)
 
         wm = context.window_manager

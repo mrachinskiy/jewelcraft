@@ -63,7 +63,7 @@ def data_format(self, context, data):
         qty_fmt = f"{qty} {_pcs}"
 
         if cut in var.CUT_SIZE_SINGLE:
-            size_raw_fmt = f"{l}"
+            size_raw_fmt = str(l)
             size_fmt = f"{l} {_mm}"
         else:
             size_raw_fmt = f"{l}×{w}"

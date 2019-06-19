@@ -70,7 +70,6 @@ dictionary = {
         "Category Name": "Nombre de Categoría",
         "Set Name": "Ajustar Nombre",
         "Curvature Scale": "Escala de Curvatura",
-        "Use Automated Presets": "Usar Preajustes Automáticos",
         "Prong Number": "Número de Clavijas",
         "Detalization": "Detallado",
         "Intersection": "Intersección",
@@ -99,6 +98,7 @@ dictionary = {
         # "Swiss": "",
         # "Japan": "",
         # "Circumference": "",
+        # "Remember Changes": "",
 
         # Tooltips
         "Add gemstone to the scene": "Añadir gema a la escena",
@@ -148,9 +148,6 @@ dictionary = {
 
         "Deform active object profile with Lattice":
             "Deformar perfil de objeto activo con Jaula",
-
-        "Use automatically generated presets, discards user edits or presets":
-            "Usar ajustes preestablecidos generados automáticamente, descarta ediciones de usuario o ajustes preestablecidos",
 
         "Create prongs for selected gems": "Crea puntas para gemas seleccionadas",
         "Create cutter for selected gems": "Crea un cortador para las gemas seleccionadas",
@@ -243,6 +240,9 @@ dictionary = {
         # "Make collection instances in radial order\n"
         # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
 
+        # "Remember user changes to properties": "",
+        # "Include or exclude given column": "",
+
         # Reports
         "WARNING": "ADVERTENCIA",
         "Possible gem dupli-face leftovers": "Posibles restos de Duplicados en Caras de gemas",
@@ -279,6 +279,7 @@ dictionary = {
         # "Overlapping gems": "",
         # "{} overlaps found": "",
         # "Optimal unit settings are in use": "",
+        # "Total (ct.)": "",
 
         # Cuts
         "Round": "Redonda",

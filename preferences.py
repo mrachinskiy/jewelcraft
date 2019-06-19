@@ -231,6 +231,10 @@ class JewelCraftPreferences(AddonPreferences):
         description="Save product report to file in project folder",
         default=True,
     )
+    product_report_show_total_ct: BoolProperty(
+        name="Total (ct.)",
+        description="Include or exclude given column",
+    )
     product_report_use_hidden_gems: BoolProperty(
         name="Hidden Gems",
         description="Enable or disable given warning",
@@ -377,6 +381,9 @@ class JewelCraftPreferences(AddonPreferences):
             col = box.column(align=True)
             col.prop(self, "gem_map_width", text="Resolution X")
             col.prop(self, "gem_map_height", text="Y")
+
+            box.label(text="Report")
+            box.prop(self, "product_report_show_total_ct")
 
             box.label(text="Warnings")
             col = box.column()
