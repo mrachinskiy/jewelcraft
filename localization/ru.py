@@ -67,7 +67,6 @@ dictionary = {
         "Category Name": "Название категории",
         "Set Name": "Название набора",
         "Curvature Scale": "Масштаб кривизны",
-        "Use Automated Presets": "Использовать автоматические пресеты",
         "Prong Number": "Количество корнеров",
         "Detalization": "Детализация",
         "Intersection": "Пересечение",
@@ -96,6 +95,7 @@ dictionary = {
         "Swiss": "Швейцария",
         "Japan": "Япония",
         "Circumference": "Окружность",
+        "Remember Changes": "Запомнить изменения",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
@@ -144,9 +144,6 @@ dictionary = {
 
         "Deform active object profile with Lattice":
             "Деформировать профиль активного объекта с помощью Lattice",
-
-        "Use automatically generated presets, discards user edits or presets":
-            "Использовать автоматически сгенерированные пресеты, сбрасывает пользовательское редактирование",
 
         "Create prongs for selected gems": "Создать корнера для выделенных камней",
         "Create cutter for selected gems": "Создать выборку для выделенных камней",
@@ -251,6 +248,9 @@ dictionary = {
             "(Горячая клавиша: удерживайте клавишу Alt при использовании инструмента "
             "для использования существующей коллекции)",
 
+        "Remember user changes to properties": "Запомнить пользовательские изменения параметров",
+        "Include or exclude given column": "Включить или исключить данную колонку",
+
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
@@ -281,7 +281,8 @@ dictionary = {
         "Settings": "Вставки",
         "Gem": "Камень",
         "Cut": "Огранка",
-        "Qty": "Количество",
+        "Qty": "Кол.",
+        "Total (ct.)": "Всего (кар)",
         "Carats": "Караты",
         "Materials": "Материалы",
         "Additional Notes": "Дополнительные примечания",

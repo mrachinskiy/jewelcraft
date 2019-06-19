@@ -43,10 +43,9 @@ class OBJECT_OT_cutter_add(UI, Operator):
     bl_idname = "object.jewelcraft_cutter_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    auto_presets: BoolProperty(
-        name="Use Automated Presets",
-        description="Use automatically generated presets, discards user edits or presets",
-        default=True,
+    use_save_edits: BoolProperty(
+        name="Remember Changes",
+        description="Remember user changes to properties",
     )
 
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
@@ -140,7 +139,7 @@ class OBJECT_OT_cutter_add(UI, Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_cutter
 
-        if self.auto_presets:
+        if not self.use_save_edits:
             init_presets(self)
 
         wm = context.window_manager

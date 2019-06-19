@@ -101,9 +101,13 @@ def data_format(self, context, data):
 
     if data["gems"]:
 
-        gemsf = []
-        table_heading = (_("Gem"), _("Cut"), _("Size"), _("Carats"), _("Qty"))
+        table_heading = [_("Gem"), _("Cut"), _("Size"), _("Carats"), _("Qty")]
+
+        if self.show_total_ct:
+            table_heading.append(_("Total (ct.)"))
+
         col_width = [len(x) for x in table_heading]
+        gemsf = []
 
         for (stone, cut, size), qty in sorted(
             data["gems"].items(),
@@ -121,15 +125,16 @@ def data_format(self, context, data):
 
             stonef = _(asset.get_name(stone))
             cutf = _(asset.get_name(cut))
-            ctf = f"{ct}"
-            qtyf = f"{qty}"
+            ctf = str(ct)
+            qtyf = str(qty)
+            total_ctf = str(round(ct * qty, 3))
 
             if cut in var.CUT_SIZE_SINGLE:
-                sizef = f"{l}"
+                sizef = str(l)
             else:
                 sizef = f"{l} × {w}"
 
-            gemf = (stonef, cutf, sizef, ctf, qtyf)
+            gemf = (stonef, cutf, sizef, ctf, qtyf, total_ctf)
             gemsf.append(gemf)
 
             # Columns width
@@ -141,7 +146,9 @@ def data_format(self, context, data):
         # Format report
         # ---------------------------
 
-        row = "    {{:{}}}   {{:{}}}   {{:{}}}   {{:{}}}   {{}}\n".format(*col_width)
+        row = ["{{:{}}}" if x < 2 else "{{:>{}}}" for x in range(len(col_width))]
+        row = "   ".join(row).format(*col_width)
+        row = f"    {row}\n"
 
         report_gems = _("Settings") + "\n\n"
         report_gems += row.format(*table_heading)

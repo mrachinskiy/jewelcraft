@@ -52,6 +52,10 @@ class WM_OT_product_report(Operator):
         description="Save product report to file in project folder",
         default=True,
     )
+    show_total_ct: BoolProperty(
+        name="Total (ct.)",
+        description="Include or exclude given column",
+    )
     use_hidden_gems: BoolProperty(
         name="Hidden Gems",
         description="Enable or disable given warning",
@@ -72,6 +76,9 @@ class WM_OT_product_report(Operator):
 
         layout.prop(self, "use_save")
         layout.prop(self, "lang")
+
+        layout.label(text="Report")
+        layout.prop(self, "show_total_ct")
 
         layout.label(text="Warnings")
         col = layout.column()
@@ -142,6 +149,7 @@ class WM_OT_product_report(Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.lang = prefs.product_report_lang
         self.use_save = prefs.product_report_save
+        self.show_total_ct = prefs.product_report_show_total_ct
         self.use_hidden_gems = prefs.product_report_use_hidden_gems
         self.use_overlap = prefs.product_report_use_overlap
 

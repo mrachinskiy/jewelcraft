@@ -26,7 +26,7 @@ class UI:
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.prop(self, "auto_presets")
+        layout.prop(self, "use_save_edits")
 
         # Handle
         # ------------------------

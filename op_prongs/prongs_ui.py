@@ -28,7 +28,7 @@ class UI:
 
         layout.separator()
 
-        layout.prop(self, "auto_presets")
+        layout.prop(self, "use_save_edits")
 
         layout.separator()
 
