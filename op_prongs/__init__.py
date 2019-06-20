@@ -35,7 +35,7 @@ class OBJECT_OT_prongs_add(UI, Operator):
     bl_label = "JewelCraft Make Prongs"
     bl_description = (
         "Create prongs for selected gems\n"
-        "(Shortcut: hold Alt when using the tool to avoid properties reset)"
+        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
     )
     bl_idname = "object.jewelcraft_prongs_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
@@ -80,7 +80,7 @@ class OBJECT_OT_prongs_add(UI, Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_prongs
 
-        if not event.alt:
+        if not event.ctrl:
             init_presets(self)
 
         wm = context.window_manager
