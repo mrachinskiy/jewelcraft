@@ -150,16 +150,16 @@ dictionary = {
             "Déformer le profil d'objet actif avec Lattice",
 
         "Create prongs for selected gems\n"
-        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
             "Créer des griffes pour les pierres sélectionnées\n"
             # TODO
-            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
 
         "Create cutter for selected gems\n"
-        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
             "Créer une coupe pour les pierres sélectionnées\n"
             # TODO
-            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
 
         "Make curve start at the top": "Faire que la courbe commence en haut",
         "Density g/cm³": "Densité g/cm³",

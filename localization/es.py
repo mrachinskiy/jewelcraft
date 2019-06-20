@@ -149,16 +149,16 @@ dictionary = {
             "Deformar perfil de objeto activo con Jaula",
 
         "Create prongs for selected gems\n"
-        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
             "Crea puntas para gemas seleccionadas\n"
             # TODO
-            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
 
         "Create cutter for selected gems\n"
-        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
             "Crea un cortador para las gemas seleccionadas\n"
             # TODO
-            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
 
         "Make curve start at the top": "Hacer que la curva comience en la parte superior",
         "Density g/cm³": "Densidad gr/cm³",
