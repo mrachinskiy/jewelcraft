@@ -33,14 +33,12 @@ from .prongs_mesh import create_prongs
 
 class OBJECT_OT_prongs_add(UI, Operator):
     bl_label = "JewelCraft Make Prongs"
-    bl_description = "Create prongs for selected gems"
+    bl_description = (
+        "Create prongs for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)"
+    )
     bl_idname = "object.jewelcraft_prongs_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
-
-    use_save_edits: BoolProperty(
-        name="Remember Changes",
-        description="Remember user changes to properties",
-    )
 
     number: IntProperty(name="Prong Number", default=4, min=1, soft_max=10)
 
@@ -59,7 +57,7 @@ class OBJECT_OT_prongs_add(UI, Operator):
     )
     alignment: FloatProperty(name="Alignment", step=100, precision=0, unit="ROTATION")
 
-    symmetry: BoolProperty(name="Symmetry")
+    use_symmetry: BoolProperty(name="Symmetry")
     symmetry_pivot: FloatProperty(name="Symmetry Pivot", step=100, precision=0, unit="ROTATION")
 
     bump_scale: FloatProperty(name="Bump Scale", default=0.5, soft_min=0.0, soft_max=1.0, subtype="FACTOR")
@@ -82,7 +80,7 @@ class OBJECT_OT_prongs_add(UI, Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_prongs
 
-        if not self.use_save_edits:
+        if not event.alt:
             init_presets(self)
 
         wm = context.window_manager

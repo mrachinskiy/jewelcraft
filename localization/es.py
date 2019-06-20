@@ -98,7 +98,6 @@ dictionary = {
         # "Swiss": "",
         # "Japan": "",
         # "Circumference": "",
-        # "Remember Changes": "",
 
         # Tooltips
         "Add gemstone to the scene": "Añadir gema a la escena",
@@ -149,8 +148,18 @@ dictionary = {
         "Deform active object profile with Lattice":
             "Deformar perfil de objeto activo con Jaula",
 
-        "Create prongs for selected gems": "Crea puntas para gemas seleccionadas",
-        "Create cutter for selected gems": "Crea un cortador para las gemas seleccionadas",
+        "Create prongs for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+            "Crea puntas para gemas seleccionadas"
+            # TODO
+            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+
+        "Create cutter for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+            "Crea un cortador para las gemas seleccionadas"
+            # TODO
+            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+
         "Make curve start at the top": "Hacer que la curva comience en la parte superior",
         "Density g/cm³": "Densidad gr/cm³",
         "Set of materials for weighting": "Conjunto de evaluación de peso",
@@ -240,7 +249,6 @@ dictionary = {
         # "Make collection instances in radial order\n"
         # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
 
-        # "Remember user changes to properties": "",
         # "Include or exclude given column": "",
 
         # Reports

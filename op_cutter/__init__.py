@@ -39,18 +39,16 @@ def update_coords_hole(self, context):
 
 class OBJECT_OT_cutter_add(UI, Operator):
     bl_label = "JewelCraft Make Cutter"
-    bl_description = "Create cutter for selected gems"
+    bl_description = (
+        "Create cutter for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)"
+    )
     bl_idname = "object.jewelcraft_cutter_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    use_save_edits: BoolProperty(
-        name="Remember Changes",
-        description="Remember user changes to properties",
-    )
-
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
-    handle: BoolProperty(name="Handle", default=True, update=update_coords_handle)
+    use_handle: BoolProperty(name="Handle", default=True, update=update_coords_handle)
     handle_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")
     handle_w_size: FloatProperty(name="Width", step=0.1, unit="LENGTH")
     handle_z_top: FloatProperty(name="Top", default=0.5, step=0.1, unit="LENGTH")
@@ -62,7 +60,7 @@ class OBJECT_OT_cutter_add(UI, Operator):
     girdle_z_btm: FloatProperty(name="Bottom", step=0.1, unit="LENGTH")
     table_z: FloatProperty(name="Table", options={"HIDDEN"})
 
-    hole: BoolProperty(name="Hole", default=True, update=update_coords_hole)
+    use_hole: BoolProperty(name="Hole", default=True, update=update_coords_hole)
     hole_z_top: FloatProperty(name="Top", default=0.25, step=0.1, unit="LENGTH")
     hole_z_btm: FloatProperty(name="Bottom", default=1.0, step=0.1, unit="LENGTH")
     hole_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")
@@ -70,11 +68,11 @@ class OBJECT_OT_cutter_add(UI, Operator):
     hole_pos_ofst: FloatProperty(name="Position Offset", step=0.1, unit="LENGTH")
     culet_z: FloatProperty(name="Culet", options={"HIDDEN"})
 
-    curve_seat: BoolProperty(name="Curve Seat")
+    use_curve_seat: BoolProperty(name="Curve Seat")
     curve_seat_segments: IntProperty(name="Segments", default=15, min=2, soft_max=30, step=1)
     curve_seat_profile: FloatProperty(name="Profile", default=0.5, min=0.15, max=1.0, subtype="FACTOR")
 
-    curve_profile: BoolProperty(name="Curve Profile")
+    use_curve_profile: BoolProperty(name="Curve Profile")
     curve_profile_segments: IntProperty(name="Segments", default=10, min=1, soft_max=30, step=1)
     curve_profile_factor: FloatProperty(name="Factor", default=0.1, min=0.0, step=1)
 
@@ -93,7 +91,7 @@ class OBJECT_OT_cutter_add(UI, Operator):
         subtype="FACTOR",
     )
 
-    bevel_corners: BoolProperty(name="Bevel Corners")
+    use_bevel_corners: BoolProperty(name="Bevel Corners")
     bevel_corners_width: FloatProperty(
         name="Width",
         default=0.1,
@@ -139,7 +137,7 @@ class OBJECT_OT_cutter_add(UI, Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_cutter
 
-        if not self.use_save_edits:
+        if not event.alt:
             init_presets(self)
 
         wm = context.window_manager

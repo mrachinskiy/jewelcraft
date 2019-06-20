@@ -64,7 +64,7 @@ def create_cutter(self):
             bv_off_t = "PERCENT"
             bv_off = self.bevel_corners_percent
 
-        if self.bevel_corners and bv_off:
+        if self.use_bevel_corners and bv_off:
 
             base_coords = (
                 (handle_w_size, handle_l_size, self.handle_z_btm),
@@ -85,7 +85,7 @@ def create_cutter(self):
                 bm.free()
                 bm = bmesh.new()
 
-            if self.handle:
+            if self.use_handle:
                 v_handle_bottom = [bm.verts.new(v) for v in coords[0]]
 
             v_girdle_btm = [bm.verts.new(v) for v in coords[1]]
@@ -93,7 +93,7 @@ def create_cutter(self):
 
         else:
 
-            if self.handle:
+            if self.use_handle:
                 v_handle_bottom = make_rect(bm, handle_w_size, handle_l_size, self.handle_z_btm)
 
             v_girdle_btm = make_rect(bm, girdle_w_size, girdle_l_size, -self.girdle_z_btm)
@@ -103,7 +103,7 @@ def create_cutter(self):
 
         v_girdle_top = duplicate_verts(bm, v_girdle_btm, z=self.girdle_z_top)
 
-        if self.handle:
+        if self.use_handle:
             v_handle_top = duplicate_verts(bm, v_handle_bottom, z=self.handle_z_top)
             bridge_verts(bm, v_handle_top, v_handle_bottom)
             bridge_verts(bm, v_handle_bottom, v_girdle_top)
@@ -113,7 +113,7 @@ def create_cutter(self):
 
         bridge_verts(bm, v_girdle_top, v_girdle_btm)
 
-        if self.curve_seat:
+        if self.use_curve_seat:
             sm_z = (self.girdle_z_btm + self.hole_z_top) / 2 * 1.4
 
             v_sm = duplicate_verts(bm, v_girdle_btm, z=-sm_z)
@@ -127,7 +127,7 @@ def create_cutter(self):
 
         bridge_verts(bm, v_fallback, v_hole_top)
 
-        if self.hole:
+        if self.use_hole:
             v_hole_bottom = duplicate_verts(bm, v_hole_top, z=-self.hole_z_btm)
             bridge_verts(bm, v_hole_top, v_hole_bottom)
             bm.faces.new(reversed(v_hole_bottom))
@@ -140,7 +140,7 @@ def create_cutter(self):
                 e_0 = e_hole_top[0]
                 e_h = e_hole_top[half]
 
-                if self.bevel_corners:
+                if self.use_bevel_corners:
                     quarter = int(half / 2)
 
                     e_side_1 = edge_loop_expand(e_0, limit=quarter)
@@ -168,7 +168,7 @@ def create_cutter(self):
         hole_l_size = self.hole_l_size
         hole_w_size = self.hole_w_size / 2
 
-        if self.bevel_corners or self.curve_profile:
+        if self.use_bevel_corners or self.use_curve_profile:
 
             bv_off_t = "PERCENT"
             bv_off = self.bevel_corners_percent
@@ -185,10 +185,10 @@ def create_cutter(self):
                 v_profile = make_tri(bm, x, y, 0.0)
                 make_edges(bm, v_profile)
 
-                if self.bevel_corners:
+                if self.use_bevel_corners:
                     bmesh.ops.bevel(bm, geom=v_profile, clamp_overlap=True, vertex_only=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
 
-                if self.curve_profile:
+                if self.use_curve_profile:
                     bm.edges.ensure_lookup_table()
                     e_subd = (bm.edges[-1], bm.edges[-2], bm.edges[-3])
                     bm.normal_update()
@@ -201,28 +201,28 @@ def create_cutter(self):
                 bm.free()
                 bm = bmesh.new()
 
-            if self.handle:
+            if self.use_handle:
                 v_handle_bottom = [bm.verts.new((x, y, self.handle_z_btm)) for x, y, z in coords[0]]
 
             v_girdle_btm = [bm.verts.new((x, y, -self.girdle_z_btm)) for x, y, z in coords[1]]
 
-            if self.hole:
+            if self.use_hole:
                 v_hole_top = [bm.verts.new((x, y, -self.hole_z_top)) for x, y, z in coords[2]]
 
         else:
 
-            if self.handle:
+            if self.use_handle:
                 v_handle_bottom = make_tri(bm, handle_w_size, handle_l_size, self.handle_z_btm)
 
             v_girdle_btm = make_tri(bm, girdle_w_size, girdle_l_size, -self.girdle_z_btm)
 
-            if self.hole:
+            if self.use_hole:
                 v_hole_top = make_tri(bm, hole_w_size, hole_l_size, -self.hole_z_top)
 
         v_girdle_top = duplicate_verts(bm, v_girdle_btm, z=self.girdle_z_top)
         bridge_verts(bm, v_girdle_top, v_girdle_btm)
 
-        if self.handle:
+        if self.use_handle:
             v_handle_top = duplicate_verts(bm, v_handle_bottom, z=self.handle_z_top)
             bridge_verts(bm, v_handle_top, v_handle_bottom)
             bridge_verts(bm, v_handle_bottom, v_girdle_top)
@@ -230,7 +230,7 @@ def create_cutter(self):
         else:
             bm.faces.new(v_girdle_top)
 
-        if self.curve_seat:
+        if self.use_curve_seat:
             sm_z = (self.girdle_z_btm + self.hole_z_top) / 2 * 1.4
 
             v_sm = duplicate_verts(bm, v_girdle_btm, z=-sm_z)
@@ -243,7 +243,7 @@ def create_cutter(self):
             v_fallback = v_girdle_btm
             sm_z = 0.0
 
-        if self.hole:
+        if self.use_hole:
             bridge_verts(bm, v_fallback, v_hole_top)
             v_hole_bottom = duplicate_verts(bm, v_hole_top, z=-self.hole_z_btm)
             bridge_verts(bm, v_hole_top, v_hole_bottom)
@@ -367,7 +367,7 @@ def create_cutter(self):
         v_girdle_top = duplicate_verts(bm, v_girdle_btm, z=self.girdle_z_top)
         bridge_verts(bm, v_girdle_top, v_girdle_btm)
 
-        if self.handle:
+        if self.use_handle:
 
             handle_l_size = self.handle_l_size / 2
             handle_w_size = self.handle_w_size / 2
@@ -385,7 +385,7 @@ def create_cutter(self):
         else:
             bm.faces.new(v_girdle_top)
 
-        if self.curve_seat:
+        if self.use_curve_seat:
             sm_z = (self.girdle_z_btm + self.hole_z_top) / 2 * 1.4
 
             v_sm = duplicate_verts(bm, v_girdle_btm, z=-sm_z)
@@ -398,7 +398,7 @@ def create_cutter(self):
             v_fallback = v_girdle_btm
             sm_z = 0.0
 
-        if self.hole:
+        if self.use_hole:
 
             hole_l_size = self.hole_l_size / 2
             hole_w_size = self.hole_w_size / 2
@@ -437,7 +437,7 @@ def create_cutter(self):
 
         v_cos = []
 
-        if self.handle:
+        if self.use_handle:
             v_cos += [
                 (0.0, handle_size, self.handle_z_top),
                 (0.0, handle_size, self.handle_z_btm),
@@ -448,7 +448,7 @@ def create_cutter(self):
             (0.0, girdle_size, -self.girdle_z_btm),
         ]
 
-        if self.hole:
+        if self.use_hole:
             v_cos += [
                 (0.0, hole_size, -self.hole_z_top),
                 (0.0, hole_size, -self.hole_z_btm),
@@ -468,7 +468,7 @@ def create_cutter(self):
     # Common operations
     # ---------------------------
 
-    if self.curve_seat:
+    if self.use_curve_seat:
         bmesh.ops.bevel(bm, geom=e_sm[:] + v_sm[:], offset=100.0, offset_type="PERCENT", segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
 

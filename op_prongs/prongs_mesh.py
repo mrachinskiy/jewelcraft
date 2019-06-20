@@ -86,7 +86,7 @@ def create_prongs(self):
 
     bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.position, 4, "Z"))
 
-    if self.symmetry:
+    if self.use_symmetry:
         bmesh.ops.mirror(bm, geom=bm.faces, merge_dist=0, axis="Y")
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))

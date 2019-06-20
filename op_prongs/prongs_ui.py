@@ -28,10 +28,6 @@ class UI:
 
         layout.separator()
 
-        layout.prop(self, "use_save_edits")
-
-        layout.separator()
-
         layout.prop(self, "number")
 
         layout.separator()
@@ -52,9 +48,9 @@ class UI:
         col.prop(self, "alignment")
 
         split = col.split(factor=0.49)
-        split.prop(self, "symmetry")
+        split.prop(self, "use_symmetry")
         sub = split.row()
-        sub.enabled = self.symmetry
+        sub.enabled = self.use_symmetry
         sub.prop(self, "symmetry_pivot", text="")
 
         layout.separator()

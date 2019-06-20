@@ -29,7 +29,7 @@ def init_presets(self):
     self.girdle_l_ofst = self.gem_l * 0.01
     self.girdle_w_ofst = self.gem_w * 0.01
 
-    self.handle = True
+    self.use_handle = True
     self.handle_l_size = self.gem_l * 0.66
     self.handle_w_size = self.gem_w * 0.66
     self.handle_z_top = self.gem_h * 1.5
@@ -39,7 +39,7 @@ def init_presets(self):
     self.girdle_z_top = self.gem_h * 0.05
     self.girdle_z_btm = 0.0
 
-    self.hole = True
+    self.use_hole = True
     self.culet_z = self.gem_h * 0.8
     self.hole_z_top = self.gem_h * 0.4
     self.hole_z_btm = self.gem_h * 2
@@ -48,15 +48,15 @@ def init_presets(self):
 
     self.hole_pos_ofst = 0.0
 
-    self.curve_seat = False
+    self.use_curve_seat = False
     self.curve_seat_segments = 15
     self.curve_seat_profile = 0.5
 
-    self.curve_profile = False
+    self.use_curve_profile = False
     self.curve_profile_segments = 10
     self.curve_profile_factor = 0.1
 
-    self.bevel_corners = False
+    self.use_bevel_corners = False
     self.bevel_corners_width = 0.1
     self.bevel_corners_percent = 18.0
     self.bevel_corners_segments = 1
@@ -77,9 +77,9 @@ def init_presets(self):
         self.handle_z_btm = self.gem_h * 0.28
         self.hole_z_top = self.gem_h * 0.3
         self.hole_l_size = self.gem_l * 0.76
-        self.curve_seat = True
+        self.use_curve_seat = True
         self.curve_seat_segments = 10
-        self.bevel_corners = True
+        self.use_bevel_corners = True
         self.bevel_corners_percent = 48.0
         self.bevel_corners_segments = 28
         self.bevel_corners_profile = 0.72
@@ -118,25 +118,25 @@ def init_presets(self):
         self.handle_z_btm = self.gem_h * 0.25
         self.girdle_z_top = self.gem_h * 0.06
         self.hole_l_size = self.gem_l * 0.77
-        self.bevel_corners = True
+        self.use_bevel_corners = True
         self.bevel_corners_width = self.gem_l * 0.093
 
     elif self.cut == "ASSCHER":
-        self.bevel_corners = True
+        self.use_bevel_corners = True
 
     elif self.cut == "RADIANT":
         self.handle_z_btm = self.gem_h * 0.25
-        self.bevel_corners = True
+        self.use_bevel_corners = True
         self.bevel_corners_percent = 15.0
 
     elif self.cut == "FLANDERS":
         self.handle_l_size = self.gem_l * 0.75
-        self.bevel_corners = True
+        self.use_bevel_corners = True
         self.bevel_corners_percent = 22.0
 
     elif self.cut == "OCTAGON":
         self.girdle_z_top = self.gem_h * 0.08
-        self.bevel_corners = True
+        self.use_bevel_corners = True
         self.bevel_corners_percent = 29.3
 
     elif self.cut == "HEART":
@@ -155,7 +155,7 @@ def init_presets(self):
         self.girdle_l_ofst = -self.gem_l * 0.1
         self.girdle_w_ofst = self.gem_w * 0.005
         self.hole_z_top = self.gem_h * 0.28
-        self.curve_profile = True
+        self.use_curve_profile = True
         self.curve_profile_factor = 0.38
 
     elif self.cut == "TRILLIANT":
@@ -166,8 +166,8 @@ def init_presets(self):
         self.girdle_l_ofst = self.gem_l * 0.12
         self.girdle_w_ofst = self.gem_w * 0.11
         self.hole_z_top = self.gem_h * 0.34
-        self.curve_profile = True
-        self.bevel_corners = True
+        self.use_curve_profile = True
+        self.use_bevel_corners = True
         self.bevel_corners_segments = 10
 
     elif self.cut == "TRIANGLE":
