@@ -144,14 +144,14 @@ dictionary = {
         "Deform active object profile with Lattice":
             "Деформировать профиль активного объекта с помощью Lattice",
 
-        "Create prongs for selected gems"
+        "Create prongs for selected gems\n"
         "(Shortcut: hold Alt when using the tool to avoid properties reset)":
-            "Создать корнера для выделенных камней"
+            "Создать корнера для выделенных камней\n"
             "(Горячая клавиша: удерживайте Alt при использовании инструмента, чтобы избежать сброса параметров)",
 
-        "Create cutter for selected gems"
+        "Create cutter for selected gems\n"
         "(Shortcut: hold Alt when using the tool to avoid properties reset)":
-            "Создать выборку для выделенных камней"
+            "Создать выборку для выделенных камней\n"
             "(Горячая клавиша: удерживайте Alt при использовании инструмента, чтобы избежать сброса параметров)",
 
         "Make curve start at the top": "Расположить начало кривой сверху",
