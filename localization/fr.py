@@ -149,15 +149,15 @@ dictionary = {
         "Deform active object profile with Lattice":
             "Déformer le profil d'objet actif avec Lattice",
 
-        "Create prongs for selected gems"
+        "Create prongs for selected gems\n"
         "(Shortcut: hold Alt when using the tool to avoid properties reset)":
-            "Créer des griffes pour les pierres sélectionnées"
+            "Créer des griffes pour les pierres sélectionnées\n"
             # TODO
             "(Shortcut: hold Alt when using the tool to avoid properties reset)",
 
-        "Create cutter for selected gems"
+        "Create cutter for selected gems\n"
         "(Shortcut: hold Alt when using the tool to avoid properties reset)":
-            "Créer une coupe pour les pierres sélectionnées"
+            "Créer une coupe pour les pierres sélectionnées\n"
             # TODO
             "(Shortcut: hold Alt when using the tool to avoid properties reset)",
 

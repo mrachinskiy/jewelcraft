@@ -148,15 +148,15 @@ dictionary = {
         "Deform active object profile with Lattice":
             "Deformar perfil de objeto activo con Jaula",
 
-        "Create prongs for selected gems"
+        "Create prongs for selected gems\n"
         "(Shortcut: hold Alt when using the tool to avoid properties reset)":
-            "Crea puntas para gemas seleccionadas"
+            "Crea puntas para gemas seleccionadas\n"
             # TODO
             "(Shortcut: hold Alt when using the tool to avoid properties reset)",
 
-        "Create cutter for selected gems"
+        "Create cutter for selected gems\n"
         "(Shortcut: hold Alt when using the tool to avoid properties reset)":
-            "Crea un cortador para las gemas seleccionadas"
+            "Crea un cortador para las gemas seleccionadas\n"
             # TODO
             "(Shortcut: hold Alt when using the tool to avoid properties reset)",
 
