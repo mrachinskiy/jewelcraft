@@ -95,7 +95,6 @@ dictionary = {
         "Swiss": "Швейцария",
         "Japan": "Япония",
         "Circumference": "Окружность",
-        "Remember Changes": "Запомнить изменения",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
@@ -145,8 +144,16 @@ dictionary = {
         "Deform active object profile with Lattice":
             "Деформировать профиль активного объекта с помощью Lattice",
 
-        "Create prongs for selected gems": "Создать корнера для выделенных камней",
-        "Create cutter for selected gems": "Создать выборку для выделенных камней",
+        "Create prongs for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+            "Создать корнера для выделенных камней"
+            "(Горячая клавиша: удерживайте Alt при использовании инструмента, чтобы избежать сброса параметров)",
+
+        "Create cutter for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+            "Создать выборку для выделенных камней"
+            "(Горячая клавиша: удерживайте Alt при использовании инструмента, чтобы избежать сброса параметров)",
+
         "Make curve start at the top": "Расположить начало кривой сверху",
         "Density g/cm³": "Плотность г/см³",
         "Set of materials for weighting": "Набор материалов для оценки веса",
@@ -248,7 +255,6 @@ dictionary = {
             "(Горячая клавиша: удерживайте клавишу Alt при использовании инструмента "
             "для использования существующей коллекции)",
 
-        "Remember user changes to properties": "Запомнить пользовательские изменения параметров",
         "Include or exclude given column": "Включить или исключить данную колонку",
 
         # Reports

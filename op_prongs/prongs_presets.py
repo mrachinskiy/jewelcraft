@@ -34,7 +34,7 @@ def init_presets(self):
     self.position = radians(45.0)
     self.intersection = 30.0
     self.alignment = 0.0
-    self.symmetry = False
+    self.use_symmetry = False
     self.symmetry_pivot = 0.0
     self.bump_scale = 0.5
     self.taper = 0.0
@@ -79,7 +79,7 @@ def init_presets(self):
         if self.cut == "OVAL":
             self.position = radians(30.0)
             self.intersection = 40.0
-            self.symmetry = True
+            self.use_symmetry = True
 
     elif self.shape_tri:
         self.number = 3
@@ -97,7 +97,7 @@ def init_presets(self):
         self.number = 2
         self.position = radians(36.0)
         self.intersection = -20.0
-        self.symmetry = True
+        self.use_symmetry = True
 
         if self.cut == "BAGUETTE":
             self.position = radians(29.0)
@@ -118,5 +118,5 @@ def init_presets(self):
             self.number = 1
             self.position = radians(50.0)
             self.intersection = 40.0
-            self.symmetry = True
+            self.use_symmetry = True
             self.symmetry_pivot = radians(-90.0)

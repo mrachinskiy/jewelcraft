@@ -99,7 +99,6 @@ dictionary = {
         # "Swiss": "",
         # "Japan": "",
         # "Circumference": "",
-        # "Remember Changes": "",
 
         # Tooltips
         "Add gemstone to the scene": "Ajouter des pierres précieuses à la scène",
@@ -150,8 +149,18 @@ dictionary = {
         "Deform active object profile with Lattice":
             "Déformer le profil d'objet actif avec Lattice",
 
-        "Create prongs for selected gems": "Créer des griffes pour les pierres sélectionnées",
-        "Create cutter for selected gems": "Créer une coupe pour les pierres sélectionnées",
+        "Create prongs for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+            "Créer des griffes pour les pierres sélectionnées"
+            # TODO
+            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+
+        "Create cutter for selected gems"
+        "(Shortcut: hold Alt when using the tool to avoid properties reset)":
+            "Créer une coupe pour les pierres sélectionnées"
+            # TODO
+            "(Shortcut: hold Alt when using the tool to avoid properties reset)",
+
         "Make curve start at the top": "Faire que la courbe commence en haut",
         "Density g/cm³": "Densité g/cm³",
         "Set of materials for weighting": "Ensemble de matériaux pour la pondération",
@@ -241,7 +250,6 @@ dictionary = {
         # "Make collection instances in radial order\n"
         # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
 
-        # "Remember user changes to properties": "",
         # "Include or exclude given column": "",
 
         # Reports

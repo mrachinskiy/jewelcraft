@@ -26,8 +26,6 @@ class UI:
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.prop(self, "use_save_edits")
-
         # Handle
         # ------------------------
 
@@ -35,10 +33,10 @@ class UI:
 
         row = layout.row()
         row.use_property_split = False
-        row.prop(self, "handle")
+        row.prop(self, "use_handle")
 
         col = layout.column()
-        col.enabled = self.handle
+        col.enabled = self.use_handle
         col.prop(self, "handle_z_top")
 
         if self.shape_rnd or self.shape_sq:
@@ -57,7 +55,7 @@ class UI:
         layout.label(text="Girdle")
 
         col = layout.column()
-        col.prop(self, "girdle_z_top", text="Top" if self.handle else "Table")
+        col.prop(self, "girdle_z_top", text="Top" if self.use_handle else "Table")
 
         if self.shape_tri or self.cut == "HEART":
             col.prop(self, "girdle_l_ofst")
@@ -74,13 +72,13 @@ class UI:
 
         row = layout.row()
         row.use_property_split = False
-        row.prop(self, "hole")
+        row.prop(self, "use_hole")
 
         col = layout.column()
-        col.prop(self, "hole_z_top", text="Top" if self.hole else "Culet")
+        col.prop(self, "hole_z_top", text="Top" if self.use_hole else "Culet")
 
         sub = col.column()
-        sub.enabled = self.hole
+        sub.enabled = self.use_hole
 
         if self.shape_rnd or self.shape_sq:
             sub.prop(self, "hole_l_size", text="Size")
@@ -102,10 +100,10 @@ class UI:
 
             row = layout.row()
             row.use_property_split = False
-            row.prop(self, "curve_seat")
+            row.prop(self, "use_curve_seat")
 
             col = layout.column()
-            col.enabled = self.curve_seat
+            col.enabled = self.use_curve_seat
             col.prop(self, "curve_seat_segments")
             col.prop(self, "curve_seat_profile")
 
@@ -118,10 +116,10 @@ class UI:
 
                 row = layout.row()
                 row.use_property_split = False
-                row.prop(self, "curve_profile")
+                row.prop(self, "use_curve_profile")
 
                 col = layout.column()
-                col.enabled = self.curve_profile
+                col.enabled = self.use_curve_profile
                 col.prop(self, "curve_profile_segments")
                 col.prop(self, "curve_profile_factor")
 
@@ -147,10 +145,10 @@ class UI:
 
                 row = layout.row()
                 row.use_property_split = False
-                row.prop(self, "bevel_corners")
+                row.prop(self, "use_bevel_corners")
 
                 col = layout.column()
-                col.enabled = self.bevel_corners
+                col.enabled = self.use_bevel_corners
 
                 if self.shape_rect:
                     col.prop(self, "bevel_corners_width")
