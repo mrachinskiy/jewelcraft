@@ -243,10 +243,10 @@ class OBJECT_OT_radial_instance(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_make_dupliface(Operator):
-    bl_label = "JewelCraft Make Dupli-face"
-    bl_description = "Create dupli-face for selected objects"
-    bl_idname = "object.jewelcraft_make_dupliface"
+class OBJECT_OT_make_instance_face(Operator):
+    bl_label = "JewelCraft Make Instance Face"
+    bl_description = "Create instance face for selected objects"
+    bl_idname = "object.jewelcraft_make_instance_face"
     bl_options = {"REGISTER", "UNDO"}
 
     apply_scale: BoolProperty(name="Apply Scale", default=True)
@@ -256,7 +256,7 @@ class OBJECT_OT_make_dupliface(Operator):
         obs = context.selected_objects
         ob = context.object or obs[0]
 
-        df_name = ob.name + " Dupli-faces"
+        df_name = ob.name + " Instance Face"
         df_radius = min(ob.dimensions[:2]) * 0.15
         df_offset = ob.dimensions[0] * 1.5
 

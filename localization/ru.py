@@ -119,7 +119,7 @@ dictionary = {
         "Display weight and volume for selected mesh objects":
             "Показать вес и объём выделенных mesh объектов",
 
-        "Create dupli-face for selected objects": "Создать dupli-face для выделенных объектов",
+        "Create instance face for selected objects": "Создать instance face для выделенных объектов",
         "Create size curve": "Создать размерную кривую",
 
         (
@@ -384,7 +384,7 @@ dictionary = {
         "Curve Scatter": "Распределить по кривой",
         "Prongs": "Крапана",
         "Cutter": "Выборка",
-        "Make Dupli-face": "Создать Dupli-face",
+        "Make Instance Face": "Создать Instance Face",
         "Lattice Project": "Lattice проекция",
         "Lattice Profile": "Lattice профиль",
         "Size Curve": "Размерная кривая",

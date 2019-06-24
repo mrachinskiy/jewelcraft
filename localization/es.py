@@ -123,7 +123,7 @@ dictionary = {
         "Display weight and volume for selected mesh objects":
             "Mostrar peso y volumen para objetos de malla seleccionados",
 
-        "Create dupli-face for selected objects": "Crear duplicados en cara para objetos seleccionados",
+        "Create instance face for selected objects": "Crear instance face para objetos seleccionados",
         "Create size curve": "Crear curva de tamaño",
 
         (
@@ -383,7 +383,7 @@ dictionary = {
         "Curve Scatter": "Dispersor de Curva",
         "Prongs": "Clavijas",
         "Cutter": "Cortador",
-        "Make Dupli-face": "Crear Duplicados en Caras",
+        "Make Instance Face": "Crear Instance Face",
         "Lattice Project": "Proyección de Jaula",
         "Lattice Profile": "Perfil de Jaula",
         "Size Curve": "Curva de Tamaño",
