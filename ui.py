@@ -323,7 +323,7 @@ class VIEW3D_PT_jewelcraft_object(Panel, Setup):
         row = col.row(align=True)
         row.operator("object.jewelcraft_mirror", text="Mirror", icon_value=self.icon_get("MIRROR"))
         row.operator("object.jewelcraft_radial_instance", text="Radial", text_ctxt="*", icon_value=self.icon_get("RADIAL"))
-        col.operator("object.jewelcraft_make_dupliface", text="Make Dupli-face", icon_value=self.icon_get("DUPLIFACE"))
+        col.operator("object.jewelcraft_make_instance_face", text="Make Instance Face", icon_value=self.icon_get("INSTANCE_FACE"))
 
         layout.operator("object.jewelcraft_resize", text="Resize", icon_value=self.icon_get("RESIZE"))
 

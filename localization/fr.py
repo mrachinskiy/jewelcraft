@@ -124,7 +124,7 @@ dictionary = {
         "Display weight and volume for selected mesh objects":
             "Afficher le poids et le volume pour les objets de maillage sélectionnés",
 
-        "Create dupli-face for selected objects": "Créer une dupli-face pour les objets sélectionnés",
+        "Create instance face for selected objects": "Créer une instance face pour les objets sélectionnés",
         "Create size curve": "Créer une courbe de taille",
 
         (
@@ -384,7 +384,7 @@ dictionary = {
         "Curve Scatter": "Dispersion de la courbe",
         "Prongs": "Fourches",
         "Cutter": "Couteau",
-        "Make Dupli-face": "Créer un dupli-face",
+        "Make Instance Face": "Créer un instance face",
         "Lattice Project": "Projet de lattice",
         "Lattice Profile": "Profil de lattice",
         "Size Curve": "Courbe de taille",
