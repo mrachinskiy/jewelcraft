@@ -161,7 +161,7 @@ def data_collect(self, context, gem_map=False):
         data["warn"].append("Hidden gems")
 
     if df_leftovers:
-        data["warn"].append("Possible gem dupli-face leftovers")
+        data["warn"].append("Possible gem instance face leftovers")
 
     if overlaps:
         data["warn"].append("Overlapping gems")

@@ -263,8 +263,8 @@ class OBJECT_OT_make_instance_face(Operator):
         verts = [
             (df_offset - df_radius, -df_radius, 0.0),
             (df_offset + df_radius, -df_radius, 0.0),
-            (df_offset + df_radius, df_radius, 0.0),
-            (df_offset - df_radius, df_radius, 0.0),
+            (df_offset + df_radius,  df_radius, 0.0),
+            (df_offset - df_radius,  df_radius, 0.0),
         ]
         faces = [(0, 1, 2, 3)]
 

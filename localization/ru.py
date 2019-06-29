@@ -259,7 +259,7 @@ dictionary = {
 
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
-        "Possible gem dupli-face leftovers": "Возможные остатки Dupli-face камней",
+        "Possible gem instance face leftovers": "Возможные остатки instance face камней",
         "Hidden gems": "Скрытые камни",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
