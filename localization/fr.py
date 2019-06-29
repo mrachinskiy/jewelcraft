@@ -254,7 +254,7 @@ dictionary = {
 
         # Reports
         "WARNING": "AVERTISSEMENT",
-        "Possible gem dupli-face leftovers": "Restes de pierres dupli-face possibles",
+        "Possible gem instance face leftovers": "Restes de pierres instance face possibles",
         "Hidden gems": "Cacher les pierres",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":

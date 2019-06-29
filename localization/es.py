@@ -253,7 +253,7 @@ dictionary = {
 
         # Reports
         "WARNING": "ADVERTENCIA",
-        "Possible gem dupli-face leftovers": "Posibles restos de Duplicados en Caras de gemas",
+        "Possible gem instance face leftovers": "Posibles restos de instance face de gemas",
         "Hidden gems": "Ocultar gemas",
 
         "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
