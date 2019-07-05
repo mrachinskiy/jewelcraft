@@ -95,6 +95,7 @@ dictionary = {
         "Swiss": "Швейцария",
         "Japan": "Япония",
         "Circumference": "Окружность",
+        "Scatter (%)": "Распределение (%)",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
