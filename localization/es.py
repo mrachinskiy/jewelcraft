@@ -98,6 +98,7 @@ dictionary = {
         # "Swiss": "",
         # "Japan": "",
         # "Circumference": "",
+        # "Scatter (%)": "",
 
         # Tooltips
         "Add gemstone to the scene": "Añadir gema a la escena",

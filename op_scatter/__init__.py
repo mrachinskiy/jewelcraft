@@ -34,11 +34,11 @@ class OBJECT_OT_curve_scatter(UI, Scatter, Operator):
 
     is_scatter = True
 
-    number: IntProperty(name="Object Number", default=10, min=1, soft_max=100)
+    number: IntProperty(name="Objects", default=10, min=1, soft_max=100)
 
-    rot_x: FloatProperty(name="Orientation", step=10, unit="ROTATION")
+    rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
-    loc_z: FloatProperty(name="Position", step=1, unit="LENGTH")
+    loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
 
     start: FloatProperty(name="Start", step=5)
     end: FloatProperty(name="End", default=100.0, step=5)
@@ -55,9 +55,9 @@ class OBJECT_OT_curve_redistribute(UI, Scatter, Operator):
 
     is_scatter = False
 
-    rot_x: FloatProperty(name="Orientation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
+    rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION", options={"SKIP_SAVE"})
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
-    loc_z: FloatProperty(name="Position", step=1, unit="LENGTH", options={"SKIP_SAVE"})
+    loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH", options={"SKIP_SAVE"})
 
     start: FloatProperty(name="Start", step=5)
     end: FloatProperty(name="End", default=100.0, step=5)
