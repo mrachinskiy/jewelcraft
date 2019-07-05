@@ -212,6 +212,11 @@ class OBJECT_OT_radial_instance(Operator):
         else:
             coll = bpy.data.collections[self.collection_name]
 
+        cursor_loc = context.scene.cursor.location
+
+        if self.use_cursor:
+            coll.instance_offset = cursor_loc
+
         dup_number = self.number - 1
         is_cyclic = round(self.angle, 2) == round(tau, 2)
         angle_offset = self.angle / (self.number if is_cyclic else dup_number)
@@ -226,6 +231,9 @@ class OBJECT_OT_radial_instance(Operator):
             ob.instance_collection = coll
             ob.rotation_euler[i] = angle
             ob.select_set(True)
+
+            if self.use_cursor:
+                ob.location = cursor_loc
 
             angle += angle_offset
 
