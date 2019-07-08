@@ -57,6 +57,9 @@ def _save_state_set():
         "last_check": int(datetime.datetime.now().timestamp()),
     }
 
+    if not os.path.exists(var.ADDON_CONFIG_DIR):
+        os.makedirs(var.ADDON_CONFIG_DIR)
+
     with open(var.UPDATE_SAVE_STATE_FILEPATH, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
 
