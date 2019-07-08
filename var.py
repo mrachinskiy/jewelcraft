@@ -37,7 +37,8 @@ elif sys.platform == "darwin":
 else:
     LOCAL_PATH = os.path.expanduser("~/.local/share")
 
-USER_ASSET_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft", "Asset Library")
+ADDON_CONFIG_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
+USER_ASSET_DIR = os.path.join(ADDON_CONFIG_DIR, "Asset Library")
 USER_ASSET_DIR_OBJECT = os.path.join(USER_ASSET_DIR, "Object")
 USER_ASSET_DIR_WEIGHTING = os.path.join(USER_ASSET_DIR, "Weighting")
 
@@ -183,7 +184,7 @@ MAP_SIZE_JP_TO_US = (1, 2, 2.5, 3, 3.25, 3.75, 4, 4.5, 5, 5.5, 6, 6.25, 6.5, 7, 
 
 
 UPDATE_OPERATOR_ID_AFFIX = "jewelcraft"
-UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_DIR, "update_state.json")
+UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "update_state.json")
 UPDATE_RELEASES_URL = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
 UPDATE_MAX_VERSION = None
 UPDATE_CURRENT_VERSION = None
