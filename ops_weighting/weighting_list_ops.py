@@ -23,8 +23,6 @@ import bpy
 from bpy.types import Operator
 from bpy.props import BoolProperty, StringProperty, FloatProperty
 
-from .. import var
-
 
 class Setup:
 
@@ -119,28 +117,4 @@ class WM_OT_ul_materials_move(Operator, Setup):
 
     def execute(self, context):
         self.list.move(self.move_up)
-        return {"FINISHED"}
-
-
-class WM_OT_ul_materials_save(Operator, Setup):
-    bl_label = "Save To Preferences"
-    bl_description = ""
-    bl_idname = "wm.jewelcraft_ul_materials_save"
-    bl_options = {"INTERNAL"}
-
-    def execute(self, context):
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        prefs.weighting_materials.copy_from(self.list)
-        return {"FINISHED"}
-
-
-class WM_OT_ul_materials_load(Operator, Setup):
-    bl_label = "Load From Preferences"
-    bl_description = ""
-    bl_idname = "wm.jewelcraft_ul_materials_load"
-    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
-
-    def execute(self, context):
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.list.copy_from(prefs.weighting_materials)
         return {"FINISHED"}

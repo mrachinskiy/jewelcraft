@@ -39,8 +39,8 @@ else:
 
 ADDON_CONFIG_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
 USER_ASSET_DIR = os.path.join(ADDON_CONFIG_DIR, "Asset Library")
-USER_ASSET_DIR_OBJECT = os.path.join(USER_ASSET_DIR, "Object")
-USER_ASSET_DIR_WEIGHTING = os.path.join(USER_ASSET_DIR, "Weighting")
+USER_ASSET_OBJECT_DIR = os.path.join(USER_ASSET_DIR, "Object")
+USER_ASSET_WEIGHTING_DIR = os.path.join(USER_ASSET_DIR, "Weighting")
 
 DEFAULT_WEIGHTING_SETS = {
     "JCASSET_PRECIOUS": (

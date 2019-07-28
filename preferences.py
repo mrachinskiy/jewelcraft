@@ -75,14 +75,6 @@ class ListProperty:
     def values(self):
         return self.coll.values()
 
-    def copy_from(self, x):
-        self.clear()
-
-        for value in x.values():
-            item = self.add()
-            for k, v in value.items():
-                setattr(item, k, v)
-
 
 class MaterialCollection(PropertyGroup):
     enabled: BoolProperty(description="Enable material for weighting and product report", default=True)
@@ -210,7 +202,7 @@ class JewelCraftPreferences(AddonPreferences):
         subtype="DIR_PATH",
         update=dynamic_list.weighting_set_refresh,
     )
-    weighting_materials: PointerProperty(type=MaterialsList)
+    weighting_set_autoload: StringProperty(default="JCASSET_PRECIOUS")
 
     # Product Report
     # ------------------------
@@ -361,16 +353,6 @@ class JewelCraftPreferences(AddonPreferences):
             sub = col.row()
             sub.active = self.weighting_set_use_custom_dir
             sub.prop(self, "weighting_set_custom_dir")
-
-            box.label(text="Materials list")
-            box.template_list(
-                "VIEW3D_UL_jewelcraft_weighting_set",
-                "",
-                self.weighting_materials,
-                "coll",
-                self.weighting_materials,
-                "index",
-            )
 
         elif active_tab == "PRODUCT_REPORT":
             col = box.column()
