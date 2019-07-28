@@ -141,30 +141,48 @@ def weighting_set(self, context):
                 "JCASSET_PRECIOUS",
                 "[JewelCraft] Precious",
                 "Commonly used precious alloys, physical properties taken directly from suppliers",
+                "BLANK1",
+                0,
             ),
             (
                 "JCASSET_PRECIOUS_RU",
                 "[JewelCraft] Precious RU (ГОСТ 30649-99)",
                 "Set of precious alloys according to Russian regulations",
+                "BLANK1",
+                1,
             ),
             (
                 "JCASSET_BASE",
                 "[JewelCraft] Base",
                 "Set of base metal alloys, physical properties taken directly from suppliers",
+                "BLANK1",
+                2,
             ),
         ]
 
     folder = asset.user_asset_library_folder_weighting()
+    i = len(list_)
 
     if os.path.exists(folder):
         for entry in os.scandir(folder):
             if entry.is_file() and entry.name.endswith(".json"):
                 id_ = entry.name
                 name_ = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
-                list_.append((id_, name_, ""))
+                list_.append((id_, name_, "", "BLANK1", i))
+                i += 1
 
-    if not list_:
-        list_ = [("", "", "")]
+    if list_:
+        for i, (id_, name_, desc_, icon_, i_) in enumerate(list_):
+            if id_ == prefs.weighting_set_autoload:
+                list_[i] = (id_, name_, desc_, "DOT", i_)
+                break
+        else:
+            id_, name_, desc_, icon_, i_ = list_[0]
+            list_[0] = (id_, name_, desc_, "DOT", i_)
+            prefs.weighting_set_autoload = id_
+            context.preferences.is_dirty = True
+    else:
+        list_ = [("", "", "", "BLANK1", 0)]
 
     _cache["weighting_set__list"] = list_
 

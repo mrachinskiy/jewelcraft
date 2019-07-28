@@ -22,7 +22,7 @@
 bl_info = {
     "name": "JewelCraft",
     "author": "Mikhail Rachinskiy",
-    "version": (2, 3, 4),
+    "version": (2, 3, 5),
     "blender": (2, 80, 0),
     "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
@@ -160,16 +160,15 @@ classes = (
     ops_weighting.WM_OT_ul_materials_del,
     ops_weighting.WM_OT_ul_materials_clear,
     ops_weighting.WM_OT_ul_materials_move,
-    ops_weighting.WM_OT_ul_materials_save,
-    ops_weighting.WM_OT_ul_materials_load,
     ops_weighting.OBJECT_OT_weight_display,
     ops_weighting.WM_OT_weighting_set_add,
     ops_weighting.WM_OT_weighting_set_replace,
     ops_weighting.WM_OT_weighting_set_del,
-    ops_weighting.WM_OT_weighting_set_load,
-    ops_weighting.WM_OT_weighting_set_load_append,
     ops_weighting.WM_OT_weighting_set_rename,
     ops_weighting.WM_OT_weighting_set_refresh,
+    ops_weighting.WM_OT_weighting_set_autoload_mark,
+    ops_weighting.WM_OT_weighting_set_load,
+    ops_weighting.WM_OT_weighting_set_load_append,
 )
 
 

@@ -24,7 +24,6 @@ import os
 import bpy
 from bpy.types import Operator
 from bpy.props import StringProperty
-from bpy.app.translations import pgettext_iface as _
 
 from .. import var
 from ..lib import asset, dynamic_list
@@ -33,7 +32,6 @@ from ..lib import asset, dynamic_list
 class Setup:
 
     def __init__(self):
-        self.prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
         self.props = bpy.context.window_manager.jewelcraft
         self.materials = bpy.context.scene.jewelcraft.weighting_materials
         self.filename = self.props.weighting_set
@@ -47,30 +45,6 @@ class EditCheck:
     def poll(cls, context):
         props = context.window_manager.jewelcraft
         return bool(props.weighting_set) and not props.weighting_set.startswith("JCASSET")
-
-
-def materials_export_to_file(materials, filepath):
-    import json
-
-    with open(filepath, "w", encoding="utf-8") as file:
-
-        data = []
-        mat_fmt = {
-            "name": "",
-            "composition": "",
-            "density": 0.0,
-        }
-
-        for mat in materials.values():
-            mat_dict = {k: v for k, v in mat.items() if k in mat_fmt.keys()}
-
-            mat_exp = mat_fmt.copy()
-            mat_exp.update(mat_dict)
-            mat_exp["density"] = round(mat_exp["density"], 2)
-
-            data.append(mat_exp)
-
-        json.dump(data, file, indent=4, ensure_ascii=False)
 
 
 class WM_OT_weighting_set_add(Operator, Setup):
@@ -101,7 +75,7 @@ class WM_OT_weighting_set_add(Operator, Setup):
         if not os.path.exists(self.folder):
             os.makedirs(self.folder)
 
-        materials_export_to_file(self.materials, filepath)
+        asset.weighting_set_export(self.materials, filepath)
 
         dynamic_list.weighting_set_refresh()
         self.props.weighting_set = set_name
@@ -121,7 +95,7 @@ class WM_OT_weighting_set_replace(Operator, Setup, EditCheck):
 
     def execute(self, context):
         if os.path.exists(self.filepath):
-            materials_export_to_file(self.materials, self.filepath)
+            asset.weighting_set_export(self.materials, self.filepath)
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -210,7 +184,13 @@ class WM_OT_weighting_set_refresh(Operator):
         return {"FINISHED"}
 
 
-class WeightingSetLoad:
+class WM_OT_weighting_set_autoload_mark(Operator, Setup):
+    bl_label = "Mark Autoload"
+    bl_description = (
+        "Autoload marked weighting set on File > Open/New "
+        "if materials list for given blend file is empty"
+    )
+    bl_idname = "wm.jewelcraft_weighting_set_autoload_mark"
     bl_options = {"INTERNAL"}
 
     @classmethod
@@ -219,29 +199,24 @@ class WeightingSetLoad:
         return bool(props.weighting_set)
 
     def execute(self, context):
-        import json
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        prefs.weighting_set_autoload = self.filename
+        dynamic_list.weighting_set_refresh()
+        context.preferences.is_dirty = True
+        return {"FINISHED"}
 
+
+class WeightingSetLoad:
+
+    @classmethod
+    def poll(cls, context):
+        props = context.window_manager.jewelcraft
+        return bool(props.weighting_set)
+
+    def execute(self, context):
         if self.clear_materials:
             self.materials.clear()
-
-        if self.filename.startswith("JCASSET"):
-            for name, dens, comp in var.DEFAULT_WEIGHTING_SETS[self.filename]:
-                item = self.materials.add()
-                item.name = _(name)
-                item.composition = comp
-                item.density = dens
-        else:
-            with open(self.filepath, "r", encoding="utf-8") as file:
-                data = json.load(file)
-
-                for mat in data:
-                    item = self.materials.add()
-                    if mat["name"]:
-                        item.name = mat["name"]
-                    if mat["composition"]:
-                        item.composition = mat["composition"]
-                    item.density = mat["density"]
-
+        asset.weighting_set_import(self.materials, self.filename, self.filepath)
         return {"FINISHED"}
 
 
@@ -249,6 +224,7 @@ class WM_OT_weighting_set_load(Operator, Setup, WeightingSetLoad):
     bl_label = "Load"
     bl_description = "Load weighting set to the materials list by replacing existing materials"
     bl_idname = "wm.jewelcraft_weighting_set_load"
+    bl_options = {"INTERNAL"}
 
     clear_materials = True
 
@@ -257,5 +233,6 @@ class WM_OT_weighting_set_load_append(Operator, Setup, WeightingSetLoad):
     bl_label = "Append"
     bl_description = "Append weighting set at the end of the current materials list"
     bl_idname = "wm.jewelcraft_weighting_set_load_append"
+    bl_options = {"INTERNAL"}
 
     clear_materials = False

@@ -140,6 +140,7 @@ class VIEW3D_MT_jewelcraft_weighting_set(Menu):
         layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", icon="REMOVE")
         layout.operator("wm.jewelcraft_weighting_set_rename", text="Rename")
         layout.operator("wm.jewelcraft_weighting_set_replace")
+        layout.operator("wm.jewelcraft_weighting_set_autoload_mark", icon="DOT")
         layout.separator()
         layout.operator("wm.path_open", text="Open Library Folder", icon="FILE_FOLDER").filepath = library_folder
         layout.separator()
@@ -153,9 +154,6 @@ class VIEW3D_MT_jewelcraft_weighting_list(Menu):
         props = context.scene.jewelcraft
         layout = self.layout
         layout.operator("wm.jewelcraft_ul_materials_clear", icon="X")
-        layout.separator()
-        layout.operator("wm.jewelcraft_ul_materials_save", icon="EXPORT")
-        layout.operator("wm.jewelcraft_ul_materials_load", icon="IMPORT")
         layout.separator()
         layout.prop(props, "weighting_show_composition")
         layout.prop(props, "weighting_show_density")

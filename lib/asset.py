@@ -24,6 +24,7 @@ from math import tau, sin, cos
 from functools import lru_cache
 
 import bpy
+from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix, Vector, kdtree
 
 from . import mesh, unit
@@ -204,7 +205,7 @@ def user_asset_library_folder_object():
     if prefs.use_custom_asset_dir:
         return bpy.path.abspath(prefs.custom_asset_dir)
 
-    return var.USER_ASSET_DIR_OBJECT
+    return var.USER_ASSET_OBJECT_DIR
 
 
 def user_asset_library_folder_weighting():
@@ -213,7 +214,7 @@ def user_asset_library_folder_weighting():
     if prefs.weighting_set_use_custom_dir:
         return bpy.path.abspath(prefs.weighting_set_custom_dir)
 
-    return var.USER_ASSET_DIR_WEIGHTING
+    return var.USER_ASSET_WEIGHTING_DIR
 
 
 def asset_import(filepath, ob_name=False, me_name=False):
@@ -346,6 +347,51 @@ def show_window(width, height, area_type=None, space_data=None):
 
     for k, v in render_config.items():
         setattr(render, k, v)
+
+
+def weighting_set_export(materials, filepath):
+    import json
+
+    with open(filepath, "w", encoding="utf-8") as file:
+        data = []
+        mat_fmt = {
+            "name": "",
+            "composition": "",
+            "density": 0.0,
+        }
+
+        for mat in materials.values():
+            mat_dict = {k: v for k, v in mat.items() if k in mat_fmt.keys()}
+
+            mat_exp = mat_fmt.copy()
+            mat_exp.update(mat_dict)
+            mat_exp["density"] = round(mat_exp["density"], 2)
+
+            data.append(mat_exp)
+
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
+
+def weighting_set_import(materials, filename, filepath):
+    import json
+
+    if filename.startswith("JCASSET"):
+        for name, dens, comp in var.DEFAULT_WEIGHTING_SETS[filename]:
+            item = materials.add()
+            item.name = _(name)
+            item.composition = comp
+            item.density = dens
+    else:
+        with open(filepath, "r", encoding="utf-8") as file:
+            data = json.load(file)
+
+            for mat in data:
+                item = materials.add()
+                if mat["name"]:
+                    item.name = mat["name"]
+                if mat["composition"]:
+                    item.composition = mat["composition"]
+                item.density = mat["density"]
 
 
 # Object

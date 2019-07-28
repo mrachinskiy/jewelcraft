@@ -47,7 +47,6 @@ dictionary = {
         "Line Width": "Ширина линии",
         "Show Composition": "Показать состав",
         "Show Density": "Показать плотность",
-        "Materials list": "Список материалов",
         "Composition": "Состав",
         "Warnings": "Предупреждения",
         "Hidden Gems": "Скрытые камни",
@@ -258,6 +257,11 @@ dictionary = {
 
         "Include or exclude given column": "Включить или исключить данную колонку",
 
+        "Autoload marked weighting set on File > Open/New "
+        "if materials list for given blend file is empty":
+            "Автозагрузка отмеченного набора материалов при File > Open/New "
+            "если список материалов для данного blend файла пуст",
+
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
         "Possible gem instance face leftovers": "Возможные остатки instance face камней",
@@ -414,7 +418,6 @@ dictionary = {
         "Gem Map": "Карта Камней",
         "Append": "Добавить",
         "Add New Measurement": "Добавить новый замер",
-        "Save To Preferences": "Сохранить в настройках",
-        "Load From Preferences": "Загрузить из настроек",
+        "Mark Autoload": "Отметить для автозагрузки",
     },
 }

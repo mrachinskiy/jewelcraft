@@ -19,10 +19,13 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import os
+
 import bpy
 from bpy.app.handlers import persistent
 
 from .. import var
+from . import asset
 
 
 def handler_add():
@@ -41,13 +44,7 @@ def _execute(dummy):
         return
 
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    prefs_mats = prefs.weighting_materials
+    filename = prefs.weighting_set_autoload
+    filepath = os.path.join(asset.user_asset_library_folder_weighting(), filename)
 
-    if prefs_mats.coll:
-        materials.copy_from(prefs_mats)
-    else:
-        for name, dens, comp in var.DEFAULT_WEIGHTING_SETS["JCASSET_PRECIOUS"]:
-            item = materials.add()
-            item.name = name
-            item.composition = comp
-            item.density = dens
+    asset.weighting_set_import(materials, filename, filepath)

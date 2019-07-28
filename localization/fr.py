@@ -48,7 +48,6 @@ dictionary = {
         "Line Width": "Epaisseur de ligne",
         "Show Composition": "Afficher la composition",
         "Show Density": "Afficher la densité",
-        "Materials list": "Liste de matériaux",
         "Composition": "Composition",
         "Warnings": "Avertissements",
         "Hidden Gems": "Cacher les pierres",
@@ -253,6 +252,9 @@ dictionary = {
 
         # "Include or exclude given column": "",
 
+        # "Autoload marked weighting set on File > Open/New "
+        # "if materials list for given blend file is empty": "",
+
         # Reports
         "WARNING": "AVERTISSEMENT",
         "Possible gem instance face leftovers": "Restes de pierres instance face possibles",
@@ -416,7 +418,6 @@ dictionary = {
         # "Gem Map": "",
         # "Append": "",
         # "Add New Measurement": "",
-        # "Save To Preferences": "",
-        # "Load From Preferences": "",
+        # "Mark Autoload": "",
     },
 }
