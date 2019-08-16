@@ -21,7 +21,6 @@
 
 dictionary = {
     "*": {
-        # Interface
         "Asset Manager": "Gestor de Activos",
         "Display Asset Name": "Mostrar nombre de activo",
         "Product Report": "Informe del Producto",
@@ -35,9 +34,9 @@ dictionary = {
         "Weighting": "Evaluación del Peso",
         "Weighting Set": "Conjunto de Materiales",
         "Hide Default Sets": "Ocultar Conjuntos por defecto",
-        "[JewelCraft] Precious": "[Joyería] Preciosa",
-        "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[Joyería] Preciosa RU (ГОСТ 30649-99)",
-        "[JewelCraft] Base": "[Joyería] Base",
+        "[JewelCraft] Precious": "[JewelCraft] Preciosa",
+        "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[JewelCraft] Preciosa RU (ГОСТ 30649-99)",
+        # "[JewelCraft] Base": "",
         "Prongs": "Dientes",
         "Cutter": "Cortador",
         "Library Folder Path": "Ruta a Carpeta Biblioteca",
@@ -50,9 +49,6 @@ dictionary = {
         "Composition": "Composición",
         "Warnings": "Alertas",
         "Hidden Gems": "Gemas Ocultas",
-        "Weight": "Peso",
-
-        # TODO
         # "Show All": "",
         # "Scene scale is not optimal": "",
         # "Unsupported unit system": "",
@@ -63,8 +59,7 @@ dictionary = {
         # "Gem Table": "",
         # "Gem Size": "",
         # "Viewport Text Size": "",
-
-        # Operator popup
+        "Weight": "Peso",
         "Asset Name": "Nombre de Activo",
         "Category Name": "Nombre de Categoría",
         "Set Name": "Ajustar Nombre",
@@ -77,7 +72,7 @@ dictionary = {
         "Size Offset": "Tamaño Desfase",
         "Girdle": "Pretina",
         "Hole": "Agujero",
-        "Culet": "Culet",
+        # "Culet": "",
         "Handle": "Asa",
         "Curve Seat": "Asiento de Curva",
         "Curve Profile": "Perfil de Curva",
@@ -98,19 +93,11 @@ dictionary = {
         # "Japan": "",
         # "Circumference": "",
         # "Scatter (%)": "",
-
-        # Tooltips
         "Add gemstone to the scene": "Añadir gema a la escena",
         "Edit selected gems": "Editar gemas seleccionadas",
-
-        "Commonly used precious alloys, physical properties taken directly from suppliers":
-            "Aleaciones preciosas de uso común, propiedades físicas tomadas directamente de los proveedores",
-
+        "Commonly used precious alloys, physical properties taken directly from suppliers": "Aleaciones preciosas de uso común, propiedades físicas tomadas directamente de los proveedores",
         "Set of precious alloys according to Russian regulations": "Juego de aleaciones preciosas según normativa rusa",
-
-        "Set of base metal alloys, physical properties taken directly from suppliers":
-            "Conjunto de aleaciones de metales comunes, propiedades físicas tomadas directamente de los proveedores",
-
+        "Set of base metal alloys, physical properties taken directly from suppliers": "Conjunto de aleaciones de metales comunes, propiedades físicas tomadas directamente de los proveedores",
         "Save product report to file in project folder": "Guardar el informe del producto en un archivo en la carpeta del proyecto",
         "Product report language": "Idioma del informe del producto",
         "Use user preferences language setting": "Usar los ajustes de preferencias de usuario del idioma",
@@ -119,47 +106,17 @@ dictionary = {
         "Search asset by name": "Buscar activo por nombre",
         "Scatter selected object along active curve": "Dispersión del objeto seleccionado a lo largo de la curva activa",
         "Redistribute selected objects along curve": "Redistribuir objetos seleccionados a lo largo de la curva",
-
-        "Display weight and volume for selected mesh objects":
-            "Mostrar peso y volumen para objetos de malla seleccionados",
-
+        "Display weight and volume for selected mesh objects": "Mostrar peso y volumen para objetos de malla seleccionados",
         "Create instance face for selected objects": "Crear instance face para objetos seleccionados",
         "Create size curve": "Crear curva de tamaño",
-
-        (
-            "Stretch deformed objects along curve on X axis, "
-            "also works in Edit Mode with selected vertices"
-        ): (
-            "Estirar objetos deformados a lo largo de la curva en el eje X, "
-            "también funciona en el modo de edición con los vértices seleccionados"
-        ),
-
+        "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices": "Estirar objetos deformados a lo largo de la curva en el eje X, también funciona en el modo de edición con los vértices seleccionados",
         "Display curve length": "Mostrar lontitud de la curva",
-
-        "Move deformed object over or under the curve":
-            "Mover el objeto deformado sobre o por debajo de la curva",
-
-        "Mirror selected objects around one or more axes, keeping object data linked":
-            "Simetría de los objetos seleccionados alrededor de uno o más ejes, manteniendo los datos de los objetos vinculados",
-
-        "Project selected objects onto active object using Lattice":
-            "Proyectar objetos seleccionados en objetos activos usando Jaula",
-
-        "Deform active object profile with Lattice":
-            "Deformar perfil de objeto activo con Jaula",
-
-        "Create prongs for selected gems\n"
-        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
-            "Crea puntas para gemas seleccionadas\n"
-            # TODO
-            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
-
-        "Create cutter for selected gems\n"
-        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
-            "Crea un cortador para las gemas seleccionadas\n"
-            # TODO
-            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
-
+        "Move deformed object over or under the curve": "Mover el objeto deformado sobre o por debajo de la curva",
+        "Mirror selected objects around one or more axes, keeping object data linked": "Simetría de los objetos seleccionados alrededor de uno o más ejes, manteniendo los datos de los objetos vinculados",
+        "Project selected objects onto active object using Lattice": "Proyectar objetos seleccionados en objetos activos usando Jaula",
+        "Deform active object profile with Lattice": "Deformar perfil de objeto activo con Jaula",
+        "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)": "Crea puntas para gemas seleccionadas\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
+        "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)": "Crea un cortador para las gemas seleccionadas\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
         "Make curve start at the top": "Hacer que la curva comience en la parte superior",
         "Density g/cm³": "Densidad gr/cm³",
         "Set of materials for weighting": "Conjunto de evaluación de peso",
@@ -173,65 +130,32 @@ dictionary = {
         "Replace asset preview image": "Reemplazar imagen de vista previa del activo",
         "Import selected asset": "Importar activo seleccionado",
         "Asset category": "Categoría de activo",
-
-        "Set custom asset library folder, if disabled the default library folder will be used": (
-            "Establecer carpeta de biblioteca de activos personalizada, "
-            "si está desactivada, se usará la carpeta de biblioteca predeterminada"
-        ),
-
+        "Set custom asset library folder, if disabled the default library folder will be used": "Establecer carpeta de biblioteca de activos personalizada, si está desactivada, se usará la carpeta de biblioteca predeterminada",
         "Custom library folder path": "Ruta de la carpeta de la biblioteca personalizada",
         "Display asset name in Tool Shelf": "Mostrar el nombre del activo en el panel de la herramienta",
         "Enable widgets drawing": "Activar mostrar controles",
         "Use object defined widget overrides": "Usar las anulaciones de los controles definidos por el objeto",
-
         "Draw widgets in front of objects": "Mostrar los controles por delante de los objetos",
-
-        "Override widget display properties for selected objects":
-            "Anular las propiedades de visualización del control para los objetos seleccionados",
-
-        "Remove widget override properties from selected objects":
-            "Eliminar propiedades de anulación del control de los objetos seleccionados",
-
+        "Override widget display properties for selected objects": "Anular las propiedades de visualización del control para los objetos seleccionados",
+        "Remove widget override properties from selected objects": "Eliminar propiedades de anulación del control de los objetos seleccionados",
         "Add new material to the list": "Añadir nuevo material a la lista",
         "Display material density in the list": "Mostrar la densidad del material en la lista",
         "Display material composition in the list": "Mostrar la composición del material en la lista",
         "Create weighting set from materials list": "Crear un conjunto de materiales desde la lista de materiales",
         "Remove weighting set": "Eliminar el conjunto de materiales",
         "Rename weighting set": "Renombrar un conjunto de materiales",
-
-        "Load weighting set to the materials list by replacing existing materials":
-            "Cargar el conjunto de materiales a la lista de materiales, reemplazando los materiales actuales",
-
-        "Append weighting set at the end of the current materials list":
-            "Anexar un conjunto de materiales al final de la lista actual de materiales",
-
-        "Hide default JewelCraft sets from weighting sets menu":
-            "Ocultar conjuntos por defecto de Joyería del menú de conjuntos",
-
-        "Replace selected weighting set with current materials list":
-            "Reemplazar el conjunto activo de materiales con la lista actual de materiales",
-
+        "Load weighting set to the materials list by replacing existing materials": "Cargar el conjunto de materiales a la lista de materiales, reemplazando los materiales actuales",
+        "Append weighting set at the end of the current materials list": "Anexar un conjunto de materiales al final de la lista actual de materiales",
+        "Hide default JewelCraft sets from weighting sets menu": "Ocultar conjuntos por defecto de Joyería del menú de conjuntos",
+        "Replace selected weighting set with current materials list": "Reemplazar el conjunto activo de materiales con la lista actual de materiales",
         "Material name": "Nombre del material",
         "Material composition": "Composición del material",
-
-        "Use one-dimensional lattice for even deformation":
-            "Usar jaula unidimensional para una deformación uniforme",
-
-        "Use two-dimensional lattice for proportional deformation":
-            "Usar jaula bidimensional para deformación proporcional",
-
+        "Use one-dimensional lattice for even deformation": "Usar jaula unidimensional para una deformación uniforme",
+        "Use two-dimensional lattice for proportional deformation": "Usar jaula bidimensional para deformación proporcional",
         "Scale selected objects to given size": "Escalar los objetos seleccionados al tamaño dado",
         "Move each object individually": "Mover cada objeto individualmente",
-
-        "Enable material for weighting and product report":
-            "Activar material para estimar el peso y el informe del producto",
-
-        "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": (
-            "Activo padre importado a los objetos seleccionados "
-            "(Atajo: mantener presionada la tecla Alt al usar la herramienta)"
-        ),
-
-        # TODO
+        "Enable material for weighting and product report": "Activar material para estimar el peso y el informe del producto",
+        "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": "Activo padre importado a los objetos seleccionados (Atajo: mantener presionada la tecla Alt al usar la herramienta)",
         # "Select gems that are less than 0.1 mm distance from each other or overlapping": "",
         # "Display spacing widget for all visible gems": "",
         # "Set optimal unit settings for jewelry modelling": "",
@@ -245,71 +169,50 @@ dictionary = {
         # "Measured object": "",
         # "Measurement type": "",
         # "Select material": "",
-
-        # "Make collection instances in radial order\n"
-        # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
-
+        # "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)": "",
         # "Include or exclude given column": "",
-
-        # "Autoload marked weighting set on File > Open/New "
-        # "if materials list for given blend file is empty": "",
-
-        # Reports
+        # "Autoload marked weighting set on File > Open/New if materials list for given blend file is empty": "",
         "WARNING": "ADVERTENCIA",
         "Possible gem instance face leftovers": "Posibles restos de instance face de gemas",
         "Hidden gems": "Ocultar gemas",
-
-        "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
-            "ID de gemas en desuso (usar Convert Deprecated Gem IDs del menú Buscar Operador)",
-
-        "Unknown gem IDs, carats are not calculated for marked gems (*)":
-            "ID de gemas desconocidas, los quilates no se calcularon para las gemas marcadas (*)",
-
+        "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)": "ID de gemas en desuso (usar Convert Deprecated Gem IDs del menú Buscar Operador)",
+        "Unknown gem IDs, carats are not calculated for marked gems (*)": "ID de gemas desconocidas, los quilates no se calcularon para las gemas marcadas (*)",
         "Curve Length": "Longitud de Curva",
-
         "At least two objects must be selected": "Al menos dos objetos deben ser seleccionados",
         "At least one gem object must be selected": "Al menos un objeto gema debe ser seleccionado",
         "At least one mesh object must be selected": "Al menos un objeto de malla debe ser seleccionado",
         "Active object must be a curve": "El objeto activo debe ser una curva",
-
-        "Selected objects do not have Follow Path constraint":
-            "Los objetos seleccionados no tienen la restricción Seguir Trayectoría",
-
+        "Selected objects do not have Follow Path constraint": "Los objetos seleccionados no tienen la restricción Seguir Trayectoría",
         "File not found": "Archivo no encontrado",
         "Name must be specified": "El nombre debe ser especificado",
+        # "Overlapping gems": "",
+        # "{} overlaps found": "",
+        # "Optimal unit settings are in use": "",
         "Volume": "Volumen",
         "Settings": "Ajustes",
         "Gem": "Gema",
         "Cut": "Corte",
         "Qty": "Cantidad",
-
-        # TODO
+        # "Total (ct.)": "",
         # "Carats": "",
         # "Materials": "",
         # "Additional Notes": "",
-        # "Overlapping gems": "",
-        # "{} overlaps found": "",
-        # "Optimal unit settings are in use": "",
-        # "Total (ct.)": "",
-
-        # Cuts
         "Round": "Redonda",
         "Oval": "Óvalo",
         "Cushion": "Cojín",
         "Pear": "Pera",
         "Marquise": "Marquesa",
         "Princess": "Princesa",
-        "Baguette": "Baguette",
+        # "Baguette": "",
         "Square": "Cuadrado",
-        "Asscher": "Asscher",
-        "Radiant": "Radiant",
-        "Flanders": "Flanders",
+        # "Asscher": "",
+        # "Radiant": "",
+        # "Flanders": "",
         "Octagon": "Octágono",
         "Heart": "Corazón",
         "Trillion": "Trillón",
         "Trilliant": "Trillante",
         "Triangle": "Triángulo",
-        # Stones
         "Alexandrite": "Alejandrita",
         "Amethyst": "Amatista",
         "Aquamarine": "Aguamarina",
@@ -328,7 +231,6 @@ dictionary = {
         "Topaz": "Topacio",
         "Tourmaline": "Turmalina",
         "Zircon": "Circonio",
-        # Alloys
         "Yellow Gold 24K": "Oro Amarillo 24K",
         "Yellow Gold 22K": "Oro Amarillo 22K",
         "Yellow Gold 18K": "Oro Amarillo 18K",
@@ -362,9 +264,8 @@ dictionary = {
         "Bronze": "Bronce",
         "Steel Stainless": "Acero Inoxidable",
         "Titanium": "Titanio",
-        # Units
-        "mm": "mm",
-        "mm³": "mm³",
+        # "mm": "",
+        # "mm³": "",
         "g": "gr",
         "ct.": "K",
         "pcs": "piezas",
@@ -372,8 +273,6 @@ dictionary = {
     "JewelCraft": {
         "Cut": "Corte",
         "Round": "Redonda",
-
-        # TODO
         # "Spacing": "",
     },
     "Dative": {
@@ -410,8 +309,6 @@ dictionary = {
         "Replace Set": "Reemplazar Conjunto",
         "Remove Set": "Eliminar Conjunto",
         "Rename Set": "Renombrar Conjunto",
-
-        # TODO
         # "Overlapping": "",
         # "Set Units": "",
         # "Gem Map": "",

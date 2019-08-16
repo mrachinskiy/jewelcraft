@@ -21,7 +21,6 @@
 
 dictionary = {
     "*": {
-        # Interface
         "Asset Manager": "Navigateur de ressources",
         "Display Asset Name": "Affiche le nom de la Ressource",
         "Product Report": "Rapport de produit",
@@ -34,26 +33,22 @@ dictionary = {
         "Jeweling": "Bijoux",
         "Weighting": "Pondération",
         "Weighting Set": "Theme de pondérations",
-        # TODO
         # "Hide Default Sets": "",
-        "[JewelCraft] Precious": "[Joaillerie] Précieux",
-        "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[Joaillerie] Précieux RU (ГОСТ 30649-99)",
-        "[JewelCraft] Base": "[Joaillerie] Base",
+        "[JewelCraft] Precious": "[JewelCraft] Précieux",
+        "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[JewelCraft] Précieux RU (ГОСТ 30649-99)",
+        # "[JewelCraft] Base": "",
         "Prongs": "Fourches",
         "Cutter": "Couteaux",
         "Library Folder Path": "Chemin du dossier de librairie",
-        "Widgets": "Widgets",
+        # "Widgets": "",
         "Use Overrides": "Utiliser des substitutions",
         "Widget Color": "Couleur du widget",
         "Line Width": "Epaisseur de ligne",
         "Show Composition": "Afficher la composition",
         "Show Density": "Afficher la densité",
-        "Composition": "Composition",
+        # "Composition": "",
         "Warnings": "Avertissements",
         "Hidden Gems": "Cacher les pierres",
-        "Weight": "Poid",
-
-        # TODO
         # "Show All": "",
         # "Scene scale is not optimal": "",
         # "Unsupported unit system": "",
@@ -64,21 +59,20 @@ dictionary = {
         # "Gem Table": "",
         # "Gem Size": "",
         # "Viewport Text Size": "",
-
-        # Operator popup
+        "Weight": "Poid",
         "Asset Name": "Nom de ressources",
         "Category Name": "Nom des catégories",
         "Set Name": "Donner le nom",
         "Curvature Scale": "Echelle de la courbe",
         "Prong Number": "Nombre de broche",
-        "Detalization": "Detalization",
-        "Intersection": "Intersection",
+        # "Detalization": "",
+        # "Intersection": "",
         "Bump Scale": "Echelle de relief",
         "Diameter": "Diamètre",
         "Size Offset": "Decalage de taille",
         "Girdle": "Ceinture",
         "Hole": "Trou",
-        "Culet": "Culet",
+        # "Culet": "",
         "Handle": "Poignée",
         "Curve Seat": "Siège courbe",
         "Curve Profile": "Profil courbe",
@@ -99,19 +93,11 @@ dictionary = {
         # "Japan": "",
         # "Circumference": "",
         # "Scatter (%)": "",
-
-        # Tooltips
         "Add gemstone to the scene": "Ajouter des pierres précieuses à la scène",
         "Edit selected gems": "Editer les pierres sélectionnées",
-
-        "Commonly used precious alloys, physical properties taken directly from suppliers":
-            "Alliages précieux couramment utilisés, propriétés physiques directement auprès des fournisseurs",
-
+        "Commonly used precious alloys, physical properties taken directly from suppliers": "Alliages précieux couramment utilisés, propriétés physiques directement auprès des fournisseurs",
         "Set of precious alloys according to Russian regulations": "Ensemble d'alliages précieux selon la réglementation russe",
-
-        "Set of base metal alloys, physical properties taken directly from suppliers":
-            "Ensemble d'alliages de métaux communs, propriétés physiques directement auprès des fournisseurs",
-
+        "Set of base metal alloys, physical properties taken directly from suppliers": "Ensemble d'alliages de métaux communs, propriétés physiques directement auprès des fournisseurs",
         "Save product report to file in project folder": "Enregistrer le rapport de produit dans un fichier dans le dossier du projet",
         "Product report language": "Langue du rapport du produit",
         "Use user preferences language setting": "Utiliser les paramètres de langue des préférences utilisateur",
@@ -120,47 +106,17 @@ dictionary = {
         "Search asset by name": "Chercher les ressources par nom",
         "Scatter selected object along active curve": "Distribuer l'objet sélectionné le long de la courbe active",
         "Redistribute selected objects along curve": "Redistribuer les objets sélectionnés le long de la courbe",
-
-        "Display weight and volume for selected mesh objects":
-            "Afficher le poids et le volume pour les objets de maillage sélectionnés",
-
+        "Display weight and volume for selected mesh objects": "Afficher le poids et le volume pour les objets de maillage sélectionnés",
         "Create instance face for selected objects": "Créer une instance face pour les objets sélectionnés",
         "Create size curve": "Créer une courbe de taille",
-
-        (
-            "Stretch deformed objects along curve on X axis, "
-            "also works in Edit Mode with selected vertices"
-        ): (
-            "Étirer les objets déformés le long de la courbe sur l’axe X, "
-            "fonctionne également en mode édition avec les sommets sélectionnés"
-        ),
-
+        "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices": "Étirer les objets déformés le long de la courbe sur l’axe X, fonctionne également en mode édition avec les sommets sélectionnés",
         "Display curve length": "Longueur de la courbe d'affichage",
-
-        "Move deformed object over or under the curve":
-            "Déplacer un objet déformé sur ou sous la courbe",
-
-        "Mirror selected objects around one or more axes, keeping object data linked":
-            "Mettre en miroir les objets sélectionnés autour d'un ou plusieurs axes, en maintenant les données d'objets liées",
-
-        "Project selected objects onto active object using Lattice":
-            "Projeter des objets sélectionnés sur un objet actif à l'aide de Lattice",
-
-        "Deform active object profile with Lattice":
-            "Déformer le profil d'objet actif avec Lattice",
-
-        "Create prongs for selected gems\n"
-        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
-            "Créer des griffes pour les pierres sélectionnées\n"
-            # TODO
-            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
-
-        "Create cutter for selected gems\n"
-        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
-            "Créer une coupe pour les pierres sélectionnées\n"
-            # TODO
-            "(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
-
+        "Move deformed object over or under the curve": "Déplacer un objet déformé sur ou sous la courbe",
+        "Mirror selected objects around one or more axes, keeping object data linked": "Mettre en miroir les objets sélectionnés autour d'un ou plusieurs axes, en maintenant les données d'objets liées",
+        "Project selected objects onto active object using Lattice": "Projeter des objets sélectionnés sur un objet actif à l'aide de Lattice",
+        "Deform active object profile with Lattice": "Déformer le profil d'objet actif avec Lattice",
+        "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)": "Créer des griffes pour les pierres sélectionnées\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
+        "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)": "Créer une coupe pour les pierres sélectionnées\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)",
         "Make curve start at the top": "Faire que la courbe commence en haut",
         "Density g/cm³": "Densité g/cm³",
         "Set of materials for weighting": "Ensemble de matériaux pour la pondération",
@@ -174,65 +130,32 @@ dictionary = {
         "Replace asset preview image": "Remplacer la vignette de la ressource",
         "Import selected asset": "Importer la ressource sélectionnés",
         "Asset category": "Catégorie de la ressource",
-
-        "Set custom asset library folder, if disabled the default library folder will be used": (
-            "Définir le dossier de la bibliothèque d’actives personnalisée; le cas échéant, "
-            "le dossier de la bibliothèque par défaut sera utilisé"
-        ),
-
+        "Set custom asset library folder, if disabled the default library folder will be used": "Définir le dossier de la bibliothèque d’actives personnalisée; le cas échéant, le dossier de la bibliothèque par défaut sera utilisé",
         "Custom library folder path": "Chemin du dossier de la bibliothèque personnalisée",
-        "Display asset name in Tool Shelf": "Display asset name in Tool Shelf",
+        # "Display asset name in Tool Shelf": "",
         "Enable widgets drawing": "Activer le dessin des widgets",
         "Use object defined widget overrides": "Utiliser les substitutions de widget définis par un objet",
-
         "Draw widgets in front of objects": "Dessiner des widgets devant des objets",
-
-        "Override widget display properties for selected objects":
-            "Substituer les propriétés d'affichage du widget pour les objets sélectionnés",
-
-        "Remove widget override properties from selected objects":
-            "Supprimer les propriétés de substitution de widget des objets sélectionnés",
-
+        "Override widget display properties for selected objects": "Substituer les propriétés d'affichage du widget pour les objets sélectionnés",
+        "Remove widget override properties from selected objects": "Supprimer les propriétés de substitution de widget des objets sélectionnés",
         "Add new material to the list": "Ajouter un nouveau matériau à la liste",
         "Display material density in the list": "Afficher la densité de matière dans la liste",
         "Display material composition in the list": "Afficher la composition du matériau dans la liste",
         "Create weighting set from materials list": "Créer un jeu de pondération à partir de la liste des matériaux",
         "Remove weighting set": "Retirer le jeu de pondération",
         "Rename weighting set": "Renommer le jeu de pondération",
-
-        "Load weighting set to the materials list by replacing existing materials":
-            "Charger la pondération définie dans la liste des matériaux en remplaçant les matériaux existants",
-
-        "Append weighting set at the end of the current materials list":
-            "Ajouter la pondération définie à la fin de la liste des matières en cours",
-
-        "Hide default JewelCraft sets from weighting sets menu":
-            "Masquer les jeux de bijoux par défaut dans le menu des ensembles de pondération",
-
-        "Replace selected weighting set with current materials list":
-            "Remplacer le jeu de pondération sélectionné par la liste des matériaux en cours",
-
+        "Load weighting set to the materials list by replacing existing materials": "Charger la pondération définie dans la liste des matériaux en remplaçant les matériaux existants",
+        "Append weighting set at the end of the current materials list": "Ajouter la pondération définie à la fin de la liste des matières en cours",
+        "Hide default JewelCraft sets from weighting sets menu": "Masquer les jeux de bijoux par défaut dans le menu des ensembles de pondération",
+        "Replace selected weighting set with current materials list": "Remplacer le jeu de pondération sélectionné par la liste des matériaux en cours",
         "Material name": "Nom de materiau",
         "Material composition": "Composition du matériau",
-
-        "Use one-dimensional lattice for even deformation":
-            "Utilisez un réseau d'une dimension pour une déformation uniforme",
-
-        "Use two-dimensional lattice for proportional deformation":
-            "Utiliser un lattice pour la déformation proportionnelle",
-
+        "Use one-dimensional lattice for even deformation": "Utilisez un réseau d'une dimension pour une déformation uniforme",
+        "Use two-dimensional lattice for proportional deformation": "Utiliser un lattice pour la déformation proportionnelle",
         "Scale selected objects to given size": "Échelle des objets sélectionnés à une taille donnée",
-        "Move each object individually": "Move each object individually",
-
-        "Enable material for weighting and product report":
-            "Activer le matériau pour la pondération et le rapport de produit",
-
-        "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": (
-            "Parenter la ressource importée pour les objets sélectionnés "
-            "(Raccourcie: Alt en utilisant l'outil)"
-        ),
-
-        # TODO
+        # "Move each object individually": "",
+        "Enable material for weighting and product report": "Activer le matériau pour la pondération et le rapport de produit",
+        "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": "Parenter la ressource importée pour les objets sélectionnés (Raccourcie: Alt en utilisant l'outil)",
         # "Select gems that are less than 0.1 mm distance from each other or overlapping": "",
         # "Display spacing widget for all visible gems": "",
         # "Set optimal unit settings for jewelry modelling": "",
@@ -246,90 +169,68 @@ dictionary = {
         # "Measured object": "",
         # "Measurement type": "",
         # "Select material": "",
-
-        # "Make collection instances in radial order\n"
-        # "(Shortcut: hold Alt when using the tool to use existing collection)": "",
-
+        # "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)": "",
         # "Include or exclude given column": "",
-
-        # "Autoload marked weighting set on File > Open/New "
-        # "if materials list for given blend file is empty": "",
-
-        # Reports
+        # "Autoload marked weighting set on File > Open/New if materials list for given blend file is empty": "",
         "WARNING": "AVERTISSEMENT",
         "Possible gem instance face leftovers": "Restes de pierres instance face possibles",
         "Hidden gems": "Cacher les pierres",
-
-        "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
-            "ID de pierre obsolète (utiliser Convert Deprecated Gem IDs dans le menu de recherche de fonction)",
-
-        "Unknown gem IDs, carats are not calculated for marked gems (*)":
-            "IDs de pierre inconnus, les carats sont calculés pour des pierres marquées (*)",
-
+        "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)": "ID de pierre obsolète (utiliser Convert Deprecated Gem IDs dans le menu de recherche de fonction)",
+        "Unknown gem IDs, carats are not calculated for marked gems (*)": "IDs de pierre inconnus, les carats sont calculés pour des pierres marquées (*)",
         "Curve Length": "Longueur de la courbe",
-
         "At least two objects must be selected": "Au moins deux objets doivent être sélectionnés",
         "At least one gem object must be selected": "Au moins une pierre doit être sélectionnée",
         "At least one mesh object must be selected": "Au moins un mesh doit être sélectionné",
         "Active object must be a curve": "L'objet actif doit être une courbe",
-
-        "Selected objects do not have Follow Path constraint":
-            "Les objets sélectionnés n'ont pas de contrainte de suivi de chemin",
-
+        "Selected objects do not have Follow Path constraint": "Les objets sélectionnés n'ont pas de contrainte de suivi de chemin",
         "File not found": "Fichier non trouvé",
         "Name must be specified": "Le nom doit être spécifié",
-        "Volume": "Volume",
+        # "Overlapping gems": "",
+        # "{} overlaps found": "",
+        # "Optimal unit settings are in use": "",
+        # "Volume": "",
         "Settings": "Réglages",
         "Gem": "Pierre",
         "Cut": "Coupe",
         "Qty": "Qté",
-
-        # TODO
+        # "Total (ct.)": "",
         # "Carats": "",
         # "Materials": "",
         # "Additional Notes": "",
-        # "Overlapping gems": "",
-        # "{} overlaps found": "",
-        # "Optimal unit settings are in use": "",
-        # "Total (ct.)": "",
-
-        # Cuts
         "Round": "Rond",
         "Oval": "Ovale",
         "Cushion": "Coussin",
         "Pear": "Poire",
-        "Marquise": "Marquise",
+        # "Marquise": "",
         "Princess": "Princesse",
-        "Baguette": "Baguette",
+        # "Baguette": "",
         "Square": "Carré",
-        "Asscher": "Asscher",
-        "Radiant": "Radiant",
+        # "Asscher": "",
+        # "Radiant": "",
         "Flanders": "Flamands",
         "Octagon": "Octaèdre",
         "Heart": "Coeur",
         "Trillion": "Billion",
-        "Trilliant": "Trilliant",
-        "Triangle": "Triangle",
-        # Stones
-        "Alexandrite": "Alexandrite",
+        # "Trilliant": "",
+        # "Triangle": "",
+        # "Alexandrite": "",
         "Amethyst": "Amethyste",
-        "Aquamarine": "Aquamarine",
-        "Citrine": "Citrine",
+        # "Aquamarine": "",
+        # "Citrine": "",
         "Cubic Zirconia": "Zircone cubique",
         "Diamond": "Diamand",
         "Emerald": "Emeraude",
         "Garnet": "Grenat",
-        "Morganite": "Morganite",
+        # "Morganite": "",
         "Peridot": "Péridot",
-        "Quartz": "Quartz",
+        # "Quartz": "",
         "Ruby": "Rubis",
         "Sapphire": "Saphir",
         "Spinel": "Spinelle",
-        "Tanzanite": "Tanzanite",
+        # "Tanzanite": "",
         "Topaz": "Topaze",
-        "Tourmaline": "Tourmaline",
-        "Zircon": "Zircon",
-        # Alloys
+        # "Tourmaline": "",
+        # "Zircon": "",
         "Yellow Gold 24K": "Or Jaune 24K",
         "Yellow Gold 22K": "Or Jaune 22K",
         "Yellow Gold 18K": "Or Jaune 18K",
@@ -356,25 +257,22 @@ dictionary = {
         "Red Gold 375": "Or Rouge 375",
         "Platinum 950": "Platine 950",
         "Platinum 900": "Platine 900",
-        "Palladium 950": "Palladium 950",
+        # "Palladium 950": "",
         "Silver 925": "Argent 925",
         "Silver Sterling": "Argent Sterling",
         "Brass": "Laiton",
-        "Bronze": "Bronze",
+        # "Bronze": "",
         "Steel Stainless": "Acier Inoxydable",
         "Titanium": "Titane",
-        # Units
-        "mm": "mm",
-        "mm³": "mm³",
-        "g": "g",
-        "ct.": "ct.",
-        "pcs": "pcs",
+        # "mm": "",
+        # "mm³": "",
+        # "g": "",
+        # "ct.": "",
+        # "pcs": "",
     },
     "JewelCraft": {
         "Cut": "Coupe",
         "Round": "Arrondi",
-
-        # TODO
         # "Spacing": "",
     },
     "Dative": {
@@ -411,8 +309,6 @@ dictionary = {
         "Replace Set": "Remplacer un jeu",
         "Remove Set": "Effacer un jeu",
         "Rename Set": "Renommer un jeu",
-
-        # TODO
         # "Overlapping": "",
         # "Set Units": "",
         # "Gem Map": "",
