@@ -23,6 +23,7 @@ from . import (
     es,
     fr,
     ru,
+    zh_cn,
 )
 
 
@@ -40,8 +41,10 @@ DICTIONARY = {
     "es": _translation_dict(es.dictionary),
     "fr_FR": _translation_dict(fr.dictionary),
     "ru_RU": _translation_dict(ru.dictionary),
+    "zh_CN": _translation_dict(zh_cn.dictionary),
 }
 
 es.dictionary.clear()
 fr.dictionary.clear()
 ru.dictionary.clear()
+zh_cn.dictionary.clear()

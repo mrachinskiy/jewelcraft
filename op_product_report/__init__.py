@@ -45,6 +45,7 @@ class WM_OT_product_report(Operator):
             ("es", "Spanish (Español)", ""),
             ("fr_FR", "French (Français)", ""),
             ("ru_RU", "Russian (Русский)", ""),
+            ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
     )
     use_save: BoolProperty(

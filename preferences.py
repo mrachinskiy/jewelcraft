@@ -216,6 +216,7 @@ class JewelCraftPreferences(AddonPreferences):
             ("es", "Spanish (Español)", ""),
             ("fr_FR", "French (Français)", ""),
             ("ru_RU", "Russian (Русский)", ""),
+            ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
     )
     product_report_save: BoolProperty(
