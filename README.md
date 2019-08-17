@@ -60,9 +60,7 @@ Contributing
   "[JewelCraft] Precious": "[JewelCraft] Драгоценные",
   ```
   * On the left is the original English message, on the right is the Russian translation of that message.
-  * Note that no every word has to be translated, in this example `JewelCraft` is not translated because it referencing add-on name.
-  * Do not add additional key value pairs to the dictionary.
-  * Remove or comment out all key value pairs that have not been translated.
+  * Not every word has to be translated, in this example `JewelCraft` is not translated because it referencing add-on name.
 * After translation is done submit it back through email.
 
 
