@@ -275,6 +275,7 @@ dictionary = {
 
         "Curve Length": "Длина кривой",
 
+        "Missing selected objects": "Отсутствуют выделенные объекты",
         "At least two objects must be selected": "Как минимум два объекта должны быть выделены",
         "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
         "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
@@ -285,6 +286,7 @@ dictionary = {
 
         "File not found": "Файл не найден",
         "Name must be specified": "Имя должно быть указано",
+        "Collection must be specified": "Коллекция должна быть указана",
         "Overlapping gems": "Пересекающиеся камни",
         "{} overlaps found": "{} пересечений обнаружено",
         "Optimal unit settings are in use": "Используются оптимальные настройки единиц измерения",

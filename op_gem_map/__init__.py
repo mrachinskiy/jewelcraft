@@ -53,6 +53,7 @@ class VIEW3D_OT_gem_map(Operator, Offscreen, OnscreenText):
             ("es", "Spanish (Español)", ""),
             ("fr_FR", "French (Français)", ""),
             ("ru_RU", "Russian (Русский)", ""),
+            ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
     )
     use_save: BoolProperty(
