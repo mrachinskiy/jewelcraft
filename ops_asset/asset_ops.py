@@ -39,6 +39,13 @@ class Setup:
         self.filepath = os.path.join(self.folder, self.asset_name)
 
 
+def update_asset_name(self, context):
+    if self.type == "SELECTION":
+        self.asset_name = context.object.name if context.object else ""
+    else:
+        self.asset_name = self.collection_name
+
+
 class AssetAdd:
     type: EnumProperty(
         name="Type",
@@ -47,6 +54,7 @@ class AssetAdd:
             ("SELECTION", "Selected Objects", ""),
             ("COLLECTION", "Collection", ""),
         ),
+        update=update_asset_name,
     )
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
     asset_name: StringProperty(name="Asset Name", options={"SKIP_SAVE"})
