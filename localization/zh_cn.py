@@ -178,6 +178,7 @@ dictionary = {
         # "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)": "",
         # "Unknown gem IDs, carats are not calculated for marked gems (*)": "",
         "Curve Length": "曲线长度",
+        # "Missing selected objects": "",
         "At least two objects must be selected": "至少要选择两个对象",
         "At least one gem object must be selected": "必须至少选择一个宝石对象",
         "At least one mesh object must be selected": "必须至少选择一个网格对象",
@@ -185,6 +186,7 @@ dictionary = {
         "Selected objects do not have Follow Path constraint": "所选对象没有“跟随路径”约束",
         "File not found": "找不到文件",
         "Name must be specified": "必须指定名称",
+        # "Collection must be specified": "",
         "Overlapping gems": "重叠宝石",
         "{} overlaps found": "发现重叠",
         "Optimal unit settings are in use": "正在使用最佳单位设置",
@@ -269,17 +271,17 @@ dictionary = {
         # "g": "",
         # "ct.": "",
         # "pcs": "",
-},
+    },
     "JewelCraft": {
         "Cut": "切割",
         "Round": "圆形",
         "Spacing": "设置距离",
-},
+    },
     "Dative": {
         "Size": "尺寸",
         "Stone": "石头",
         "Cut": "切割",
-},
+    },
     "Operator": {
         "Add Gem": "添加宝石",
         "Curve Scatter": "曲线分配",
@@ -315,5 +317,5 @@ dictionary = {
         "Append": "追加",
         "Add New Measurement": "添加新度量值",
         "Mark Autoload": "标记自动加载",
-	},
+    },
 }

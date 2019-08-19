@@ -234,13 +234,13 @@ def asset_import_batch(filepath):
 
     with bpy.data.libraries.load(filepath) as (data_from, data_to):
         data_to.objects = data_from.objects
+        data_to.collections = data_from.collections
 
     return data_to
 
 
-def asset_export(filepath):
+def asset_export(data_blocks, filepath):
     folder = os.path.dirname(filepath)
-    data_blocks = set(bpy.context.selected_objects)
 
     if not os.path.exists(folder):
         os.makedirs(folder)

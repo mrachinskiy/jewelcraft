@@ -23,7 +23,7 @@ import os
 
 import bpy
 from bpy.types import Operator
-from bpy.props import StringProperty, BoolProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty
 import bpy.utils.previews
 
 from ..lib import asset, dynamic_list
@@ -39,13 +39,17 @@ class Setup:
         self.filepath = os.path.join(self.folder, self.asset_name)
 
 
-class WM_OT_asset_add_to_library(Operator, Setup):
-    bl_label = "Add To Library"
-    bl_description = "Add selected objects to asset library"
-    bl_idname = "wm.jewelcraft_asset_add_to_library"
-    bl_options = {"INTERNAL"}
-
-    asset_name: StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
+class AssetAdd:
+    type: EnumProperty(
+        name="Type",
+        description="",
+        items=(
+            ("SELECTION", "Selected Objects", ""),
+            ("COLLECTION", "Collection", ""),
+        ),
+    )
+    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    asset_name: StringProperty(name="Asset Name", options={"SKIP_SAVE"})
 
     @classmethod
     def poll(cls, context):
@@ -57,39 +61,85 @@ class WM_OT_asset_add_to_library(Operator, Setup):
         layout.use_property_decorate = False
 
         layout.separator()
-        layout.prop(self, "asset_name")
+
+        layout.prop(self, "type")
+
+        if self.type == "COLLECTION":
+            layout.prop_search(self, "collection_name", bpy.data, "collections")
+
+        if self.is_add:
+            layout.prop(self, "asset_name")
+
         layout.separator()
 
     def execute(self, context):
+        if self.type == "SELECTION":
+            if not context.selected_objects:
+                self.report({"ERROR"}, "Missing selected objects")
+                return {"CANCELLED"}
+        else:
+            if not self.collection_name:
+                self.report({"ERROR"}, "Collection must be specified")
+                return {"CANCELLED"}
+
         if not self.asset_name:
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
         filepath = os.path.join(self.folder, self.asset_name)
+        data_blocks = self.asset_datablocks(context)
 
-        asset.asset_export(filepath + ".blend")
-        asset.render_preview(256, 256, filepath + ".png")
-        dynamic_list.asset_list_refresh()
-        self.props.asset_list = self.asset_name
+        asset.asset_export(data_blocks, filepath + ".blend")
 
-        context.area.tag_redraw()
+        if self.is_add:
+            asset.render_preview(256, 256, filepath + ".png")
+            dynamic_list.asset_list_refresh()
+            self.props.asset_list = self.asset_name
+
+            context.area.tag_redraw()
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.selected_objects:
-            return {"CANCELLED"}
+        if context.collection and context.collection is not context.scene.collection:
+            self.collection_name = context.collection.name
 
-        self.asset_name = context.object.name
+        if self.is_add and context.object:
+            self.asset_name = context.object.name
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
+    def asset_datablocks(self, context):
+        if self.type == "SELECTION":
+            return set(context.selected_objects)
+        else:
+            collection = bpy.data.collections[self.collection_name]
+            return set((collection,))
 
-class WM_OT_asset_remove_from_library(Operator, Setup):
+
+class WM_OT_asset_add(Operator, Setup, AssetAdd):
+    bl_label = "Add To Library"
+    bl_description = "Add selected objects to asset library"
+    bl_idname = "wm.jewelcraft_asset_add"
+    bl_options = {"INTERNAL"}
+
+    is_add = True
+
+
+class WM_OT_asset_replace(Operator, Setup, AssetAdd):
+    bl_label = "Replace Asset"
+    bl_description = "Replace current asset with selected objects"
+    bl_idname = "wm.jewelcraft_asset_replace"
+    bl_options = {"INTERNAL"}
+
+    is_add = False
+
+
+class WM_OT_asset_remove(Operator, Setup):
     bl_label = "Remove Asset"
     bl_description = "Remove asset from library"
-    bl_idname = "wm.jewelcraft_asset_remove_from_library"
+    bl_idname = "wm.jewelcraft_asset_remove"
     bl_options = {"INTERNAL"}
 
     @classmethod
@@ -127,7 +177,7 @@ class WM_OT_asset_rename(Operator, Setup):
     bl_idname = "wm.jewelcraft_asset_rename"
     bl_options = {"INTERNAL"}
 
-    asset_name: StringProperty(name="Asset Name", description="Asset name", options={"SKIP_SAVE"})
+    asset_name: StringProperty(name="Asset Name", options={"SKIP_SAVE"})
 
     @classmethod
     def poll(cls, context):
@@ -174,26 +224,6 @@ class WM_OT_asset_rename(Operator, Setup):
     def invoke(self, context, event):
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
-
-
-class WM_OT_asset_replace(Operator, Setup):
-    bl_label = "Replace Asset"
-    bl_description = "Replace current asset with selected objects"
-    bl_idname = "wm.jewelcraft_asset_replace"
-    bl_options = {"INTERNAL"}
-
-    @classmethod
-    def poll(cls, context):
-        return bool(context.window_manager.jewelcraft.asset_list)
-
-    def execute(self, context):
-        filepath = os.path.join(self.folder, self.asset_name)
-        asset.asset_export(filepath + ".blend")
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_confirm(self, event)
 
 
 class WM_OT_asset_preview_replace(Operator, Setup):
@@ -243,9 +273,17 @@ class WM_OT_asset_import(Operator, Setup):
 
         imported = asset.asset_import_batch(self.filepath + ".blend")
         obs = imported.objects
+        colls = imported.collections
+
+        if colls:
+            for coll in colls:
+                if not coll.users or coll.users == len(coll.users_dupli_group):
+                    context.scene.collection.children.link(coll)
 
         for ob in obs:
-            collection.objects.link(ob)
+            if not colls:
+                collection.objects.link(ob)
+
             ob.select_set(True)
 
             if use_local_view:
@@ -267,5 +305,4 @@ class WM_OT_asset_import(Operator, Setup):
 
     def invoke(self, context, event):
         self.use_parent = event.alt
-
         return self.execute(context)

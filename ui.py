@@ -282,8 +282,8 @@ class VIEW3D_PT_jewelcraft_assets(Panel, Setup):
             col.label(text=self.wm_props.asset_list)
 
         col = row.column(align=True)
-        col.operator("wm.jewelcraft_asset_add_to_library", text="", icon="ADD")
-        col.operator("wm.jewelcraft_asset_remove_from_library", text="", icon="REMOVE")
+        col.operator("wm.jewelcraft_asset_add", text="", icon="ADD")
+        col.operator("wm.jewelcraft_asset_remove", text="", icon="REMOVE")
         col.separator()
         col.operator("view3d.jewelcraft_search_asset", text="", icon="VIEWZOOM")
         col.separator()
