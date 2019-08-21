@@ -418,7 +418,7 @@ class WmProperties(PropertyGroup):
             ("WEIGHTING",      "Weighting",      ""),
             ("PRODUCT_REPORT", "Product Report", ""),
             ("THEMES",         "Themes",         ""),
-            ("UPDATES",        "Updates",         ""),
+            ("UPDATES",        "Updates",        ""),
         ),
     )
     widget_toggle: BoolProperty(description="Enable widgets drawing", update=widget.handler_toggle)
