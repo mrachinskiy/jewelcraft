@@ -87,9 +87,9 @@ class OBJECT_OT_select_gems_by_trait(Operator):
         )
 
         expr = expr.format(
-            size="and round(ob.dimensions[1], 2) == size" if self.filter_size  else "",
-            stone="and ob['gem']['stone'] == self.stone"  if self.filter_stone else "",
-            cut="and ob['gem']['cut'] == self.cut"        if self.filter_cut   else "",
+            size="and round(ob.dimensions[1], 2) == size" if self.filter_size else "",
+            stone="and ob['gem']['stone'] == self.stone" if self.filter_stone else "",
+            cut="and ob['gem']['cut'] == self.cut" if self.filter_cut else "",
             else_deselect="" if self.use_extend else "else: ob.select_set(False)",
         )
 
