@@ -289,7 +289,7 @@ class WM_OT_asset_import(Operator, Setup):
                     context.scene.collection.children.link(coll)
 
         for ob in obs:
-            if not colls:
+            if not ob.users:
                 collection.objects.link(ob)
 
             ob.select_set(True)
