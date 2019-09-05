@@ -21,7 +21,7 @@ How to install
 ==========================
 
 1. Download the add-on:<sup>1</sup>
-    * [**Blender 2.80** JewelCraft v2.3.6][v2_3_6]
+    * [**Blender 2.80** JewelCraft v2.3.7][v2_3_7]
     * [**Blender 2.79** JewelCraft v2.2.1][v2_2_1]
 2. Open `Preferences` → `Add-ons` category.
 3. Use `Install` to install add-on from downloaded zip archive.
@@ -34,7 +34,7 @@ How to install
 ==========================
 
 1. Загрузите аддон:<sup>1</sup>
-    * [**Blender 2.80** JewelCraft v2.3.6][v2_3_6]
+    * [**Blender 2.80** JewelCraft v2.3.7][v2_3_7]
     * [**Blender 2.79** JewelCraft v2.2.1][v2_2_1]
 2. Откройте `Preferences` → `Add-ons`.
 3. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.
@@ -72,7 +72,7 @@ Contributing
 * After translation is done submit it back through email.
 
 
-[v2_3_6]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.3.6/jewelcraft-2_3_6.zip
+[v2_3_7]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.3.7/jewelcraft-2_3_7.zip
 [v2_2_1]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.2.1/jewelcraft-2_2_1.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
