@@ -173,14 +173,15 @@ def add_material(ob, name="New Material", color=None, is_gem=False):
             for node in nodes:
                 nodes.remove(node)
 
+            node = nodes.new("ShaderNodeBsdfPrincipled")
+            node.inputs["Base Color"].default_value = color
+            node.inputs["Roughness"].default_value = 0.0
+
             if is_gem:
-                node = nodes.new("ShaderNodeBsdfGlass")
-                node.inputs["Color"].default_value = color
+                node.inputs["Transmission"].default_value = 1.0
+                node.inputs["IOR"].default_value = 2.42
             else:
-                node = nodes.new("ShaderNodeBsdfPrincipled")
-                node.inputs["Base Color"].default_value = color
                 node.inputs["Metallic"].default_value = 1.0
-                node.inputs["Roughness"].default_value = 0.0
 
             node.location = (0.0, 0.0)
 

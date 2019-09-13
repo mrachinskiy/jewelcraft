@@ -112,6 +112,27 @@ STONE_DENSITY = {
     "ZIRCON": 4.73,
 }
 
+STONE_COLOR = {
+    # White
+    "DIAMOND": (1.0, 1.0, 1.0, 1.0),
+    "CUBIC_ZIRCONIA": (1.0, 1.0, 1.0, 1.0),
+    # Red
+    "RUBY": (0.57, 0.011, 0.005, 1.0),
+    "SPINEL": (0.57, 0.011, 0.005, 1.0),
+    # Blue
+    "SAPPHIRE": (0.004, 0.019, 0.214, 1.0),
+    "TANZANITE": (0.004, 0.019, 0.214, 1.0),
+    # Other
+    "ALEXANDRITE": (0.153, 0.0705, 0.595, 1.0),
+    "AMETHYST": (0.415, 0.041, 0.523, 1.0),
+    "AQUAMARINE": (0.0, 0.748, 1.0, 1.0),
+    "CITRINE": (1.0, 0.355, 0.0, 1.0),
+    "EMERALD": (0.062, 0.748, 0.057, 1.0),
+    "GARNET": (0.319, 0.0, 0.0, 1.0),
+    "MORGANITE": (0.41, 0.21, 0.09, 1.0),
+    "PERIDOT": (0.201, 0.748, 0.026, 1.0),
+}
+
 CUT_VOLUME_CORRECTION = {
     # Cone
     "ROUND": 1.3056,
@@ -134,27 +155,6 @@ CUT_VOLUME_CORRECTION = {
     "TRILLION": 1.644,
     "TRILLIANT": 1.888,
     "TRIANGLE": 1.531,
-}
-
-STONE_COLOR = {
-    # White
-    "DIAMOND": (1.0, 1.0, 1.0, 1.0),
-    "CUBIC_ZIRCONIA": (1.0, 1.0, 1.0, 1.0),
-    # Red
-    "RUBY": (0.57, 0.011, 0.005, 1.0),
-    "SPINEL": (0.57, 0.011, 0.005, 1.0),
-    # Blue
-    "SAPPHIRE": (0.004, 0.019, 0.214, 1.0),
-    "TANZANITE": (0.004, 0.019, 0.214, 1.0),
-    # Other
-    "ALEXANDRITE": (0.153, 0.0705, 0.595, 1.0),
-    "AMETHYST": (0.415, 0.041, 0.523, 1.0),
-    "AQUAMARINE": (0.0, 0.748, 1.0, 1.0),
-    "CITRINE": (1.0, 0.355, 0.0, 1.0),
-    "EMERALD": (0.062, 0.748, 0.057, 1.0),
-    "GARNET": (0.319, 0.0, 0.0, 1.0),
-    "MORGANITE": (0.41, 0.21, 0.09, 1.0),
-    "PERIDOT": (0.201, 0.748, 0.026, 1.0),
 }
 
 CUT_SIZE_SINGLE = {
