@@ -308,14 +308,21 @@ def render_preview(width, height, filepath, compression=100, gamma=None):
 
 
 def show_window(width, height, area_type=None, space_data=None):
+    version_281 = bpy.app.version >= (2, 81, 12)
     render = bpy.context.scene.render
 
     render_config = {
         "resolution_x": width,
         "resolution_y": height,
         "resolution_percentage": 100,
-        "display_mode": "WINDOW",
     }
+
+    if version_281:
+        prefs = bpy.context.preferences
+        _is_dirty = prefs.is_dirty
+        display_type = "WINDOW"
+    else:
+        render_config["display_mode"] = "WINDOW"
 
     # Apply settings
     # ---------------------------
@@ -324,6 +331,9 @@ def show_window(width, height, area_type=None, space_data=None):
         x = getattr(render, k)
         setattr(render, k, v)
         render_config[k] = x
+
+    if version_281:
+        prefs.view.render_display_type, display_type = display_type, prefs.view.render_display_type
 
     # Invoke window
     # ---------------------------
@@ -348,6 +358,10 @@ def show_window(width, height, area_type=None, space_data=None):
 
     for k, v in render_config.items():
         setattr(render, k, v)
+
+    if version_281:
+        prefs.view.render_display_type = display_type
+        prefs.is_dirty = _is_dirty
 
 
 def weighting_set_export(materials, filepath):
