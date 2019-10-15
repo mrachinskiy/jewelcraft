@@ -126,7 +126,7 @@ class AssetAdd:
             return set((collection,))
 
 
-class WM_OT_asset_add(Operator, Setup, AssetAdd):
+class WM_OT_asset_add(Setup, AssetAdd, Operator):
     bl_label = "Add To Library"
     bl_description = "Add selected objects to asset library"
     bl_idname = "wm.jewelcraft_asset_add"
@@ -135,7 +135,7 @@ class WM_OT_asset_add(Operator, Setup, AssetAdd):
     is_add = True
 
 
-class WM_OT_asset_replace(Operator, Setup, AssetAdd):
+class WM_OT_asset_replace(Setup, AssetAdd, Operator):
     bl_label = "Replace Asset"
     bl_description = "Replace current asset with selected objects"
     bl_idname = "wm.jewelcraft_asset_replace"
@@ -144,7 +144,7 @@ class WM_OT_asset_replace(Operator, Setup, AssetAdd):
     is_add = False
 
 
-class WM_OT_asset_remove(Operator, Setup):
+class WM_OT_asset_remove(Setup, Operator):
     bl_label = "Remove Asset"
     bl_description = "Remove asset from library"
     bl_idname = "wm.jewelcraft_asset_remove"
@@ -179,7 +179,7 @@ class WM_OT_asset_remove(Operator, Setup):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_asset_rename(Operator, Setup):
+class WM_OT_asset_rename(Setup, Operator):
     bl_label = "Rename Asset"
     bl_description = "Rename asset"
     bl_idname = "wm.jewelcraft_asset_rename"
@@ -234,7 +234,7 @@ class WM_OT_asset_rename(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_asset_preview_replace(Operator, Setup):
+class WM_OT_asset_preview_replace(Setup, Operator):
     bl_label = "Replace Asset Preview"
     bl_description = "Replace asset preview image"
     bl_idname = "wm.jewelcraft_asset_preview_replace"
@@ -255,7 +255,7 @@ class WM_OT_asset_preview_replace(Operator, Setup):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_asset_import(Operator, Setup):
+class WM_OT_asset_import(Setup, Operator):
     bl_label = "JewelCraft Import Asset"
     bl_description = "Import selected asset"
     bl_idname = "wm.jewelcraft_asset_import"

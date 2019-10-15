@@ -163,7 +163,7 @@ class VIEW3D_MT_jewelcraft_weighting_list(Menu):
 # ---------------------------
 
 
-class VIEW3D_PT_jewelcraft_update(Panel, Setup):
+class VIEW3D_PT_jewelcraft_update(Setup, Panel):
     bl_label = "Update"
 
     @classmethod
@@ -174,7 +174,7 @@ class VIEW3D_PT_jewelcraft_update(Panel, Setup):
         mod_update.sidebar_ui(self, context)
 
 
-class VIEW3D_PT_jewelcraft_warning(Panel, Setup):
+class VIEW3D_PT_jewelcraft_warning(Setup, Panel):
     bl_label = "Warning"
 
     @classmethod
@@ -203,7 +203,7 @@ class VIEW3D_PT_jewelcraft_warning(Panel, Setup):
         col.operator("scene.jewelcraft_scene_units_set")
 
 
-class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
+class VIEW3D_PT_jewelcraft_gems(Setup, Panel):
     bl_label = "Gems"
 
     @classmethod
@@ -220,7 +220,7 @@ class VIEW3D_PT_jewelcraft_gems(Panel, Setup):
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
 
 
-class VIEW3D_PT_jewelcraft_widgets(Panel, Setup):
+class VIEW3D_PT_jewelcraft_widgets(Setup, Panel):
     bl_label = "Widgets"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
@@ -252,7 +252,7 @@ class VIEW3D_PT_jewelcraft_widgets(Panel, Setup):
         row.operator("object.jewelcraft_widget_override_del")
 
 
-class VIEW3D_PT_jewelcraft_assets(Panel, Setup):
+class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
     bl_label = "Assets"
     bl_options = {"DEFAULT_CLOSED"}
 
@@ -292,7 +292,7 @@ class VIEW3D_PT_jewelcraft_assets(Panel, Setup):
         layout.operator("wm.jewelcraft_asset_import", text="Import Asset")
 
 
-class VIEW3D_PT_jewelcraft_jeweling(Panel, Setup):
+class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
     bl_label = "Jeweling"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -309,7 +309,7 @@ class VIEW3D_PT_jewelcraft_jeweling(Panel, Setup):
         row.operator("object.jewelcraft_curve_redistribute", text="", icon_value=self.icon_get("REDISTRIBUTE"))
 
 
-class VIEW3D_PT_jewelcraft_object(Panel, Setup):
+class VIEW3D_PT_jewelcraft_object(Setup, Panel):
     bl_label = "Object"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -330,7 +330,7 @@ class VIEW3D_PT_jewelcraft_object(Panel, Setup):
         col.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.icon_get("LATTICE_PROFILE"))
 
 
-class VIEW3D_PT_jewelcraft_curve(Panel, Setup):
+class VIEW3D_PT_jewelcraft_curve(Setup, Panel):
     bl_label = "Curve"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -349,7 +349,7 @@ class VIEW3D_PT_jewelcraft_curve(Panel, Setup):
         layout.operator("curve.jewelcraft_length_display", text="Curve Length", icon_value=self.icon_get("CURVE_LENGTH"))
 
 
-class VIEW3D_PT_jewelcraft_curve_editmesh(Panel, Setup):
+class VIEW3D_PT_jewelcraft_curve_editmesh(Setup, Panel):
     bl_label = "Curve"
     bl_context = "mesh_edit"
 
@@ -363,7 +363,7 @@ class VIEW3D_PT_jewelcraft_curve_editmesh(Panel, Setup):
         sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.icon_get("UNDER")).under = True
 
 
-class VIEW3D_PT_jewelcraft_weighting(Panel, Setup):
+class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
     bl_label = "Weighting"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -408,7 +408,7 @@ class VIEW3D_PT_jewelcraft_weighting(Panel, Setup):
         layout.operator("object.jewelcraft_weight_display", text="Calculate")
 
 
-class VIEW3D_PT_jewelcraft_product_report(Panel, Setup):
+class VIEW3D_PT_jewelcraft_product_report(Setup, Panel):
     bl_label = "Product Report"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -419,7 +419,7 @@ class VIEW3D_PT_jewelcraft_product_report(Panel, Setup):
         layout.operator("view3d.jewelcraft_gem_map", text="Gem Map")
 
 
-class VIEW3D_PT_jewelcraft_measurement(Panel, Setup):
+class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
     bl_label = "Measurement"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_product_report"
