@@ -33,7 +33,7 @@ class Setup:
         self.list = props.measurements
 
 
-class WM_OT_ul_measurements_add(Operator, Setup):
+class WM_OT_ul_measurements_add(Setup, Operator):
     bl_label = "Add New Measurement"
     bl_description = "Add a new measurement"
     bl_idname = "wm.jewelcraft_ul_measurements_add"
@@ -139,7 +139,7 @@ class WM_OT_ul_measurements_add(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_ul_measurements_material_select(Operator, Setup):
+class WM_OT_ul_measurements_material_select(Setup, Operator):
     bl_label = "Select Material"
     bl_description = "Select material"
     bl_idname = "wm.jewelcraft_ul_measurements_material_select"
@@ -179,7 +179,7 @@ class WM_OT_ul_measurements_material_select(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_ul_measurements_del(Operator, Setup):
+class WM_OT_ul_measurements_del(Setup, Operator):
     bl_label = "Remove Item"
     bl_description = "Remove selected item"
     bl_idname = "wm.jewelcraft_ul_measurements_del"
@@ -190,7 +190,7 @@ class WM_OT_ul_measurements_del(Operator, Setup):
         return {"FINISHED"}
 
 
-class WM_OT_ul_measurements_move(Operator, Setup):
+class WM_OT_ul_measurements_move(Setup, Operator):
     bl_label = "Move Item"
     bl_description = "Move selected item up/down in the list"
     bl_idname = "wm.jewelcraft_ul_measurements_move"

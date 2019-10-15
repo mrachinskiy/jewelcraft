@@ -30,7 +30,7 @@ class Setup:
         self.list = bpy.context.scene.jewelcraft.weighting_materials
 
 
-class WM_OT_ul_materials_add(Operator, Setup):
+class WM_OT_ul_materials_add(Setup, Operator):
     bl_label = "Add New Material"
     bl_description = "Add new material to the list"
     bl_idname = "wm.jewelcraft_ul_materials_add"
@@ -85,7 +85,7 @@ class WM_OT_ul_materials_add(Operator, Setup):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_ul_materials_del(Operator, Setup):
+class WM_OT_ul_materials_del(Setup, Operator):
     bl_label = "Remove Item"
     bl_description = "Remove selected item"
     bl_idname = "wm.jewelcraft_ul_materials_del"
@@ -96,7 +96,7 @@ class WM_OT_ul_materials_del(Operator, Setup):
         return {"FINISHED"}
 
 
-class WM_OT_ul_materials_clear(Operator, Setup):
+class WM_OT_ul_materials_clear(Setup, Operator):
     bl_label = "Clear List"
     bl_description = "Remove all list items"
     bl_idname = "wm.jewelcraft_ul_materials_clear"
@@ -107,7 +107,7 @@ class WM_OT_ul_materials_clear(Operator, Setup):
         return {"FINISHED"}
 
 
-class WM_OT_ul_materials_move(Operator, Setup):
+class WM_OT_ul_materials_move(Setup, Operator):
     bl_label = "Move Item"
     bl_description = "Move selected item up/down in the list"
     bl_idname = "wm.jewelcraft_ul_materials_move"

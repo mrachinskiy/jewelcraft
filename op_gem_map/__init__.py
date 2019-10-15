@@ -35,7 +35,7 @@ from .. import var
 from ..op_product_report import report_get
 
 
-class VIEW3D_OT_gem_map(Operator, Offscreen, OnscreenText):
+class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
     bl_label = "Jewelcraft Gem Map"
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
