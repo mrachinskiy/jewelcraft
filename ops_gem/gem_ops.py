@@ -20,7 +20,7 @@
 
 
 import bpy
-from bpy.props import EnumProperty, FloatProperty
+from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
 
 from .. import var
@@ -103,6 +103,16 @@ class OBJECT_OT_gem_edit(Operator):
 
     cut: EnumProperty(name="Cut", items=dynamic_list.cuts, options={"SKIP_SAVE"})
     stone: EnumProperty(name="Stone", items=dynamic_list.stones, options={"SKIP_SAVE"})
+    use_id_only: BoolProperty(
+        name="Only ID",
+        description="Only edit gem identifiers, not affecting object data and materials",
+        options={"SKIP_SAVE"},
+    )
+    use_force: BoolProperty(
+        name="Force",
+        description="Force edit selected objects, can be used to make gems from non-gem objects",
+        options={"SKIP_SAVE"},
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -113,63 +123,73 @@ class OBJECT_OT_gem_edit(Operator):
         split = layout.split(factor=0.49)
         split.row()
         split.template_icon_view(self, "cut", show_labels=True)
+        layout.prop(self, "use_id_only")
+        layout.prop(self, "use_force", text="Force", text_ctxt="JewelCraft")
 
     def execute(self, context):
         obs = context.selected_objects
 
-        if self.cut != self.cut_orig:
+        cut_name = asset.get_name(self.cut)
+        stone_name = asset.get_name(self.stone)
 
-            cut_name = asset.get_name(self.cut)
-            imported = asset.asset_import(var.GEM_ASSET_FILEPATH, me_name=cut_name)
-            me = imported.meshes[0]
+        imported = asset.asset_import(var.GEM_ASSET_FILEPATH, me_name=cut_name)
+        me = imported.meshes[0]
 
-            for ob in obs:
-                if "gem" in ob:
+        color = var.STONE_COLOR.get(self.stone) or self.color
 
-                    size_orig = ob.dimensions[1]
-                    mats_orig = ob.data.materials
+        for ob in obs:
 
-                    ob.data = me.copy()
+            if ob.type != "MESH":
+                continue
+
+            if self.use_force or "gem" in ob:
+
+                if self.use_force:
+                    ob["gem"] = {}
+
+                if self.use_force or ob["gem"]["cut"] != self.cut:
+
                     ob["gem"]["cut"] = self.cut
-                    ob.name = cut_name
 
-                    ob.scale = (size_orig, size_orig, size_orig)
-                    asset.apply_scale(ob)
+                    if not self.use_id_only:
+                        size_orig = ob.dimensions[1]
+                        mats_orig = ob.data.materials
 
-                    for mat in mats_orig:
-                        ob.data.materials.append(mat)
+                        ob.data = me.copy()
+                        ob.name = cut_name
 
-            bpy.data.meshes.remove(me)
+                        ob.scale = (size_orig, size_orig, size_orig)
+                        asset.apply_scale(ob)
 
-        if self.stone != self.stone_orig:
+                        for mat in mats_orig:
+                            ob.data.materials.append(mat)
 
-            stone_name = asset.get_name(self.stone)
-            color = var.STONE_COLOR.get(self.stone) or self.color
-
-            for ob in obs:
-                if "gem" in ob:
-
-                    if ob.data.users > 1:
-                        ob.data = ob.data.copy()
+                if self.use_force or ob["gem"]["stone"] != self.stone:
 
                     ob["gem"]["stone"] = self.stone
-                    asset.add_material(ob, name=stone_name, color=color, is_gem=True)
+
+                    if not self.use_id_only:
+
+                        if ob.data.users > 1:
+                            ob.data = ob.data.copy()
+
+                        asset.add_material(ob, name=stone_name, color=color, is_gem=True)
+
+        bpy.data.meshes.remove(me)
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.selected_objects or not context.object:
+        if not context.selected_objects:
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
         ob = context.object
 
-        if "gem" in ob:
+        if ob is not None and "gem" in ob:
             self.cut = ob["gem"]["cut"]
             self.stone = ob["gem"]["stone"]
 
-        self.stone_orig = self.stone
-        self.cut_orig = self.cut
         self.color = asset.color_rnd()
 
         wm = context.window_manager
@@ -180,31 +200,10 @@ class OBJECT_OT_gem_id_add(Operator):
     bl_label = "JewelCraft Add Gem ID"
     bl_description = "Add gem identifiers to selected objects"
     bl_idname = "object.jewelcraft_gem_id_add"
-    bl_options = {"REGISTER", "UNDO"}
-
-    cut: EnumProperty(name="Cut", items=dynamic_list.cuts)
-    stone: EnumProperty(name="Stone", items=dynamic_list.stones)
-
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
-
-        layout.prop(self, "stone")
-        split = layout.split(factor=0.49)
-        split.row()
-        split.template_icon_view(self, "cut", show_labels=True)
 
     def execute(self, context):
-        for ob in context.selected_objects:
-            if ob.type == "MESH":
-                ob["gem"] = {"cut": self.cut, "stone": self.stone}
-
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_props_dialog(self)
+        self.report({"ERROR"}, "DEPRECATED! Use Edit Gem tool Force option instead")
+        return {"CANCELLED"}
 
 
 class OBJECT_OT_gem_id_convert_deprecated(Operator):
