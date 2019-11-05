@@ -89,6 +89,7 @@ class WM_OT_product_report(Operator):
         layout.separator()
 
     def execute(self, context):
+        version_281 = bpy.app.version >= (2, 81, 14)
         data_raw = report_get.data_collect(self, context)
         data_fmt = report_fmt.data_format(self, context, data_raw)
 
@@ -113,7 +114,11 @@ class WM_OT_product_report(Operator):
             txt = bpy.data.texts.new("Product Report")
 
         txt.write(data_fmt)
-        txt.current_line_index = 0
+
+        if version_281:
+            txt.cursor_set(0)
+        else:
+            txt.current_line_index = 0
 
         # Save to file
         # ---------------------------
