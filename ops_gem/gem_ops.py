@@ -202,7 +202,7 @@ class OBJECT_OT_gem_id_add(Operator):
     bl_idname = "object.jewelcraft_gem_id_add"
 
     def execute(self, context):
-        self.report({"ERROR"}, "DEPRECATED! Use Edit Gem tool Force option instead")
+        self.report({"ERROR"}, "DEPRECATED! Use Edit Gem tool instead")
         return {"CANCELLED"}
 
 
