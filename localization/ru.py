@@ -96,12 +96,13 @@ dictionary = {
         "Circumference": "Окружность",
         "Scatter (%)": "Распределение (%)",
         "Only ID": "Только идентификаторы",
+        "Force Edit": "Принудительное редактирование",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
 
-        "Force edit selected objects, can be used to make gems from non-gem objects":
-            "Принудительно редактировать выделенные объекты, можно использовать для создания камней из других объектов",
+        "Force edit selected mesh objects, can be used to make gems from non-gem objects":
+            "Принудительно редактировать выделенные мэш объекты, можно использовать для создания камней из других объектов",
 
         "Only edit gem identifiers, not affecting object data and materials":
             "Редактировать только идентификаторы камня, не затрагивая объектную информация и материалы.",
@@ -387,7 +388,6 @@ dictionary = {
         "Cut": "Огранка",
         "Round": "Кр-57",
         "Spacing": "Расстояние",
-        "Force": "Принудительно",
     },
     "Dative": {
         "Size": "Размеру",
