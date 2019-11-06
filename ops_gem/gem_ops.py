@@ -109,8 +109,8 @@ class OBJECT_OT_gem_edit(Operator):
         options={"SKIP_SAVE"},
     )
     use_force: BoolProperty(
-        name="Force",
-        description="Force edit selected objects, can be used to make gems from non-gem objects",
+        name="Force Edit",
+        description="Force edit selected mesh objects, can be used to make gems from non-gem objects",
         options={"SKIP_SAVE"},
     )
 
@@ -124,7 +124,7 @@ class OBJECT_OT_gem_edit(Operator):
         split.row()
         split.template_icon_view(self, "cut", show_labels=True)
         layout.prop(self, "use_id_only")
-        layout.prop(self, "use_force", text="Force", text_ctxt="JewelCraft")
+        layout.prop(self, "use_force")
 
     def execute(self, context):
         obs = context.selected_objects
