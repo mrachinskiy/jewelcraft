@@ -97,7 +97,7 @@ class OBJECT_OT_select_gems_by_trait(Operator):
 
         if selected:
 
-            if not context.object.select_get():
+            if context.object is None or not context.object.select_get():
                 context.view_layer.objects.active = selected[0]
 
             if self.use_select_children:
