@@ -203,8 +203,11 @@ class CURVE_OT_size_curve_add(Operator):
 
         if obs:
             for ob in obs:
-                md = ob.modifiers.new("Curve", "CURVE")
-                md.object = curve
+                try:
+                    md = ob.modifiers.new("Curve", "CURVE")
+                    md.object = curve
+                except AttributeError:
+                    continue
 
         return {"FINISHED"}
 
