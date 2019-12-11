@@ -147,10 +147,9 @@ def _draw(self, context):
     shader.bind()
     bgl.glEnable(bgl.GL_BLEND)
     bgl.glEnable(bgl.GL_LINE_SMOOTH)
+    if not props.widget_show_in_front:
+        bgl.glEnable(bgl.GL_DEPTH_TEST)
     bgl.glDepthMask(bgl.GL_FALSE)
-
-    if props.widget_show_in_front:
-        bgl.glDisable(bgl.GL_DEPTH_TEST)
 
     for dup in depsgraph.object_instances:
 
@@ -249,8 +248,8 @@ def _draw(self, context):
 
     bgl.glDisable(bgl.GL_BLEND)
     bgl.glDisable(bgl.GL_LINE_SMOOTH)
+    bgl.glDisable(bgl.GL_DEPTH_TEST)
     bgl.glDepthMask(bgl.GL_TRUE)
-    bgl.glEnable(bgl.GL_DEPTH_TEST)
     bgl.glLineWidth(1.0)
 
 
