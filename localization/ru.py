@@ -149,8 +149,10 @@ dictionary = {
         "Project selected objects onto active object using Lattice":
             "Проецировать выделенные объекты на активный объект с помощью Lattice",
 
-        "Deform active object profile with Lattice":
-            "Деформировать профиль активного объекта с помощью Lattice",
+        "Deform active object profile with Lattice, "
+        "also works in Edit Mode with selected vertices":
+            "Деформировать профиль активного объекта с помощью Lattice, "
+            "также работает в режиме редактирования с выделенными вершинами",
 
         "Create prongs for selected gems\n"
         "(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
@@ -288,6 +290,7 @@ dictionary = {
         "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
         "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
         "Active object must be a curve": "Активный объект должен быть кривой",
+        "Object dimensions must be greater than zero": "Габариты объекта должны быть больше нуля",
 
         "Selected objects do not have Follow Path constraint":
             "Выделенные объекты не имеют ограничение Follow Path",

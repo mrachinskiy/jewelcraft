@@ -429,13 +429,20 @@ class OBJECT_OT_lattice_project(Operator):
         obs.remove(context.object)
         self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox(obs)
 
+        if 0.0 in self.dim:
+            self.report({"ERROR"}, "Object dimensions must be greater than zero")
+            return {"CANCELLED"}
+
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
 
 
 class OBJECT_OT_lattice_profile(Operator):
     bl_label = "JewelCraft Lattice Profile"
-    bl_description = "Deform active object profile with Lattice"
+    bl_description = (
+        "Deform active object profile with Lattice, "
+        "also works in Edit Mode with selected vertices"
+    )
     bl_idname = "object.jewelcraft_lattice_profile"
     bl_options = {"REGISTER", "UNDO"}
 
@@ -469,6 +476,7 @@ class OBJECT_OT_lattice_profile(Operator):
     def execute(self, context):
         ob = context.object
         obs = context.selected_objects
+        is_editmesh = context.mode == "EDIT_MESH"
 
         if ob.select_get():
             obs.remove(ob)
@@ -479,6 +487,9 @@ class OBJECT_OT_lattice_profile(Operator):
         else:
             rot_z = pi / 2
             dim_xy = self.dim[0]
+
+        if is_editmesh:
+            bpy.ops.object.mode_set(mode="OBJECT")
 
         bpy.ops.object.add(radius=1, type="LATTICE", rotation=(0.0, 0.0, rot_z))
         lat = context.object
@@ -532,9 +543,12 @@ class OBJECT_OT_lattice_profile(Operator):
                 if not v_gr:
                     v_gr = ob.vertex_groups.new(name="Lattice profile")
 
-                v_ids = [v.index for v in ob.data.vertices if v.co[2] > 0.1]
-                v_gr.add(v_ids, 1.0, "ADD")
+                if is_editmesh:
+                    v_ids = [v.index for v in ob.data.vertices if v.select]
+                else:
+                    v_ids = [v.index for v in ob.data.vertices if v.co[2] > 0.1]
 
+                v_gr.add(v_ids, 1.0, "ADD")
                 md.vertex_group = v_gr.name
 
         # Transform lattice points
@@ -560,6 +574,10 @@ class OBJECT_OT_lattice_profile(Operator):
             return {"CANCELLED"}
 
         self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox((ob,))
+
+        if 0.0 in self.dim:
+            self.report({"ERROR"}, "Object dimensions must be greater than zero")
+            return {"CANCELLED"}
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
@@ -607,6 +625,10 @@ class OBJECT_OT_resize(Operator):
             return {"CANCELLED"}
 
         dim = context.object.dimensions
+
+        if 0.0 in dim:
+            self.report({"ERROR"}, "Object dimensions must be greater than zero")
+            return {"CANCELLED"}
 
         self.dim_orig = dim.to_tuple()
         self.size = dim[int(self.axis)]

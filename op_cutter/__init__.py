@@ -134,6 +134,11 @@ class OBJECT_OT_cutter_add(UI, Operator):
             return {"CANCELLED"}
 
         asset.get_gem(self, context)
+
+        if 0.0 in {self.gem_w, self.gem_l, self.gem_h}:
+            self.report({"ERROR"}, "Object dimensions must be greater than zero")
+            return {"CANCELLED"}
+
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_cutter
 
