@@ -109,6 +109,7 @@ classes = (
     ui.VIEW3D_PT_jewelcraft_assets,
     ui.VIEW3D_PT_jewelcraft_jeweling,
     ui.VIEW3D_PT_jewelcraft_object,
+    ui.VIEW3D_PT_jewelcraft_object_editmesh,
     ui.VIEW3D_PT_jewelcraft_curve,
     ui.VIEW3D_PT_jewelcraft_curve_editmesh,
     ui.VIEW3D_PT_jewelcraft_weighting,

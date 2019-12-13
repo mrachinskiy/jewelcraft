@@ -330,6 +330,16 @@ class VIEW3D_PT_jewelcraft_object(Setup, Panel):
         col.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.icon_get("LATTICE_PROFILE"))
 
 
+class VIEW3D_PT_jewelcraft_object_editmesh(Setup, Panel):
+    bl_label = "Object"
+    bl_context = "mesh_edit"
+
+    def draw(self, context):
+        layout = self.layout
+
+        layout.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.icon_get("LATTICE_PROFILE"))
+
+
 class VIEW3D_PT_jewelcraft_curve(Setup, Panel):
     bl_label = "Curve"
     bl_context = "objectmode"
