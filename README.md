@@ -4,15 +4,16 @@ Features:
 
 * Create and customize gems, prongs and cutters.
 * Organize library of components using in add-on asset manager.
-* Additional modeling tools to help jeweling process.
 * Calculate weight in a variety of precious alloys.
-* Present summary information about your design with product report.
+* Present summary information about your design with product report and gem map.
+* Additional modeling tools to help jeweling process.
 
 Video:
 
 * [Demo v1.0](https://youtu.be/XZ6uIdNnrHk)
 * [Prongs & Cutters v2.0](https://youtu.be/AZlCFg8bDSg)
 * [Widgets v2.3](https://youtu.be/9VN_-seau3k)
+* [Gem Map v2.3](https://youtu.be/aQ__ec0BAbE)
 
 [More videos][playlist_en] | [Больше видео][playlist_ru]
 
