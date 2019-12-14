@@ -35,15 +35,9 @@ from .. import var
 # ------------------------------------
 
 
-def get_gem(self, context):
-    ob = context.object
-
-    self.gem_w = ob.dimensions[0]
-    self.gem_l = ob.dimensions[1]
-    self.gem_h = ob.dimensions[2]
-
+def get_gem(self, ob):
+    self.gem_w, self.gem_l, self.gem_h = ob.dimensions
     self.cut = ob["gem"]["cut"] if "gem" in ob else ""
-
     self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
 
     if self.cut in {"SQUARE", "ASSCHER", "PRINCESS", "CUSHION", "RADIANT", "FLANDERS", "OCTAGON"}:

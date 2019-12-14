@@ -72,16 +72,17 @@ class OBJECT_OT_prongs_add(UI, Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.object or not context.selected_objects:
+        ob = context.object
+
+        if not ob or not context.selected_objects:
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        asset.get_gem(self, context)
-
-        if 0.0 in {self.gem_w, self.gem_l, self.gem_h}:
+        if 0.0 in ob.dimensions:
             self.report({"ERROR"}, "Object dimensions must be greater than zero")
             return {"CANCELLED"}
 
+        asset.get_gem(self, ob)
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_prongs
 
