@@ -135,10 +135,6 @@ class OBJECT_OT_cutter_add(UI, Operator):
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        if 0.0 in ob.dimensions:
-            self.report({"ERROR"}, "Object dimensions must be greater than zero")
-            return {"CANCELLED"}
-
         asset.get_gem(self, ob)
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_cutter
