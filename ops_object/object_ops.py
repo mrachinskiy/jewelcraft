@@ -313,6 +313,13 @@ class OBJECT_OT_make_instance_face(Operator):
         return self.execute(context)
 
 
+def get_ratio(a, b):
+    try:
+        return a / b
+    except ZeroDivisionError:
+        return 0.0
+
+
 class OBJECT_OT_lattice_project(Operator):
     bl_label = "JewelCraft Lattice Project"
     bl_description = "Project selected objects onto active object using Lattice"
@@ -372,9 +379,9 @@ class OBJECT_OT_lattice_project(Operator):
             md.object = lat
 
         if "X" in direction:
-            ratio = self.dim[2] / self.dim[1]
-            lat.scale[0] = self.dim[2]
-            lat.scale[1] = self.dim[1]
+            ratio = get_ratio(self.dim[2], self.dim[1])
+            sca_x = self.dim[2]
+            sca_y = self.dim[1]
 
             if "NEG" in direction:
                 lat.rotation_euler[1] = pi / 2
@@ -384,9 +391,9 @@ class OBJECT_OT_lattice_project(Operator):
                 lat.location = (self.bbox_max[0], self.loc[1], self.loc[2])
 
         elif "Y" in direction:
-            ratio = self.dim[0] / self.dim[2]
-            lat.scale[0] = self.dim[0]
-            lat.scale[1] = self.dim[2]
+            ratio = get_ratio(self.dim[0], self.dim[2])
+            sca_x = self.dim[0]
+            sca_y = self.dim[2]
 
             if "NEG" in direction:
                 lat.rotation_euler[0] = -pi / 2
@@ -396,9 +403,9 @@ class OBJECT_OT_lattice_project(Operator):
                 lat.location = (self.loc[0], self.bbox_max[1], self.loc[2])
 
         else:
-            ratio = self.dim[0] / self.dim[1]
-            lat.scale[0] = self.dim[0]
-            lat.scale[1] = self.dim[1]
+            ratio = get_ratio(self.dim[0], self.dim[1])
+            sca_x = self.dim[0]
+            sca_y = self.dim[1]
 
             if "NEG" in direction:
                 lat.location = (self.loc[0], self.loc[1], self.bbox_min[2])
@@ -406,7 +413,10 @@ class OBJECT_OT_lattice_project(Operator):
                 lat.rotation_euler[0] = -pi
                 lat.location = (self.loc[0], self.loc[1], self.bbox_max[2])
 
-        if ratio >= 1.0:
+        if not ratio:
+            pt_u = 10 if sca_x else 1
+            pt_v = 10 if sca_y else 1
+        elif ratio >= 1.0:
             pt_u = round(10 * ratio)
             pt_v = 10
         else:
@@ -416,6 +426,9 @@ class OBJECT_OT_lattice_project(Operator):
         lat.data.points_u = pt_u
         lat.data.points_v = pt_v
         lat.data.points_w = 1
+
+        lat.scale[0] = sca_x or 1.0
+        lat.scale[1] = sca_y or 1.0
 
         return {"FINISHED"}
 
@@ -428,10 +441,6 @@ class OBJECT_OT_lattice_project(Operator):
 
         obs.remove(context.object)
         self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox(obs)
-
-        if 0.0 in self.dim:
-            self.report({"ERROR"}, "Object dimensions must be greater than zero")
-            return {"CANCELLED"}
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
@@ -483,10 +492,10 @@ class OBJECT_OT_lattice_profile(Operator):
 
         if self.axis == "X":
             rot_z = 0.0
-            dim_xy = self.dim[1]
+            dim_xy = self.dim[1] or 1.0
         else:
             rot_z = pi / 2
-            dim_xy = self.dim[0]
+            dim_xy = self.dim[0] or 1.0
 
         if is_editmesh:
             bpy.ops.object.mode_set(mode="OBJECT")
@@ -575,10 +584,6 @@ class OBJECT_OT_lattice_profile(Operator):
 
         self.loc, self.dim, self.bbox_min, self.bbox_max = asset.calc_bbox((ob,))
 
-        if 0.0 in self.dim:
-            self.report({"ERROR"}, "Object dimensions must be greater than zero")
-            return {"CANCELLED"}
-
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
         return self.execute(context)
@@ -611,13 +616,25 @@ class OBJECT_OT_resize(Operator):
         layout.use_property_decorate = False
 
         layout.row().prop(self, "axis", expand=True)
-        layout.prop(self, "size")
+
+        if self.dim_orig[int(self.axis)]:
+            layout.prop(self, "size")
+        else:
+            row = layout.row()
+            row.alignment = "RIGHT"
+            row.label(text="Zero dimensions", icon="ERROR")
 
         layout.separator()
 
     def execute(self, context):
-        scale = self.size / self.dim_orig[int(self.axis)]
+        size_orig = self.dim_orig[int(self.axis)]
+
+        if not size_orig:
+            return {"FINISHED"}
+
+        scale = self.size / size_orig
         bpy.ops.transform.resize(value=(scale, scale, scale), center_override=self.pivot)
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -625,10 +642,6 @@ class OBJECT_OT_resize(Operator):
             return {"CANCELLED"}
 
         dim = context.object.dimensions
-
-        if 0.0 in dim:
-            self.report({"ERROR"}, "Object dimensions must be greater than zero")
-            return {"CANCELLED"}
 
         self.dim_orig = dim.to_tuple()
         self.size = dim[int(self.axis)]

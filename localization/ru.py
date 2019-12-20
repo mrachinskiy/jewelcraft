@@ -97,6 +97,7 @@ dictionary = {
         "Scatter (%)": "Распределение (%)",
         "Only ID": "Только идентификаторы",
         "Force Edit": "Принудительное редактирование",
+        "Zero dimensions": "Нулевые габариты",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
@@ -290,7 +291,6 @@ dictionary = {
         "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
         "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
         "Active object must be a curve": "Активный объект должен быть кривой",
-        "Object dimensions must be greater than zero": "Габариты объекта должны быть больше нуля",
 
         "Selected objects do not have Follow Path constraint":
             "Выделенные объекты не имеют ограничение Follow Path",
