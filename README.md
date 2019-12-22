@@ -4,10 +4,10 @@ Features:
 
 * Create and customize gems, prongs and cutters.
 * Organize library of components using in add-on asset manager.
-* Detect overlap and display distances between gems.
+* Manage distances between gems to create compact setting.
 * Calculate weight in a variety of precious alloys.
-* Compose color-coded gem map.
-* Present summary information about your design with product report.
+* Generate color-coded gem map.
+* Present summary information about your design.
 
 Video:
 
