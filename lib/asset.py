@@ -58,16 +58,20 @@ def get_name(x):
 
 @lru_cache(maxsize=128)
 def girdle_coords(radius, mat):
-    coords = []
-    app = coords.append
     angle = tau / 64
 
-    for i in range(64):
-        x = sin(i * angle) * radius
-        y = cos(i * angle) * radius
-        app(Vector((x, y, 0.0)))
-
-    return tuple((mat @ co).freeze() for co in coords)
+    return tuple(
+        (
+            mat @ Vector(
+                (
+                    sin(i * angle) * radius,
+                    cos(i * angle) * radius,
+                    0.0,
+                )
+            )
+        ).freeze()
+        for i in range(64)
+    )
 
 
 @lru_cache(maxsize=128)
