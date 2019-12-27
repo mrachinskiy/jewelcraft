@@ -32,7 +32,7 @@ def _ct_calc(stone, cut, size):
     if not dens or not corr:
         return 0
 
-    dens = unit.convert(dens, "CM3_TO_MM3")
+    dens = unit.convert_cm3_mm3(dens)
     l = size[1]
     w = size[0]
     h = size[2]
@@ -50,7 +50,7 @@ def _ct_calc(stone, cut, size):
         vol = l * w * h / 6  # Tetrahedron
 
     g = vol * corr * dens
-    ct = unit.convert(g, "G_TO_CT")
+    ct = unit.convert_g_ct(g)
 
     return round(ct, 3)
 
