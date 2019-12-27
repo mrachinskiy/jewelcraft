@@ -29,24 +29,26 @@ from mathutils import Matrix
 
 
 def make_rect(bm, x, y, h):
-    coords = (
-        ( x,  y, h),
-        (-x,  y, h),
-        (-x, -y, h),
-        ( x, -y, h),
-    )
-
-    return [bm.verts.new(co) for co in coords]
+    return [
+        bm.verts.new(co)
+        for co in (
+            ( x,  y, h),
+            (-x,  y, h),
+            (-x, -y, h),
+            ( x, -y, h),
+        )
+    ]
 
 
 def make_tri(bm, x, y, h):
-    coords = (
-        (  x,  y / 3.0, h),
-        ( -x,  y / 3.0, h),
-        (0.0, -y / 1.5, h),
-    )
-
-    return [bm.verts.new(co) for co in coords]
+    return [
+        bm.verts.new(co)
+        for co in (
+            (  x,  y / 3.0, h),
+            ( -x,  y / 3.0, h),
+            (0.0, -y / 1.5, h),
+        )
+    ]
 
 
 # Tools
@@ -102,15 +104,17 @@ def make_edges(bm, verts):
 def bridge_verts(bm, v1, v2):
     faces = []
     edges = []
+    app_f = faces.append
+    app_e = edges.append
 
     for i in range(len(v1) - 1):
         f = bm.faces.new([v1[i + 1], v1[i], v2[i], v2[i + 1]])
-        faces.append(f)
-        edges.append(f.edges[1])
+        app_f(f)
+        app_e(f.edges[1])
 
     f = bm.faces.new([v1[0], v1[i + 1], v2[i + 1], v2[0]])
-    faces.append(f)
-    edges.append(f.edges[1])
+    app_f(f)
+    app_e(f.edges[1])
 
     return {"faces": faces, "edges": edges}
 
