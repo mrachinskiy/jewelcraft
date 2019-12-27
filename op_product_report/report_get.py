@@ -52,7 +52,7 @@ def data_collect(self, context, gem_map=False):
             if item.type == "WEIGHT":
                 if item.object.type == "MESH":
                     name = item.material_name
-                    density = unit.convert(item.material_density, "CM3_TO_MM3")
+                    density = unit.convert_cm3_mm3(item.material_density)
                     vol = from_scene_scale(mesh.est_volume((item.object,)), volume=True)
                     data["materials"][(name, density)] += vol
 

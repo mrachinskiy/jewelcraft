@@ -19,11 +19,12 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-def convert(x, units):
-    if units == "CM3_TO_MM3":
-        return x / 1000
-    if units == "G_TO_CT":
-        return x * 5
+def convert_cm3_mm3(x):
+    return x / 1000
+
+
+def convert_g_ct(x):
+    return x * 5
 
 
 class Scale:

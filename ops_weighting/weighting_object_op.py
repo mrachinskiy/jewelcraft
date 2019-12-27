@@ -47,7 +47,7 @@ class OBJECT_OT_weight_display(Operator):
 
         for mat in materials.values():
             if mat.enabled:
-                density = unit.convert(mat.density, "CM3_TO_MM3")
+                density = unit.convert_cm3_mm3(mat.density)
                 weight = round(vol * density, 2)
                 weight_fmt = "{} {}  {}".format(weight, _("g"), mat.name)
                 weight_report.append(weight_fmt)
