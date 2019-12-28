@@ -25,7 +25,7 @@ from ..localization import DICTIONARY
 
 
 class GetText:
-    __slots__ = ("use_gettext", "lang")
+    __slots__ = ("lang", "gettext")
 
     def __init__(self, context, lang):
         if lang == "AUTO":
@@ -34,10 +34,14 @@ class GetText:
         if lang == "es_ES":
             lang = "es"
 
-        self.use_gettext = lang in DICTIONARY.keys()
-        self.lang = lang
+        if lang in DICTIONARY.keys():
+            self.lang = lang
+            self.gettext = self._gettext
+        else:
+            self.gettext = self._blank
 
-    def gettext(self, text, ctxt="*"):
-        if self.use_gettext:
-            return DICTIONARY[self.lang].get((ctxt, text), text)
+    def _gettext(self, text, ctxt="*"):
+        return DICTIONARY[self.lang].get((ctxt, text), text)
+
+    def _blank(self, text, ctxt="*"):
         return text
