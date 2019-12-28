@@ -28,33 +28,34 @@ def convert_g_ct(x):
 
 
 class Scale:
-    __slots__ = ("scale", "use_conversion")
+    __slots__ = ("scale", "from_scene", "to_scene")
 
     def __init__(self, context):
         unit = context.scene.unit_settings
         self.scale = round(unit.scale_length, 4)
-        self.use_conversion = unit.system == "METRIC" and self.scale != 0.001
 
-    def from_scene(self, x, volume=False, batch=False):
-        if self.use_conversion:
+        if unit.system == "METRIC" and self.scale != 0.001:
+            self.from_scene = self._from_scene
+            self.to_scene = self._to_scene
+        else:
+            self.from_scene = self._blank
+            self.to_scene = self._blank
 
-            if volume:
-                return x * 1000 ** 3 * self.scale ** 3
-            if batch:
-                return tuple(v * 1000 * self.scale for v in x)
+    def _from_scene(self, x, volume=False, batch=False):
+        if volume:
+            return x * 1000 ** 3 * self.scale ** 3
+        if batch:
+            return tuple(v * 1000 * self.scale for v in x)
 
-            return x * 1000 * self.scale
+        return x * 1000 * self.scale
 
-        return x
+    def _to_scene(self, x, volume=False, batch=False):
+        if volume:
+            return x / 1000 ** 3 / self.scale ** 3
+        if batch:
+            return tuple(v / 1000 / self.scale for v in x)
 
-    def to_scene(self, x, volume=False, batch=False):
-        if self.use_conversion:
+        return x / 1000 / self.scale
 
-            if volume:
-                return x / 1000 ** 3 / self.scale ** 3
-            if batch:
-                return tuple(v / 1000 / self.scale for v in x)
-
-            return x / 1000 / self.scale
-
+    def _blank(self, x, volume=False, batch=False):
         return x
