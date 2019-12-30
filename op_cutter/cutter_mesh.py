@@ -265,13 +265,14 @@ def create_cutter(self):
             curve_resolution = self.detalization
             angle = -tau / curve_resolution
 
-            profile_coords = []
-            co_app = profile_coords.append
-
-            for i in range(curve_resolution):
-                x = sin(i * angle)
-                y = cos(i * angle)
-                co_app((x, y, 0.0))
+            profile_coords = [
+                (
+                    sin(i * angle),
+                    cos(i * angle),
+                    0.0,
+                )
+                for i in range(curve_resolution)
+            ]
 
             v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
 
