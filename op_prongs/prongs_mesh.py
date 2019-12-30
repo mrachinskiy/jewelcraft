@@ -38,16 +38,16 @@ def create_prongs(self):
         curve_resolution = int(self.detalization / 4) + 1
         angle = (pi / 2) / (curve_resolution - 1)
 
-        v_cos = []
-        v_co_app = v_cos.append
-        x = 0.0
+        v_cos = [
+            (
+                0.0,
+                sin(i * angle) * prong_rad,
+                cos(i * angle) * prong_rad * self.bump_scale + self.z_top,
+            )
+            for i in range(curve_resolution)
+        ]
 
-        for i in range(curve_resolution):
-            y = sin(i * angle) * prong_rad
-            z = cos(i * angle) * prong_rad * self.bump_scale + self.z_top
-            v_co_app((x, y, z))
-
-        v_co_app((x, prong_rad * taper, -self.z_btm))
+        v_cos.append((0.0, prong_rad * taper, -self.z_btm))
 
     else:
 
