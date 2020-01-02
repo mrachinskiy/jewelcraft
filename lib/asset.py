@@ -502,10 +502,11 @@ def calc_bbox(obs):
         bbox += [ob.matrix_world @ Vector(x) for x in ob.bound_box]
 
     x_min = min(x[0] for x in bbox)
-    x_max = max(x[0] for x in bbox)
     y_min = min(x[1] for x in bbox)
-    y_max = max(x[1] for x in bbox)
     z_min = min(x[2] for x in bbox)
+
+    x_max = max(x[0] for x in bbox)
+    y_max = max(x[1] for x in bbox)
     z_max = max(x[2] for x in bbox)
 
     x_loc = (x_max + x_min) / 2
