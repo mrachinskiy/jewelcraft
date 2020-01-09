@@ -67,14 +67,14 @@ def upd_size(self, context):
 
 
 def upd_diameter(self, context):
-    if self.use_unit_conversion:
+    if self.is_scale:
         self["circumference"] = self.diameter * pi
     else:
         self["circumference"] = round(self.diameter * pi, 4)
 
 
 def upd_circumference(self, context):
-    if self.use_unit_conversion:
+    if self.is_scale:
         self["diameter"] = self.circumference / pi
     else:
         self["diameter"] = round(self.circumference / pi, 2)
@@ -147,7 +147,7 @@ class CURVE_OT_size_curve_add(Operator):
         name="1/2",
         update=upd_size,
     )
-    use_unit_conversion: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
+    is_scale: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
@@ -212,7 +212,8 @@ class CURVE_OT_size_curve_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.use_unit_conversion = unit.Scale(context).use_conversion
+        unit = context.scene.unit_settings
+        self.is_scale = unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
