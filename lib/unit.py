@@ -19,6 +19,22 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+WARN_SCALE = 1
+WARN_SYSTEM = 2
+
+
+def check(context):
+    unit = context.scene.unit_settings
+
+    if unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001:
+        return WARN_SCALE
+
+    if unit.system == "IMPERIAL":
+        return WARN_SYSTEM
+
+    return False
+
+
 def convert_cm3_mm3(x):
     return x / 1000
 

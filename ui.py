@@ -23,7 +23,7 @@ import bpy
 from bpy.types import Panel, Menu, UIList
 
 from . import var, mod_update
-from .lib import asset
+from .lib import asset, unit
 
 
 # Utils
@@ -179,22 +179,16 @@ class VIEW3D_PT_jewelcraft_warning(Setup, Panel):
 
     @classmethod
     def poll(cls, context):
-        unit = context.scene.unit_settings
-        is_scale = unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001
-        is_imperial = unit.system == "IMPERIAL"
-
-        return is_scale or is_imperial
+        return unit.check(context) is not False
 
     def draw(self, context):
-        unit = context.scene.unit_settings
-        is_scale = unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001
-        is_imperial = unit.system == "IMPERIAL"
-
         layout = self.layout
 
-        if is_scale:
+        warning = unit.check(context)
+
+        if warning is unit.WARN_SCALE:
             layout.label(text="Scene scale is not optimal", icon="ERROR")
-        elif is_imperial:
+        elif warning is unit.WARN_SYSTEM:
             layout.label(text="Unsupported unit system", icon="ERROR")
 
         col = layout.row()
