@@ -91,7 +91,7 @@ class OnscreenText:
             blf.color(fontid, 0.7, 0.7, 0.7, 1.0)
             blf.draw(fontid, hotkey)
 
-            if prop_type == self.TYPE_BOOL:
+            if prop_type is self.TYPE_BOOL:
                 x_ofst += font_w_2 + 10
                 blf.position(fontid, x_ofst, y, 0.0)
                 blf.color(fontid, 0.97, 0.97, 0.97, 1.0)
