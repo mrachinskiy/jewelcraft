@@ -187,17 +187,5 @@ UPDATE_OPERATOR_ID_AFFIX = "jewelcraft"
 UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "update_state.json")
 UPDATE_RELEASES_URL = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
 UPDATE_VERSION_MAX = None
-UPDATE_VERSION_CURRENT = None
-
-UPDATE_CHECKING = 0
-UPDATE_INSTALLING = 1
-UPDATE_COMPLETED = 2
-UPDATE_ERROR = 3
 
 update_available = False
-update_status = None
-update_days_passed = None
-update_version_new = None
-update_download_url = None
-update_html_url = None
-update_error_msg = None
