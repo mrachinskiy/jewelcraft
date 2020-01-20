@@ -64,8 +64,8 @@ def _save_state_set():
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def _runtime_state_set(in_progress=False):
-    var.update_in_progress = in_progress
+def _runtime_state_set(status):
+    var.update_status = status
 
     for window in bpy.context.window_manager.windows:
         for area in window.screen.areas:
@@ -75,6 +75,7 @@ def _runtime_state_set(in_progress=False):
 def _update_check(use_force_check):
     import re
     import urllib.request
+    import urllib.error
     import json
     import ssl
 
@@ -93,71 +94,88 @@ def _update_check(use_force_check):
     ):
         return
 
-    _runtime_state_set(in_progress=True)
+    _runtime_state_set(var.UPDATE_CHECKING)
     ssl_context = ssl.SSLContext()
 
-    with urllib.request.urlopen(var.UPDATE_RELEASES_URL, context=ssl_context) as response:
-        data = json.load(response)
+    try:
 
-        for release in data:
-
-            if not prefs.update_use_prerelease and release["prerelease"]:
-                continue
-
-            if not release["draft"]:
-                update_version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
-                update_version = tuple(int(x) for x in update_version_string.split())
-
-                if var.UPDATE_MAX_VERSION and update_version >= var.UPDATE_MAX_VERSION:
-                    continue
-
-                if update_version > var.UPDATE_CURRENT_VERSION:
-                    break
-                else:
-                    _save_state_set()
-                    _runtime_state_set(in_progress=False)
-                    return
-
-        with urllib.request.urlopen(release["assets_url"], context=ssl_context) as response:
+        with urllib.request.urlopen(var.UPDATE_RELEASES_URL, context=ssl_context) as response:
             data = json.load(response)
 
-            for asset in data:
-                if re.match(r".+\d+.\d+.\d+.+", asset["name"]):
-                    break
+            for release in data:
 
-            prerelease_note = " (pre-release)" if release["prerelease"] else ""
+                if not prefs.update_use_prerelease and release["prerelease"]:
+                    continue
 
-            var.update_available = True
-            var.update_version = release["tag_name"] + prerelease_note
-            var.update_download_url = asset["browser_download_url"]
-            var.update_html_url = release["html_url"]
+                if not release["draft"]:
+                    update_version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
+                    update_version_new = tuple(int(x) for x in update_version_string.split())
 
-    _save_state_set()
-    _runtime_state_set(in_progress=False)
+                    if var.UPDATE_VERSION_MAX and update_version_new >= var.UPDATE_VERSION_MAX:
+                        continue
+
+                    if update_version_new > var.UPDATE_VERSION_CURRENT:
+                        break
+                    else:
+                        _save_state_set()
+                        _runtime_state_set(None)
+                        return
+
+            with urllib.request.urlopen(release["assets_url"], context=ssl_context) as response:
+                data = json.load(response)
+
+                for asset in data:
+                    if re.match(r".+\d+.\d+.\d+.+", asset["name"]):
+                        break
+
+                prerelease_note = " (pre-release)" if release["prerelease"] else ""
+
+                var.update_available = True
+                var.update_version_new = release["tag_name"] + prerelease_note
+                var.update_download_url = asset["browser_download_url"]
+                var.update_html_url = release["html_url"]
+
+        _save_state_set()
+        _runtime_state_set(None)
+
+    except (urllib.error.HTTPError, urllib.error.URLError) as e:
+
+        var.update_error_msg = str(e)
+
+        _save_state_set()
+        _runtime_state_set(var.UPDATE_ERROR)
 
 
 def _update_download():
     import io
+    import pathlib
     import zipfile
     import urllib.request
+    import urllib.error
     import shutil
     import ssl
 
-    _runtime_state_set(in_progress=True)
+    _runtime_state_set(var.UPDATE_INSTALLING)
     ssl_context = ssl.SSLContext()
 
-    with urllib.request.urlopen(var.update_download_url, context=ssl_context) as response:
-        with zipfile.ZipFile(io.BytesIO(response.read())) as zfile:
-            addons_dir = os.path.dirname(var.ADDON_DIR)
-            extract_dirname = zfile.namelist()[0]
-            extract_dir = os.path.join(addons_dir, extract_dirname)
+    try:
 
-            shutil.rmtree(var.ADDON_DIR)
-            zfile.extractall(addons_dir)
-            os.rename(extract_dir, var.ADDON_DIR)
+        with urllib.request.urlopen(var.update_download_url, context=ssl_context) as response:
+            with zipfile.ZipFile(io.BytesIO(response.read())) as zfile:
+                addons_dir = os.path.dirname(var.ADDON_DIR)
+                extract_relpath = pathlib.Path(zfile.namelist()[0])
+                extract_dir = os.path.join(addons_dir, extract_relpath.parts[0])
 
-    var.update_completed = True
-    _runtime_state_set(in_progress=True)
+                shutil.rmtree(var.ADDON_DIR)
+                zfile.extractall(addons_dir)
+                os.rename(extract_dir, var.ADDON_DIR)
+
+        _runtime_state_set(var.UPDATE_COMPLETED)
+
+    except (urllib.error.HTTPError, urllib.error.URLError) as e:
+
+        var.update_error_msg = str(e)
+        _runtime_state_set(var.UPDATE_ERROR)
 
 
 def update_init_check(use_force_check=False):
