@@ -38,7 +38,7 @@ def prefs_ui(self, layout):
     row = layout.row(align=True)
     row.alignment = "CENTER"
 
-    if var.update_completed:
+    if var.update_status is var.UPDATE_COMPLETED:
         row.label(text="Update completed")
         row.operator(operators.OP_IDNAME_WHATS_NEW)
 
@@ -46,14 +46,17 @@ def prefs_ui(self, layout):
         row.alignment = "CENTER"
         row.label(text="Close Blender to complete the installation", icon="ERROR")
 
-    elif var.update_in_progress:
-        if var.update_available:
-            row.label(text="Installing...")
-        else:
-            row.label(text="Checking...")
+    elif var.update_status is var.UPDATE_CHECKING:
+        row.label(text="Checking...")
+
+    elif var.update_status is var.UPDATE_INSTALLING:
+        row.label(text="Installing...")
+
+    elif var.update_status is var.UPDATE_ERROR:
+        row.label(text=var.update_error_msg)
 
     elif var.update_available:
-        row.label(text=_("Update {} is available").format(var.update_version))
+        row.label(text=_("Update {} is available").format(var.update_version_new))
 
     else:
         if var.update_days_passed is None:
@@ -70,7 +73,7 @@ def prefs_ui(self, layout):
     col = layout.row()
     col.alignment = "CENTER"
     col.scale_y = 1.5
-    col.enabled = not var.update_in_progress and not var.update_completed
+    col.enabled = var.update_status is None or var.update_status is var.UPDATE_ERROR
 
     if var.update_available:
         col.operator(operators.OP_IDNAME_DOWNLOAD)
@@ -86,7 +89,7 @@ def sidebar_ui(self, context):
     row = layout.row(align=True)
     row.alignment = "CENTER"
 
-    if var.update_completed:
+    if var.update_status is var.UPDATE_COMPLETED:
         row.label(text="Update completed")
         row.operator(operators.OP_IDNAME_WHATS_NEW)
 
@@ -94,14 +97,17 @@ def sidebar_ui(self, context):
         row.alignment = "CENTER"
         row.label(text="Close Blender to complete the installation", icon="ERROR")
 
-    elif var.update_in_progress:
+    elif var.update_status is var.UPDATE_INSTALLING:
         row.label(text="Installing...")
 
-    elif var.update_available:
-        row.label(text=_("Update {} is available").format(var.update_version))
+    elif var.update_status is var.UPDATE_ERROR:
+        row.label(text=var.update_error_msg)
+
+    else:
+        row.label(text=_("Update {} is available").format(var.update_version_new))
 
     col = layout.row()
     col.alignment = "CENTER"
     col.scale_y = 1.5
-    col.enabled = not var.update_in_progress and not var.update_completed
+    col.enabled = var.update_status is None or var.update_status is var.UPDATE_ERROR
     col.operator(operators.OP_IDNAME_DOWNLOAD)

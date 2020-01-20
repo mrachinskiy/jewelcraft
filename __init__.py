@@ -57,6 +57,7 @@ if "bpy" in locals():
                 walk(entry.path, parent_dir=dirname)
 
     walk(var.ADDON_DIR)
+
 else:
     import os
 
@@ -85,7 +86,7 @@ else:
     from .lib import on_load
 
 
-var.UPDATE_CURRENT_VERSION = bl_info["version"]
+var.UPDATE_VERSION_CURRENT = bl_info["version"]
 
 classes = (
     preferences.MeasurementCollection,

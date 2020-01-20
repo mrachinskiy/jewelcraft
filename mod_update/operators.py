@@ -37,7 +37,11 @@ class WM_OT_update_check(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        if var.update_in_progress:
+        if (
+            var.update_status is var.UPDATE_CHECKING or
+            var.update_status is var.UPDATE_INSTALLING or
+            var.update_status is var.UPDATE_COMPLETED
+        ):
             return {"CANCELLED"}
 
         lib.update_init_check(use_force_check=True)
@@ -52,7 +56,11 @@ class WM_OT_update_download(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        if var.update_in_progress:
+        if (
+            var.update_status is var.UPDATE_CHECKING or
+            var.update_status is var.UPDATE_INSTALLING or
+            var.update_status is var.UPDATE_COMPLETED
+        ):
             return {"CANCELLED"}
 
         lib.update_init_download()
