@@ -22,7 +22,7 @@
 from bpy.types import Operator
 
 from .. import var
-from . import lib
+from . import state, lib
 
 
 OP_IDNAME_CHECK = f"wm.{var.UPDATE_OPERATOR_ID_AFFIX}_update_check"
@@ -38,9 +38,9 @@ class WM_OT_update_check(Operator):
 
     def execute(self, context):
         if (
-            var.update_status is var.UPDATE_CHECKING or
-            var.update_status is var.UPDATE_INSTALLING or
-            var.update_status is var.UPDATE_COMPLETED
+            state.status is state.CHECKING or
+            state.status is state.INSTALLING or
+            state.status is state.COMPLETED
         ):
             return {"CANCELLED"}
 
@@ -57,9 +57,9 @@ class WM_OT_update_download(Operator):
 
     def execute(self, context):
         if (
-            var.update_status is var.UPDATE_CHECKING or
-            var.update_status is var.UPDATE_INSTALLING or
-            var.update_status is var.UPDATE_COMPLETED
+            state.status is state.CHECKING or
+            state.status is state.INSTALLING or
+            state.status is state.COMPLETED
         ):
             return {"CANCELLED"}
 
@@ -76,5 +76,5 @@ class WM_OT_update_whats_new(Operator):
 
     def execute(self, context):
         import webbrowser
-        webbrowser.open(var.update_html_url)
+        webbrowser.open(state.url_changelog)
         return {"FINISHED"}

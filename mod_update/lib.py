@@ -25,6 +25,11 @@ import os
 import bpy
 
 from .. import var
+from . import state
+
+
+def version_set(v):
+    state.VERSION_CURRENT = v
 
 
 def _save_state_get():
@@ -42,7 +47,7 @@ def _save_state_get():
 
             last_check = datetime.date.fromtimestamp(data["last_check"])
             delta = datetime.date.today() - last_check
-            var.update_days_passed = delta.days
+            state.days_passed = delta.days
 
     return data
 
@@ -51,7 +56,7 @@ def _save_state_set():
     import datetime
     import json
 
-    var.update_days_passed = 0
+    state.days_passed = 0
     data = {
         "update_available": var.update_available,
         "last_check": int(datetime.datetime.now().timestamp()),
@@ -65,7 +70,7 @@ def _save_state_set():
 
 
 def _runtime_state_set(status):
-    var.update_status = status
+    state.status = status
 
     for window in bpy.context.window_manager.windows:
         for area in window.screen.areas:
@@ -89,12 +94,12 @@ def _update_check(use_force_check):
         use_force_check = True
 
     if not use_force_check and (
-        var.update_days_passed is not None and
-        var.update_days_passed < int(prefs.update_interval)
+        state.days_passed is not None and
+        state.days_passed < int(prefs.update_interval)
     ):
         return
 
-    _runtime_state_set(var.UPDATE_CHECKING)
+    _runtime_state_set(state.CHECKING)
     ssl_context = ssl.SSLContext()
 
     try:
@@ -108,13 +113,13 @@ def _update_check(use_force_check):
                     continue
 
                 if not release["draft"]:
-                    update_version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
-                    update_version_new = tuple(int(x) for x in update_version_string.split())
+                    version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
+                    version_new = tuple(int(x) for x in version_string.split())
 
-                    if var.UPDATE_VERSION_MAX and update_version_new >= var.UPDATE_VERSION_MAX:
+                    if var.UPDATE_VERSION_MAX and version_new >= var.UPDATE_VERSION_MAX:
                         continue
 
-                    if update_version_new > var.UPDATE_VERSION_CURRENT:
+                    if version_new > state.VERSION_CURRENT:
                         break
                     else:
                         _save_state_set()
@@ -131,19 +136,19 @@ def _update_check(use_force_check):
                 prerelease_note = " (pre-release)" if release["prerelease"] else ""
 
                 var.update_available = True
-                var.update_version_new = release["tag_name"] + prerelease_note
-                var.update_download_url = asset["browser_download_url"]
-                var.update_html_url = release["html_url"]
+                state.version_new = release["tag_name"] + prerelease_note
+                state.url_download = asset["browser_download_url"]
+                state.url_changelog = release["html_url"]
 
         _save_state_set()
         _runtime_state_set(None)
 
     except (urllib.error.HTTPError, urllib.error.URLError) as e:
 
-        var.update_error_msg = str(e)
+        state.error_msg = str(e)
 
         _save_state_set()
-        _runtime_state_set(var.UPDATE_ERROR)
+        _runtime_state_set(state.ERROR)
 
 
 def _update_download():
@@ -155,12 +160,12 @@ def _update_download():
     import shutil
     import ssl
 
-    _runtime_state_set(var.UPDATE_INSTALLING)
+    _runtime_state_set(state.INSTALLING)
     ssl_context = ssl.SSLContext()
 
     try:
 
-        with urllib.request.urlopen(var.update_download_url, context=ssl_context) as response:
+        with urllib.request.urlopen(state.url_download, context=ssl_context) as response:
             with zipfile.ZipFile(io.BytesIO(response.read())) as zfile:
                 addons_dir = os.path.dirname(var.ADDON_DIR)
                 extract_relpath = pathlib.Path(zfile.namelist()[0])
@@ -170,12 +175,12 @@ def _update_download():
                 zfile.extractall(addons_dir)
                 os.rename(extract_dir, var.ADDON_DIR)
 
-        _runtime_state_set(var.UPDATE_COMPLETED)
+        _runtime_state_set(state.COMPLETED)
 
     except (urllib.error.HTTPError, urllib.error.URLError) as e:
 
-        var.update_error_msg = str(e)
-        _runtime_state_set(var.UPDATE_ERROR)
+        state.error_msg = str(e)
+        _runtime_state_set(state.ERROR)
 
 
 def update_init_check(use_force_check=False):
