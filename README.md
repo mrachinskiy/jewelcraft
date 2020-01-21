@@ -56,7 +56,7 @@ Contributing
 
 ### Known issues
 
-* If error occurs on add-on installation or activation, check [how to install](#how-to-install) guide.
+* If error occurs on add-on installation or activation you probably trying to install add-on repository instead of release, check [how to install](#how-to-install) guide for propper instalation process.
 * Product Report gem table is misaligned when using Chinese as report language, use Gem Map as a workaround.
 * if Chinese characters are not displaying, enable `Preferences` → `Interface` → `Translation` property.
 
@@ -71,7 +71,7 @@ Contributing
   ```
   * On the left is the original English message, on the right is the Russian translation of that message.
   * Not every word has to be translated, in this example `JewelCraft` is not translated because it referencing add-on name.
-* After translation is done submit it back through email.
+* After translation is done submit it back through [issues][new_issue].
 
 
 [v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.4.2/jewelcraft-2_4_2.zip
