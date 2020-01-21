@@ -28,10 +28,6 @@ from .. import var
 from . import state
 
 
-def version_set(v):
-    state.VERSION_CURRENT = v
-
-
 def _save_state_get():
     import datetime
     import json
@@ -119,7 +115,7 @@ def _update_check(use_force_check):
                     if var.UPDATE_VERSION_MAX and version_new >= var.UPDATE_VERSION_MAX:
                         continue
 
-                    if version_new > state.VERSION_CURRENT:
+                    if version_new > var.UPDATE_VERSION_CURRENT:
                         break
                     else:
                         _save_state_set()
