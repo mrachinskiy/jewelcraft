@@ -104,7 +104,7 @@ def _update_check(use_force_check):
 
     try:
 
-        with urllib.request.urlopen(var.UPDATE_RELEASES_URL, context=ssl_context) as response:
+        with urllib.request.urlopen(var.UPDATE_URL_RELEASES, context=ssl_context) as response:
             data = json.load(response)
 
             for release in data:
