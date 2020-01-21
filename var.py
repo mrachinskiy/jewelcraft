@@ -186,6 +186,7 @@ MAP_SIZE_JP_TO_US = (1, 2, 2.5, 3, 3.25, 3.75, 4, 4.5, 5, 5.5, 6, 6.25, 6.5, 7, 
 UPDATE_OPERATOR_ID_AFFIX = "jewelcraft"
 UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "update_state.json")
 UPDATE_URL_RELEASES = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
+UPDATE_VERSION_CURRENT = None
 UPDATE_VERSION_MAX = None
 
 update_available = False
