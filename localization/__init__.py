@@ -22,12 +22,13 @@
 from . import (
     es,
     fr,
+    it,
     ru,
     zh_cn,
 )
 
 
-def _translation_dict(dictionary):
+def _convert(dictionary):
     d = {}
 
     for ctxt, msgs in dictionary.items():
@@ -37,14 +38,14 @@ def _translation_dict(dictionary):
     return d
 
 
-DICTIONARY = {
-    "es": _translation_dict(es.dictionary),
-    "fr_FR": _translation_dict(fr.dictionary),
-    "ru_RU": _translation_dict(ru.dictionary),
-    "zh_CN": _translation_dict(zh_cn.dictionary),
-}
+DICTIONARY = {}
 
-es.dictionary.clear()
-fr.dictionary.clear()
-ru.dictionary.clear()
-zh_cn.dictionary.clear()
+for k, v in (
+    ("es", es),
+    ("fr_FR", fr),
+    ("it_IT", it),
+    ("ru_RU", ru),
+    ("zh_CN", zh_cn),
+):
+    DICTIONARY[k] = _convert(v.dictionary)
+    v.dictionary.clear()

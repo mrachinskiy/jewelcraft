@@ -197,6 +197,7 @@ dictionary = {
         "Optimal unit settings are in use": "正在使用最佳单位设置",
         "Volume": "体积",
         "Settings": "设置",
+        "Size": "尺寸",
         "Gem": "宝石",
         "Cut": "切割",
         "Qty": "数量",

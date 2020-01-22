@@ -303,6 +303,7 @@ dictionary = {
         "Optimal unit settings are in use": "Используются оптимальные настройки единиц измерения",
         "Volume": "Объём",
         "Settings": "Вставки",
+        "Size": "Размер",
         "Gem": "Камень",
         "Cut": "Огранка",
         "Qty": "Кол.",
