@@ -44,6 +44,7 @@ class WM_OT_product_report(Operator):
             ("en_US", "English (English)", ""),
             ("es", "Spanish (Español)", ""),
             ("fr_FR", "French (Français)", ""),
+            ("it_IT", "Italian (Italiano)", ""),
             ("ru_RU", "Russian (Русский)", ""),
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),

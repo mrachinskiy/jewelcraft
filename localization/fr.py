@@ -197,6 +197,7 @@ dictionary = {
         "Optimal unit settings are in use": "Les unités optimales sont définies",
         # "Volume": "",
         "Settings": "Réglages",
+        "Size": "Dimension",
         "Gem": "Pierre",
         "Cut": "Taille",
         "Qty": "Qté",
