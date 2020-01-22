@@ -22,7 +22,7 @@
 bl_info = {
     "name": "JewelCraft",
     "author": "Mikhail Rachinskiy",
-    "version": (2, 4, 2),
+    "version": (2, 4, 3),
     "blender": (2, 80, 0),
     "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
@@ -116,9 +116,6 @@ classes = (
     ui.VIEW3D_PT_jewelcraft_weighting,
     ui.VIEW3D_PT_jewelcraft_product_report,
     ui.VIEW3D_PT_jewelcraft_measurement,
-    mod_update.WM_OT_update_check,
-    mod_update.WM_OT_update_download,
-    mod_update.WM_OT_update_whats_new,
     op_cutter.OBJECT_OT_cutter_add,
     op_gem_map.VIEW3D_OT_gem_map,
     op_product_report.WM_OT_product_report,
@@ -171,6 +168,9 @@ classes = (
     ops_weighting.WM_OT_weighting_set_autoload_mark,
     ops_weighting.WM_OT_weighting_set_load,
     ops_weighting.WM_OT_weighting_set_load_append,
+    mod_update.WM_OT_update_check,
+    mod_update.WM_OT_update_download,
+    mod_update.WM_OT_update_whats_new,
 )
 
 
