@@ -49,6 +49,7 @@ def _dict_init():
     ):
         d[k] = convert(v.dictionary)
         v.dictionary.clear()
+        del v.dictionary
 
     return d
 
