@@ -19,33 +19,38 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from . import (
-    es,
-    fr,
-    it,
-    ru,
-    zh_cn,
-)
+def _dict_init():
 
+    def convert(dictionary):
+        d = {}
 
-def _convert(dictionary):
+        for ctxt, msgs in dictionary.items():
+            for msg_key, msg_translation in msgs.items():
+                d[(ctxt, msg_key)] = msg_translation
+
+        return d
+
+    from . import (
+        es,
+        fr,
+        it,
+        ru,
+        zh_cn,
+    )
+
     d = {}
 
-    for ctxt, msgs in dictionary.items():
-        for msg_key, msg_translation in msgs.items():
-            d[(ctxt, msg_key)] = msg_translation
+    for k, v in (
+        ("es", es),
+        ("fr_FR", fr),
+        ("it_IT", it),
+        ("ru_RU", ru),
+        ("zh_CN", zh_cn),
+    ):
+        d[k] = convert(v.dictionary)
+        v.dictionary.clear()
 
     return d
 
 
-DICTIONARY = {}
-
-for k, v in (
-    ("es", es),
-    ("fr_FR", fr),
-    ("it_IT", it),
-    ("ru_RU", ru),
-    ("zh_CN", zh_cn),
-):
-    DICTIONARY[k] = _convert(v.dictionary)
-    v.dictionary.clear()
+DICTIONARY = _dict_init()
