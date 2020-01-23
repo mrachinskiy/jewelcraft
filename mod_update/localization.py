@@ -90,7 +90,7 @@ _es = {
 }
 
 
-def _translation_dict(dictionary):
+def _convert(dictionary):
     d = {}
 
     for ctxt, msgs in dictionary.items():
@@ -101,9 +101,12 @@ def _translation_dict(dictionary):
 
 
 DICTIONARY = {
-    "es": _translation_dict(_es),
-    "ru_RU": _translation_dict(_ru),
+    "es": _convert(_es),
+    "ru_RU": _convert(_ru),
 }
 
 _es.clear()
 _ru.clear()
+
+del _es
+del _ru
