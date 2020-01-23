@@ -8,6 +8,14 @@ Features:
 * Calculate weight in a variety of precious alloys.
 * Generate color-coded gem map.
 * Present summary information about your design.
+* Support multiple languages:
+  * English
+  * Spanish
+  * French
+  * Italian
+  * Russian
+  * Simplified Chinese
+  * Your language is missing? [Contribute translation](#translations).
 
 Video:
 
