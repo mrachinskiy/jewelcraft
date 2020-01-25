@@ -64,7 +64,7 @@ Contributing
 
 ### Known issues
 
-* If error occurs on add-on installation or activation you probably trying to install add-on repository instead of release, check [how to install](#how-to-install) guide for propper instalation process.
+* If error occurs on add-on installation or activation you probably trying to install add-on repository instead of release, check [how to install](#how-to-install) guide for proper installation process.
 * Product Report gem table is misaligned when using Chinese as report language, use Gem Map as a workaround.
 * if Chinese characters are not displaying, enable `Preferences` → `Interface` → `Translation` property.
 
