@@ -1,8 +1,8 @@
 ---
 name: Contribute translation
 about: Contribute or update existing translation
-title: "[TRANSLATION]"
-labels: ''
+title: ''
+labels: translation
 assignees: ''
 
 ---
