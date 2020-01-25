@@ -60,7 +60,7 @@ Contributing
 
 * Check [known issues](#known-issues).
 * Ensure the bug can be reproduced in the latest add-on version.
-* [Open new issue][new_issue], be sure to include Blender and add-on versions, and screenshot showing the error message.
+* [Open new bug report][new_bug_report], be sure to include Blender and add-on versions, and screenshot showing the error message.
 
 ### Known issues
 
@@ -79,11 +79,12 @@ Contributing
   ```
   * On the left is the original English message, on the right is the Russian translation of that message.
   * Not every word has to be translated, in this example `JewelCraft` is not translated because it referencing add-on name.
-* After translation is done submit it back through [issues][new_issue].
+* After translation is done submit it back through [issues][new_translation].
 
 
 [v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.4.3/jewelcraft-2_4_3.zip
 [v_legacy]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.2.1/jewelcraft-2_2_1.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
-[new_issue]: https://github.com/mrachinskiy/jewelcraft/issues/new
+[new_bug_report]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
+[new_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
