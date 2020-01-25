@@ -1,7 +1,7 @@
 ---
 name: Contribute translation
 about: Contribute or update existing translation
-title: ''
+title: "[TRANSLATION]"
 labels: ''
 assignees: ''
 
