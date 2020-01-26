@@ -59,9 +59,9 @@ class OBJECT_OT_gem_add(Operator):
         scene = context.scene
         view_layer = context.view_layer
         space_data = context.space_data
-        stone_name = asset.get_name(self.stone)
-        cut_name = asset.get_name(self.cut)
-        color = var.STONE_COLOR.get(self.stone) or self.color
+        cut_name = var.CUTS[self.cut].name
+        stone_name = var.STONES[self.stone].name
+        color = var.STONES[self.stone].color or self.color
 
         for ob in context.selected_objects:
             ob.select_set(False)
@@ -128,14 +128,12 @@ class OBJECT_OT_gem_edit(Operator):
 
     def execute(self, context):
         obs = context.selected_objects
-
-        cut_name = asset.get_name(self.cut)
-        stone_name = asset.get_name(self.stone)
+        cut_name = var.CUTS[self.cut].name
+        stone_name = var.STONES[self.stone].name
+        color = var.STONES[self.stone].color or self.color
 
         imported = asset.asset_import(var.GEM_ASSET_FILEPATH, me_name=cut_name)
         me = imported.meshes[0]
-
-        color = var.STONE_COLOR.get(self.stone) or self.color
 
         for ob in obs:
 

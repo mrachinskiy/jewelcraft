@@ -52,10 +52,6 @@ def get_gem(self, ob):
         self.shape_rnd = True
 
 
-def get_name(x):
-    return x.replace("_", " ").title()
-
-
 @lru_cache(maxsize=128)
 def girdle_coords(radius, mat):
     angle = tau / 64

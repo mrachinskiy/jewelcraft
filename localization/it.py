@@ -280,6 +280,7 @@ dictionary = {
     },
     "JewelCraft": {
         "Cut": "Taglio",
+        "Diamond": "Diamante",
         "Round": "Brillante",
         "Spacing": "Spaziatura",
     },
