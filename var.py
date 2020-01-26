@@ -21,6 +21,7 @@
 
 import os
 import sys
+import collections
 
 
 ADDON_ID = __package__
@@ -87,82 +88,56 @@ DEFAULT_WEIGHTING_SETS = {
     ),
 }
 
-STONE_DENSITY = {
-    # Corundum
-    "RUBY": 4.1,
-    "SAPPHIRE": 4.1,
-    # Beryl
-    "AQUAMARINE": 2.76,
-    "EMERALD": 2.76,
-    "MORGANITE": 2.76,
-    # Quartz
-    "AMETHYST": 2.65,
-    "CITRINE": 2.65,
-    "QUARTZ": 2.65,
-    # Other
-    "ALEXANDRITE": 3.73,
-    "CUBIC_ZIRCONIA": 5.9,
-    "DIAMOND": 3.53,
-    "GARNET": 4.3,
-    "PERIDOT": 3.34,
-    "SPINEL": 3.8,
-    "TANZANITE": 3.38,
-    "TOPAZ": 3.57,
-    "TOURMALINE": 3.22,
-    "ZIRCON": 4.73,
+Stone = collections.namedtuple("Stone", ("name", "density", "color"), defaults=(None,))
+Cut = collections.namedtuple("Cut", ("name", "vol_correction", "xy_symmetry"), defaults=(False,))
+
+CORUNDUM = 4.1
+BERYL = 2.76
+QUARTZ = 2.65
+
+WHITE = (1.0, 1.0, 1.0, 1.0)
+RED = (0.57, 0.011, 0.005, 1.0)
+BLUE = (0.004, 0.019, 0.214, 1.0)
+
+STONES = {
+    "DIAMOND": Stone("Diamond", 3.53, WHITE),
+    "ALEXANDRITE": Stone("Alexandrite", 3.73, (0.153, 0.0705, 0.595, 1.0)),
+    "AMETHYST": Stone("Amethyst", QUARTZ, (0.415, 0.041, 0.523, 1.0)),
+    "AQUAMARINE": Stone("Aquamarine", BERYL, (0.0, 0.748, 1.0, 1.0)),
+    "CITRINE": Stone("Citrine", QUARTZ, (1.0, 0.355, 0.0, 1.0)),
+    "CUBIC_ZIRCONIA": Stone("Cubic Zirconia", 5.9, WHITE),
+    "EMERALD": Stone("Emerald", BERYL, (0.062, 0.748, 0.057, 1.0)),
+    "GARNET": Stone("Garnet", 4.3, (0.319, 0.0, 0.0, 1.0)),
+    "MORGANITE": Stone("Morganite", BERYL, (0.41, 0.21, 0.09, 1.0)),
+    "PERIDOT": Stone("Peridot", 3.34, (0.201, 0.748, 0.026, 1.0)),
+    "QUARTZ": Stone("Quartz", QUARTZ),
+    "RUBY": Stone("Ruby", CORUNDUM, RED),
+    "SAPPHIRE": Stone("Sapphire", CORUNDUM, BLUE),
+    "SPINEL": Stone("Spinel", 3.8, RED),
+    "TANZANITE": Stone("Tanzanite", 3.38, BLUE),
+    "TOPAZ": Stone("Topaz", 3.57),
+    "TOURMALINE": Stone("Tourmaline", 3.22),
+    "ZIRCON": Stone("Zircon", 4.73),
 }
 
-STONE_COLOR = {
-    # White
-    "DIAMOND": (1.0, 1.0, 1.0, 1.0),
-    "CUBIC_ZIRCONIA": (1.0, 1.0, 1.0, 1.0),
-    # Red
-    "RUBY": (0.57, 0.011, 0.005, 1.0),
-    "SPINEL": (0.57, 0.011, 0.005, 1.0),
-    # Blue
-    "SAPPHIRE": (0.004, 0.019, 0.214, 1.0),
-    "TANZANITE": (0.004, 0.019, 0.214, 1.0),
-    # Other
-    "ALEXANDRITE": (0.153, 0.0705, 0.595, 1.0),
-    "AMETHYST": (0.415, 0.041, 0.523, 1.0),
-    "AQUAMARINE": (0.0, 0.748, 1.0, 1.0),
-    "CITRINE": (1.0, 0.355, 0.0, 1.0),
-    "EMERALD": (0.062, 0.748, 0.057, 1.0),
-    "GARNET": (0.319, 0.0, 0.0, 1.0),
-    "MORGANITE": (0.41, 0.21, 0.09, 1.0),
-    "PERIDOT": (0.201, 0.748, 0.026, 1.0),
-}
-
-CUT_VOLUME_CORRECTION = {
-    # Cone
-    "ROUND": 1.3056,
-    "OCTAGON": 1.479,
-    "OVAL": 1.34455,
-    "PEAR": 1.24936,
-    "MARQUISE": 1.20412,
-    "HEART": 1.29,
-    # Pyramid
-    "SQUARE": 1.6,
-    "PRINCESS": 1.43301,
-    "ASSCHER": 1.379,
-    "CUSHION": 1.2852,
-    "RADIANT": 1.3494,
-    "FLANDERS": 1.2407,
-    # Prism
-    "EMERALD": 1.025,
-    "BAGUETTE": 1.197,
-    # Tetrahedron
-    "TRILLION": 1.644,
-    "TRILLIANT": 1.888,
-    "TRIANGLE": 1.531,
-}
-
-CUT_SIZE_SINGLE = {
-    "ASSCHER",
-    "FLANDERS",
-    "OCTAGON",
-    "ROUND",
-    "SQUARE",
+CUTS = {
+    "ROUND": Cut("Round", 1.3056, True),
+    "OVAL": Cut("Oval", 1.34455),
+    "CUSHION": Cut("Cushion", 1.2852),
+    "PEAR": Cut("Pear", 1.24936),
+    "MARQUISE": Cut("Marquise", 1.20412),
+    "PRINCESS": Cut("Princess", 1.43301),
+    "BAGUETTE": Cut("Baguette", 1.197),
+    "SQUARE": Cut("Square", 1.6, True),
+    "EMERALD": Cut("Emerald", 1.025),
+    "ASSCHER": Cut("Asscher", 1.379, True),
+    "RADIANT": Cut("Radiant", 1.3494),
+    "FLANDERS": Cut("Flanders", 1.2407, True),
+    "OCTAGON": Cut("Octagon", 1.479, True),
+    "HEART": Cut("Heart", 1.29),
+    "TRILLION": Cut("Trillion", 1.644),
+    "TRILLIANT": Cut("Trilliant", 1.888),
+    "TRIANGLE": Cut("Triangle", 1.531),
 }
 
 preview_collections = {}

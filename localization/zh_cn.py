@@ -280,6 +280,7 @@ dictionary = {
     },
     "JewelCraft": {
         "Cut": "切割",
+        "Diamond": "钻石",
         "Round": "圆形",
         "Spacing": "设置距离",
     },

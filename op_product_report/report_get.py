@@ -78,8 +78,8 @@ def data_collect(self, context, gem_map=False):
     # ---------------------------
 
     gems = data["gems"]
-    known_stones = var.STONE_DENSITY.keys()
-    known_cuts = var.CUT_VOLUME_CORRECTION.keys()
+    known_stones = var.STONES.keys()
+    known_cuts = var.CUTS.keys()
     ob_data = []
     df_leftovers = False
     deprecated_id = False
@@ -103,7 +103,6 @@ def data_collect(self, context, gem_map=False):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
         size = tuple(round(x, 2) for x in from_scene_scale(ob.dimensions, batch=True))
-        gems[(stone, cut, size)] += 1
 
         # Warnings
         loc = dup.matrix_world.to_translation()
@@ -133,6 +132,8 @@ def data_collect(self, context, gem_map=False):
             ob.parent.instance_type == "NONE"
         ):
             df_leftovers = True
+
+        gems[(stone, cut, size)] += 1
 
     # Find overlaps
     # ---------------------------

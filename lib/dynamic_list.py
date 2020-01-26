@@ -62,25 +62,16 @@ def cuts(self, context):
 
         var.preview_collections["cuts"] = pcoll
 
-    list_ = (
-        ("ROUND",     _("Round", "JewelCraft"), "", pcoll["round"].icon_id,     0),
-        ("OVAL",      _("Oval"),                "", pcoll["oval"].icon_id,      1),
-        ("CUSHION",   _("Cushion"),             "", pcoll["cushion"].icon_id,   2),
-        ("PEAR",      _("Pear"),                "", pcoll["pear"].icon_id,      3),
-        ("MARQUISE",  _("Marquise"),            "", pcoll["marquise"].icon_id,  4),
-        ("PRINCESS",  _("Princess"),            "", pcoll["princess"].icon_id,  5),
-        ("BAGUETTE",  _("Baguette"),            "", pcoll["baguette"].icon_id,  6),
-        ("SQUARE",    _("Square"),              "", pcoll["square"].icon_id,    7),
-        ("EMERALD",   _("Emerald"),             "", pcoll["emerald"].icon_id,   8),
-        ("ASSCHER",   _("Asscher"),             "", pcoll["asscher"].icon_id,   9),
-        ("RADIANT",   _("Radiant"),             "", pcoll["radiant"].icon_id,   10),
-        ("FLANDERS",  _("Flanders"),            "", pcoll["flanders"].icon_id,  11),
-        ("OCTAGON",   _("Octagon"),             "", pcoll["octagon"].icon_id,   12),
-        ("HEART",     _("Heart"),               "", pcoll["heart"].icon_id,     13),
-        ("TRILLION",  _("Trillion"),            "", pcoll["trillion"].icon_id,  14),
-        ("TRILLIANT", _("Trilliant"),           "", pcoll["trilliant"].icon_id, 15),
-        ("TRIANGLE",  _("Triangle"),            "", pcoll["triangle"].icon_id,  16),
-    )
+    list_ = []
+    app = list_.append
+
+    for i, (k, v) in enumerate(var.CUTS.items()):
+        if k == "ROUND":
+            name = _(v.name, "JewelCraft")
+        else:
+            name = _(v.name)
+
+        app((k, name, "", pcoll[k.lower()].icon_id, i))
 
     _cache["cuts__list"] = list_
     _cache["cuts__lang"] = lang
@@ -94,26 +85,16 @@ def stones(self, context):
     if _cache.get("stones__lang") == lang:
         return _cache["stones__list"]
 
-    list_ = [
-        ("DIAMOND",        _("Diamond"),        "", 0),
-        ("ALEXANDRITE",    _("Alexandrite"),    "", 1),
-        ("AMETHYST",       _("Amethyst"),       "", 2),
-        ("AQUAMARINE",     _("Aquamarine"),     "", 3),
-        ("CITRINE",        _("Citrine"),        "", 4),
-        ("CUBIC_ZIRCONIA", _("Cubic Zirconia"), "", 5),
-        ("EMERALD",        _("Emerald"),        "", 6),
-        ("GARNET",         _("Garnet"),         "", 7),
-        ("MORGANITE",      _("Morganite"),      "", 8),
-        ("PERIDOT",        _("Peridot"),        "", 9),
-        ("QUARTZ",         _("Quartz"),         "", 10),
-        ("RUBY",           _("Ruby"),           "", 11),
-        ("SAPPHIRE",       _("Sapphire"),       "", 12),
-        ("SPINEL",         _("Spinel"),         "", 13),
-        ("TANZANITE",      _("Tanzanite"),      "", 14),
-        ("TOPAZ",          _("Topaz"),          "", 15),
-        ("TOURMALINE",     _("Tourmaline"),     "", 16),
-        ("ZIRCON",         _("Zircon"),         "", 17),
-    ]
+    list_ = []
+    app = list_.append
+
+    for i, (k, v) in enumerate(var.STONES.items()):
+        if k == "DIAMOND":
+            name = _(v.name, "JewelCraft")
+        else:
+            name = _(v.name)
+
+        app((k, name, "", i))
 
     list_.sort(key=lambda x: x[1])
 

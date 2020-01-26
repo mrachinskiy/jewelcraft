@@ -58,16 +58,23 @@ def data_format(self, context, data):
         l = asset.to_int(size[1])
         w = asset.to_int(size[0])
 
-        stone_fmt = _(asset.get_name(stone))
-        cut_fmt = _(asset.get_name(cut))
-        qty_fmt = f"{qty} {_pcs}"
+        try:
+            stone_fmt = _(var.STONES[stone].name)
+            cut_fmt = _(var.CUTS[cut].name)
+            xy_symmetry = var.CUTS[cut].xy_symmetry
+        except KeyError:
+            stone_fmt = stone
+            cut_fmt = cut
+            xy_symmetry = False
 
-        if cut in var.CUT_SIZE_SINGLE:
+        if xy_symmetry:
             size_raw_fmt = str(l)
             size_fmt = f"{l} {_mm}"
         else:
             size_raw_fmt = f"{l}×{w}"
             size_fmt = f"{l} × {w} {_mm}"
+
+        qty_fmt = f"{qty} {_pcs}"
 
         self.gems_raw.append((stone, cut, size, size_raw_fmt, color))
         gems_fmt_temp.append((stone_fmt, cut_fmt, size_fmt, qty_fmt, color))

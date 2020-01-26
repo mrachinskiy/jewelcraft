@@ -26,10 +26,10 @@ from ..lib import unit, asset, gettext
 
 
 def _ct_calc(stone, cut, size):
-    dens = var.STONE_DENSITY.get(stone)
-    corr = var.CUT_VOLUME_CORRECTION.get(cut)
-
-    if not dens or not corr:
+    try:
+        dens = var.STONES[stone].density
+        corr = var.CUTS[cut].vol_correction
+    except KeyError:
         return 0
 
     dens = unit.convert_cm3_mm3(dens)
@@ -123,16 +123,23 @@ def data_format(self, context, data):
             # Format values
             # ---------------------------
 
-            stonef = _(asset.get_name(stone))
-            cutf = _(asset.get_name(cut))
-            ctf = str(ct)
-            qtyf = str(qty)
-            total_ctf = str(round(ct * qty, 3))
+            try:
+                stonef = _(var.STONES[stone].name)
+                cutf = _(var.CUTS[cut].name)
+                xy_symmetry = var.CUTS[cut].xy_symmetry
+            except KeyError:
+                stonef = stone
+                cutf = cut
+                xy_symmetry = False
 
-            if cut in var.CUT_SIZE_SINGLE:
+            if xy_symmetry:
                 sizef = str(l)
             else:
                 sizef = f"{l} × {w}"
+
+            ctf = str(ct)
+            qtyf = str(qty)
+            total_ctf = str(round(ct * qty, 3))
 
             gemf = (stonef, cutf, sizef, ctf, qtyf, total_ctf)
             gemsf.append(gemf)
