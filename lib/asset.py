@@ -35,18 +35,23 @@ from .. import var
 # ------------------------------------
 
 
-def get_gem(self, ob):
+def get_cut(self, ob):
     self.gem_w, self.gem_l, self.gem_h = ob.dimensions
-    self.cut = ob["gem"]["cut"] if "gem" in ob else ""
+    self.cut = ob["gem"]["cut"] if "gem" in ob else None
     self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
 
-    if self.cut in {"SQUARE", "ASSCHER", "PRINCESS", "CUSHION", "RADIANT", "FLANDERS", "OCTAGON"}:
+    try:
+        shape = var.CUTS[self.cut].shape
+    except KeyError:
+        shape = var.SHAPE_ROUND
+
+    if shape is var.SHAPE_SQUARE:
         self.shape_sq = True
-    elif self.cut in {"BAGUETTE", "EMERALD"}:
+    elif shape is var.SHAPE_RECTANGLE:
         self.shape_rect = True
-    elif self.cut in {"TRILLION", "TRILLIANT", "TRIANGLE"}:
+    elif shape is var.SHAPE_TRIANGLE:
         self.shape_tri = True
-    elif self.cut in {"PEAR", "MARQUISE", "HEART", "OVAL"}:
+    elif shape is var.SHAPE_FANTASY:
         self.shape_fant = True
     else:
         self.shape_rnd = True
