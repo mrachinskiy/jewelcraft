@@ -135,7 +135,7 @@ class OBJECT_OT_cutter_add(UI, Operator):
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        asset.get_gem(self, ob)
+        asset.get_cut(self, ob)
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_cutter
 

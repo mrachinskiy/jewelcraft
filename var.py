@@ -89,7 +89,7 @@ DEFAULT_WEIGHTING_SETS = {
 }
 
 Stone = collections.namedtuple("Stone", ("name", "density", "color"), defaults=(None,))
-Cut = collections.namedtuple("Cut", ("name", "vol_correction", "xy_symmetry"), defaults=(False,))
+Cut = collections.namedtuple("Cut", ("name", "shape", "vol_correction", "xy_symmetry"), defaults=(False,))
 
 CORUNDUM = 4.1
 BERYL = 2.76
@@ -98,6 +98,12 @@ QUARTZ = 2.65
 WHITE = (1.0, 1.0, 1.0, 1.0)
 RED = (0.57, 0.011, 0.005, 1.0)
 BLUE = (0.004, 0.019, 0.214, 1.0)
+
+SHAPE_ROUND = 0
+SHAPE_SQUARE = 1
+SHAPE_RECTANGLE = 2
+SHAPE_TRIANGLE = 3
+SHAPE_FANTASY = 4
 
 STONES = {
     "DIAMOND": Stone("Diamond", 3.53, WHITE),
@@ -121,23 +127,23 @@ STONES = {
 }
 
 CUTS = {
-    "ROUND": Cut("Round", 1.3056, True),
-    "OVAL": Cut("Oval", 1.34455),
-    "CUSHION": Cut("Cushion", 1.2852),
-    "PEAR": Cut("Pear", 1.24936),
-    "MARQUISE": Cut("Marquise", 1.20412),
-    "PRINCESS": Cut("Princess", 1.43301),
-    "BAGUETTE": Cut("Baguette", 1.197),
-    "SQUARE": Cut("Square", 1.6, True),
-    "EMERALD": Cut("Emerald", 1.025),
-    "ASSCHER": Cut("Asscher", 1.379, True),
-    "RADIANT": Cut("Radiant", 1.3494),
-    "FLANDERS": Cut("Flanders", 1.2407, True),
-    "OCTAGON": Cut("Octagon", 1.479, True),
-    "HEART": Cut("Heart", 1.29),
-    "TRILLION": Cut("Trillion", 1.644),
-    "TRILLIANT": Cut("Trilliant", 1.888),
-    "TRIANGLE": Cut("Triangle", 1.531),
+    "ROUND": Cut("Round", SHAPE_ROUND, 1.3056, True),
+    "OVAL": Cut("Oval", SHAPE_FANTASY, 1.34455),
+    "CUSHION": Cut("Cushion", SHAPE_SQUARE, 1.2852),
+    "PEAR": Cut("Pear", SHAPE_FANTASY, 1.24936),
+    "MARQUISE": Cut("Marquise", SHAPE_FANTASY, 1.20412),
+    "PRINCESS": Cut("Princess", SHAPE_SQUARE, 1.43301),
+    "BAGUETTE": Cut("Baguette", SHAPE_RECTANGLE, 1.197),
+    "SQUARE": Cut("Square", SHAPE_SQUARE, 1.6, True),
+    "EMERALD": Cut("Emerald", SHAPE_RECTANGLE, 1.025),
+    "ASSCHER": Cut("Asscher", SHAPE_SQUARE, 1.379, True),
+    "RADIANT": Cut("Radiant", SHAPE_SQUARE, 1.3494),
+    "FLANDERS": Cut("Flanders", SHAPE_SQUARE, 1.2407, True),
+    "OCTAGON": Cut("Octagon", SHAPE_SQUARE, 1.479, True),
+    "HEART": Cut("Heart", SHAPE_FANTASY, 1.29),
+    "TRILLION": Cut("Trillion", SHAPE_TRIANGLE, 1.644),
+    "TRILLIANT": Cut("Trilliant", SHAPE_TRIANGLE, 1.888),
+    "TRIANGLE": Cut("Triangle", SHAPE_TRIANGLE, 1.531),
 }
 
 preview_collections = {}
