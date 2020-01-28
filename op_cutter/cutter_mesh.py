@@ -459,8 +459,8 @@ def create_cutter(self):
 
         v_profile = [bm.verts.new(v) for v in v_cos]
 
-        for i in range(len(v_profile) - 1):
-            bm.edges.new((v_profile[i], v_profile[i + 1]))
+        for vs in zip(v_profile, v_profile[1:]):
+            bm.edges.new(vs)
 
         bmesh.ops.spin(bm, geom=bm.edges, angle=tau, steps=self.detalization, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0))
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
