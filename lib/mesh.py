@@ -24,6 +24,26 @@ import bmesh
 from mathutils import Matrix
 
 
+# Utils
+# ---------------------------
+
+
+def circular_pairwise(a):
+    import itertools
+    second = itertools.cycle(a)
+    next(second)
+    return zip(a, second)
+
+
+def circular_quadwise(a1, b1):
+    import itertools
+    a2 = itertools.cycle(a1)
+    next(a2)
+    b2 = itertools.cycle(b1)
+    next(b2)
+    return zip(a2, a1, b1, b2)
+
+
 # Primitives
 # ---------------------------
 
@@ -91,30 +111,12 @@ def curve_length(ob):
 
 
 def make_edges(bm, verts):
-    edges = []
-
-    for i in range(len(verts) - 1):
-        edges.append(bm.edges.new((verts[i], verts[i + 1])))
-
-    edges.append(bm.edges.new((verts[-1], verts[0])))
-
-    return edges
+    return [bm.edges.new(x) for x in circular_pairwise(verts)]
 
 
 def bridge_verts(bm, v1, v2):
-    faces = []
-    edges = []
-    app_f = faces.append
-    app_e = edges.append
-
-    for i in range(len(v1) - 1):
-        f = bm.faces.new([v1[i + 1], v1[i], v2[i], v2[i + 1]])
-        app_f(f)
-        app_e(f.edges[1])
-
-    f = bm.faces.new([v1[0], v1[i + 1], v2[i + 1], v2[0]])
-    app_f(f)
-    app_e(f.edges[1])
+    faces = [bm.faces.new(verts) for verts in circular_quadwise(v1, v2)]
+    edges = [f.edges[1] for f in faces]
 
     return {"faces": faces, "edges": edges}
 
