@@ -30,9 +30,9 @@ from mathutils import Matrix
 
 def circular_pairwise(a):
     import itertools
-    second = itertools.cycle(a)
-    next(second)
-    return zip(a, second)
+    b = itertools.cycle(a)
+    next(b)
+    return zip(a, b)
 
 
 def circular_quadwise(a1, b1):
@@ -115,7 +115,7 @@ def make_edges(bm, verts):
 
 
 def bridge_verts(bm, v1, v2):
-    faces = [bm.faces.new(verts) for verts in circular_quadwise(v1, v2)]
+    faces = [bm.faces.new(x) for x in circular_quadwise(v1, v2)]
     edges = [f.edges[1] for f in faces]
 
     return {"faces": faces, "edges": edges}
