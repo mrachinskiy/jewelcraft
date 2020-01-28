@@ -64,9 +64,9 @@ def _to_ring_size(cir, size_format):
             if size_format == "US":
                 return asset.to_int(size)
 
-            for i, s in enumerate(var.MAP_SIZE_JP_TO_US):
-                if s - 0.2 < size < s + 0.2:
-                    return i + 1
+            for size_jp, size_us in enumerate(var.MAP_SIZE_JP_TO_US, start=1):
+                if size_us - 0.2 < size < size_us + 0.2:
+                    return size_jp
 
     if size_format == "UK":
         import string
