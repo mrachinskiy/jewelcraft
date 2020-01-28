@@ -28,14 +28,14 @@ from mathutils import Matrix
 # ---------------------------
 
 
-def circular_pairwise(a):
+def pairwise_cyclic(a):
     import itertools
     b = itertools.cycle(a)
     next(b)
     return zip(a, b)
 
 
-def circular_quadwise(a1, b1):
+def quadwise_cyclic(a1, b1):
     import itertools
     a2 = itertools.cycle(a1)
     next(a2)
@@ -111,11 +111,11 @@ def curve_length(ob):
 
 
 def make_edges(bm, verts):
-    return [bm.edges.new(x) for x in circular_pairwise(verts)]
+    return [bm.edges.new(x) for x in pairwise_cyclic(verts)]
 
 
 def bridge_verts(bm, v1, v2):
-    faces = [bm.faces.new(x) for x in circular_quadwise(v1, v2)]
+    faces = [bm.faces.new(x) for x in quadwise_cyclic(v1, v2)]
     edges = [f.edges[1] for f in faces]
 
     return {"faces": faces, "edges": edges}
