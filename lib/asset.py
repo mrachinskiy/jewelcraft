@@ -37,27 +37,25 @@ from .. import var
 
 def ct_calc(stone, cut, size):
     try:
-        dens = var.STONES[stone].density
-        corr = var.CUTS[cut].vol_correction
+        dens = unit.convert_cm3_mm3(var.STONES[stone].density)
+        cut = var.CUTS[cut]
+        vol_corr = cut.vol_correction
+        shape = cut.vol_shape
     except KeyError:
         return 0
 
-    dens = unit.convert_cm3_mm3(dens)
     w, l, h = size
 
-    if cut in {"ROUND", "OVAL", "PEAR", "MARQUISE", "OCTAGON", "HEART"}:
-        vol = pi * (l / 2) * (w / 2) * (h / 3)  # Cone
+    if shape is var.VOL_CONE:
+        vol = pi * (l / 2) * (w / 2) * (h / 3)
+    elif shape is var.VOL_PYRAMID:
+        vol = l * w * h / 3
+    elif shape is var.VOL_PRISM:
+        vol = l * w * (h / 2)
+    elif shape is var.VOL_TETRAHEDRON:
+        vol = l * w * h / 6
 
-    elif cut in {"SQUARE", "ASSCHER", "PRINCESS", "CUSHION", "RADIANT", "FLANDERS"}:
-        vol = l * w * h / 3  # Pyramid
-
-    elif cut in {"BAGUETTE", "EMERALD"}:
-        vol = l * w * (h / 2)  # Prism
-
-    elif cut in {"TRILLION", "TRILLIANT", "TRIANGLE"}:
-        vol = l * w * h / 6  # Tetrahedron
-
-    g = vol * corr * dens
+    g = vol * vol_corr * dens
     ct = unit.convert_g_ct(g)
 
     return round(ct, 3)
