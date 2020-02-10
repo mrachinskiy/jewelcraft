@@ -101,6 +101,7 @@ dictionary = {
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",
+        "Round diamonds only": "Только бриллианты Кр-57",
 
         "Force edit selected mesh objects, can be used to make gems from non-gem objects":
             "Принудительно редактировать выделенные мэш объекты, можно использовать для создания камней из других объектов",

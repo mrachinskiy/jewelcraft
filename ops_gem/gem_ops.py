@@ -24,7 +24,16 @@ from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
 
 from .. import var
-from ..lib import asset, dynamic_list
+from ..lib import asset, dynamic_list, unit
+
+
+def upd_set_weight(self, context):
+    if self.stone == "DIAMOND" and self.cut == "ROUND":
+        self["weight"] = unit.convert_mm_ct(unit.Scale(context).from_scene(self.size))
+
+
+def upd_weight(self, context):
+    self["size"] = unit.Scale(context).to_scene(unit.convert_ct_mm(self.weight))
 
 
 class OBJECT_OT_gem_add(Operator):
@@ -33,8 +42,8 @@ class OBJECT_OT_gem_add(Operator):
     bl_idname = "object.jewelcraft_gem_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    cut: EnumProperty(name="Cut", items=dynamic_list.cuts)
-    stone: EnumProperty(name="Stone", items=dynamic_list.stones)
+    cut: EnumProperty(name="Cut", items=dynamic_list.cuts, update=upd_set_weight)
+    stone: EnumProperty(name="Stone", items=dynamic_list.stones, update=upd_set_weight)
     size: FloatProperty(
         name="Size",
         default=1.0,
@@ -42,6 +51,16 @@ class OBJECT_OT_gem_add(Operator):
         step=5,
         precision=2,
         unit="LENGTH",
+        update=upd_set_weight,
+    )
+    weight: FloatProperty(
+        name="Carats",
+        description="Round diamonds only",
+        default=0.004,
+        min=0.0001,
+        step=0.1,
+        precision=3,
+        update=upd_weight,
     )
 
     def draw(self, context):
@@ -50,6 +69,9 @@ class OBJECT_OT_gem_add(Operator):
         layout.use_property_decorate = False
 
         layout.prop(self, "size")
+        col = layout.column()
+        col.enabled = self.stone == "DIAMOND" and self.cut == "ROUND"
+        col.prop(self, "weight")
         layout.prop(self, "stone")
         split = layout.split(factor=0.49)
         split.row()

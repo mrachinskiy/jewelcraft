@@ -98,6 +98,7 @@ dictionary = {
         # "Zero dimensions": "",
         "Add gemstone to the scene": "向场景添加宝石",
         "Edit selected gems": "编辑选中的宝石",
+        # "Round diamonds only": "",
         # "Force edit selected mesh objects, can be used to make gems from non-gem objects": "",
         # "Only edit gem identifiers, not affecting object data and materials": "",
         "Commonly used precious alloys, physical properties taken directly from suppliers": "常用的贵重合金,直接从供应商处获取的物理特性",
