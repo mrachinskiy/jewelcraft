@@ -43,6 +43,16 @@ def convert_g_ct(x):
     return x * 5
 
 
+def convert_ct_mm(x):
+    """Round diamonds only"""
+    return round(x ** (1 / 3) / 0.00365 ** (1 / 3), 2)
+
+
+def convert_mm_ct(x):
+    """Round diamonds only"""
+    return round(x ** 3 * 0.00365, 3)
+
+
 class Scale:
     __slots__ = ("scale", "from_scene", "to_scene")
 

@@ -98,6 +98,7 @@ dictionary = {
         # "Zero dimensions": "",
         "Add gemstone to the scene": "Añadir gema a la escena",
         "Edit selected gems": "Editar gemas seleccionadas",
+        # "Round diamonds only": "",
         # "Force edit selected mesh objects, can be used to make gems from non-gem objects": "",
         # "Only edit gem identifiers, not affecting object data and materials": "",
         "Commonly used precious alloys, physical properties taken directly from suppliers": "Aleaciones preciosas de uso común, propiedades físicas tomadas directamente de los proveedores",
