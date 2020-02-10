@@ -24,6 +24,13 @@ import sys
 import collections
 
 
+preview_collections = {}
+
+
+# Paths
+# --------------------------------
+
+
 ADDON_ID = __package__
 ADDON_DIR = os.path.dirname(__file__)
 
@@ -42,6 +49,11 @@ ADDON_CONFIG_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
 USER_ASSET_DIR = os.path.join(ADDON_CONFIG_DIR, "Asset Library")
 USER_ASSET_OBJECT_DIR = os.path.join(USER_ASSET_DIR, "Object")
 USER_ASSET_WEIGHTING_DIR = os.path.join(USER_ASSET_DIR, "Weighting")
+
+
+# Weighting
+# --------------------------------
+
 
 DEFAULT_WEIGHTING_SETS = {
     "JCASSET_PRECIOUS": (
@@ -87,6 +99,11 @@ DEFAULT_WEIGHTING_SETS = {
         ("Titanium", 4.43, "Ti6Al4V"),
     ),
 }
+
+
+# Gems
+# --------------------------------
+
 
 Stone = collections.namedtuple("Stone", ("name", "density", "color"), defaults=(None,))
 Cut = collections.namedtuple("Cut", ("name", "shape", "vol_shape", "vol_correction", "xy_symmetry"), defaults=(False,))
@@ -150,8 +167,6 @@ CUTS = {
     "TRILLIANT": Cut("Trilliant", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.888),
     "TRIANGLE": Cut("Triangle", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.531),
 }
-
-preview_collections = {}
 
 
 # Ring Size
