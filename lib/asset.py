@@ -20,7 +20,7 @@
 
 
 import os
-from math import tau, sin, cos
+from math import tau, sin, cos, pi
 from functools import lru_cache
 
 import bpy
@@ -33,6 +33,34 @@ from .. import var
 
 # Gem
 # ------------------------------------
+
+
+def ct_calc(stone, cut, size):
+    try:
+        dens = var.STONES[stone].density
+        corr = var.CUTS[cut].vol_correction
+    except KeyError:
+        return 0
+
+    dens = unit.convert_cm3_mm3(dens)
+    w, l, h = size
+
+    if cut in {"ROUND", "OVAL", "PEAR", "MARQUISE", "OCTAGON", "HEART"}:
+        vol = pi * (l / 2) * (w / 2) * (h / 3)  # Cone
+
+    elif cut in {"SQUARE", "ASSCHER", "PRINCESS", "CUSHION", "RADIANT", "FLANDERS"}:
+        vol = l * w * h / 3  # Pyramid
+
+    elif cut in {"BAGUETTE", "EMERALD"}:
+        vol = l * w * (h / 2)  # Prism
+
+    elif cut in {"TRILLION", "TRILLIANT", "TRIANGLE"}:
+        vol = l * w * h / 6  # Tetrahedron
+
+    g = vol * corr * dens
+    ct = unit.convert_g_ct(g)
+
+    return round(ct, 3)
 
 
 def get_cut(self, ob):

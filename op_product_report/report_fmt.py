@@ -25,36 +25,6 @@ from .. import var
 from ..lib import unit, asset, gettext
 
 
-def _ct_calc(stone, cut, size):
-    try:
-        dens = var.STONES[stone].density
-        corr = var.CUTS[cut].vol_correction
-    except KeyError:
-        return 0
-
-    dens = unit.convert_cm3_mm3(dens)
-    l = size[1]
-    w = size[0]
-    h = size[2]
-
-    if cut in {"ROUND", "OVAL", "PEAR", "MARQUISE", "OCTAGON", "HEART"}:
-        vol = pi * (l / 2) * (w / 2) * (h / 3)  # Cone
-
-    elif cut in {"SQUARE", "ASSCHER", "PRINCESS", "CUSHION", "RADIANT", "FLANDERS"}:
-        vol = l * w * h / 3  # Pyramid
-
-    elif cut in {"BAGUETTE", "EMERALD"}:
-        vol = l * w * (h / 2)  # Prism
-
-    elif cut in {"TRILLION", "TRILLIANT", "TRIANGLE"}:
-        vol = l * w * h / 6  # Tetrahedron
-
-    g = vol * corr * dens
-    ct = unit.convert_g_ct(g)
-
-    return round(ct, 3)
-
-
 def _to_ring_size(cir, size_format):
     if size_format in {"US", "JP"}:
         size = round((cir - var.CIR_BASE_US) / var.CIR_STEP_US, 2)
@@ -116,9 +86,8 @@ def data_format(self, context, data):
             # Values
             # ---------------------------
 
-            ct = _ct_calc(stone, cut, size)
-            l = size[1]
-            w = size[0]
+            ct = asset.ct_calc(stone, cut, size)
+            w, l, h = size
 
             # Format values
             # ---------------------------
