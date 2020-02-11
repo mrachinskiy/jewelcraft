@@ -136,18 +136,18 @@ def weighting_set(self, context):
         for entry in os.scandir(folder):
             if entry.is_file() and entry.name.endswith(".json"):
                 id_ = entry.name
-                name_ = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
-                list_.append((id_, name_, "", "BLANK1", i))
+                name = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
+                list_.append((id_, name, "", "BLANK1", i))
                 i += 1
 
     if list_:
-        for i, (id_, name_, desc_, icon_, i_) in enumerate(list_):
+        for id_, name, desc, icon, i in list_:
             if id_ == prefs.weighting_set_autoload:
-                list_[i] = (id_, name_, desc_, "DOT", i_)
+                list_[i] = (id_, name, desc, "DOT", i)
                 break
         else:
-            id_, name_, desc_, icon_, i_ = list_[0]
-            list_[0] = (id_, name_, desc_, "DOT", i_)
+            id_, name, desc, icon, i = list_[0]
+            list_[0] = (id_, name, desc, "DOT", i)
             prefs.weighting_set_autoload = id_
             context.preferences.is_dirty = True
     else:
@@ -168,8 +168,8 @@ def weighting_materials(self, context):
 
     for i, mat in enumerate(props.weighting_materials.values()):
         id_ = str(i)
-        name_ = mat.name + " "  # Add trailing space to deny UI translation
-        list_.append((id_, name_, ""))
+        name = mat.name + " "  # Add trailing space to deny UI translation
+        list_.append((id_, name, ""))
 
     if not list_:
         list_ = [("", "", "")]
@@ -210,8 +210,8 @@ def asset_folders(self, context):
 
         if entry.is_dir() and not entry.name.startswith("."):
             id_ = entry.name
-            name_ = entry.name + " "  # Add trailing space to deny UI translation
-            list_.append((id_, name_, ""))
+            name = entry.name + " "  # Add trailing space to deny UI translation
+            list_.append((id_, name, ""))
 
     if not list_:
         list_ = [("", "", "")]
@@ -248,7 +248,7 @@ def assets(self, context):
         if entry.is_file() and entry.name.endswith(".blend"):
             filename = os.path.splitext(entry.name)[0]
             id_ = filename
-            name_ = filename + " "  # Add trailing space to deny UI translation
+            name = filename + " "  # Add trailing space to deny UI translation
 
             preview_id = category + filename
             preview_path = os.path.splitext(entry.path)[0] + ".png"
@@ -260,7 +260,7 @@ def assets(self, context):
             else:
                 preview = no_preview
 
-            list_.append((id_, name_, "", preview, i))
+            list_.append((id_, name, "", preview, i))
             i += 1
 
     var.preview_collections["assets"] = pcoll
