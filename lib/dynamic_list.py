@@ -58,20 +58,14 @@ def cuts(self, context):
         for entry in os.scandir(var.GEM_ASSET_DIR):
             if entry.name.endswith(".png"):
                 name = os.path.splitext(entry.name)[0]
-                pcoll.load(name, entry.path, "IMAGE")
+                pcoll.load(name.upper(), entry.path, "IMAGE")
 
         var.preview_collections["cuts"] = pcoll
 
-    list_ = []
-    app = list_.append
-
-    for i, (k, v) in enumerate(var.CUTS.items()):
-        if k == "ROUND":
-            name = _(v.name, "JewelCraft")
-        else:
-            name = _(v.name)
-
-        app((k, name, "", pcoll[k.lower()].icon_id, i))
+    list_ = [
+        (k, _(_(v.name, "JewelCraft")), "", pcoll[k].icon_id, i)  # _(_()) default return value workaround
+        for i, (k, v) in enumerate(var.CUTS.items())
+    ]
 
     _cache["cuts__list"] = list_
     _cache["cuts__lang"] = lang
@@ -85,16 +79,10 @@ def stones(self, context):
     if _cache.get("stones__lang") == lang:
         return _cache["stones__list"]
 
-    list_ = []
-    app = list_.append
-
-    for i, (k, v) in enumerate(var.STONES.items()):
-        if k == "DIAMOND":
-            name = _(v.name, "JewelCraft")
-        else:
-            name = _(v.name)
-
-        app((k, name, "", i))
+    list_ = [
+        (k, _(_(v.name, "JewelCraft")), "", i)  # _(_()) default return value workaround
+        for i, (k, v) in enumerate(var.STONES.items())
+    ]
 
     list_.sort(key=lambda x: x[1])
 
