@@ -62,10 +62,10 @@ def cuts(self, context):
 
         var.preview_collections["cuts"] = pcoll
 
-    list_ = [
+    list_ = tuple(
         (k, _(_(v.name, "JewelCraft")), "", pcoll[k].icon_id, i)  # _(_()) default return value workaround
         for i, (k, v) in enumerate(var.CUTS.items())
-    ]
+    )
 
     _cache["cuts__list"] = list_
     _cache["cuts__lang"] = lang
@@ -85,6 +85,7 @@ def stones(self, context):
     ]
 
     list_.sort(key=lambda x: x[1])
+    list_ = tuple(list_)
 
     _cache["stones__list"] = list_
     _cache["stones__lang"] = lang
@@ -130,9 +131,9 @@ def weighting_set(self, context):
         ]
 
     folder = asset.user_asset_library_folder_weighting()
-    i = len(list_)
 
     if os.path.exists(folder):
+        i = len(list_)
         for entry in os.scandir(folder):
             if entry.is_file() and entry.name.endswith(".json"):
                 id_ = entry.name
@@ -151,8 +152,9 @@ def weighting_set(self, context):
             prefs.weighting_set_autoload = id_
             context.preferences.is_dirty = True
     else:
-        list_ = [("", "", "", "BLANK1", 0)]
+        list_ = (("", "", "", "BLANK1", 0),)
 
+    list_ = tuple(list_)
     _cache["weighting_set__list"] = list_
 
     return list_
@@ -164,15 +166,14 @@ def weighting_materials(self, context):
         return _cache["weighting_materials__list"]
 
     props = context.scene.jewelcraft
-    list_ = []
 
-    for i, mat in enumerate(props.weighting_materials.values()):
-        id_ = str(i)
-        name = mat.name + " "  # Add trailing space to deny UI translation
-        list_.append((id_, name, ""))
+    list_ = tuple(
+        (str(i), mat.name + " ", "")  # Add trailing space to deny UI translation
+        for i, mat in enumerate(props.weighting_materials.values())
+    )
 
     if not list_:
-        list_ = [("", "", "")]
+        list_ = (("", "", ""),)
 
     _cache["weighting_materials__list"] = list_
 
@@ -201,20 +202,17 @@ def asset_folders(self, context):
     folder = asset.user_asset_library_folder_object()
 
     if not os.path.exists(folder):
-        _cache["asset_folders__list"] = [("", "", "")]
-        return [("", "", "")]
+        _cache["asset_folders__list"] = (("", "", ""),)
+        return (("", "", ""),)
 
-    list_ = []
-
-    for entry in os.scandir(folder):
-
-        if entry.is_dir() and not entry.name.startswith("."):
-            id_ = entry.name
-            name = entry.name + " "  # Add trailing space to deny UI translation
-            list_.append((id_, name, ""))
+    list_ = tuple(
+        (entry.name, entry.name + " ", "")  # Add trailing space to deny UI translation
+        for entry in os.scandir(folder)
+        if entry.is_dir() and not entry.name.startswith(".")
+    )
 
     if not list_:
-        list_ = [("", "", "")]
+        list_ = (("", "", ""),)
 
     _cache["asset_folders__list"] = list_
 
@@ -231,8 +229,8 @@ def assets(self, context):
     folder = os.path.join(asset.user_asset_library_folder_object(), category)
 
     if not os.path.exists(folder):
-        _cache["assets__list"] = [("", "", "")]
-        return [("", "", "")]
+        _cache["assets__list"] = (("", "", ""),)
+        return (("", "", ""),)
 
     pcoll = var.preview_collections.get("assets")
 
@@ -240,28 +238,22 @@ def assets(self, context):
         pcoll = bpy.utils.previews.new()
 
     list_ = []
-    i = 0
+    app = list_.append
     no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
 
-    for entry in os.scandir(folder):
+    for i, entry in enumerate(x for x in os.scandir(folder) if x.is_file() and x.name.endswith(".blend")):
+        filename = os.path.splitext(entry.name)[0]
+        preview_id = category + filename
+        preview_path = os.path.splitext(entry.path)[0] + ".png"
 
-        if entry.is_file() and entry.name.endswith(".blend"):
-            filename = os.path.splitext(entry.name)[0]
-            id_ = filename
-            name = filename + " "  # Add trailing space to deny UI translation
+        if os.path.exists(preview_path):
+            if preview_id not in pcoll:
+                pcoll.load(preview_id, preview_path, "IMAGE")
+            preview = pcoll[preview_id].icon_id
+        else:
+            preview = no_preview
 
-            preview_id = category + filename
-            preview_path = os.path.splitext(entry.path)[0] + ".png"
-
-            if os.path.exists(preview_path):
-                if preview_id not in pcoll:
-                    pcoll.load(preview_id, preview_path, "IMAGE")
-                preview = pcoll[preview_id].icon_id
-            else:
-                preview = no_preview
-
-            list_.append((id_, name, "", preview, i))
-            i += 1
+        app((filename, filename + " ", "", preview, i))  # Add trailing space to deny UI translation
 
     var.preview_collections["assets"] = pcoll
 
@@ -270,8 +262,9 @@ def assets(self, context):
         del var.preview_collections["assets"]
 
     if not list_:
-        list_ = [("", "", "")]
+        list_ = (("", "", ""),)
 
+    list_ = tuple(list_)
     _cache["assets__list"] = list_
 
     return list_
