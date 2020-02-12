@@ -133,13 +133,13 @@ def weighting_set(self, context):
     folder = asset.user_asset_library_folder_weighting()
 
     if os.path.exists(folder):
-        i = len(list_)
-        for entry in os.scandir(folder):
-            if entry.is_file() and entry.name.endswith(".json"):
-                id_ = entry.name
-                name = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
-                list_.append((id_, name, "", "BLANK1", i))
-                i += 1
+        for i, entry in enumerate(
+            (x for x in os.scandir(folder) if x.is_file() and x.name.endswith(".json")),
+            start=len(list_)
+        ):
+            id_ = entry.name
+            name = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
+            list_.append((id_, name, "", "BLANK1", i))
 
     if list_:
         for id_, name, desc, icon, i in list_:
