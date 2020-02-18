@@ -46,8 +46,9 @@ def _iface_lang(context):
 
 def cuts(self, context):
     lang = _iface_lang(context)
+    theme = context.preferences.addons[var.ADDON_ID].preferences.theme_icon
 
-    if _cache.get("cuts__lang") == lang:
+    if _cache.get("cuts__lang") == lang and _cache.get("cuts__theme") == theme:
         return _cache["cuts__list"]
 
     pcoll = var.preview_collections.get("cuts")
@@ -56,19 +57,22 @@ def cuts(self, context):
         pcoll = bpy.utils.previews.new()
 
         for entry in os.scandir(var.GEM_ASSET_DIR):
-            if entry.name.endswith(".png"):
-                name = os.path.splitext(entry.name)[0]
-                pcoll.load(name.upper(), entry.path, "IMAGE")
+            if entry.is_dir():
+                for subentry in os.scandir(entry.path):
+                    if subentry.is_file() and subentry.name.endswith(".png"):
+                        name = entry.name + os.path.splitext(subentry.name)[0]
+                        pcoll.load(name.upper(), subentry.path, "IMAGE")
 
         var.preview_collections["cuts"] = pcoll
 
     list_ = tuple(
-        (k, _(_(v.name, "JewelCraft")), "", pcoll[k].icon_id, i)  # _(_()) default return value workaround
+        (k, _(_(v.name, "JewelCraft")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround
         for i, (k, v) in enumerate(var.CUTS.items())
     )
 
     _cache["cuts__list"] = list_
     _cache["cuts__lang"] = lang
+    _cache["cuts__theme"] = theme
 
     return list_
 
