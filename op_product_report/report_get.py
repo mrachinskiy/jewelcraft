@@ -84,7 +84,7 @@ def data_collect(self, context, gem_map=False):
     df_leftovers = False
     deprecated_id = False
     unknown_id = False
-    instance_orig = {dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance}
+    orig_instance_obs = {dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance}
 
     for dup in depsgraph.object_instances:
 
@@ -96,7 +96,7 @@ def data_collect(self, context, gem_map=False):
         if not deprecated_id:
             deprecated_id = ob.type == "MESH" and "gem" in ob.data
 
-        if "gem" not in ob or (not dup.is_instance and ob in instance_orig):
+        if "gem" not in ob or (not dup.is_instance and ob in orig_instance_obs):
             continue
 
         # Gem
