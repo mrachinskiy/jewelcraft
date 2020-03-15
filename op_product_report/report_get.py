@@ -84,7 +84,7 @@ def data_collect(self, context, gem_map=False):
     df_leftovers = False
     deprecated_id = False
     unknown_id = False
-    instance_orig = set(dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance)
+    instance_orig = {dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance}
 
     for dup in depsgraph.object_instances:
 

@@ -123,7 +123,7 @@ class AssetAdd:
             return set(context.selected_objects)
         else:
             collection = bpy.data.collections[self.collection_name]
-            return set((collection,))
+            return {collection}
 
 
 class WM_OT_asset_add(Setup, AssetAdd, Operator):
