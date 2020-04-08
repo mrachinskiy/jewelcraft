@@ -26,7 +26,8 @@ bl_info = {
     "blender": (2, 80, 0),
     "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
-    "wiki_url": "https://github.com/mrachinskiy/jewelcraft#readme",
+    "wiki_url": "https://github.com/mrachinskiy/jewelcraft#readme",  # NOTE 2.82 compatibility
+    "doc_url": "https://github.com/mrachinskiy/jewelcraft#readme",
     "tracker_url": "https://github.com/mrachinskiy/jewelcraft/issues",
     "category": "Object",
 }
