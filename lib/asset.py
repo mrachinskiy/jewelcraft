@@ -358,7 +358,7 @@ def render_preview(width, height, filepath, compression=100, gamma=None):
 
 
 def show_window(width, height, area_type=None, space_data=None):
-    version_281 = bpy.app.version >= (2, 81, 12)
+    version_281 = bpy.app.version >= (2, 81, 12)  # NOTE display_type property moved to preferences
     render = bpy.context.scene.render
 
     render_config = {

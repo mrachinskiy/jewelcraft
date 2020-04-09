@@ -90,7 +90,10 @@ class WM_OT_product_report(Operator):
         layout.separator()
 
     def execute(self, context):
+        # NOTE new method cursor_set()
+        # new behaviour for current_line_index property
         version_281 = bpy.app.version >= (2, 81, 14)
+
         data_raw = report_get.data_collect(self, context)
         data_fmt = report_fmt.data_format(self, context, data_raw)
 
