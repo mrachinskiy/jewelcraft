@@ -97,6 +97,7 @@ dictionary = {
         # "Only ID": "",
         # "Force Edit": "",
         # "Zero dimensions": "",
+        # "Action completed!": "",
         "Add gemstone to the scene": "Ajouter une pierre précieuse à la scène",
         "Edit selected gems": "Editer les pierres sélectionnées",
         # "Round diamonds only": "",

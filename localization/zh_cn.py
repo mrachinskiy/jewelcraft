@@ -97,6 +97,7 @@ dictionary = {
         # "Only ID": "",
         # "Force Edit": "",
         # "Zero dimensions": "",
+        # "Action completed!": "",
         "Add gemstone to the scene": "向场景添加宝石",
         "Edit selected gems": "编辑选中的宝石",
         # "Round diamonds only": "",
