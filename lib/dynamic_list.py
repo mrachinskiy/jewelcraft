@@ -22,6 +22,7 @@
 import os
 from functools import lru_cache
 
+import bpy
 import bpy.utils.previews
 from bpy.app.translations import pgettext_iface as _
 
@@ -32,13 +33,25 @@ from . import asset
 _cache = {}
 
 
-def _iface_lang(context):
-    view = context.preferences.view
+if bpy.app.version >= (2, 83, 13):
 
-    if view.use_international_fonts and view.use_translate_interface:
-        return view.language
+    def _iface_lang(context):
+        view = context.preferences.view
 
-    return "DEFAULT"
+        if view.use_translate_interface:
+            return view.language
+
+        return "en_US"
+
+else:
+
+    def _iface_lang(context):
+        view = context.preferences.view
+
+        if view.use_international_fonts and view.use_translate_interface:
+            return view.language
+
+        return "DEFAULT"
 
 
 # Gems
