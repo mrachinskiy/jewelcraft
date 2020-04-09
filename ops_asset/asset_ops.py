@@ -23,23 +23,17 @@ import os
 
 import bpy
 from bpy.types import Operator
-from bpy.props import StringProperty, BoolProperty, EnumProperty
-import bpy.utils.previews
+from bpy.props import StringProperty, BoolProperty, EnumProperty, IntProperty
 
+from .. import var
 from ..lib import asset, dynamic_list
 
 
-class Setup:
-
-    def __init__(self):
-        self.props = bpy.context.window_manager.jewelcraft
-        self.folder_name = self.props.asset_folder
-        self.folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
-        self.asset_name = self.props.asset_list
-        self.filepath = os.path.join(self.folder, self.asset_name)
+def asset_menu_lock(context):
+    context.window_manager.jewelcraft.asset_menu_ui_lock = True
 
 
-def update_asset_name(self, context):
+def upd_asset_name(self, context):
     if self.type == "SELECTION":
         self.asset_name = context.object.name if context.object else ""
     else:
@@ -54,10 +48,11 @@ class AssetAdd:
             ("SELECTION", "Selected Objects", ""),
             ("COLLECTION", "Collection", ""),
         ),
-        update=update_asset_name,
+        update=upd_asset_name,
     )
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
     asset_name: StringProperty(name="Asset Name", options={"SKIP_SAVE"})
+    ovrd_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     @classmethod
     def poll(cls, context):
@@ -94,17 +89,21 @@ class AssetAdd:
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        filepath = os.path.join(self.folder, self.asset_name)
+        filepath = asset.get_asset_path(self.asset_name)
         data_blocks = self.asset_datablocks(context)
 
         asset.asset_export(data_blocks, filepath + ".blend")
 
         if self.is_add:
-            asset.render_preview(256, 256, filepath + ".png")
-            dynamic_list.asset_list_refresh()
-            self.props.asset_list = self.asset_name
+            prefs = context.preferences.addons[var.ADDON_ID].preferences
+            resolution = prefs.asset_preview_resolution
 
+            asset.render_preview(resolution, resolution, filepath + ".png")
+            dynamic_list.assets_refresh()
             context.area.tag_redraw()
+
+        if self.ovrd_name:
+            asset_menu_lock(context)
 
         return {"FINISHED"}
 
@@ -112,7 +111,9 @@ class AssetAdd:
         if context.collection and context.collection is not context.scene.collection:
             self.collection_name = context.collection.name
 
-        if self.is_add and context.object:
+        if self.ovrd_name:
+            self.asset_name = self.ovrd_name
+        elif self.is_add and context.object:
             self.asset_name = context.object.name
 
         wm = context.window_manager
@@ -126,7 +127,7 @@ class AssetAdd:
             return {collection}
 
 
-class WM_OT_asset_add(Setup, AssetAdd, Operator):
+class WM_OT_asset_add(AssetAdd, Operator):
     bl_label = "Add To Library"
     bl_description = "Add selected objects to asset library"
     bl_idname = "wm.jewelcraft_asset_add"
@@ -135,7 +136,7 @@ class WM_OT_asset_add(Setup, AssetAdd, Operator):
     is_add = True
 
 
-class WM_OT_asset_replace(Setup, AssetAdd, Operator):
+class WM_OT_asset_replace(AssetAdd, Operator):
     bl_label = "Replace Asset"
     bl_description = "Replace current asset with selected objects"
     bl_idname = "wm.jewelcraft_asset_replace"
@@ -144,32 +145,25 @@ class WM_OT_asset_replace(Setup, AssetAdd, Operator):
     is_add = False
 
 
-class WM_OT_asset_remove(Setup, Operator):
-    bl_label = "Remove Asset"
+class WM_OT_asset_remove(Operator):
+    bl_label = "Remove"
     bl_description = "Remove asset from library"
     bl_idname = "wm.jewelcraft_asset_remove"
     bl_options = {"INTERNAL"}
 
-    @classmethod
-    def poll(cls, context):
-        return bool(context.window_manager.jewelcraft.asset_list)
+    ovrd_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        asset_list = dynamic_list.assets(self, context)
-        last = self.asset_name == asset_list[-1][0]
-        iterable = len(asset_list) > 1
+        filepath = asset.get_asset_path(self.ovrd_name)
 
-        if os.path.exists(self.filepath + ".blend"):
-            os.remove(self.filepath + ".blend")
+        if os.path.exists(filepath + ".blend"):
+            os.remove(filepath + ".blend")
 
-        if os.path.exists(self.filepath + ".png"):
-            os.remove(self.filepath + ".png")
+        if os.path.exists(filepath + ".png"):
+            os.remove(filepath + ".png")
 
-        dynamic_list.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
-
-        if last and iterable:
-            self.props.asset_list = asset_list[-2][0]
-
+        dynamic_list.assets_refresh(preview_id=filepath)
+        asset_menu_lock(context)
         context.area.tag_redraw()
 
         return {"FINISHED"}
@@ -179,17 +173,14 @@ class WM_OT_asset_remove(Setup, Operator):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_asset_rename(Setup, Operator):
-    bl_label = "Rename Asset"
+class WM_OT_asset_rename(Operator):
+    bl_label = "Rename"
     bl_description = "Rename asset"
     bl_idname = "wm.jewelcraft_asset_rename"
     bl_options = {"INTERNAL"}
 
     asset_name: StringProperty(name="Asset Name", options={"SKIP_SAVE"})
-
-    @classmethod
-    def poll(cls, context):
-        return bool(context.window_manager.jewelcraft.asset_list)
+    ovrd_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def draw(self, context):
         layout = self.layout
@@ -205,49 +196,52 @@ class WM_OT_asset_rename(Setup, Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        name_current = self.props.asset_list
+        if self.asset_name == self.ovrd_name:
+            return {"CANCELLED"}
 
-        file_current = os.path.join(self.folder, name_current + ".blend")
-        file_preview_current = os.path.join(self.folder, name_current + ".png")
+        path_current = asset.get_asset_path(self.ovrd_name)
+        path_new = asset.get_asset_path(self.asset_name)
 
-        file_new = os.path.join(self.folder, self.asset_name + ".blend")
-        file_preview_new = os.path.join(self.folder, self.asset_name + ".png")
-
-        if not os.path.exists(file_current):
+        if not os.path.exists(path_current + ".blend"):
             self.report({"ERROR"}, "File not found")
             return {"CANCELLED"}
 
-        os.rename(file_current, file_new)
+        os.rename(path_current + ".blend", path_new + ".blend")
 
-        if os.path.exists(file_preview_current):
-            os.rename(file_preview_current, file_preview_new)
+        if os.path.exists(path_current + ".png"):
+            os.rename(path_current + ".png", path_new + ".png")
 
-        dynamic_list.asset_list_refresh()
-        self.props.asset_list = self.asset_name
-
+        dynamic_list.assets_refresh()
+        asset_menu_lock(context)
         context.area.tag_redraw()
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        self.asset_name = self.ovrd_name
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_asset_preview_replace(Setup, Operator):
-    bl_label = "Replace Asset Preview"
+class WM_OT_asset_preview_replace(Operator):
+    bl_label = "Replace Preview"
     bl_description = "Replace asset preview image"
     bl_idname = "wm.jewelcraft_asset_preview_replace"
     bl_options = {"INTERNAL"}
 
-    @classmethod
-    def poll(cls, context):
-        return bool(context.window_manager.jewelcraft.asset_list)
+    ovrd_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        asset.render_preview(256, 256, self.filepath + ".png")
-        dynamic_list.asset_list_refresh(preview_id=self.folder_name + self.asset_name)
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        resolution = prefs.asset_preview_resolution
+        filepath = asset.get_asset_path(self.ovrd_name)
+
+        asset.render_preview(resolution, resolution, filepath + ".png")
+
+        dynamic_list.assets_refresh(preview_id=filepath)
+        asset_menu_lock(context)
         context.area.tag_redraw()
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -255,31 +249,29 @@ class WM_OT_asset_preview_replace(Setup, Operator):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_asset_import(Setup, Operator):
-    bl_label = "JewelCraft Import Asset"
+class WM_OT_asset_import(Operator):
+    bl_label = "Import Asset"
     bl_description = "Import selected asset"
     bl_idname = "wm.jewelcraft_asset_import"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     use_parent: BoolProperty(
         name="Parent to selected",
         description="Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)",
     )
-
-    @classmethod
-    def poll(cls, context):
-        return bool(context.window_manager.jewelcraft.asset_list)
+    ovrd_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
         space_data = context.space_data
         use_local_view = bool(space_data.local_view)
         collection = context.collection
         selected = list(context.selected_objects)
+        filepath = asset.get_asset_path(self.ovrd_name)
 
         for ob in selected:
             ob.select_set(False)
 
-        imported = asset.asset_import_batch(self.filepath + ".blend")
+        imported = asset.asset_import_batch(filepath + ".blend")
         obs = imported.objects
         colls = imported.collections
 
@@ -314,3 +306,36 @@ class WM_OT_asset_import(Setup, Operator):
     def invoke(self, context, event):
         self.use_parent = event.alt
         return self.execute(context)
+
+
+class WM_OT_asset_menu(Operator):
+    bl_label = "Asset Menu"
+    bl_description = "Asset menu"
+    bl_idname = "wm.jewelcraft_asset_menu"
+    bl_options = {"INTERNAL"}
+
+    ovrd_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
+    ovrd_icon: IntProperty(options={"SKIP_SAVE", "HIDDEN"})
+
+    def execute(self, context):
+        return {"FINISHED"}
+
+    def draw(self, context):
+        layout = self.layout
+
+        if context.window_manager.jewelcraft.asset_menu_ui_lock:
+            layout.label(text="Action completed!", icon="INFO")
+            return
+
+        layout.emboss = "PULLDOWN_MENU"
+
+        row = layout.row()
+        row.operator("wm.jewelcraft_asset_rename", text="", icon="OUTLINER_DATA_GP_LAYER").ovrd_name = self.ovrd_name
+        row.operator("wm.jewelcraft_asset_preview_replace", text="", icon="IMAGE_DATA").ovrd_name = self.ovrd_name
+        row.operator("wm.jewelcraft_asset_replace", text="", icon="FILE_TICK").ovrd_name = self.ovrd_name
+        row.operator("wm.jewelcraft_asset_remove", text="", icon="TRASH").ovrd_name = self.ovrd_name
+
+    def invoke(self, context, event):
+        context.window_manager.jewelcraft.asset_menu_ui_lock = False
+        wm = context.window_manager
+        return wm.invoke_popup(self)

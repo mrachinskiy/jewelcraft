@@ -20,6 +20,7 @@
 
 
 import os
+from functools import lru_cache
 
 import bpy.utils.previews
 from bpy.app.translations import pgettext_iface as _
@@ -48,8 +49,8 @@ def cuts(self, context):
     lang = _iface_lang(context)
     theme = context.preferences.addons[var.ADDON_ID].preferences.theme_icon
 
-    if _cache.get("cuts__lang") == lang and _cache.get("cuts__theme") == theme:
-        return _cache["cuts__list"]
+    if lang == _cache.get("cuts__LANG") and theme == _cache.get("cuts__THEME"):
+        return _cache["cuts__RESULT"]
 
     pcoll = var.preview_collections.get("cuts")
 
@@ -60,8 +61,8 @@ def cuts(self, context):
             if entry.is_dir():
                 for subentry in os.scandir(entry.path):
                     if subentry.is_file() and subentry.name.endswith(".png"):
-                        name = entry.name + os.path.splitext(subentry.name)[0]
-                        pcoll.load(name.upper(), subentry.path, "IMAGE")
+                        preview_id = entry.name + os.path.splitext(subentry.name)[0]
+                        pcoll.load(preview_id.upper(), subentry.path, "IMAGE")
 
         var.preview_collections["cuts"] = pcoll
 
@@ -70,9 +71,9 @@ def cuts(self, context):
         for i, (k, v) in enumerate(var.CUTS.items())
     )
 
-    _cache["cuts__list"] = list_
-    _cache["cuts__lang"] = lang
-    _cache["cuts__theme"] = theme
+    _cache["cuts__RESULT"] = list_
+    _cache["cuts__LANG"] = lang
+    _cache["cuts__THEME"] = theme
 
     return list_
 
@@ -80,8 +81,8 @@ def cuts(self, context):
 def stones(self, context):
     lang = _iface_lang(context)
 
-    if _cache.get("stones__lang") == lang:
-        return _cache["stones__list"]
+    if lang == _cache.get("stones__LANG"):
+        return _cache["stones__RESULT"]
 
     list_ = [
         (k, _(_(v.name, "JewelCraft")), "", i)  # _(_()) default return value workaround
@@ -91,8 +92,8 @@ def stones(self, context):
     list_.sort(key=lambda x: x[1])
     list_ = tuple(list_)
 
-    _cache["stones__list"] = list_
-    _cache["stones__lang"] = lang
+    _cache["stones__RESULT"] = list_
+    _cache["stones__LANG"] = lang
 
     return list_
 
@@ -102,9 +103,8 @@ def stones(self, context):
 
 
 def weighting_set(self, context):
-
-    if "weighting_set__list" in _cache:
-        return _cache["weighting_set__list"]
+    if "weighting_set__RESULT" in _cache:
+        return _cache["weighting_set__RESULT"]
 
     prefs = context.preferences.addons[var.ADDON_ID].preferences
     list_ = []
@@ -134,11 +134,11 @@ def weighting_set(self, context):
             ),
         ]
 
-    folder = asset.user_asset_library_folder_weighting()
+    lib_path = asset.get_weighting_lib_path()
 
-    if os.path.exists(folder):
+    if os.path.exists(lib_path):
         for i, entry in enumerate(
-            (x for x in os.scandir(folder) if x.is_file() and x.name.endswith(".json")),
+            (x for x in os.scandir(lib_path) if x.is_file() and x.name.endswith(".json")),
             start=len(list_)
         ):
             id_ = entry.name
@@ -155,19 +155,21 @@ def weighting_set(self, context):
             list_[0] = (id_, name, desc, "DOT", i)
             prefs.weighting_set_autoload = id_
             context.preferences.is_dirty = True
-    else:
-        list_ = (("", "", "", "BLANK1", 0),)
 
     list_ = tuple(list_)
-    _cache["weighting_set__list"] = list_
+    _cache["weighting_set__RESULT"] = list_
 
     return list_
 
 
-def weighting_materials(self, context):
+def weighting_set_refresh(self=None, context=None):
+    if "weighting_set__RESULT" in _cache:
+        del _cache["weighting_set__RESULT"]
 
-    if "weighting_materials__list" in _cache:
-        return _cache["weighting_materials__list"]
+
+def weighting_materials(self, context):
+    if "weighting_materials__RESULT" in _cache:
+        return _cache["weighting_materials__RESULT"]
 
     props = context.scene.jewelcraft
 
@@ -176,22 +178,14 @@ def weighting_materials(self, context):
         for i, mat in enumerate(props.weighting_materials.values())
     )
 
-    if not list_:
-        list_ = (("", "", ""),)
-
-    _cache["weighting_materials__list"] = list_
+    _cache["weighting_materials__RESULT"] = list_
 
     return list_
 
 
-def weighting_set_refresh(self=None, context=None):
-    if "weighting_set__list" in _cache:
-        del _cache["weighting_set__list"]
-
-
 def weighting_materials_refresh(self=None, context=None):
-    if "weighting_materials__list" in _cache:
-        del _cache["weighting_materials__list"]
+    if "weighting_materials__RESULT" in _cache:
+        del _cache["weighting_materials__RESULT"]
 
 
 # Assets
@@ -199,15 +193,14 @@ def weighting_materials_refresh(self=None, context=None):
 
 
 def asset_folders(self, context):
+    if "asset_folders__RESULT" in _cache:
+        return _cache["asset_folders__RESULT"]
 
-    if "asset_folders__list" in _cache:
-        return _cache["asset_folders__list"]
-
-    folder = asset.user_asset_library_folder_object()
+    folder = asset.get_asset_lib_path()
 
     if not os.path.exists(folder):
-        _cache["asset_folders__list"] = (("", "", ""),)
-        return (("", "", ""),)
+        _cache["asset_folders__RESULT"] = ()
+        return ()
 
     list_ = tuple(
         (entry.name, entry.name + " ", "")  # Add trailing space to deny UI translation
@@ -215,26 +208,22 @@ def asset_folders(self, context):
         if entry.is_dir() and not entry.name.startswith(".")
     )
 
-    if not list_:
-        list_ = (("", "", ""),)
-
-    _cache["asset_folders__list"] = list_
+    _cache["asset_folders__RESULT"] = list_
 
     return list_
 
 
-def assets(self, context):
-    category = context.window_manager.jewelcraft.asset_folder
+def asset_folders_refresh():
+    if "asset_folders__RESULT" in _cache:
+        del _cache["asset_folders__RESULT"]
 
-    if "assets__list" in _cache and category == _cache.get("assets__category"):
-        return _cache["assets__list"]
 
-    _cache["assets__category"] = category
-    folder = os.path.join(asset.user_asset_library_folder_object(), category)
+@lru_cache(maxsize=32)
+def assets(lib_path, category):
+    folder = os.path.join(lib_path, category)
 
     if not os.path.exists(folder):
-        _cache["assets__list"] = (("", "", ""),)
-        return (("", "", ""),)
+        return ()
 
     pcoll = var.preview_collections.get("assets")
 
@@ -245,19 +234,20 @@ def assets(self, context):
     app = list_.append
     no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
 
-    for i, entry in enumerate(x for x in os.scandir(folder) if x.is_file() and x.name.endswith(".blend")):
-        filename = os.path.splitext(entry.name)[0]
-        preview_id = category + filename
-        preview_path = os.path.splitext(entry.path)[0] + ".png"
+    for entry in os.scandir(folder):
+        if entry.is_file() and entry.name.endswith(".blend"):
+            filename = os.path.splitext(entry.name)[0]
+            filepath = os.path.splitext(entry.path)[0]
 
-        if os.path.exists(preview_path):
-            if preview_id not in pcoll:
-                pcoll.load(preview_id, preview_path, "IMAGE")
-            preview = pcoll[preview_id].icon_id
-        else:
-            preview = no_preview
+            if os.path.exists(filepath + ".png"):
+                preview_id = str(hash(filepath))
+                if preview_id not in pcoll:
+                    pcoll.load(preview_id, filepath + ".png", "IMAGE")
+                preview = pcoll[preview_id].icon_id
+            else:
+                preview = no_preview
 
-        app((filename, filename + " ", "", preview, i))  # Add trailing space to deny UI translation
+            app((filename, preview))
 
     var.preview_collections["assets"] = pcoll
 
@@ -265,38 +255,29 @@ def assets(self, context):
         bpy.utils.previews.remove(pcoll)
         del var.preview_collections["assets"]
 
-    if not list_:
-        list_ = (("", "", ""),)
-
-    list_ = tuple(list_)
-    _cache["assets__list"] = list_
-
-    return list_
+    return tuple(list_)
 
 
-def asset_folder_list_refresh():
-    if "asset_folders__list" in _cache:
-        del _cache["asset_folders__list"]
+def assets_refresh(preview_id=None, hard=False):
+    if preview_id or hard:
+        pcoll = var.preview_collections.get("assets")
 
+        if pcoll:
 
-def asset_list_refresh(preview_id=False, hard=False):
-    pcoll = var.preview_collections.get("assets")
+            if preview_id:
+                preview_id = str(hash(preview_id))
 
-    if pcoll:
+                if preview_id in pcoll:
+                    del pcoll[preview_id]
+                    if not pcoll:
+                        bpy.utils.previews.remove(pcoll)
+                        del var.preview_collections["assets"]
 
-        if preview_id and preview_id in pcoll:
-            del pcoll[preview_id]
-
-            if not pcoll:
+            elif hard:
                 bpy.utils.previews.remove(pcoll)
                 del var.preview_collections["assets"]
 
-        elif hard:
-            bpy.utils.previews.remove(pcoll)
-            del var.preview_collections["assets"]
-
-    if "assets__list" in _cache:
-        del _cache["assets__list"]
+    assets.cache_clear()
 
 
 # Other
@@ -304,12 +285,12 @@ def asset_list_refresh(preview_id=False, hard=False):
 
 
 def abc(self, context):
-    if "abc__list" in _cache:
-        return _cache["abc__list"]
+    if "abc__RESULT" in _cache:
+        return _cache["abc__RESULT"]
 
     import string
 
     list_ = tuple((str(i), char, "") for i, char in enumerate(string.ascii_uppercase))
-    _cache["abc__list"] = list_
+    _cache["abc__RESULT"] = list_
 
     return list_

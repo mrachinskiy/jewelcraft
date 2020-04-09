@@ -29,6 +29,7 @@ from mathutils import Matrix, Vector, kdtree
 
 from . import mesh, unit
 from .. import var
+from ..lib import dynamic_list
 
 
 # Gem
@@ -216,22 +217,55 @@ def add_material(ob, name="New Material", color=None, is_gem=False):
 # ------------------------------------
 
 
-def user_asset_library_folder_object():
+def check_deprecated_path_ob(context):
+    if var.deprecated_asset_path_checked:
+        return
+
+    if os.path.exists(var.USER_ASSET_OBJECT_DIR):
+        libs = context.preferences.addons[var.ADDON_ID].preferences.asset_libs
+
+        lib = libs.add()
+        lib.name = "Default"
+        lib.path = var.USER_ASSET_OBJECT_DIR
+
+        context.preferences.is_dirty = True
+
+    var.deprecated_asset_path_checked = True
+
+
+def check_deprecated_path_ws(context):
+    if var.deprecated_weighting_path_checked:
+        return
+
+    if os.path.exists(var.USER_ASSET_WEIGHTING_DIR):
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        prefs.weighting_set_lib_path = var.USER_ASSET_WEIGHTING_DIR
+
+        context.preferences.is_dirty = True
+
+        dynamic_list.weighting_set_refresh()
+
+    var.deprecated_weighting_path_checked = True
+
+
+def get_asset_lib_path():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-
-    if prefs.use_custom_asset_dir:
-        return bpy.path.abspath(prefs.custom_asset_dir)
-
-    return var.USER_ASSET_OBJECT_DIR
+    return bpy.path.abspath(prefs.asset_libs.active_item().path)
 
 
-def user_asset_library_folder_weighting():
+def get_asset_path(filename):
+    props = bpy.context.window_manager.jewelcraft
+    return os.path.join(get_asset_lib_path(), props.asset_folder, filename)
+
+
+def get_weighting_lib_path():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+    return bpy.path.abspath(prefs.weighting_set_lib_path)
 
-    if prefs.weighting_set_use_custom_dir:
-        return bpy.path.abspath(prefs.weighting_set_custom_dir)
 
-    return var.USER_ASSET_WEIGHTING_DIR
+def get_weighting_set_path():
+    props = bpy.context.window_manager.jewelcraft
+    return os.path.join(get_weighting_lib_path(), props.weighting_set)
 
 
 def asset_import(filepath, ob_name=False, me_name=False):

@@ -23,7 +23,7 @@ import bpy
 from bpy.types import Panel, Menu, UIList
 
 from . import var, mod_update
-from .lib import asset, unit
+from .lib import asset, unit, dynamic_list
 
 
 # Utils
@@ -86,6 +86,22 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
         row.prop(item, "name", text="", emboss=False)
 
 
+class VIEW3D_UL_jewelcraft_asset_libs(UIList):
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        row = layout.split(factor=0.25)
+        row.prop(item, "name", text="", emboss=False)
+        row.prop(item, "path", text="", emboss=False)
+
+
+class VIEW3D_UL_jewelcraft_asset_libs_select(UIList):
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        row = layout.row(align=True)
+        row.label(text=item.name)
+        row.operator("wm.path_open", text="", icon="FILE_FOLDER", emboss=False).filepath = item.path
+
+
 # Menus
 # ---------------------------
 
@@ -106,35 +122,20 @@ class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
         layout.operator("object.jewelcraft_select_gems_by_trait", text="All")
 
 
-class VIEW3D_MT_jewelcraft_folder(Menu):
+class VIEW3D_MT_jewelcraft_asset_folder(Menu):
     bl_label = ""
 
     def draw(self, context):
-        library_folder = asset.user_asset_library_folder_object()
         layout = self.layout
         layout.operator("wm.jewelcraft_asset_folder_create", icon="ADD")
         layout.operator("wm.jewelcraft_asset_folder_rename", text="Rename")
-        layout.separator()
-        layout.operator("wm.path_open", text="Open Library Folder", icon="FILE_FOLDER").filepath = library_folder
-        layout.separator()
-        layout.operator("wm.jewelcraft_asset_ui_refresh", icon="FILE_REFRESH")
-
-
-class VIEW3D_MT_jewelcraft_asset(Menu):
-    bl_label = ""
-
-    def draw(self, context):
-        layout = self.layout
-        layout.operator("wm.jewelcraft_asset_rename", text="Rename")
-        layout.operator("wm.jewelcraft_asset_replace")
-        layout.operator("wm.jewelcraft_asset_preview_replace", text="Replace Preview", icon="IMAGE_DATA")
 
 
 class VIEW3D_MT_jewelcraft_weighting_set(Menu):
     bl_label = ""
 
     def draw(self, context):
-        library_folder = asset.user_asset_library_folder_weighting()
+        library_folder = asset.get_weighting_lib_path()
         layout = self.layout
         layout.operator("wm.jewelcraft_weighting_set_add", icon="ADD")
         layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", icon="REMOVE")
@@ -147,16 +148,49 @@ class VIEW3D_MT_jewelcraft_weighting_set(Menu):
         layout.operator("wm.jewelcraft_weighting_set_refresh", icon="FILE_REFRESH")
 
 
-class VIEW3D_MT_jewelcraft_weighting_list(Menu):
+class VIEW3D_MT_jewelcraft_weighting_mats(Menu):
     bl_label = ""
 
     def draw(self, context):
         props = context.scene.jewelcraft
         layout = self.layout
-        layout.operator("wm.jewelcraft_ul_materials_clear", icon="X")
+        layout.operator("scene.jewelcraft_ul_clear", icon="X").prop = "weighting_materials"
         layout.separator()
         layout.prop(props, "weighting_show_composition")
         layout.prop(props, "weighting_show_density")
+
+
+# Popovers
+# ---------------------------
+
+
+class VIEW3D_PT_asset_libs(Panel):
+    bl_label = "Libraries"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "WINDOW"
+    bl_ui_units_x = 8
+
+    def draw(self, context):
+        prefs = context.preferences.addons[__package__].preferences
+
+        layout = self.layout
+
+        row = layout.row()
+        row.label(text="Libraries")
+
+        sub = row.row()
+        sub.alignment = "RIGHT"
+        sub.operator("wm.jewelcraft_asset_ui_refresh", text="", icon="FILE_REFRESH", emboss=False)
+
+        layout.template_list(
+            "VIEW3D_UL_jewelcraft_asset_libs_select",
+            "",
+            prefs.asset_libs,
+            "coll",
+            prefs.asset_libs,
+            "index",
+            rows=prefs.asset_libs.length() + 1,
+        )
 
 
 # Panels
@@ -257,33 +291,54 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
     def draw(self, context):
         layout = self.layout
 
-        if not self.wm_props.asset_folder:
-            layout.operator("wm.jewelcraft_asset_folder_create", icon="ADD")
-            layout.operator("wm.jewelcraft_asset_ui_refresh", icon="FILE_REFRESH")
+        if not self.prefs.asset_libs.values():
+            asset.check_deprecated_path_ob(context)
+            layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").active_tab = "ASSET_MANAGER"
             return
 
         row = layout.row(align=True)
+        sub = row.row(align=True)
+        sub.scale_x = 1.28
+        sub.popover(panel="VIEW3D_PT_asset_libs", text="", icon="ASSET_MANAGER")
+
+        if not self.wm_props.asset_folder:
+            row.operator("wm.jewelcraft_asset_folder_create", icon="ADD")
+            layout.operator("wm.jewelcraft_asset_ui_refresh", icon="FILE_REFRESH")
+            return
+
         row.prop(self.wm_props, "asset_folder", text="")
-        row.menu("VIEW3D_MT_jewelcraft_folder", icon="THREE_DOTS")
+        row.menu("VIEW3D_MT_jewelcraft_asset_folder", icon="THREE_DOTS")
 
-        row = layout.row()
+        flow = layout.grid_flow()
+        flow.row().operator("wm.jewelcraft_asset_add", icon="ADD")
+        flow.row().prop(self.wm_props, "asset_filter", text="", icon="VIEWZOOM")
 
-        col = row.column()
-        col.enabled = bool(self.wm_props.asset_list)
-        col.template_icon_view(self.wm_props, "asset_list", show_labels=True)
+        flow = layout.grid_flow(row_major=True, even_columns=True, even_rows=True, align=True)
 
-        if self.prefs.display_asset_name:
-            col.label(text=self.wm_props.asset_list)
+        filter_name = self.wm_props.asset_filter.lower()
+        show_name = self.prefs.asset_show_name
 
-        col = row.column(align=True)
-        col.operator("wm.jewelcraft_asset_add", text="", icon="ADD")
-        col.operator("wm.jewelcraft_asset_remove", text="", icon="REMOVE")
-        col.separator()
-        col.operator("view3d.jewelcraft_search_asset", text="", icon="VIEWZOOM")
-        col.separator()
-        col.menu("VIEW3D_MT_jewelcraft_asset", icon="DOWNARROW_HLT")
+        for asset_name, asset_icon in dynamic_list.assets(
+            self.prefs.asset_libs.active_item().path,
+            self.wm_props.asset_folder,
+        ):
 
-        layout.operator("wm.jewelcraft_asset_import", text="Import Asset")
+            if filter_name and filter_name not in asset_name.lower():
+                continue
+
+            box = flow.box().column(align=True)
+            box.template_icon(icon_value=asset_icon, scale=self.prefs.asset_ui_preview_scale)
+            if show_name:
+                row = box.row()
+                row.scale_x = 0.8
+                row.label(text=asset_name, translate=False)
+
+            split = box.split(align=True)
+            split.scale_y = 0.9
+            split.operator("wm.jewelcraft_asset_import", text="", icon="IMPORT", emboss=False).ovrd_name = asset_name
+            edit = split.operator("wm.jewelcraft_asset_menu", text="", icon="THREE_DOTS", emboss=False)
+            edit.ovrd_name = asset_name
+            edit.ovrd_icon = asset_icon
 
 
 class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
@@ -374,6 +429,7 @@ class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
 
     def draw(self, context):
         material_list = context.scene.jewelcraft.weighting_materials
+        asset.check_deprecated_path_ws(context)
 
         layout = self.layout
 
@@ -402,12 +458,14 @@ class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
 
         col = row.column(align=True)
         col.operator("wm.jewelcraft_ul_materials_add", text="", icon="ADD")
-        col.operator("wm.jewelcraft_ul_materials_del", text="", icon="REMOVE")
+        col.operator("scene.jewelcraft_ul_del", text="", icon="REMOVE").prop = "weighting_materials"
         col.separator()
-        col.menu("VIEW3D_MT_jewelcraft_weighting_list", icon="DOWNARROW_HLT")
+        col.menu("VIEW3D_MT_jewelcraft_weighting_mats", icon="DOWNARROW_HLT")
         col.separator()
-        col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_UP").move_up = True
-        col.operator("wm.jewelcraft_ul_materials_move", text="", icon="TRIA_DOWN")
+        op = col.operator("scene.jewelcraft_ul_move", text="", icon="TRIA_UP")
+        op.prop = "weighting_materials"
+        op.move_up = True
+        col.operator("scene.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "weighting_materials"
 
         layout.operator("object.jewelcraft_weight_display", text="Calculate")
 
@@ -450,10 +508,12 @@ class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
 
         col = row.column(align=True)
         col.operator("wm.jewelcraft_ul_measurements_add", text="", icon="ADD")
-        col.operator("wm.jewelcraft_ul_measurements_del", text="", icon="REMOVE")
+        col.operator("scene.jewelcraft_ul_del", text="", icon="REMOVE").prop = "measurements"
         col.separator()
-        col.operator("wm.jewelcraft_ul_measurements_move", text="", icon="TRIA_UP").move_up = True
-        col.operator("wm.jewelcraft_ul_measurements_move", text="", icon="TRIA_DOWN")
+        op = col.operator("scene.jewelcraft_ul_move", text="", icon="TRIA_UP")
+        op.prop = "measurements"
+        op.move_up = True
+        col.operator("scene.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "measurements"
 
         if measures_list.coll:
             item = measures_list.coll[measures_list.index]
@@ -473,3 +533,106 @@ class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
             elif item.type == "RING_SIZE":
                 layout.prop(item, "ring_size")
                 layout.prop(item, "axis")
+
+
+# Preferences
+# ---------------------------
+
+
+def prefs_ui(self, context):
+    props_wm = context.window_manager.jewelcraft
+    active_tab = props_wm.prefs_active_tab
+
+    layout = self.layout
+    layout.use_property_split = True
+    layout.use_property_decorate = False
+
+    split = layout.split(factor=0.25)
+    col = split.column()
+    col.use_property_split = False
+    col.scale_y = 1.3
+    col.prop(props_wm, "prefs_active_tab", expand=True)
+
+    box = split.box()
+
+    if active_tab == "ASSET_MANAGER":
+        box.label(text="Libraries")
+        col = box.column()
+        row = col.row()
+
+        col = row.column()
+        col.template_list(
+            "VIEW3D_UL_jewelcraft_asset_libs",
+            "",
+            self.asset_libs,
+            "coll",
+            self.asset_libs,
+            "index",
+            rows=4,
+        )
+
+        col = row.column(align=True)
+        col.operator("preferences.jewelcraft_ul_add", text="", icon="ADD").prop = "asset_libs"
+        col.operator("preferences.jewelcraft_ul_del", text="", icon="REMOVE").prop = "asset_libs"
+        col.separator()
+        op = col.operator("preferences.jewelcraft_ul_move", text="", icon="TRIA_UP")
+        op.prop = "asset_libs"
+        op.move_up = True
+        col.operator("preferences.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "asset_libs"
+
+        box.label(text="Asset")
+        col = box.column()
+        col.prop(self, "asset_preview_resolution")
+
+        box.label(text="Interface")
+        col = box.column()
+        col.prop(self, "asset_show_name")
+        col.prop(self, "asset_ui_preview_scale")
+
+    elif active_tab == "WEIGHTING":
+        col = box.column()
+        col.prop(self, "weighting_hide_default_sets")
+        col.prop(self, "weighting_set_lib_path")
+
+    elif active_tab == "PRODUCT_REPORT":
+        col = box.column()
+        col.prop(self, "product_report_save")
+        col.prop(self, "product_report_lang")
+
+        box.label(text="Gem Map")
+        col = box.column(align=True)
+        col.prop(self, "gem_map_width", text="Resolution X")
+        col.prop(self, "gem_map_height", text="Y")
+
+        box.label(text="Report")
+        box.prop(self, "product_report_show_total_ct")
+
+        box.label(text="Warnings")
+        col = box.column()
+        col.prop(self, "product_report_use_hidden_gems")
+        col.prop(self, "product_report_use_overlap")
+
+    elif active_tab == "THEMES":
+        box.label(text="Interface")
+        col = box.column()
+        col.prop(self, "theme_icon")
+
+        box.label(text="Widgets")
+        col = box.column()
+        col.prop(self, "widget_color")
+        col.prop(self, "widget_linewidth")
+
+        box.label(text="Materials")
+        col = box.column()
+        col.prop(self, "color_prongs")
+        col.prop(self, "color_cutter")
+
+        box.label(text="Viewport Text Size")
+        col = box.column()
+        col.prop(self, "view_font_size_report")
+        col.prop(self, "view_font_size_option")
+        col.prop(self, "view_font_size_gem_size")
+        col.prop(self, "view_font_size_distance")
+
+    elif active_tab == "UPDATES":
+        mod_update.prefs_ui(self, box)

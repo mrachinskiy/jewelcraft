@@ -19,6 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from .list_ops import *
 from .scene_ops import *
-from .search_ops import *
 from .widget_ops import *
+from .wm_ops import *

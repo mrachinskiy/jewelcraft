@@ -19,32 +19,32 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
-
 import bpy
-from bpy.app.handlers import persistent
+from bpy.types import Operator
+from bpy.props import StringProperty
 
 from .. import var
-from . import asset
 
 
-def handler_add():
-    bpy.app.handlers.load_post.append(_execute)
+class WM_OT_goto_prefs(Operator):
+    bl_label = "Open Add-on Preferences"
+    bl_description = "Open add-on preferences window"
+    bl_idname = "wm.jewelcraft_goto_prefs"
+    bl_options = {"INTERNAL"}
 
+    active_tab: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
-def handler_del():
-    bpy.app.handlers.load_post.remove(_execute)
+    def execute(self, context):
+        prefs = context.preferences
+        wm = context.window_manager
 
+        prefs.active_section = "ADDONS"
+        wm.addon_support = {"OFFICIAL", "COMMUNITY"}
+        wm.addon_filter = "All"
+        wm.addon_search = "JewelCraft"
+        wm.jewelcraft.prefs_active_tab = self.active_tab
 
-@persistent
-def _execute(dummy):
-    materials = bpy.context.scene.jewelcraft.weighting_materials
+        bpy.ops.screen.userpref_show("INVOKE_DEFAULT")
+        bpy.ops.preferences.addon_show(module=var.ADDON_ID)
 
-    if materials.coll:
-        return
-
-    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    filename = prefs.weighting_set_autoload
-    filepath = os.path.join(asset.get_weighting_lib_path(), filename)
-
-    asset.weighting_set_import(materials, filename, filepath)
+        return {"FINISHED"}
