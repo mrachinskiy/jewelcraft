@@ -23,11 +23,10 @@ dictionary = {
     "*": {
         # Interface
         "Asset Manager": "Менеджер ассетов",
-        "Display Asset Name": "Показывать название ассета",
+        "Show Asset Name": "Показывать название ассета",
         "Product Report": "Отчёт изделия",
         "Report Language": "Язык отчёта",
         "Save To File": "Сохранить в файл",
-        "Use Custom Library Folder": "Использовать пользовательский каталог библиотеки",
         "Gems": "Камни",
         "Assets": "Ассеты",
         "Select Gems By...": "Выделить камни по...",
@@ -40,7 +39,7 @@ dictionary = {
         "[JewelCraft] Base": "[JewelCraft] Недрагоценные",
         "Prongs": "Крапана",
         "Cutter": "Выборка",
-        "Library Folder Path": "Путь к каталогу библиотеки",
+        "Library Folder": "Каталог библиотеки",
         "Widgets": "Виджеты",
         "Use Overrides": "Использовать переопределения",
         "Widget Color": "Цвет виджета",
@@ -61,6 +60,8 @@ dictionary = {
         "Gem Size": "Размер камня",
         "Viewport Text Size": "Размер текста вьюпорта",
         "Weight": "Вес",
+        "Preview Resolution": "Разрешение превью",
+        "Preview Scale": "Масштаб превью",
         # Operator popup
         "Asset Name": "Название ассета",
         "Category Name": "Название категории",
@@ -122,7 +123,6 @@ dictionary = {
         "Use user preferences language setting": "Использовать язык заданный в настройках пользователя",
         "Select gems by trait": "Выделить камни по характеристике",
         "Search stone by name": "Искать камень по названию",
-        "Search asset by name": "Искать ассет по названию",
         "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
         "Redistribute selected objects along curve": "Перераспределить выделенные объекты по кривой",
 
@@ -180,13 +180,8 @@ dictionary = {
         "Import selected asset": "Импортировать выбранный ассет",
         "Asset category": "Категория ассетов",
 
-        "Set custom asset library folder, if disabled the default library folder will be used": (
-            "Указать пользовательский каталог библиотеки ассетов, если отключено, "
-            "то используется стандартный каталог"
-        ),
-
         "Custom library folder path": "Путь к пользовательскому каталогу библиотеки",
-        "Display asset name in Tool Shelf": "Показывать название ассета в панели инструментов",
+        "Show asset name in sidebar": "Показывать название ассета в боковой панели",
         "Enable widgets drawing": "Активировать отображение виджетов",
         "Use object defined widget overrides": "Использовать переопределения виджетов заданные на объектах",
 
@@ -254,6 +249,7 @@ dictionary = {
             "Предоставить суммарную информацию об изделии, включая камни, размеры и вес",
 
         "Add a new measurement": "Добавить новый замер",
+        "Add new item to the list": "Добавить новый элемент в список",
         "Remove selected item": "Удалить выбранный элемент",
         "Remove all list items": "Удалить все элементы списка",
         "Move selected item up/down in the list": "Переместить выбранный элемент вверх/вниз по списку",
@@ -273,6 +269,12 @@ dictionary = {
         "if materials list for given blend file is empty":
             "Автозагрузка отмеченного набора материалов при File > Open/New "
             "если список материалов для данного blend файла пуст",
+
+        "Asset preview image size when creating new assets":
+            "Размер изображения превью ассета при создании новых ассетов",
+
+        "Asset preview scale in sidebar": "Масштаб превью ассетов в боковой панели",
+        "Filter by name": "Фильтр по имени",
 
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
@@ -435,5 +437,6 @@ dictionary = {
         "Append": "Добавить",
         "Add New Measurement": "Добавить новый замер",
         "Mark Autoload": "Отметить для автозагрузки",
+        "Add To Library": "Добавить в библиотеку",
     },
 }

@@ -29,11 +29,11 @@ from .cutter_ui import UI
 from .cutter_presets import init_presets
 
 
-def update_coords_handle(self, context):
+def upd_coords_handle(self, context):
     self.girdle_z_top, self.table_z = self.table_z, self.girdle_z_top
 
 
-def update_coords_hole(self, context):
+def upd_coords_hole(self, context):
     self.hole_z_top, self.culet_z = self.culet_z, self.hole_z_top
 
 
@@ -48,7 +48,7 @@ class OBJECT_OT_cutter_add(UI, Operator):
 
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
-    use_handle: BoolProperty(name="Handle", default=True, update=update_coords_handle)
+    use_handle: BoolProperty(name="Handle", default=True, update=upd_coords_handle)
     handle_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")
     handle_w_size: FloatProperty(name="Width", step=0.1, unit="LENGTH")
     handle_z_top: FloatProperty(name="Top", default=0.5, step=0.1, unit="LENGTH")
@@ -60,7 +60,7 @@ class OBJECT_OT_cutter_add(UI, Operator):
     girdle_z_btm: FloatProperty(name="Bottom", step=0.1, unit="LENGTH")
     table_z: FloatProperty(name="Table", options={"HIDDEN"})
 
-    use_hole: BoolProperty(name="Hole", default=True, update=update_coords_hole)
+    use_hole: BoolProperty(name="Hole", default=True, update=upd_coords_hole)
     hole_z_top: FloatProperty(name="Top", default=0.25, step=0.1, unit="LENGTH")
     hole_z_btm: FloatProperty(name="Bottom", default=1.0, step=0.1, unit="LENGTH")
     hole_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")

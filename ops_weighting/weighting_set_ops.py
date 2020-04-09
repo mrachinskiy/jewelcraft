@@ -21,22 +21,11 @@
 
 import os
 
-import bpy
 from bpy.types import Operator
 from bpy.props import StringProperty
 
 from .. import var
 from ..lib import asset, dynamic_list
-
-
-class Setup:
-
-    def __init__(self):
-        self.props = bpy.context.window_manager.jewelcraft
-        self.materials = bpy.context.scene.jewelcraft.weighting_materials
-        self.filename = self.props.weighting_set
-        self.folder = asset.user_asset_library_folder_weighting()
-        self.filepath = os.path.join(self.folder, self.filename)
 
 
 class EditCheck:
@@ -47,7 +36,7 @@ class EditCheck:
         return bool(props.weighting_set) and not props.weighting_set.startswith("JCASSET")
 
 
-class WM_OT_weighting_set_add(Setup, Operator):
+class WM_OT_weighting_set_add(Operator):
     bl_label = "Create Set"
     bl_description = "Create weighting set from materials list"
     bl_idname = "wm.jewelcraft_weighting_set_add"
@@ -69,16 +58,18 @@ class WM_OT_weighting_set_add(Setup, Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        set_name = self.set_name + ".json"
-        filepath = os.path.join(self.folder, set_name)
+        lib_path = asset.get_weighting_lib_path()
+        set_path = os.path.join(lib_path, self.set_name + ".json")
 
-        if not os.path.exists(self.folder):
-            os.makedirs(self.folder)
+        if not os.path.exists(lib_path):
+            os.makedirs(lib_path)
 
-        asset.weighting_set_export(self.materials, filepath)
+        materials = context.scene.jewelcraft.weighting_materials
+        asset.weighting_set_export(materials, set_path)
 
         dynamic_list.weighting_set_refresh()
-        self.props.weighting_set = set_name
+        props = context.window_manager.jewelcraft
+        props.weighting_set = self.set_name + ".json"
 
         return {"FINISHED"}
 
@@ -87,15 +78,17 @@ class WM_OT_weighting_set_add(Setup, Operator):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_weighting_set_replace(Setup, EditCheck, Operator):
+class WM_OT_weighting_set_replace(EditCheck, Operator):
     bl_label = "Replace Set"
     bl_description = "Replace selected weighting set with current materials list"
     bl_idname = "wm.jewelcraft_weighting_set_replace"
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        if os.path.exists(self.filepath):
-            asset.weighting_set_export(self.materials, self.filepath)
+        set_path = asset.get_weighting_set_path()
+        if os.path.exists(set_path):
+            materials = context.scene.jewelcraft.weighting_materials
+            asset.weighting_set_export(materials, set_path)
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -103,24 +96,27 @@ class WM_OT_weighting_set_replace(Setup, EditCheck, Operator):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_weighting_set_del(Setup, EditCheck, Operator):
+class WM_OT_weighting_set_del(EditCheck, Operator):
     bl_label = "Remove Set"
     bl_description = "Remove weighting set"
     bl_idname = "wm.jewelcraft_weighting_set_del"
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        list_ = [x[0] for x in dynamic_list.weighting_set(self, context)]
-        index = max(0, list_.index(self.filename) - 1)
+        props = context.window_manager.jewelcraft
+        set_path = asset.get_weighting_set_path()
 
-        if os.path.exists(self.filepath):
-            os.remove(self.filepath)
+        list_ = [x[0] for x in dynamic_list.weighting_set(self, context)]
+        index = max(0, list_.index(props.weighting_set) - 1)
+
+        if os.path.exists(set_path):
+            os.remove(set_path)
 
         dynamic_list.weighting_set_refresh()
 
         list_ = [x[0] for x in dynamic_list.weighting_set(self, context)]
         if list_:
-            self.props.weighting_set = list_[index]
+            props.weighting_set = list_[index]
 
         return {"FINISHED"}
 
@@ -129,17 +125,13 @@ class WM_OT_weighting_set_del(Setup, EditCheck, Operator):
         return wm.invoke_confirm(self, event)
 
 
-class WM_OT_weighting_set_rename(Setup, EditCheck, Operator):
+class WM_OT_weighting_set_rename(EditCheck, Operator):
     bl_label = "Rename Set"
     bl_description = "Rename weighting set"
     bl_idname = "wm.jewelcraft_weighting_set_rename"
     bl_options = {"INTERNAL"}
 
     set_name: StringProperty(name="Set Name", options={"SKIP_SAVE"})
-
-    def __init__(self):
-        super().__init__()
-        self.set_name = os.path.splitext(self.filename)[0]
 
     def draw(self, context):
         layout = self.layout
@@ -155,20 +147,24 @@ class WM_OT_weighting_set_rename(Setup, EditCheck, Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        filename_new = self.set_name + ".json"
-        filepath_new = os.path.join(self.folder, filename_new)
+        set_path_current = asset.get_weighting_set_path()
+        set_path_new = os.path.join(asset.get_weighting_lib_path(), self.set_name + ".json")
 
-        if not os.path.exists(self.filepath):
+        if not os.path.exists(set_path_current):
             self.report({"ERROR"}, "File not found")
             return {"CANCELLED"}
 
-        os.rename(self.filepath, filepath_new)
+        os.rename(set_path_current, set_path_new)
         dynamic_list.weighting_set_refresh()
-        self.props.weighting_set = filename_new
+        props = context.window_manager.jewelcraft
+        props.weighting_set = self.set_name + ".json"
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        props = context.window_manager.jewelcraft
+        self.set_name = os.path.splitext(props.weighting_set)[0]
+
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
@@ -184,7 +180,7 @@ class WM_OT_weighting_set_refresh(Operator):
         return {"FINISHED"}
 
 
-class WM_OT_weighting_set_autoload_mark(Setup, Operator):
+class WM_OT_weighting_set_autoload_mark(Operator):
     bl_label = "Mark Autoload"
     bl_description = (
         "Autoload marked weighting set on File > Open/New "
@@ -200,9 +196,13 @@ class WM_OT_weighting_set_autoload_mark(Setup, Operator):
 
     def execute(self, context):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
-        prefs.weighting_set_autoload = self.filename
+        props = context.window_manager.jewelcraft
+
+        prefs.weighting_set_autoload = props.weighting_set
+
         dynamic_list.weighting_set_refresh()
         context.preferences.is_dirty = True
+
         return {"FINISHED"}
 
 
@@ -214,13 +214,19 @@ class WeightingSetLoad:
         return bool(props.weighting_set)
 
     def execute(self, context):
+        props = context.window_manager.jewelcraft
+        materials = context.scene.jewelcraft.weighting_materials
+        set_path = asset.get_weighting_set_path()
+
         if self.clear_materials:
-            self.materials.clear()
-        asset.weighting_set_import(self.materials, self.filename, self.filepath)
+            materials.clear()
+
+        asset.weighting_set_import(materials, props.weighting_set, set_path)
+
         return {"FINISHED"}
 
 
-class WM_OT_weighting_set_load(Setup, WeightingSetLoad, Operator):
+class WM_OT_weighting_set_load(WeightingSetLoad, Operator):
     bl_label = "Load"
     bl_description = "Load weighting set to the materials list by replacing existing materials"
     bl_idname = "wm.jewelcraft_weighting_set_load"
@@ -229,7 +235,7 @@ class WM_OT_weighting_set_load(Setup, WeightingSetLoad, Operator):
     clear_materials = True
 
 
-class WM_OT_weighting_set_load_append(Setup, WeightingSetLoad, Operator):
+class WM_OT_weighting_set_load_append(WeightingSetLoad, Operator):
     bl_label = "Append"
     bl_description = "Append weighting set at the end of the current materials list"
     bl_idname = "wm.jewelcraft_weighting_set_load_append"

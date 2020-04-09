@@ -589,7 +589,7 @@ class OBJECT_OT_lattice_profile(Operator):
         return self.execute(context)
 
 
-def update_size(self, context):
+def upd_size(self, context):
     self.size = context.object.dimensions[int(self.axis)]
 
 
@@ -606,7 +606,7 @@ class OBJECT_OT_resize(Operator):
             ("1", "Y", ""),
             ("2", "Z", ""),
         ),
-        update=update_size,
+        update=upd_size,
     )
     size: FloatProperty(name="Size", min=0.0, step=10, unit="LENGTH")
 

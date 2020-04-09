@@ -21,22 +21,13 @@
 
 import os
 
-import bpy
 from bpy.types import Operator
 from bpy.props import StringProperty
 
 from ..lib import asset, dynamic_list
 
 
-class Setup:
-
-    def __init__(self):
-        self.props = bpy.context.window_manager.jewelcraft
-        self.folder_name = self.props.asset_folder
-        self.folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
-
-
-class WM_OT_asset_folder_create(Setup, Operator):
+class WM_OT_asset_folder_create(Operator):
     bl_label = "Create Category"
     bl_description = "Create category"
     bl_idname = "wm.jewelcraft_asset_folder_create"
@@ -58,12 +49,13 @@ class WM_OT_asset_folder_create(Setup, Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        folder = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
+        folder = os.path.join(asset.get_asset_lib_path(), self.folder_name)
 
         if not os.path.exists(folder):
             os.makedirs(folder)
-            dynamic_list.asset_folder_list_refresh()
-            self.props.asset_folder = self.folder_name
+            dynamic_list.asset_folders_refresh()
+            context.window_manager.jewelcraft.asset_folder = self.folder_name
+            context.area.tag_redraw()
 
         return {"FINISHED"}
 
@@ -72,7 +64,7 @@ class WM_OT_asset_folder_create(Setup, Operator):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_asset_folder_rename(Setup, Operator):
+class WM_OT_asset_folder_rename(Operator):
     bl_label = "Rename Category"
     bl_description = "Rename category"
     bl_idname = "wm.jewelcraft_asset_folder_rename"
@@ -94,12 +86,20 @@ class WM_OT_asset_folder_rename(Setup, Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        folder_new = os.path.join(asset.user_asset_library_folder_object(), self.folder_name)
+        if self.folder_name == self.props.asset_folder:
+            return {"CANCELLED"}
 
-        if os.path.exists(self.folder):
-            os.rename(self.folder, folder_new)
-            dynamic_list.asset_folder_list_refresh()
-            self.props.asset_folder = self.folder_name
+        props = context.window_manager.jewelcraft
+        lib_path = asset.get_asset_lib_path()
+
+        folder_current = os.path.join(lib_path, props.asset_folder)
+        folder_new = os.path.join(lib_path, self.folder_name)
+
+        if os.path.exists(folder_current):
+            os.rename(folder_current, folder_new)
+            dynamic_list.asset_folders_refresh()
+            props.asset_folder = self.folder_name
+            context.area.tag_redraw()
 
         return {"FINISHED"}
 
@@ -115,6 +115,7 @@ class WM_OT_asset_ui_refresh(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        dynamic_list.asset_folder_list_refresh()
-        dynamic_list.asset_list_refresh(hard=True)
+        dynamic_list.asset_folders_refresh()
+        dynamic_list.assets_refresh(hard=True)
+        context.area.tag_redraw()
         return {"FINISHED"}

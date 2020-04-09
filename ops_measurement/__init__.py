@@ -19,4 +19,153 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from .measurement_list_ops import *
+from bpy.types import Operator
+from bpy.props import BoolProperty, StringProperty, EnumProperty
+
+from ..lib import dynamic_list
+
+
+class WM_OT_ul_measurements_add(Operator):
+    bl_label = "Add New Measurement"
+    bl_description = "Add a new measurement"
+    bl_idname = "wm.jewelcraft_ul_measurements_add"
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
+
+    item_name: StringProperty(name="Name", options={"SKIP_SAVE"})
+    type: EnumProperty(
+        name="Type",
+        description="Measurement type",
+        items=(
+            ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
+            ("WEIGHT", "Weight", "", "FILE_3D", 1),
+            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 2),
+        ),
+    )
+    ring_size: EnumProperty(
+        name="Format",
+        items=(
+            ("DIA", "Diameter", ""),
+            ("CIR", "Circumference", ""),
+            ("US", "USA", ""),
+            ("UK", "Britain", ""),
+            ("CH", "Swiss", ""),
+            ("JP", "Japan", ""),
+        ),
+        options={"SKIP_SAVE"},
+    )
+    axis: EnumProperty(
+        name="Axis",
+        items=(
+            ("0", "X", ""),
+            ("1", "Y", ""),
+            ("2", "Z", ""),
+        ),
+        options={"SKIP_SAVE"},
+    )
+    material: EnumProperty(
+        name="Material",
+        items=dynamic_list.weighting_materials,
+        options={"SKIP_SAVE"},
+    )
+    x: BoolProperty(name="X", default=True, options={"SKIP_SAVE"})
+    y: BoolProperty(name="Y", default=True, options={"SKIP_SAVE"})
+    z: BoolProperty(name="Z", default=True, options={"SKIP_SAVE"})
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+
+        row = layout.row(align=True)
+        row.prop(self, "type", text="Type", icon_only=True)
+        row.prop(self, "item_name", text="")
+
+        if self.type == "DIMENSIONS":
+            col = layout.column(align=True)
+            col.prop(self, "x")
+            col.prop(self, "y")
+            col.prop(self, "z")
+        elif self.type == "WEIGHT":
+            layout.prop(self, "material")
+        elif self.type == "RING_SIZE":
+            layout.prop(self, "ring_size")
+            layout.prop(self, "axis")
+
+        layout.separator()
+
+    def execute(self, context):
+        item = context.scene.jewelcraft.measurements.add()
+
+        item.name = self.item_name
+        item.object = context.object
+        item.type = self.type
+
+        if self.type == "DIMENSIONS":
+            item.x = self.x
+            item.y = self.y
+            item.z = self.z
+        elif self.type == "WEIGHT":
+            materials = context.scene.jewelcraft.weighting_materials
+            mat = materials.values()[int(self.material)]
+            item.material_name = mat.name
+            item.material_density = mat.density
+        elif self.type == "RING_SIZE":
+            item.ring_size = self.ring_size
+            item.axis = self.axis
+
+        context.area.tag_redraw()
+
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        if not context.object:
+            self.report({"ERROR"}, "No active object")
+            return {"CANCELLED"}
+
+        dynamic_list.weighting_materials_refresh()
+        self.item_name = context.object.name
+
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+
+class WM_OT_ul_measurements_material_select(Operator):
+    bl_label = "Select Material"
+    bl_description = "Select material"
+    bl_idname = "wm.jewelcraft_ul_measurements_material_select"
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
+
+    material: EnumProperty(
+        name="Material",
+        items=dynamic_list.weighting_materials,
+        options={"SKIP_SAVE"},
+    )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+        layout.prop(self, "material")
+        layout.separator()
+
+    def execute(self, context):
+        item = context.scene.jewelcraft.measurements.active_item()
+
+        materials = context.scene.jewelcraft.weighting_materials
+        mat = materials.values()[int(self.material)]
+        item.material_name = mat.name
+        item.material_density = mat.density
+
+        context.area.tag_redraw()
+
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        dynamic_list.weighting_materials_refresh()
+
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)

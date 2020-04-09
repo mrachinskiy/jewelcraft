@@ -46,9 +46,14 @@ else:
     LOCAL_PATH = os.path.expanduser("~/.local/share")
 
 ADDON_CONFIG_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
-USER_ASSET_DIR = os.path.join(ADDON_CONFIG_DIR, "Asset Library")
-USER_ASSET_OBJECT_DIR = os.path.join(USER_ASSET_DIR, "Object")
-USER_ASSET_WEIGHTING_DIR = os.path.join(USER_ASSET_DIR, "Weighting")
+DEFAULT_WEIGHTING_SET_DIR = os.path.join(ADDON_CONFIG_DIR, "Weighting Sets")
+
+USER_ASSET_DIR = os.path.join(ADDON_CONFIG_DIR, "Asset Library")  # DEPRECATED
+USER_ASSET_OBJECT_DIR = os.path.join(USER_ASSET_DIR, "Object")  # DEPRECATED
+USER_ASSET_WEIGHTING_DIR = os.path.join(USER_ASSET_DIR, "Weighting")  # DEPRECATED
+
+deprecated_asset_path_checked = False
+deprecated_weighting_path_checked = False
 
 
 # Weighting

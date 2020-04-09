@@ -31,8 +31,17 @@ from bpy.props import (
     CollectionProperty,
 )
 
-from . import mod_update
+from . import ui, var
 from .lib import widget, dynamic_list
+
+
+# Update callbacks
+# ------------------------------------------
+
+
+def upd_folder_list(self, context):
+    dynamic_list.asset_folders_refresh()
+    context.window_manager.jewelcraft.property_unset("asset_folder")
 
 
 # Custom properties
@@ -74,6 +83,12 @@ class ListProperty:
 
     def values(self):
         return self.coll.values()
+
+    def active_item(self):
+        return self.coll[self.index]
+
+    def length(self):
+        return len(self.coll)
 
 
 class MaterialCollection(PropertyGroup):
@@ -121,6 +136,11 @@ class MeasurementCollection(PropertyGroup):
     material_density: FloatProperty()
 
 
+class AssetLibsCollection(PropertyGroup):
+    name: StringProperty(default="Untitled", update=upd_folder_list)
+    path: StringProperty(default="//", subtype="DIR_PATH", update=upd_folder_list)
+
+
 class MaterialsList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=MaterialCollection)
 
@@ -129,13 +149,13 @@ class MeasurementsList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=MeasurementCollection)
 
 
+class AssetLibsList(ListProperty, PropertyGroup):
+    index: IntProperty(update=upd_folder_list)
+    coll: CollectionProperty(type=AssetLibsCollection)
+
+
 # Preferences
 # ------------------------------------------
-
-
-def update_asset_refresh(self, context):
-    dynamic_list.asset_folder_list_refresh()
-    dynamic_list.asset_list_refresh(hard=True)
 
 
 class JewelCraftPreferences(AddonPreferences):
@@ -167,21 +187,24 @@ class JewelCraftPreferences(AddonPreferences):
     # Asset
     # ------------------------
 
-    use_custom_asset_dir: BoolProperty(
-        name="Use Custom Library Folder",
-        description="Set custom asset library folder, if disabled the default library folder will be used",
-        update=update_asset_refresh,
+    asset_preview_resolution: IntProperty(
+        name="Preview Resolution",
+        description="Asset preview image size when creating new assets",
+        default=256,
+        subtype="PIXEL",
     )
-    custom_asset_dir: StringProperty(
-        name="Library Folder Path",
-        description="Custom library folder path",
-        subtype="DIR_PATH",
-        update=update_asset_refresh,
+    asset_ui_preview_scale: FloatProperty(
+        name="Preview Scale",
+        description="Asset preview scale in sidebar",
+        default=3.0,
+        min=1.0,
+        step=1,
     )
-    display_asset_name: BoolProperty(
-        name="Display Asset Name",
-        description="Display asset name in Tool Shelf",
+    asset_show_name: BoolProperty(
+        name="Show Asset Name",
+        description="Show asset name in sidebar",
     )
+    asset_libs: PointerProperty(type=AssetLibsList)
 
     # Weighting
     # ------------------------
@@ -191,14 +214,10 @@ class JewelCraftPreferences(AddonPreferences):
         description="Hide default JewelCraft sets from weighting sets menu",
         update=dynamic_list.weighting_set_refresh,
     )
-    weighting_set_use_custom_dir: BoolProperty(
-        name="Use Custom Library Folder",
-        description="Set custom asset library folder, if disabled the default library folder will be used",
-        update=dynamic_list.weighting_set_refresh,
-    )
-    weighting_set_custom_dir: StringProperty(
-        name="Library Folder Path",
+    weighting_set_lib_path: StringProperty(
+        name="Library Folder",
         description="Custom library folder path",
+        default=var.DEFAULT_WEIGHTING_SET_DIR,
         subtype="DIR_PATH",
         update=dynamic_list.weighting_set_refresh,
     )
@@ -324,91 +343,11 @@ class JewelCraftPreferences(AddonPreferences):
     )
 
     def draw(self, context):
-        props_wm = context.window_manager.jewelcraft
-        active_tab = props_wm.prefs_active_tab
-
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
-
-        split = layout.split(factor=0.25)
-        col = split.column()
-        col.use_property_split = False
-        col.scale_y = 1.3
-        col.prop(props_wm, "prefs_active_tab", expand=True)
-
-        box = split.box()
-
-        if active_tab == "ASSET_MANAGER":
-            col = box.column()
-            col.prop(self, "display_asset_name")
-            col.prop(self, "use_custom_asset_dir")
-            sub = col.row()
-            sub.active = self.use_custom_asset_dir
-            sub.prop(self, "custom_asset_dir")
-
-        elif active_tab == "WEIGHTING":
-            col = box.column()
-            col.prop(self, "weighting_hide_default_sets")
-            col.prop(self, "weighting_set_use_custom_dir")
-            sub = col.row()
-            sub.active = self.weighting_set_use_custom_dir
-            sub.prop(self, "weighting_set_custom_dir")
-
-        elif active_tab == "PRODUCT_REPORT":
-            col = box.column()
-            col.prop(self, "product_report_save")
-            col.prop(self, "product_report_lang")
-
-            box.label(text="Gem Map")
-            col = box.column(align=True)
-            col.prop(self, "gem_map_width", text="Resolution X")
-            col.prop(self, "gem_map_height", text="Y")
-
-            box.label(text="Report")
-            box.prop(self, "product_report_show_total_ct")
-
-            box.label(text="Warnings")
-            col = box.column()
-            col.prop(self, "product_report_use_hidden_gems")
-            col.prop(self, "product_report_use_overlap")
-
-        elif active_tab == "THEMES":
-            box.label(text="Interface")
-            col = box.column()
-            col.prop(self, "theme_icon")
-
-            box.label(text="Widgets")
-            col = box.column()
-            col.prop(self, "widget_color")
-            col.prop(self, "widget_linewidth")
-
-            box.label(text="Materials")
-            col = box.column()
-            col.prop(self, "color_prongs")
-            col.prop(self, "color_cutter")
-
-            box.label(text="Viewport Text Size")
-            col = box.column()
-            col.prop(self, "view_font_size_report")
-            col.prop(self, "view_font_size_option")
-            col.prop(self, "view_font_size_gem_size")
-            col.prop(self, "view_font_size_distance")
-
-        elif active_tab == "UPDATES":
-            mod_update.prefs_ui(self, box)
+        ui.prefs_ui(self, context)
 
 
 # Window manager properties
 # ------------------------------------------
-
-
-def update_asset_list(self, context):
-    dynamic_list.asset_list_refresh()
-    item_id = dynamic_list.assets(self, context)[0][0]
-
-    if item_id:
-        self.asset_list = item_id
 
 
 class WmProperties(PropertyGroup):
@@ -426,14 +365,17 @@ class WmProperties(PropertyGroup):
         name="Category",
         description="Asset category",
         items=dynamic_list.asset_folders,
-        update=update_asset_list,
     )
-    asset_list: EnumProperty(items=dynamic_list.assets)
+    asset_filter: StringProperty(
+        name="Filter",
+        description="Filter by name",
+    )
     weighting_set: EnumProperty(
         name="Weighting Set",
         description="Set of materials for weighting",
         items=dynamic_list.weighting_set,
     )
+    asset_menu_ui_lock: BoolProperty()
 
 
 # Scene properties
