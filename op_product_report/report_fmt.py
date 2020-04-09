@@ -22,7 +22,7 @@
 from math import pi, modf
 
 from .. import var
-from ..lib import unit, asset, gettext
+from ..lib import asset, gettext
 
 
 def _to_ring_size(cir, size_format):
