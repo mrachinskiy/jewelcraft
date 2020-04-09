@@ -99,6 +99,7 @@ dictionary = {
         "Only ID": "Только идентификаторы",
         "Force Edit": "Принудительное редактирование",
         "Zero dimensions": "Нулевые габариты",
+        "Action completed!": "Действие выполнено",
         # Tooltips
         "Add gemstone to the scene": "Добавить камень в сцену",
         "Edit selected gems": "Редактировать выделенные камни",

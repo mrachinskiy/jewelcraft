@@ -324,7 +324,7 @@ class WM_OT_asset_menu(Operator):
         layout = self.layout
 
         if context.window_manager.jewelcraft.asset_menu_ui_lock:
-            layout.label(text="Action completed!", icon="INFO")
+            layout.label(text="Action completed", icon="INFO")
             return
 
         layout.emboss = "PULLDOWN_MENU"
