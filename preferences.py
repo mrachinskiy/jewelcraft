@@ -19,6 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import os
+
 from bpy.types import PropertyGroup, AddonPreferences, Object
 from bpy.props import (
     EnumProperty,
@@ -42,6 +44,11 @@ from .lib import widget, dynamic_list
 def upd_folder_list(self, context):
     dynamic_list.asset_folders_refresh()
     context.window_manager.jewelcraft.property_unset("asset_folder")
+
+
+def upd_lib_name(self, context):
+    self.name = os.path.basename(os.path.normpath(self.path))
+    upd_folder_list(self, context)
 
 
 # Custom properties
@@ -138,7 +145,7 @@ class MeasurementCollection(PropertyGroup):
 
 class AssetLibsCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list)
-    path: StringProperty(default="//", subtype="DIR_PATH", update=upd_folder_list)
+    path: StringProperty(default="//", subtype="DIR_PATH", update=upd_lib_name)
 
 
 class MaterialsList(ListProperty, PropertyGroup):
