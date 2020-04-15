@@ -319,7 +319,7 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
         show_name = self.prefs.asset_show_name
 
         for asset_name, asset_icon in dynamic_list.assets(
-            self.prefs.asset_libs.active_item().path,
+            asset.get_asset_lib_path(),
             self.wm_props.asset_folder,
         ):
 
