@@ -250,7 +250,7 @@ def check_deprecated_path_ws(context):
 
 def get_asset_lib_path():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    return prefs.asset_libs.active_item().path
+    return bpy.path.abspath(prefs.asset_libs.active_item().path)
 
 
 def get_asset_path(filename):
