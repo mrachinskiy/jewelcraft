@@ -21,6 +21,7 @@
 
 import os
 
+import bpy
 from bpy.types import PropertyGroup, AddonPreferences, Object
 from bpy.props import (
     EnumProperty,
@@ -46,8 +47,9 @@ def upd_folder_list(self, context):
     context.window_manager.jewelcraft.property_unset("asset_folder")
 
 
-def upd_lib_name(self, context):
-    self.name = os.path.basename(os.path.normpath(self.path))
+def upd_lib_normalize(self, context):
+    self["path"] = os.path.abspath(bpy.path.abspath(self.path)) + os.sep
+    self["name"] = os.path.basename(os.path.normpath(self.path))
     upd_folder_list(self, context)
 
 
@@ -145,7 +147,7 @@ class MeasurementCollection(PropertyGroup):
 
 class AssetLibsCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list)
-    path: StringProperty(default="//", subtype="DIR_PATH", update=upd_lib_name)
+    path: StringProperty(default="//", subtype="DIR_PATH", update=upd_lib_normalize)
 
 
 class MaterialsList(ListProperty, PropertyGroup):
