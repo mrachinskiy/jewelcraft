@@ -60,13 +60,13 @@ class ListProperty:
 
     def add(self):
         item = self.coll.add()
-        self.index = len(self.coll) - 1
+        self.index = self.length() - 1
         return item
 
     def remove(self):
         if self.coll:
             self.coll.remove(self.index)
-            index_last = max(0, len(self.coll) - 1)
+            index_last = max(0, self.length() - 1)
 
             if self.index > index_last:
                 self.index = index_last
@@ -75,8 +75,7 @@ class ListProperty:
         self.coll.clear()
 
     def move(self, move_up):
-
-        if len(self.coll) < 2:
+        if self.length() < 2:
             return
 
         if move_up:
@@ -84,7 +83,7 @@ class ListProperty:
         else:
             index_new = self.index + 1
 
-        if 0 <= index_new < len(self.coll):
+        if 0 <= index_new < self.length():
             self.coll.move(self.index, index_new)
             self.index = index_new
 
