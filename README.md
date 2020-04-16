@@ -23,6 +23,7 @@ Video:
 * [Prongs & Cutters v2.0](https://youtu.be/AZlCFg8bDSg)
 * [Widgets v2.3](https://youtu.be/9VN_-seau3k)
 * [Gem Map v2.3](https://youtu.be/aQ__ec0BAbE)
+* [Asset Manager v2.6](https://youtu.be/SYMHsImXe_c)
 
 [More videos][playlist_en] | [Больше видео][playlist_ru]
 
@@ -31,7 +32,7 @@ How to install
 ==========================
 
 1. Download the add-on:<sup>1</sup>
-    * [**Blender 2.80** JewelCraft v2.5.0][v_latest]
+    * [**Blender 2.80** JewelCraft v2.6.0][v_latest]
     * [**Blender 2.79** JewelCraft v2.2.1][v_legacy]
 2. Open `Preferences` → `Add-ons` category.
 3. Use `Install` to install add-on from downloaded zip archive.
@@ -44,7 +45,7 @@ How to install
 ==========================
 
 1. Загрузите аддон:<sup>1</sup>
-    * [**Blender 2.80** JewelCraft v2.5.0][v_latest]
+    * [**Blender 2.80** JewelCraft v2.6.0][v_latest]
     * [**Blender 2.79** JewelCraft v2.2.1][v_legacy]
 2. Откройте `Preferences` → `Add-ons`.
 3. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.
@@ -82,7 +83,7 @@ Contributing
 * After translation is done submit it back through [issues][new_translation].
 
 
-[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.5.0/jewelcraft-2_5_0.zip
+[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.6.0/jewelcraft-2_6_0.zip
 [v_legacy]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.2.1/jewelcraft-2_2_1.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh

@@ -22,7 +22,7 @@
 bl_info = {
     "name": "JewelCraft",
     "author": "Mikhail Rachinskiy",
-    "version": (2, 5, 0),
+    "version": (2, 6, 0),
     "blender": (2, 80, 0),
     "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
