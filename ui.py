@@ -580,7 +580,7 @@ def prefs_ui(self, context):
         op.move_up = True
         col.operator("preferences.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "asset_libs"
 
-        box.label(text="Asset")
+        box.label(text="Assets")
         col = box.column()
         col.prop(self, "asset_preview_resolution")
 
