@@ -53,21 +53,23 @@ class VIEW3D_UL_jewelcraft_weighting_set(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         props = context.scene.jewelcraft
+        mainrow = layout.row(align=True)
 
-        row = layout.row(align=True)
+        row = mainrow.row(align=True)
+        row.scale_x = 0.8
         row.prop(item, "enabled", text="")
 
-        row = row.row(align=True)
+        row = mainrow.row(align=True)
         row.active = item.enabled
         row.prop(item, "name", text="", emboss=False)
 
         if props.weighting_show_composition:
-            sub = row.row(align=True)
+            sub = mainrow.row(align=True)
             sub.scale_x = 1.5
             sub.prop(item, "composition", text="", emboss=False)
 
         if props.weighting_show_density:
-            sub = row.row(align=True)
+            sub = mainrow.row(align=True)
             sub.scale_x = 0.7
             sub.prop(item, "density", text="", emboss=False)
 
@@ -80,16 +82,14 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
     }
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        row = layout.row(align=True)
-        row.active = item.object is not None
-        row.label(icon=self.icons.get(item.type, "BLANK1"))
-        row.prop(item, "name", text="", emboss=False)
+        layout.active = item.object is not None
+        layout.prop(item, "name", text="", emboss=False, icon=self.icons.get(item.type, "BLANK1"))
 
 
 class VIEW3D_UL_jewelcraft_asset_libs(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        row = layout.split(factor=0.25)
+        row = layout.split(factor=0.25, align=True)
         row.prop(item, "name", text="", emboss=False)
         row.prop(item, "path", text="", emboss=False)
 
