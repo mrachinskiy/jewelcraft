@@ -217,37 +217,6 @@ def add_material(ob, name="New Material", color=None, is_gem=False):
 # ------------------------------------
 
 
-def check_deprecated_path_ob(context):
-    if var.deprecated_asset_path_checked:
-        return
-
-    if os.path.exists(var.USER_ASSET_OBJECT_DIR):
-        libs = context.preferences.addons[var.ADDON_ID].preferences.asset_libs
-
-        lib = libs.add()
-        lib.name = "Default"
-        lib.path = var.USER_ASSET_OBJECT_DIR
-
-        context.preferences.is_dirty = True
-
-    var.deprecated_asset_path_checked = True
-
-
-def check_deprecated_path_ws(context):
-    if var.deprecated_weighting_path_checked:
-        return
-
-    if os.path.exists(var.USER_ASSET_WEIGHTING_DIR):
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        prefs.weighting_set_lib_path = var.USER_ASSET_WEIGHTING_DIR
-
-        context.preferences.is_dirty = True
-
-        dynamic_list.weighting_set_refresh()
-
-    var.deprecated_weighting_path_checked = True
-
-
 def get_asset_lib_path():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     return bpy.path.abspath(prefs.asset_libs.active_item().path)
