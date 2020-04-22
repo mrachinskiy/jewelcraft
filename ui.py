@@ -292,7 +292,6 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
         layout = self.layout
 
         if not self.prefs.asset_libs.values():
-            asset.check_deprecated_path_ob(context)
             layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").active_tab = "ASSET_MANAGER"
             return
 
@@ -429,7 +428,6 @@ class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
 
     def draw(self, context):
         material_list = context.scene.jewelcraft.weighting_materials
-        asset.check_deprecated_path_ws(context)
 
         layout = self.layout
 
