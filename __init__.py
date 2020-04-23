@@ -248,6 +248,7 @@ def unregister():
 
     var.preview_collections.clear()
     dynamic_list._cache.clear()
+    preferences._folder_cache.clear()
 
     # Handlers
     # ---------------------------
