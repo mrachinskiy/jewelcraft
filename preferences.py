@@ -41,9 +41,25 @@ from .lib import widget, dynamic_list, asset
 # ------------------------------------------
 
 
+_folder_cache = {}
+
+
+def upd_folder_cache(self, context):
+    wm_props = context.window_manager.jewelcraft
+    _folder_cache[wm_props.asset_libs.index] = wm_props.asset_folder
+
+
 def upd_folder_list(self, context):
     dynamic_list.asset_folders_refresh()
-    context.window_manager.jewelcraft.property_unset("asset_folder")
+
+    # Recover previous folder
+    wm_props = context.window_manager.jewelcraft
+    folder = _folder_cache.get(wm_props.asset_libs.index)
+
+    if folder is not None:
+        wm_props.asset_folder = folder
+    else:
+        wm_props.property_unset("asset_folder")
 
 
 def upd_folder_list_serialize(self, context):
@@ -376,6 +392,7 @@ class WmProperties(PropertyGroup):
         name="Category",
         description="Asset category",
         items=dynamic_list.asset_folders,
+        update=upd_folder_cache,
     )
     asset_filter: StringProperty(
         name="Filter",
