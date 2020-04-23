@@ -409,6 +409,8 @@ def ul_deserialize(ul, filepath):
         for k, v in data_item.items():
             setattr(item, k, v)
 
+    ul.index = 0
+
 
 def asset_libs_serialize(ul_override=None):
     ul_serialize(
@@ -434,6 +436,7 @@ def weighting_set_deserialize(materials, filename):
             item.name = _(name)
             item.composition = comp
             item.density = dens
+        materials.index = 0
     else:
         filepath = os.path.join(get_weighting_lib_path(), filename)
         ul_deserialize(materials, filepath)

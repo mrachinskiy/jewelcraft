@@ -24,6 +24,7 @@ import os
 from bpy.types import Operator
 from bpy.props import StringProperty
 
+from .. import var
 from ..lib import asset, dynamic_list
 
 
@@ -115,7 +116,12 @@ class WM_OT_asset_ui_refresh(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
+        if os.path.exists(var.ASSET_LIBS_FILEPATH):
+            libs = context.window_manager.jewelcraft.asset_libs
+            asset.ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
+
         dynamic_list.asset_folders_refresh()
         dynamic_list.assets_refresh(hard=True)
         context.area.tag_redraw()
+
         return {"FINISHED"}

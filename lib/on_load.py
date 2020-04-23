@@ -56,7 +56,6 @@ def _load_asset_libs():
     if os.path.exists(var.ASSET_LIBS_FILEPATH):
         libs = bpy.context.window_manager.jewelcraft.asset_libs
         asset.ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
-        libs.index = 0
         return
 
     # TODO serialize deprecated property
