@@ -34,7 +34,7 @@ from bpy.props import (
 )
 
 from . import ui, var
-from .lib import widget, dynamic_list
+from .lib import widget, dynamic_list, asset
 
 
 # Update callbacks
@@ -46,9 +46,14 @@ def upd_folder_list(self, context):
     context.window_manager.jewelcraft.property_unset("asset_folder")
 
 
+def upd_folder_list_serialize(self, context):
+    upd_folder_list(self, context)
+    asset.asset_libs_serialize()
+
+
 def upd_lib_name(self, context):
     self["name"] = os.path.basename(os.path.normpath(self.path)) or self.name
-    upd_folder_list(self, context)
+    upd_folder_list_serialize(self, context)
 
 
 # Custom properties
@@ -143,7 +148,7 @@ class MeasurementCollection(PropertyGroup):
 
 
 class AssetLibsCollection(PropertyGroup):
-    name: StringProperty(default="Untitled", update=upd_folder_list)
+    name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
 
 
@@ -210,7 +215,7 @@ class JewelCraftPreferences(AddonPreferences):
         name="Show Asset Name",
         description="Show asset name in sidebar",
     )
-    asset_libs: PointerProperty(type=AssetLibsList)
+    asset_libs: PointerProperty(type=AssetLibsList)  # TODO deprecated
 
     # Weighting
     # ------------------------
@@ -382,6 +387,7 @@ class WmProperties(PropertyGroup):
         items=dynamic_list.weighting_set,
     )
     asset_menu_ui_lock: BoolProperty()
+    asset_libs: PointerProperty(type=AssetLibsList)
 
 
 # Scene properties

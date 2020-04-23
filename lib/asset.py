@@ -20,7 +20,7 @@
 
 
 import os
-from math import tau, sin, cos, pi
+from math import tau, pi, sin, cos
 from functools import lru_cache
 
 import bpy
@@ -29,7 +29,6 @@ from mathutils import Matrix, Vector, kdtree
 
 from . import mesh, unit
 from .. import var
-from ..lib import dynamic_list
 
 
 # Gem
@@ -218,8 +217,8 @@ def add_material(ob, name="New Material", color=None, is_gem=False):
 
 
 def get_asset_lib_path():
-    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    return bpy.path.abspath(prefs.asset_libs.active_item().path)
+    wm_props = bpy.context.window_manager.jewelcraft
+    return bpy.path.abspath(wm_props.asset_libs.active_item().path)
 
 
 def get_asset_path(filename):
@@ -383,32 +382,52 @@ def show_window(width, height, area_type=None, space_data=None):
         prefs.is_dirty = _is_dirty
 
 
-def weighting_set_export(materials, filepath):
+# Serialization
+# ------------------------------------
+
+
+def ul_serialize(ul, filepath, keys, fmt=lambda k, v: v):
     import json
 
+    data = [
+        {k: fmt(k, getattr(item, k)) for k in keys}
+        for item in ul.values()
+    ]
+
     with open(filepath, "w", encoding="utf-8") as file:
-        data = []
-        mat_fmt = {
-            "name": "",
-            "composition": "",
-            "density": 0.0,
-        }
-
-        for mat in materials.values():
-            mat_dict = {k: v for k, v in mat.items() if k in mat_fmt.keys()}
-
-            mat_exp = mat_fmt.copy()
-            mat_exp.update(mat_dict)
-            mat_exp["density"] = round(mat_exp["density"], 2)
-
-            data.append(mat_exp)
-
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def weighting_set_import(materials, filename, filepath):
+def ul_deserialize(ul, filepath):
     import json
 
+    with open(filepath, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    for data_item in data:
+        item = ul.add()
+        for k, v in data_item.items():
+            setattr(item, k, v)
+
+
+def asset_libs_serialize(ul_override=None):
+    ul_serialize(
+        ul_override or bpy.context.window_manager.jewelcraft.asset_libs,
+        var.ASSET_LIBS_FILEPATH,
+        ("name", "path"),
+    )
+
+
+def weighting_set_serialize(materials, filepath):
+    ul_serialize(
+        materials,
+        filepath,
+        ("name", "composition", "density"),
+        lambda k, v: round(v, 2) if k == "density" else v,
+    )
+
+
+def weighting_set_deserialize(materials, filename):
     if filename.startswith("JCASSET"):
         for name, dens, comp in var.DEFAULT_WEIGHTING_SETS[filename]:
             item = materials.add()
@@ -416,16 +435,8 @@ def weighting_set_import(materials, filename, filepath):
             item.composition = comp
             item.density = dens
     else:
-        with open(filepath, "r", encoding="utf-8") as file:
-            data = json.load(file)
-
-            for mat in data:
-                item = materials.add()
-                if mat["name"]:
-                    item.name = mat["name"]
-                if mat["composition"]:
-                    item.composition = mat["composition"]
-                item.density = mat["density"]
+        filepath = os.path.join(get_weighting_lib_path(), filename)
+        ul_deserialize(materials, filepath)
 
 
 # Object

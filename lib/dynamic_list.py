@@ -179,6 +179,9 @@ def weighting_set_refresh(self=None, context=None):
     if "weighting_set__RESULT" in _cache:
         del _cache["weighting_set__RESULT"]
 
+    if context is not None:
+        context.window_manager.jewelcraft.property_unset("weighting_set")
+
 
 def weighting_materials(self, context):
     if "weighting_materials__RESULT" in _cache:
