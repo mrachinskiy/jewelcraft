@@ -22,7 +22,7 @@
 from bpy.types import Operator
 from bpy.props import BoolProperty, StringProperty
 
-from .. import var
+from ..lib import asset
 
 
 # Scene
@@ -69,48 +69,53 @@ class SCENE_OT_ul_move(Operator):
         return {"FINISHED"}
 
 
-# Preferences
+# Window manager
 # ---------------------------
 
 
-class PREFERENCES_OT_ul_add(Operator):
+def serialize(prop):
+    if prop == "asset_libs":
+        asset.asset_libs_serialize()
+
+
+class WM_OT_ul_add(Operator):
     bl_label = "Add Item"
     bl_description = "Add new item to the list"
-    bl_idname = "preferences.jewelcraft_ul_add"
+    bl_idname = "wm.jewelcraft_ul_add"
     bl_options = {"INTERNAL"}
 
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        getattr(context.preferences.addons[var.ADDON_ID].preferences, self.prop).add()
-        context.preferences.is_dirty = True
+        getattr(context.window_manager.jewelcraft, self.prop).add()
+        serialize(self.prop)
         return {"FINISHED"}
 
 
-class PREFERENCES_OT_ul_del(Operator):
+class WM_OT_ul_del(Operator):
     bl_label = "Remove Item"
     bl_description = "Remove selected item"
-    bl_idname = "preferences.jewelcraft_ul_del"
+    bl_idname = "wm.jewelcraft_ul_del"
     bl_options = {"INTERNAL"}
 
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        getattr(context.preferences.addons[var.ADDON_ID].preferences, self.prop).remove()
-        context.preferences.is_dirty = True
+        getattr(context.window_manager.jewelcraft, self.prop).remove()
+        serialize(self.prop)
         return {"FINISHED"}
 
 
-class PREFERENCES_OT_ul_move(Operator):
+class WM_OT_ul_move(Operator):
     bl_label = "Move Item"
     bl_description = "Move selected item up/down in the list"
-    bl_idname = "preferences.jewelcraft_ul_move"
+    bl_idname = "wm.jewelcraft_ul_move"
     bl_options = {"INTERNAL"}
 
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
     move_up: BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        getattr(context.preferences.addons[var.ADDON_ID].preferences, self.prop).move(self.move_up)
-        context.preferences.is_dirty = True
+        getattr(context.window_manager.jewelcraft, self.prop).move(self.move_up)
+        serialize(self.prop)
         return {"FINISHED"}

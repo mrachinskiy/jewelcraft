@@ -171,7 +171,7 @@ class VIEW3D_PT_asset_libs(Panel):
     bl_ui_units_x = 8
 
     def draw(self, context):
-        prefs = context.preferences.addons[__package__].preferences
+        wm_props = context.window_manager.jewelcraft
 
         layout = self.layout
 
@@ -185,11 +185,11 @@ class VIEW3D_PT_asset_libs(Panel):
         layout.template_list(
             "VIEW3D_UL_jewelcraft_asset_libs_select",
             "",
-            prefs.asset_libs,
+            wm_props.asset_libs,
             "coll",
-            prefs.asset_libs,
+            wm_props.asset_libs,
             "index",
-            rows=prefs.asset_libs.length() + 1,
+            rows=wm_props.asset_libs.length() + 1,
         )
 
 
@@ -291,7 +291,7 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
     def draw(self, context):
         layout = self.layout
 
-        if not self.prefs.asset_libs.values():
+        if not self.wm_props.asset_libs.values():
             layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").active_tab = "ASSET_MANAGER"
             return
 
@@ -538,8 +538,8 @@ class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
 
 
 def prefs_ui(self, context):
-    props_wm = context.window_manager.jewelcraft
-    active_tab = props_wm.prefs_active_tab
+    wm_props = context.window_manager.jewelcraft
+    active_tab = wm_props.prefs_active_tab
 
     layout = self.layout
     layout.use_property_split = True
@@ -549,7 +549,7 @@ def prefs_ui(self, context):
     col = split.column()
     col.use_property_split = False
     col.scale_y = 1.3
-    col.prop(props_wm, "prefs_active_tab", expand=True)
+    col.prop(wm_props, "prefs_active_tab", expand=True)
 
     box = split.box()
 
@@ -562,21 +562,21 @@ def prefs_ui(self, context):
         col.template_list(
             "VIEW3D_UL_jewelcraft_asset_libs",
             "",
-            self.asset_libs,
+            wm_props.asset_libs,
             "coll",
-            self.asset_libs,
+            wm_props.asset_libs,
             "index",
             rows=4,
         )
 
         col = row.column(align=True)
-        col.operator("preferences.jewelcraft_ul_add", text="", icon="ADD").prop = "asset_libs"
-        col.operator("preferences.jewelcraft_ul_del", text="", icon="REMOVE").prop = "asset_libs"
+        col.operator("wm.jewelcraft_ul_add", text="", icon="ADD").prop = "asset_libs"
+        col.operator("wm.jewelcraft_ul_del", text="", icon="REMOVE").prop = "asset_libs"
         col.separator()
-        op = col.operator("preferences.jewelcraft_ul_move", text="", icon="TRIA_UP")
+        op = col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_UP")
         op.prop = "asset_libs"
         op.move_up = True
-        col.operator("preferences.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "asset_libs"
+        col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "asset_libs"
 
         box.label(text="Assets")
         col = box.column()

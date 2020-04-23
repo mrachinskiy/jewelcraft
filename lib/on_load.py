@@ -38,13 +38,34 @@ def handler_del():
 
 @persistent
 def _execute(dummy):
+    _load_weighting_mats()
+    _load_asset_libs()
+
+
+def _load_weighting_mats():
     materials = bpy.context.scene.jewelcraft.weighting_materials
 
     if materials.coll:
         return
 
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    filename = prefs.weighting_set_autoload
-    filepath = os.path.join(asset.get_weighting_lib_path(), filename)
+    asset.weighting_set_deserialize(materials, prefs.weighting_set_autoload)
 
-    asset.weighting_set_import(materials, filename, filepath)
+
+def _load_asset_libs():
+    if os.path.exists(var.ASSET_LIBS_FILEPATH):
+        libs = bpy.context.window_manager.jewelcraft.asset_libs
+        asset.ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
+        libs.index = 0
+        return
+
+    # TODO serialize deprecated property
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+
+    if prefs.asset_libs.values():
+        asset.asset_libs_serialize(prefs.asset_libs)
+
+        prefs.asset_libs.clear()
+        bpy.context.preferences.is_dirty = True
+
+        _load_asset_libs()

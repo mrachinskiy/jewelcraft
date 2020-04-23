@@ -47,6 +47,7 @@ else:
 
 ADDON_CONFIG_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
 DEFAULT_WEIGHTING_SET_DIR = os.path.join(ADDON_CONFIG_DIR, "Weighting Sets")
+ASSET_LIBS_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "asset_libraries.json")
 
 
 # Weighting
