@@ -64,8 +64,7 @@ class WM_OT_weighting_set_add(Operator):
         if not os.path.exists(lib_path):
             os.makedirs(lib_path)
 
-        materials = context.scene.jewelcraft.weighting_materials
-        asset.weighting_set_serialize(materials, set_path)
+        asset.weighting_set_serialize(set_path)
 
         dynamic_list.weighting_set_refresh()
         props = context.window_manager.jewelcraft
@@ -87,8 +86,7 @@ class WM_OT_weighting_set_replace(EditCheck, Operator):
     def execute(self, context):
         set_path = asset.get_weighting_set_path()
         if os.path.exists(set_path):
-            materials = context.scene.jewelcraft.weighting_materials
-            asset.weighting_set_serialize(materials, set_path)
+            asset.weighting_set_serialize(set_path)
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -220,7 +218,7 @@ class WeightingSetLoad:
         if self.clear_materials:
             materials.clear()
 
-        asset.weighting_set_deserialize(materials, props.weighting_set)
+        asset.weighting_set_deserialize(props.weighting_set)
 
         return {"FINISHED"}
 

@@ -49,7 +49,7 @@ def _load_weighting_mats():
         return
 
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    asset.weighting_set_deserialize(materials, prefs.weighting_set_autoload)
+    asset.weighting_set_deserialize(prefs.weighting_set_autoload)
 
 
 def _load_asset_libs():

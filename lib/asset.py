@@ -420,26 +420,28 @@ def asset_libs_serialize(ul_override=None):
     )
 
 
-def weighting_set_serialize(materials, filepath):
+def weighting_set_serialize(filepath):
     ul_serialize(
-        materials,
+        bpy.context.scene.jewelcraft.weighting_materials,
         filepath,
         ("name", "composition", "density"),
         lambda k, v: round(v, 2) if k == "density" else v,
     )
 
 
-def weighting_set_deserialize(materials, filename):
+def weighting_set_deserialize(filename):
+    mats = bpy.context.scene.jewelcraft.weighting_materials
+
     if filename.startswith("JCASSET"):
         for name, dens, comp in var.DEFAULT_WEIGHTING_SETS[filename]:
-            item = materials.add()
+            item = mats.add()
             item.name = _(name)
             item.composition = comp
             item.density = dens
-        materials.index = 0
+        mats.index = 0
     else:
         filepath = os.path.join(get_weighting_lib_path(), filename)
-        ul_deserialize(materials, filepath)
+        ul_deserialize(mats, filepath)
 
 
 # Object
