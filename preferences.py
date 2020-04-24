@@ -57,9 +57,13 @@ def upd_folder_list(self, context):
     folder = _folder_cache.get(wm_props.asset_libs.index)
 
     if folder is not None:
-        wm_props.asset_folder = folder
-    else:
-        wm_props.property_unset("asset_folder")
+        try:
+            wm_props.asset_folder = folder
+            return
+        except TypeError:
+            _folder_cache.clear()
+
+    wm_props.property_unset("asset_folder")
 
 
 def upd_folder_list_serialize(self, context):
