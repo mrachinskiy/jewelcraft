@@ -221,11 +221,6 @@ def get_asset_lib_path():
     return bpy.path.abspath(wm_props.asset_libs.active_item().path)
 
 
-def get_asset_path(filename):
-    props = bpy.context.window_manager.jewelcraft
-    return os.path.join(get_asset_lib_path(), props.asset_folder, filename)
-
-
 def get_weighting_lib_path():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     return bpy.path.abspath(prefs.weighting_set_lib_path)
@@ -382,7 +377,21 @@ def show_window(width, height, area_type=None, space_data=None):
         prefs.is_dirty = _is_dirty
 
 
-# Serialization
+# List Serialization
+# ------------------------------------
+
+
+@lru_cache(maxsize=1)
+def favs_deserialize():
+    import json
+
+    with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    return set(data)
+
+
+# UL Serialization
 # ------------------------------------
 
 

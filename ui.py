@@ -45,6 +45,12 @@ class Setup:
         return self.pcoll[self.theme + name].icon_id
 
 
+def ico_radio(x):
+    if x:
+        return "RADIOBUT_ON"
+    return "RADIOBUT_OFF"
+
+
 # Lists
 # ---------------------------
 
@@ -295,7 +301,10 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
             layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").active_tab = "ASSET_MANAGER"
             return
 
+        show_favs = self.wm_props.asset_show_favs
+
         row = layout.row(align=True)
+        row.enabled = not show_favs
         sub = row.row(align=True)
         sub.scale_x = 1.28
         sub.popover(panel="VIEW3D_PT_asset_libs", text="", icon="ASSET_MANAGER")
@@ -309,18 +318,26 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
         row.menu("VIEW3D_MT_jewelcraft_asset_folder", icon="THREE_DOTS")
 
         flow = layout.grid_flow()
-        flow.row().operator("wm.jewelcraft_asset_add", icon="ADD")
+        sub = flow.row()
+        sub.enabled = not show_favs
+        sub.operator("wm.jewelcraft_asset_add", icon="ADD")
         flow.row().prop(self.wm_props, "asset_filter", text="", icon="VIEWZOOM")
+
+        row = layout.row(align=True)
+        row.prop(self.wm_props, "asset_show_favs", text="Category", icon=ico_radio(not show_favs), emboss=False, invert_checkbox=True)
+        row.prop(self.wm_props, "asset_show_favs", text="Favorites", icon=ico_radio(show_favs), emboss=False)
 
         flow = layout.grid_flow(row_major=True, even_columns=True, even_rows=True, align=True)
 
         filter_name = self.wm_props.asset_filter.lower()
         show_name = self.prefs.asset_show_name
 
-        for asset_name, asset_icon in dynamic_list.assets(
-            asset.get_asset_lib_path(),
-            self.wm_props.asset_folder,
-        ):
+        if show_favs:
+            assets = dynamic_list.favorites()
+        else:
+            assets = dynamic_list.assets(asset.get_asset_lib_path(), self.wm_props.asset_folder)
+
+        for asset_path, asset_name, asset_icon, is_fav in assets:
 
             if filter_name and filter_name not in asset_name.lower():
                 continue
@@ -334,10 +351,13 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
 
             split = box.split(align=True)
             split.scale_y = 0.9
-            split.operator("wm.jewelcraft_asset_import", text="", icon="IMPORT", emboss=False).ovrd_name = asset_name
-            edit = split.operator("wm.jewelcraft_asset_menu", text="", icon="THREE_DOTS", emboss=False)
-            edit.ovrd_name = asset_name
-            edit.ovrd_icon = asset_icon
+            split.scale_x = 0.8
+            split.operator("wm.jewelcraft_asset_import", text="", icon="IMPORT", emboss=False).filepath = asset_path
+            split.operator("wm.jewelcraft_asset_menu", text="", icon="THREE_DOTS", emboss=False).filepath = asset_path
+            if is_fav:
+                split.operator("wm.jewelcraft_asset_favorite_del", text="", icon="SOLO_ON", emboss=False).filepath = asset_path
+            else:
+                split.operator("wm.jewelcraft_asset_favorite_add", text="", icon="SOLO_OFF", emboss=False).filepath = asset_path
 
 
 class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):

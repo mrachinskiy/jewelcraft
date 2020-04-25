@@ -182,6 +182,8 @@ dictionary = {
         # "Asset preview image size when creating new assets": "",
         # "Asset preview scale in sidebar": "",
         # "Filter by name": "",
+        # "Add to favorites": "",
+        # "Remove from favorites": "",
         "WARNING": "AVVERTENZA",
         "Possible gem instance face leftovers": "Posibles restos de instance face de gemas",
         "Hidden gems": "Nascondi gemme",

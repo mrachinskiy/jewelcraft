@@ -276,6 +276,8 @@ dictionary = {
 
         "Asset preview scale in sidebar": "Масштаб превью ассетов в боковой панели",
         "Filter by name": "Фильтр по имени",
+        "Add to favorites": "Добавить в избранное",
+        "Remove from favorites": "Удалить из избранного",
 
         # Reports
         "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
