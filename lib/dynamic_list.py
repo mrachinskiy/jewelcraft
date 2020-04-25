@@ -234,6 +234,14 @@ def asset_folders_refresh():
         del _cache["asset_folders__RESULT"]
 
 
+def _preview_get(filepath, pcoll):
+    if os.path.exists(filepath + ".png"):
+        preview_id = str(hash(filepath))
+        if preview_id not in pcoll:
+            pcoll.load(preview_id, filepath + ".png", "IMAGE")
+        return pcoll[preview_id].icon_id
+
+
 @lru_cache(maxsize=32)
 def assets(lib_path, category):
     folder = os.path.join(lib_path, category)
@@ -249,21 +257,13 @@ def assets(lib_path, category):
     list_ = []
     app = list_.append
     no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
+    favs = asset.favs_deserialize()
 
     for entry in os.scandir(folder):
         if entry.is_file() and entry.name.endswith(".blend"):
             filename = os.path.splitext(entry.name)[0]
             filepath = os.path.splitext(entry.path)[0]
-
-            if os.path.exists(filepath + ".png"):
-                preview_id = str(hash(filepath))
-                if preview_id not in pcoll:
-                    pcoll.load(preview_id, filepath + ".png", "IMAGE")
-                preview = pcoll[preview_id].icon_id
-            else:
-                preview = no_preview
-
-            app((filename, preview))
+            app((filepath, filename, _preview_get(filepath, pcoll) or no_preview, filepath in favs))
 
     var.preview_collections["assets"] = pcoll
 
@@ -274,7 +274,34 @@ def assets(lib_path, category):
     return tuple(list_)
 
 
-def assets_refresh(preview_id=None, hard=False):
+@lru_cache(maxsize=1)
+def favorites():
+    if not os.path.exists(var.ASSET_FAVS_FILEPATH):
+        return ()
+
+    pcoll = var.preview_collections.get("assets")
+
+    if not pcoll:
+        pcoll = bpy.utils.previews.new()
+
+    list_ = []
+    app = list_.append
+    no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
+
+    for filepath in asset.favs_deserialize():
+        filename = os.path.basename(filepath)
+        app((filepath, filename, _preview_get(filepath, pcoll) or no_preview, True))
+
+    var.preview_collections["assets"] = pcoll
+
+    if not pcoll:
+        bpy.utils.previews.remove(pcoll)
+        del var.preview_collections["assets"]
+
+    return tuple(list_)
+
+
+def assets_refresh(preview_id=None, hard=False, favs=False):
     if preview_id or hard:
         pcoll = var.preview_collections.get("assets")
 
@@ -292,6 +319,10 @@ def assets_refresh(preview_id=None, hard=False):
             elif hard:
                 bpy.utils.previews.remove(pcoll)
                 del var.preview_collections["assets"]
+
+    if favs:
+        asset.favs_deserialize.cache_clear()
+        favorites.cache_clear()
 
     assets.cache_clear()
 

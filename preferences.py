@@ -408,6 +408,7 @@ class WmProperties(PropertyGroup):
         items=dynamic_list.weighting_set,
     )
     asset_menu_ui_lock: BoolProperty()
+    asset_show_favs: BoolProperty(description="Switch between favorites and category view")
     asset_libs: PointerProperty(type=AssetLibsList)
 
 

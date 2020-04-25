@@ -136,6 +136,8 @@ classes = (
     ops_asset.WM_OT_asset_replace,
     ops_asset.WM_OT_asset_preview_replace,
     ops_asset.WM_OT_asset_import,
+    ops_asset.WM_OT_asset_favorite_add,
+    ops_asset.WM_OT_asset_favorite_del,
     ops_asset.WM_OT_asset_menu,
     ops_gem.OBJECT_OT_gem_add,
     ops_gem.OBJECT_OT_gem_edit,

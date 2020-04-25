@@ -121,7 +121,7 @@ class WM_OT_asset_ui_refresh(Operator):
             asset.ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
 
         dynamic_list.asset_folders_refresh()
-        dynamic_list.assets_refresh(hard=True)
+        dynamic_list.assets_refresh(hard=True, favs=True)
         context.area.tag_redraw()
 
         return {"FINISHED"}

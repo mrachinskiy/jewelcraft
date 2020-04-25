@@ -182,6 +182,8 @@ dictionary = {
         # "Asset preview image size when creating new assets": "",
         # "Asset preview scale in sidebar": "",
         # "Filter by name": "",
+        # "Add to favorites": "",
+        # "Remove from favorites": "",
         "WARNING": "警告",
         "Possible gem instance face leftovers": "宝石实例面的可能残留物",
         "Hidden gems": "隐藏宝石",
