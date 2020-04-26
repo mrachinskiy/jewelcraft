@@ -219,7 +219,7 @@ class WM_OT_asset_rename(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.asset_name = os.path.basename(self.filepath)
+        self.name_current = self.asset_name = os.path.basename(self.filepath)
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
