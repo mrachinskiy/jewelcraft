@@ -386,9 +386,7 @@ def favs_deserialize():
     import json
 
     with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
-        data = json.load(file)
-
-    return set(data)
+        return set(json.load(file))
 
 
 # UL Serialization
@@ -413,12 +411,12 @@ def ul_deserialize(ul, filepath):
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
 
-    for data_item in data:
-        item = ul.add()
-        for k, v in data_item.items():
-            setattr(item, k, v)
+        for data_item in data:
+            item = ul.add()
+            for k, v in data_item.items():
+                setattr(item, k, v)
 
-    ul.index = 0
+        ul.index = 0
 
 
 def asset_libs_serialize(ul_override=None):
