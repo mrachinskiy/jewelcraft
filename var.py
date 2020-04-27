@@ -20,7 +20,6 @@
 
 
 import os
-import sys
 import collections
 
 
@@ -33,21 +32,25 @@ preview_collections = {}
 
 ADDON_ID = __package__
 ADDON_DIR = os.path.dirname(__file__)
+CONFIG_DIR = os.path.join(ADDON_DIR, ".config")
 
-if sys.platform == "win32":
-    ADDON_CONFIG_DIR = os.path.join(os.getenv("APPDATA"), "Blender Foundation", "Blender", "JewelCraft")
-elif sys.platform == "darwin":
-    ADDON_CONFIG_DIR = os.path.join(os.path.expanduser("~/Library/Application Support"), "Blender", "JewelCraft")
-else:
-    ADDON_CONFIG_DIR = os.path.join(os.path.expanduser("~/.config"), "blender", "JewelCraft")
+if not os.path.exists(CONFIG_DIR):
+    import sys
+
+    if sys.platform == "win32":
+        CONFIG_DIR = os.path.join(os.getenv("APPDATA"), "Blender Foundation", "Blender", "JewelCraft")
+    elif sys.platform == "darwin":
+        CONFIG_DIR = os.path.join(os.path.expanduser("~/Library/Application Support"), "Blender", "JewelCraft")
+    else:
+        CONFIG_DIR = os.path.join(os.path.expanduser("~/.config"), "blender", "JewelCraft")
 
 ICONS_DIR = os.path.join(ADDON_DIR, "assets", "icons")
 GEM_ASSET_DIR = os.path.join(ADDON_DIR, "assets", "gems")
 GEM_ASSET_FILEPATH = os.path.join(GEM_ASSET_DIR, "gems.blend")
 
-DEFAULT_WEIGHTING_SET_DIR = os.path.join(ADDON_CONFIG_DIR, "Weighting Sets")
-ASSET_LIBS_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "libraries.json")
-ASSET_FAVS_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "favorites.json")
+DEFAULT_WEIGHTING_SET_DIR = os.path.join(CONFIG_DIR, "Weighting Sets")
+ASSET_LIBS_FILEPATH = os.path.join(CONFIG_DIR, "libraries.json")
+ASSET_FAVS_FILEPATH = os.path.join(CONFIG_DIR, "favorites.json")
 
 
 # Weighting
@@ -184,7 +187,7 @@ MAP_SIZE_JP_TO_US = (1, 2, 2.5, 3, 3.25, 3.75, 4, 4.5, 5, 5.5, 6, 6.25, 6.5, 7, 
 
 
 UPDATE_OPERATOR_ID_AFFIX = "jewelcraft"
-UPDATE_SAVE_STATE_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "update_state.json")
+UPDATE_SAVE_STATE_FILEPATH = os.path.join(CONFIG_DIR, "update_state.json")
 UPDATE_URL_RELEASES = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
 UPDATE_VERSION_CURRENT = None
 UPDATE_VERSION_MAX = None
