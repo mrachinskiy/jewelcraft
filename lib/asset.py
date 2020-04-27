@@ -377,18 +377,6 @@ def show_window(width, height, area_type=None, space_data=None):
         prefs.is_dirty = _is_dirty
 
 
-# List Serialization
-# ------------------------------------
-
-
-@lru_cache(maxsize=1)
-def favs_deserialize():
-    import json
-
-    with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
-        return set(json.load(file))
-
-
 # UL Serialization
 # ------------------------------------
 
