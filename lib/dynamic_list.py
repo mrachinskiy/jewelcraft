@@ -257,7 +257,7 @@ def assets(lib_path, category):
     list_ = []
     app = list_.append
     no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
-    favs = asset.favs_deserialize()
+    favs = _favs_deserialize()
 
     for entry in os.scandir(folder):
         if entry.is_file() and entry.name.endswith(".blend"):
@@ -279,6 +279,8 @@ def favorites():
     if not os.path.exists(var.ASSET_FAVS_FILEPATH):
         return ()
 
+    import json
+
     pcoll = var.preview_collections.get("assets")
 
     if not pcoll:
@@ -288,9 +290,10 @@ def favorites():
     app = list_.append
     no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
 
-    for filepath in asset.favs_deserialize():
-        filename = os.path.basename(filepath)
-        app((filepath, filename, _preview_get(filepath, pcoll) or no_preview, True))
+    with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
+        for filepath in json.load(file):
+            filename = os.path.basename(filepath)
+            app((filepath, filename, _preview_get(filepath, pcoll) or no_preview, True))
 
     var.preview_collections["assets"] = pcoll
 
@@ -299,6 +302,14 @@ def favorites():
         del var.preview_collections["assets"]
 
     return tuple(list_)
+
+
+@lru_cache(maxsize=1)
+def _favs_deserialize():
+    import json
+
+    with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
+        return frozenset(json.load(file))
 
 
 def assets_refresh(preview_id=None, hard=False, favs=False):
@@ -321,7 +332,7 @@ def assets_refresh(preview_id=None, hard=False, favs=False):
                 del var.preview_collections["assets"]
 
     if favs:
-        asset.favs_deserialize.cache_clear()
+        _favs_deserialize.cache_clear()
         favorites.cache_clear()
 
     assets.cache_clear()
