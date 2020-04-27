@@ -28,7 +28,7 @@ from .. import var
 from . import state
 
 
-def _save_state_get():
+def _save_state_deserialize():
     import datetime
     import json
 
@@ -48,7 +48,7 @@ def _save_state_get():
     return data
 
 
-def _save_state_set():
+def _save_state_serialize():
     import datetime
     import json
 
@@ -81,7 +81,7 @@ def _update_check(use_force_check):
     import ssl
 
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    save_state = _save_state_get()
+    save_state = _save_state_deserialize()
 
     if not use_force_check and not prefs.update_use_auto_check:
         return
@@ -118,7 +118,7 @@ def _update_check(use_force_check):
                     if version_new > var.UPDATE_VERSION_CURRENT:
                         break
                     else:
-                        _save_state_set()
+                        _save_state_serialize()
                         _runtime_state_set(None)
                         return
 
@@ -136,14 +136,14 @@ def _update_check(use_force_check):
                 state.url_download = asset["browser_download_url"]
                 state.url_changelog = release["html_url"]
 
-        _save_state_set()
+        _save_state_serialize()
         _runtime_state_set(None)
 
     except (urllib.error.HTTPError, urllib.error.URLError) as e:
 
         state.error_msg = str(e)
 
-        _save_state_set()
+        _save_state_serialize()
         _runtime_state_set(state.ERROR)
 
 
