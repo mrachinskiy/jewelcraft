@@ -34,18 +34,17 @@ preview_collections = {}
 ADDON_ID = __package__
 ADDON_DIR = os.path.dirname(__file__)
 
+if sys.platform == "win32":
+    ADDON_CONFIG_DIR = os.path.join(os.getenv("APPDATA"), "Blender Foundation", "Blender", "JewelCraft")
+elif sys.platform == "darwin":
+    ADDON_CONFIG_DIR = os.path.join(os.path.expanduser("~/Library/Application Support"), "Blender", "JewelCraft")
+else:
+    ADDON_CONFIG_DIR = os.path.join(os.path.expanduser("~/.config"), "blender", "JewelCraft")
+
 ICONS_DIR = os.path.join(ADDON_DIR, "assets", "icons")
 GEM_ASSET_DIR = os.path.join(ADDON_DIR, "assets", "gems")
 GEM_ASSET_FILEPATH = os.path.join(GEM_ASSET_DIR, "gems.blend")
 
-if sys.platform == "win32":
-    LOCAL_PATH = os.getenv("LOCALAPPDATA")
-elif sys.platform == "darwin":
-    LOCAL_PATH = os.path.expanduser("~/Library/Application Support")
-else:
-    LOCAL_PATH = os.path.expanduser("~/.local/share")
-
-ADDON_CONFIG_DIR = os.path.join(LOCAL_PATH, "Blender", "JewelCraft")
 DEFAULT_WEIGHTING_SET_DIR = os.path.join(ADDON_CONFIG_DIR, "Weighting Sets")
 ASSET_LIBS_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "libraries.json")
 ASSET_FAVS_FILEPATH = os.path.join(ADDON_CONFIG_DIR, "favorites.json")
