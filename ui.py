@@ -45,12 +45,6 @@ class Setup:
         return self.pcoll[self.theme + name].icon_id
 
 
-def ico_radio(x):
-    if x:
-        return "RADIOBUT_ON"
-    return "RADIOBUT_OFF"
-
-
 # Lists
 # ---------------------------
 
@@ -304,28 +298,26 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
         show_favs = self.wm_props.asset_show_favs
 
         row = layout.row(align=True)
-        row.enabled = not show_favs
-        sub = row.row(align=True)
+        row.prop(self.wm_props, "asset_show_favs", text="", icon="SOLO_ON")
+        row.separator()
+        subrow = row.row(align=True)
+        subrow.enabled = not show_favs
+        sub = subrow.row(align=True)
         sub.scale_x = 1.28
         sub.popover(panel="VIEW3D_PT_asset_libs", text="", icon="ASSET_MANAGER")
 
         if not self.wm_props.asset_folder:
-            row.operator("wm.jewelcraft_asset_folder_create", icon="ADD")
-            layout.operator("wm.jewelcraft_asset_ui_refresh", icon="FILE_REFRESH")
+            subrow.operator("wm.jewelcraft_asset_folder_create", icon="ADD")
             return
 
-        row.prop(self.wm_props, "asset_folder", text="")
-        row.menu("VIEW3D_MT_jewelcraft_asset_folder", icon="THREE_DOTS")
+        subrow.prop(self.wm_props, "asset_folder", text="")
+        subrow.menu("VIEW3D_MT_jewelcraft_asset_folder", icon="THREE_DOTS")
 
         flow = layout.grid_flow()
         sub = flow.row()
         sub.enabled = not show_favs
         sub.operator("wm.jewelcraft_asset_add", icon="ADD")
         flow.row().prop(self.wm_props, "asset_filter", text="", icon="VIEWZOOM")
-
-        row = layout.row(align=True)
-        row.prop(self.wm_props, "asset_show_favs", text="Category", icon=ico_radio(not show_favs), emboss=False, invert_checkbox=True)
-        row.prop(self.wm_props, "asset_show_favs", text="Favorites", icon=ico_radio(show_favs), emboss=False)
 
         flow = layout.grid_flow(row_major=True, even_columns=True, even_rows=True, align=True)
 
