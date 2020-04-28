@@ -112,7 +112,7 @@ def _update_check(use_force_check):
                     version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
                     version_new = tuple(int(x) for x in version_string.split())
 
-                    if var.UPDATE_VERSION_MAX and version_new >= var.UPDATE_VERSION_MAX:
+                    if var.update_block(version_new):
                         continue
 
                     if version_new > var.UPDATE_VERSION_CURRENT:
