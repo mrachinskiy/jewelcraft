@@ -40,7 +40,7 @@ How to install
 
 <sup>1</sup> Note for mac users: Safari browser will automatically unpack downloaded zip archive, so in order to install the add-on, you have to pack folder with add-on files back into zip archive. Or use a different browser to download add-on.
 
-<sup>2</sup> If error occurs on add-on activation, it means you are trying to install add-on repository instead of releases, make sure you download the add-on using link provided in step one of this guide.
+<sup>2</sup> If error occurs on add-on activation, it means you are trying to install add-on repository instead of release. Make sure you download add-on release using link provided in step one of this guide.
 
 
 Установка
@@ -55,7 +55,7 @@ How to install
 
 <sup>1</sup> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, поэтому, чтобы установить аддон, необходимо запаковать папку с файлами аддона обратно в zip архив. Или используйте другой браузер для скачивания аддона.
 
-<sup>2</sup> Если при активации аддона возникает ошибка, значит вы пытаетесь установить репозиторий вместо релиза, убедитесь, что вы загружаете аддон по ссылке, приведённой в первом шаге данного руководства.
+<sup>2</sup> Если при активации аддона возникает ошибка, значит вы пытаетесь установить репозиторий вместо релиза. Для загрузки релиза используйте ссылку, приведённую в первом шаге данного руководства.
 
 
 Contributing
