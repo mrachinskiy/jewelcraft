@@ -31,9 +31,7 @@ Video:
 How to install
 ==========================
 
-1. Download the add-on:<sup>1</sup>
-    * [**Blender 2.80** JewelCraft v2.6.0][v_latest]
-    * [**Blender 2.79** JewelCraft v2.2.1][v_legacy]
+1. Download [JewelCraft 2.6.0][v_latest] for Blender 2.80.<sup>1</sup>
 2. Open `Preferences` → `Add-ons` category.
 3. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
 4. Check [known issues](#known-issues).
@@ -46,9 +44,7 @@ How to install
 Установка
 ==========================
 
-1. Загрузите аддон:<sup>1</sup>
-    * [**Blender 2.80** JewelCraft v2.6.0][v_latest]
-    * [**Blender 2.79** JewelCraft v2.2.1][v_legacy]
+1. Загрузите [JewelCraft 2.6.0][v_latest] для Blender 2.80.<sup>1</sup>
 2. Откройте `Preferences` → `Add-ons`.
 3. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
 4. Ознакомьтесь с [известными проблемами](#known-issues).
@@ -87,7 +83,6 @@ Contributing
 
 
 [v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.6.0/jewelcraft-2_6_0.zip
-[v_legacy]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.2.1/jewelcraft-2_2_1.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
 [new_bug_report]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
