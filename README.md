@@ -31,10 +31,11 @@ Video:
 How to install
 ==========================
 
-1. Download [JewelCraft 2.6.0][v_latest] for Blender 2.80.<sup>1</sup>
-2. Open `Preferences` → `Add-ons` category.
-3. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
-4. Check [known issues](#known-issues).
+1. Download [JewelCraft 2.7.0][v_latest].<sup>1</sup>
+2. Make sure you have Blender 2.80 or newer.
+3. Open `Preferences` → `Add-ons` category.
+4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
+5. Check [known issues](#known-issues).
 
 <sup>1</sup> Note for mac users: Safari browser will automatically unpack downloaded zip archive, so in order to install the add-on, you have to pack folder with add-on files back into zip archive. Or use a different browser to download add-on.
 
@@ -44,10 +45,11 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.6.0][v_latest] для Blender 2.80.<sup>1</sup>
-2. Откройте `Preferences` → `Add-ons`.
-3. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
-4. Ознакомьтесь с [известными проблемами](#known-issues).
+1. Загрузите [JewelCraft 2.7.0][v_latest].<sup>1</sup>
+2. Убедитесь, что у вас установлен Blender 2.80 или новее.
+3. Откройте `Preferences` → `Add-ons`.
+4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
+5. Ознакомьтесь с [известными проблемами](#known-issues).
 
 <sup>1</sup> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, поэтому, чтобы установить аддон, необходимо запаковать папку с файлами аддона обратно в zip архив. Или используйте другой браузер для скачивания аддона.
 
@@ -82,7 +84,7 @@ Contributing
 * After translation is done submit it back through [issues][new_translation].
 
 
-[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.6.0/jewelcraft-2_6_0.zip
+[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.7.0/jewelcraft-2_7_0.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
 [new_bug_report]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
