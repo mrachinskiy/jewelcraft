@@ -61,6 +61,7 @@ dictionary = {
         "Weight": "Peso",
         # "Preview Resolution": "",
         # "Preview Scale": "",
+        # "Category is empty": "",
         "Asset Name": "Nome risorsa",
         "Category Name": "Nome categoría",
         "Set Name": "Imposta nome",
