@@ -62,6 +62,7 @@ dictionary = {
         "Weight": "Вес",
         "Preview Resolution": "Разрешение превью",
         "Preview Scale": "Масштаб превью",
+        "Category is empty": "Категория пуста",
         # Operator popup
         "Asset Name": "Название ассета",
         "Category Name": "Название категории",

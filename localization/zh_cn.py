@@ -61,6 +61,7 @@ dictionary = {
         "Weight": "重量",
         # "Preview Resolution": "",
         # "Preview Scale": "",
+        # "Category is empty": "",
         "Asset Name": "资产名称",
         "Category Name": "类别名称",
         "Set Name": "设置名称",

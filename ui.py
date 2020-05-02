@@ -329,6 +329,10 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
         else:
             assets = dynamic_list.assets(asset.get_asset_lib_path(), self.wm_props.asset_folder)
 
+        if not assets:
+            flow.box().label(text="Category is empty")
+            return
+
         for asset_path, asset_name, asset_icon, is_fav in assets:
 
             if filter_name and filter_name not in asset_name.lower():
