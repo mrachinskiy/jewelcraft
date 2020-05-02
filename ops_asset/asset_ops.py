@@ -356,6 +356,9 @@ class Favorite:
         elif self.filepath in data:
             data.remove(self.filepath)
 
+        if not os.path.exists(var.CONFIG_DIR):
+            os.makedirs(var.CONFIG_DIR)
+
         with open(var.ASSET_FAVS_FILEPATH, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 

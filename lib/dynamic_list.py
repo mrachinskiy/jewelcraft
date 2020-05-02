@@ -306,6 +306,9 @@ def favorites():
 
 @lru_cache(maxsize=1)
 def _favs_deserialize():
+    if not os.path.exists(var.ASSET_FAVS_FILEPATH):
+        return ()
+
     import json
 
     with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
