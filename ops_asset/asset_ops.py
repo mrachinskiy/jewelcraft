@@ -344,17 +344,23 @@ class Favorite:
     def execute(self, context):
         import json
 
+        # Deserialize
+
         if os.path.exists(var.ASSET_FAVS_FILEPATH):
             with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
                 data = json.load(file)
         else:
             data = []
 
+        # Process
+
         if self.is_add:
             data.append(self.filepath)
             data.sort()
         elif self.filepath in data:
             data.remove(self.filepath)
+
+        # Serialize
 
         if not os.path.exists(var.CONFIG_DIR):
             os.makedirs(var.CONFIG_DIR)

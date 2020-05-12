@@ -407,12 +407,12 @@ def ul_deserialize(ul, filepath):
         ul.index = 0
 
 
-def asset_libs_serialize(ul_override=None):
+def asset_libs_serialize():
     if not os.path.exists(var.CONFIG_DIR):
         os.makedirs(var.CONFIG_DIR)
 
     ul_serialize(
-        ul_override or bpy.context.window_manager.jewelcraft.asset_libs,
+        bpy.context.window_manager.jewelcraft.asset_libs,
         var.ASSET_LIBS_FILEPATH,
         ("name", "path"),
     )
