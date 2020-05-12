@@ -53,10 +53,7 @@ def _load_weighting_mats():
 
 
 def _load_asset_libs():
-    if os.path.exists(var.ASSET_LIBS_FILEPATH):
-        libs = bpy.context.window_manager.jewelcraft.asset_libs
-        asset.ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
-        return
+    asset.asset_libs_deserialize()
 
     # TODO serialize deprecated property
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
@@ -67,4 +64,4 @@ def _load_asset_libs():
         prefs.asset_libs.clear()
         bpy.context.preferences.is_dirty = True
 
-        _load_asset_libs()
+        asset.asset_libs_deserialize()

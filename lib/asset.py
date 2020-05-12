@@ -418,6 +418,13 @@ def asset_libs_serialize(ul_override=None):
     )
 
 
+def asset_libs_deserialize():
+    if os.path.exists(var.ASSET_LIBS_FILEPATH):
+        libs = bpy.context.window_manager.jewelcraft.asset_libs
+        libs.clear()
+        ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
+
+
 def weighting_set_serialize(filepath):
     ul_serialize(
         bpy.context.scene.jewelcraft.weighting_materials,
