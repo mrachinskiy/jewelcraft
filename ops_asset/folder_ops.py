@@ -116,13 +116,8 @@ class WM_OT_asset_ui_refresh(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        if os.path.exists(var.ASSET_LIBS_FILEPATH):
-            libs = context.window_manager.jewelcraft.asset_libs
-            libs.clear()
-            asset.ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
-
+        asset.asset_libs_deserialize()
         dynamic_list.asset_folders_refresh()
         dynamic_list.assets_refresh(hard=True, favs=True)
         context.area.tag_redraw()
-
         return {"FINISHED"}
