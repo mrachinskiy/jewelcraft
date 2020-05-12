@@ -19,8 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
-
 import bpy
 from bpy.app.handlers import persistent
 
@@ -39,7 +37,7 @@ def handler_del():
 @persistent
 def _execute(dummy):
     _load_weighting_mats()
-    _load_asset_libs()
+    asset.asset_libs_deserialize()
 
 
 def _load_weighting_mats():
@@ -50,18 +48,3 @@ def _load_weighting_mats():
 
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     asset.weighting_set_deserialize(prefs.weighting_set_autoload)
-
-
-def _load_asset_libs():
-    asset.asset_libs_deserialize()
-
-    # TODO serialize deprecated property
-    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-
-    if prefs.asset_libs.values():
-        asset.asset_libs_serialize(prefs.asset_libs)
-
-        prefs.asset_libs.clear()
-        bpy.context.preferences.is_dirty = True
-
-        asset.asset_libs_deserialize()

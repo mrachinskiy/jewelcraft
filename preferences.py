@@ -235,7 +235,6 @@ class JewelCraftPreferences(AddonPreferences):
         name="Show Asset Name",
         description="Show asset name in sidebar",
     )
-    asset_libs: PointerProperty(type=AssetLibsList)  # TODO deprecated
 
     # Weighting
     # ------------------------
