@@ -24,7 +24,6 @@ import os
 from bpy.types import Operator
 from bpy.props import StringProperty
 
-from .. import var
 from ..lib import asset, dynamic_list
 
 

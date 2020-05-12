@@ -230,27 +230,6 @@ def register():
 
     mod_update.update_init_check()
 
-    # Versioning
-    # ---------------------------
-
-    import sys
-
-    if sys.platform == "win32":
-        local_path = os.getenv("LOCALAPPDATA")
-    elif sys.platform == "darwin":
-        return
-    else:
-        local_path = os.path.expanduser("~/.local/share")
-
-    config_dir = os.path.join(local_path, "Blender", "JewelCraft")
-    deprecated_dir = os.path.join(config_dir, "Weighting Sets")
-
-    prefs = bpy.context.preferences.addons[__package__].preferences
-
-    if os.path.exists(deprecated_dir) and prefs.weighting_set_lib_path != deprecated_dir and bool(os.listdir(deprecated_dir)):
-        prefs.weighting_set_lib_path = deprecated_dir
-        bpy.context.preferences.is_dirty = True
-
 
 def unregister():
     from .lib import dynamic_list, widget
