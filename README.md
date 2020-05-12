@@ -31,7 +31,7 @@ Video:
 How to install
 ==========================
 
-1. Download [JewelCraft 2.7.0][v_latest].<sup>1</sup>
+1. Download [JewelCraft 2.7.1][v_latest].<sup>1</sup>
 2. Make sure you have Blender 2.80 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
@@ -45,7 +45,7 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.7.0][v_latest].<sup>1</sup>
+1. Загрузите [JewelCraft 2.7.1][v_latest].<sup>1</sup>
 2. Убедитесь, что у вас установлен Blender 2.80 или новее.
 3. Откройте `Preferences` → `Add-ons`.
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
@@ -84,7 +84,7 @@ Contributing
 * After translation is done submit it back through [issues][new_translation].
 
 
-[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.7.0/jewelcraft-2_7_0.zip
+[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.7.1/jewelcraft-2_7_1.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
 [new_bug_report]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
