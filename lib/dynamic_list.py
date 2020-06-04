@@ -33,7 +33,7 @@ from . import asset
 _cache = {}
 
 
-if bpy.app.version >= (2, 83, 13):  # NOTE use_international_fonts property removed
+if bpy.app.version >= (2, 83, 0):  # NOTE use_international_fonts property removed
 
     def _iface_lang(context):
         view = context.preferences.view
