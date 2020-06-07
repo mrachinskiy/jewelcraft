@@ -67,8 +67,11 @@ Contributing
 
 ### Known issues
 
-* Product Report gem table is misaligned when using Chinese as report language, use Gem Map as a workaround.
-* If Chinese characters are not displaying, enable `Preferences` → `Interface` → `Translation` property.
+* Product Report/Gem Map:
+  * Gems from hidden collections appear in report, this happens when collection is hidden with  `Hide in Viewport` (eye icon), instead use `Disable in Viewports` (display icon) or `Exclude from View Layer` (checkbox left from collection).
+* Translations:
+  * Product Report gem table is misaligned when using Chinese as report language, use Gem Map as a workaround.
+  * If Chinese characters are not displaying, enable `Preferences` → `Interface` → `Translation` property.
 
 ### Translations
 
