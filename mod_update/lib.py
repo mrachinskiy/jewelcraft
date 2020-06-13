@@ -54,7 +54,7 @@ def _save_state_serialize():
 
     state.days_passed = 0
     data = {
-        "update_available": var.update_available,
+        "update_available": state.update_available,
         "last_check": int(datetime.datetime.now().timestamp()),
     }
 
@@ -131,7 +131,7 @@ def _update_check(use_force_check):
 
                 prerelease_note = " (pre-release)" if release["prerelease"] else ""
 
-                var.update_available = True
+                state.update_available = True
                 state.version_new = release["tag_name"] + prerelease_note
                 state.url_download = asset["browser_download_url"]
                 state.url_changelog = release["html_url"]

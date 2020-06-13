@@ -55,7 +55,7 @@ def prefs_ui(self, layout):
     elif state.status is state.ERROR:
         row.label(text=state.error_msg)
 
-    elif var.update_available:
+    elif state.update_available:
         row.label(text=_("Update {} is available").format(state.version_new))
 
     else:
@@ -75,7 +75,7 @@ def prefs_ui(self, layout):
     col.scale_y = 1.5
     col.enabled = state.status is None or state.status is state.ERROR
 
-    if var.update_available:
+    if state.update_available:
         col.operator(operators.OP_IDNAME_DOWNLOAD)
     else:
         col.operator(operators.OP_IDNAME_CHECK)

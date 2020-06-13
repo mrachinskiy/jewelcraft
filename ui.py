@@ -202,7 +202,7 @@ class VIEW3D_PT_jewelcraft_update(Setup, Panel):
 
     @classmethod
     def poll(cls, context):
-        return var.update_available
+        return mod_update.state.update_available
 
     def draw(self, context):
         mod_update.sidebar_ui(self, context)
