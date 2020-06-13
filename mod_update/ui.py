@@ -21,7 +21,6 @@
 
 from bpy.app.translations import pgettext_iface as _
 
-from .. import var
 from . import state, operators
 
 
