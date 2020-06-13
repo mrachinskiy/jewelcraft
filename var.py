@@ -191,8 +191,6 @@ UPDATE_SAVE_STATE_FILEPATH = os.path.join(CONFIG_DIR, "update_state.json")
 UPDATE_URL_RELEASES = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
 UPDATE_VERSION_CURRENT = None
 
-update_available = False
-
 
 def update_block(version_new):
     import bpy

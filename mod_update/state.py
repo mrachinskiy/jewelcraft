@@ -30,3 +30,5 @@ version_new = None
 url_download = None
 url_changelog = None
 error_msg = None
+
+update_available = False
