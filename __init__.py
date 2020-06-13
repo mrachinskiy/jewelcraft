@@ -183,7 +183,7 @@ classes = (
 
 def register():
     if not os.path.exists(var.ICONS_DIR):
-        integrity_check = FileNotFoundError("!!! READ HOW TO INSTALL GUIDE !!!")
+        integrity_check = FileNotFoundError("!!! READ INSTALLATION GUIDE !!!")
         raise integrity_check
 
     for cls in classes:
@@ -231,7 +231,7 @@ def register():
     mod_update.init(
         addon_version=bl_info["version"],
         url_releases="https://api.github.com/repos/mrachinskiy/jewelcraft/releases",
-        expression=lambda v_new: v_new >= (2, 8, 0) and bpy.app.version < (2, 90, 0),
+        update_block=lambda v_new: v_new >= (2, 8, 0) and bpy.app.version < (2, 90, 0),
     )
 
 
