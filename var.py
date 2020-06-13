@@ -180,17 +180,3 @@ CIR_STEP_US = 2.5535
 CIR_BASE_UK = 37.5
 CIR_STEP_UK = 1.25
 MAP_SIZE_JP_TO_US = (1, 2, 2.5, 3, 3.25, 3.75, 4, 4.5, 5, 5.5, 6, 6.25, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.25, 10.5, 11, 11.5, 12, 12.5, 13)
-
-
-# mod_update
-# --------------------------------
-
-
-UPDATE_OPERATOR_ID_AFFIX = "jewelcraft"
-UPDATE_URL_RELEASES = "https://api.github.com/repos/mrachinskiy/jewelcraft/releases"
-
-
-def update_block(version_new):
-    import bpy
-
-    return version_new >= (2, 8, 0) and bpy.app.version < (2, 90, 0)

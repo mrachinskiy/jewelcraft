@@ -28,7 +28,13 @@ from .. import var
 from . import state
 
 
+VERSION_CURRENT = None
+URL_RELEASES = None
 SAVE_STATE_FILEPATH = os.path.join(var.CONFIG_DIR, "update_state.json")
+
+
+def _update_block(version_new):
+    return False
 
 
 def _save_state_deserialize():
@@ -103,7 +109,7 @@ def _update_check(use_force_check):
 
     try:
 
-        with urllib.request.urlopen(var.UPDATE_URL_RELEASES, context=ssl_context) as response:
+        with urllib.request.urlopen(URL_RELEASES, context=ssl_context) as response:
             data = json.load(response)
 
             for release in data:
@@ -115,10 +121,10 @@ def _update_check(use_force_check):
                     version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
                     version_new = tuple(int(x) for x in version_string.split())
 
-                    if var.update_block(version_new):
+                    if _update_block(version_new):
                         continue
 
-                    if version_new > state.VERSION_CURRENT:
+                    if version_new > VERSION_CURRENT:
                         break
                     else:
                         _save_state_serialize()
@@ -188,3 +194,17 @@ def update_init_check(use_force_check=False):
 
 def update_init_download():
     threading.Thread(target=_update_download).start()
+
+
+def init(addon_version=None, url_releases=None, expression=None):
+    global VERSION_CURRENT
+    global URL_RELEASES
+    global _update_block
+
+    VERSION_CURRENT = addon_version
+    URL_RELEASES = url_releases
+
+    if expression is not None:
+        _update_block = expression
+
+    update_init_check()
