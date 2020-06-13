@@ -39,7 +39,7 @@ def prefs_ui(self, layout):
 
     if state.status is state.COMPLETED:
         row.label(text="Update completed")
-        row.operator(operators.OP_IDNAME_WHATS_NEW)
+        row.operator(operators.WM_OT_update_whats_new.bl_idname)
 
         row = layout.row(align=True)
         row.alignment = "CENTER"
@@ -75,9 +75,9 @@ def prefs_ui(self, layout):
     col.enabled = state.status is None or state.status is state.ERROR
 
     if state.update_available:
-        col.operator(operators.OP_IDNAME_DOWNLOAD)
+        col.operator(operators.WM_OT_update_download.bl_idname)
     else:
-        col.operator(operators.OP_IDNAME_CHECK)
+        col.operator(operators.WM_OT_update_check.bl_idname)
 
 
 def sidebar_ui(self, context):
@@ -90,7 +90,7 @@ def sidebar_ui(self, context):
 
     if state.status is state.COMPLETED:
         row.label(text="Update completed")
-        row.operator(operators.OP_IDNAME_WHATS_NEW)
+        row.operator(operators.WM_OT_update_whats_new.bl_idname)
 
         row = layout.row(align=True)
         row.alignment = "CENTER"
@@ -109,4 +109,4 @@ def sidebar_ui(self, context):
     col.alignment = "CENTER"
     col.scale_y = 1.5
     col.enabled = state.status is None or state.status is state.ERROR
-    col.operator(operators.OP_IDNAME_DOWNLOAD)
+    col.operator(operators.WM_OT_update_download.bl_idname)

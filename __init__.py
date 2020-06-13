@@ -87,8 +87,6 @@ else:
     from .lib import on_load
 
 
-mod_update.state.VERSION_CURRENT = bl_info["version"]
-
 classes = (
     preferences.MeasurementCollection,
     preferences.MaterialCollection,
@@ -230,7 +228,11 @@ def register():
     # mod_update
     # ---------------------------
 
-    mod_update.update_init_check()
+    mod_update.init(
+        addon_version=bl_info["version"],
+        url_releases="https://api.github.com/repos/mrachinskiy/jewelcraft/releases",
+        expression=lambda v_new: v_new >= (2, 8, 0) and bpy.app.version < (2, 90, 0),
+    )
 
 
 def unregister():

@@ -25,15 +25,10 @@ from .. import var
 from . import state, lib
 
 
-OP_IDNAME_CHECK = f"wm.{var.UPDATE_OPERATOR_ID_AFFIX}_update_check"
-OP_IDNAME_DOWNLOAD = f"wm.{var.UPDATE_OPERATOR_ID_AFFIX}_update_download"
-OP_IDNAME_WHATS_NEW = f"wm.{var.UPDATE_OPERATOR_ID_AFFIX}_update_whats_new"
-
-
 class WM_OT_update_check(Operator):
     bl_label = "Check for Updates"
     bl_description = "Check for new add-on release"
-    bl_idname = OP_IDNAME_CHECK
+    bl_idname = f"wm.{var.ADDON_ID}_update_check"
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
@@ -52,7 +47,7 @@ class WM_OT_update_check(Operator):
 class WM_OT_update_download(Operator):
     bl_label = "Install Update"
     bl_description = "Download and install new version of the add-on"
-    bl_idname = OP_IDNAME_DOWNLOAD
+    bl_idname = f"wm.{var.ADDON_ID}_update_download"
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
@@ -71,7 +66,7 @@ class WM_OT_update_download(Operator):
 class WM_OT_update_whats_new(Operator):
     bl_label = "See What's New"
     bl_description = "Open release notes in web browser"
-    bl_idname = OP_IDNAME_WHATS_NEW
+    bl_idname = f"wm.{var.ADDON_ID}_update_whats_new"
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
