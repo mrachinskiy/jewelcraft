@@ -87,7 +87,7 @@ else:
     from .lib import on_load
 
 
-var.UPDATE_VERSION_CURRENT = bl_info["version"]
+mod_update.state.VERSION_CURRENT = bl_info["version"]
 
 classes = (
     preferences.MeasurementCollection,

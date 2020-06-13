@@ -24,6 +24,8 @@ INSTALLING = 1
 COMPLETED = 2
 ERROR = 3
 
+VERSION_CURRENT = None
+
 status = None
 days_passed = None
 version_new = None
