@@ -197,15 +197,13 @@ def register():
     # Translations
     # ---------------------------
 
-    for k, v in mod_update.DICTIONARY.items():
+    for k, v in mod_update.dict_init().items():
         if k in localization.DICTIONARY.keys():
             localization.DICTIONARY[k].update(v)
         else:
             localization.DICTIONARY[k] = v
 
     bpy.app.translations.register(__name__, localization.DICTIONARY)
-
-    mod_update.DICTIONARY.clear()
 
     # Previews
     # ---------------------------

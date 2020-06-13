@@ -19,7 +19,25 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from .lib import update_init_check, update_init_download
-from .operators import WM_OT_update_check, WM_OT_update_download, WM_OT_update_whats_new
-from .ui import prefs_ui, sidebar_ui
-from .localization import dict_init
+def _get_dicts():
+    import os
+    import json
+
+    for entry in os.scandir(os.path.dirname(__file__)):
+        if entry.is_file() and entry.name.endswith(".json"):
+            with open(entry, "r", encoding="utf-8") as file:
+                yield json.load(file)
+
+
+def _convert(dictionary):
+    d = {}
+
+    for ctxt, msgs in dictionary.items():
+        for msg_key, msg_translation in msgs.items():
+            d[(ctxt, msg_key)] = msg_translation
+
+    return d
+
+
+def dict_init():
+    return {k: _convert(v) for k, v in _get_dicts()}
