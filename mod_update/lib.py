@@ -196,7 +196,7 @@ def update_init_download():
     threading.Thread(target=_update_download).start()
 
 
-def init(addon_version=None, url_releases=None, expression=None):
+def init(addon_version=None, url_releases=None, update_block=None):
     global VERSION_CURRENT
     global URL_RELEASES
     global _update_block
@@ -204,7 +204,7 @@ def init(addon_version=None, url_releases=None, expression=None):
     VERSION_CURRENT = addon_version
     URL_RELEASES = url_releases
 
-    if expression is not None:
-        _update_block = expression
+    if update_block is not None:
+        _update_block = update_block
 
     update_init_check()
