@@ -55,7 +55,7 @@ def prefs_ui(self, layout):
         row.label(text=state.error_msg)
 
     elif state.update_available:
-        row.label(text=_("Update {} is available").format(state.version_new))
+        row.label(text=_("Update {} is available").format(state.update_version))
 
     else:
         if state.days_passed is None:
@@ -103,7 +103,7 @@ def sidebar_ui(self, context):
         row.label(text=state.error_msg)
 
     else:
-        row.label(text=_("Update {} is available").format(state.version_new))
+        row.label(text=_("Update {} is available").format(state.update_version))
 
     col = layout.row()
     col.alignment = "CENTER"

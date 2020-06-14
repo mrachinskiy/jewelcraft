@@ -71,5 +71,5 @@ class WM_OT_update_whats_new(Operator):
 
     def execute(self, context):
         import webbrowser
-        webbrowser.open(state.url_changelog)
+        webbrowser.open(state.changelog_url)
         return {"FINISHED"}
