@@ -230,8 +230,8 @@ def register():
 
     mod_update.init(
         addon_version=bl_info["version"],
-        url_releases="https://api.github.com/repos/mrachinskiy/jewelcraft/releases",
-        update_block=lambda v_new: v_new >= (2, 8, 0) and bpy.app.version < (2, 90, 0),
+        releases_url="https://api.github.com/repos/mrachinskiy/jewelcraft/releases",
+        interrupt=lambda v_new: v_new >= (2, 8, 0) and bpy.app.version < (2, 90, 0),
     )
 
 

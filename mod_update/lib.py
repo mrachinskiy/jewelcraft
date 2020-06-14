@@ -28,12 +28,12 @@ from .. import var
 from . import state
 
 
-VERSION_CURRENT = None
-URL_RELEASES = None
+ADDON_VERSION = None
+RELEASES_URL = None
 SAVE_STATE_FILEPATH = os.path.join(var.CONFIG_DIR, "update_state.json")
 
 
-def _update_block(version_new):
+def _interrupt(update_version):
     return False
 
 
@@ -109,7 +109,7 @@ def _update_check(use_force_check):
 
     try:
 
-        with urllib.request.urlopen(URL_RELEASES, context=ssl_context) as response:
+        with urllib.request.urlopen(RELEASES_URL, context=ssl_context) as response:
             data = json.load(response)
 
             for release in data:
@@ -119,12 +119,12 @@ def _update_check(use_force_check):
 
                 if not release["draft"]:
                     version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
-                    version_new = tuple(int(x) for x in version_string.split())
+                    update_version = tuple(int(x) for x in version_string.split())
 
-                    if _update_block(version_new):
+                    if _interrupt(update_version):
                         continue
 
-                    if version_new > VERSION_CURRENT:
+                    if update_version > ADDON_VERSION:
                         break
                     else:
                         _save_state_serialize()
@@ -141,9 +141,9 @@ def _update_check(use_force_check):
                 prerelease_note = " (pre-release)" if release["prerelease"] else ""
 
                 state.update_available = True
-                state.version_new = release["tag_name"] + prerelease_note
-                state.url_download = asset["browser_download_url"]
-                state.url_changelog = release["html_url"]
+                state.update_version = release["tag_name"] + prerelease_note
+                state.download_url = asset["browser_download_url"]
+                state.changelog_url = release["html_url"]
 
         _save_state_serialize()
         _runtime_state_set(None)
@@ -170,7 +170,7 @@ def _update_download():
 
     try:
 
-        with urllib.request.urlopen(state.url_download, context=ssl_context) as response:
+        with urllib.request.urlopen(state.download_url, context=ssl_context) as response:
             with zipfile.ZipFile(io.BytesIO(response.read())) as zfile:
                 addons_dir = os.path.dirname(var.ADDON_DIR)
                 extract_relpath = pathlib.Path(zfile.namelist()[0])
@@ -196,15 +196,15 @@ def update_init_download():
     threading.Thread(target=_update_download).start()
 
 
-def init(addon_version=None, url_releases=None, update_block=None):
-    global VERSION_CURRENT
-    global URL_RELEASES
-    global _update_block
+def init(addon_version=None, releases_url=None, interrupt=None):
+    global ADDON_VERSION
+    global RELEASES_URL
+    global _interrupt
 
-    VERSION_CURRENT = addon_version
-    URL_RELEASES = url_releases
+    ADDON_VERSION = addon_version
+    RELEASES_URL = releases_url
 
-    if update_block is not None:
-        _update_block = update_block
+    if interrupt is not None:
+        _interrupt = interrupt
 
     update_init_check()

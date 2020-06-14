@@ -26,9 +26,9 @@ ERROR = 3
 
 status = None
 days_passed = None
-version_new = None
-url_download = None
-url_changelog = None
+update_version = None
+download_url = None
+changelog_url = None
 error_msg = None
 
 update_available = False
