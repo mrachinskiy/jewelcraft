@@ -19,39 +19,24 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-def _dict_init():
-
-    def convert(dictionary):
-        d = {}
-
-        for ctxt, msgs in dictionary.items():
-            for msg_key, msg_translation in msgs.items():
-                d[(ctxt, msg_key)] = msg_translation
-
-        return d
-
-    from . import (
-        es,
-        fr,
-        it,
-        ru,
-        zh_cn,
-    )
-
-    d = {}
-
-    for k, v in (
-        ("es", es),
-        ("fr_FR", fr),
-        ("it_IT", it),
-        ("ru_RU", ru),
-        ("zh_CN", zh_cn),
-    ):
-        d[k] = convert(v.dictionary)
-        v.dictionary.clear()
-        del v.dictionary
-
-    return d
+import os
+import re
+import json
 
 
-DICTIONARY = _dict_init()
+def _walk():
+    for entry in os.scandir(os.path.dirname(__file__)):
+        if entry.is_file() and entry.name.endswith(".jsonc"):
+            with open(entry, "r", encoding="utf-8") as file:
+                yield os.path.splitext(entry.name)[0], json.loads(re.sub("//.*", "", file.read()))
+
+
+def _convert(dictionary):
+    return {
+        (ctxt, msg_key): msg_translation
+        for ctxt, msgs in dictionary.items()
+        for msg_key, msg_translation in msgs.items()
+    }
+
+
+DICTIONARY = {k: _convert(v) for k, v in _walk()}
