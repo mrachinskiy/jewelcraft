@@ -19,25 +19,23 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-def _get_dicts():
+def _walk():
     import os
     import json
 
     for entry in os.scandir(os.path.dirname(__file__)):
         if entry.is_file() and entry.name.endswith(".json"):
             with open(entry, "r", encoding="utf-8") as file:
-                yield json.load(file)
+                yield os.path.splitext(entry.name)[0], json.load(file)
 
 
 def _convert(dictionary):
-    d = {}
-
-    for ctxt, msgs in dictionary.items():
-        for msg_key, msg_translation in msgs.items():
-            d[(ctxt, msg_key)] = msg_translation
-
-    return d
+    return {
+        (ctxt, msg_key): msg_translation
+        for ctxt, msgs in dictionary.items()
+        for msg_key, msg_translation in msgs.items()
+    }
 
 
-def dict_init():
-    return {k: _convert(v) for k, v in _get_dicts()}
+def init():
+    return {k: _convert(v) for k, v in _walk()}
