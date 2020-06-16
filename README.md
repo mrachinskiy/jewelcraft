@@ -75,15 +75,18 @@ Contributing
 
 ### Translations
 
-* Get `localization/ru.py` translation dictionary from repository and use it as an example template for your translation.
+* Take `.jsonc` translation dictionary from `localization` folder, and use it as an example template for your translation.
 * Example:
-  ```
-  "Save to file": "Сохранить в файл",
+  ```jsonc
+  "Save To File": "Сохранить в файл",
   "{} duplicates found": "{} дубликатов обнаружено",
   "[JewelCraft] Precious": "[JewelCraft] Драгоценные",
+  // "Add To Library": "",
   ```
-  * On the left is the original English message, on the right is the Russian translation of that message.
-  * Not every word has to be translated, in this example `JewelCraft` is not translated because it referencing add-on name.
+  * On the left is the original English message, with translation on the right, in this case in Russian language.
+  * Notice how original message is using Title Case formatting when translation is not, that is the difference between English and Russian UI conventions, to know formatting convention for your language just see how Blender handles it and follow the rule.
+  * Not every word has to be translated, for example `JewelCraft` is not translated because it referencing add-on name.
+  * Commented out `//` empty entries have not been translated yet, remove double slash after filling in the translation.
 * After translation is done submit it back through [issues][new_translation].
 
 
