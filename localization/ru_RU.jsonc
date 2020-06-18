@@ -79,7 +79,7 @@
     "Only ID": "Только идентификаторы",
     "Force Edit": "Принудительное редактирование",
     "Zero dimensions": "Нулевые габариты",
-    "Action completed!": "Действие выполнено",
+    "Action completed": "Действие выполнено",
     // Tooltips
     "Add gemstone to the scene": "Добавить камень в сцену",
     "Edit selected gems": "Редактировать выделенные камни",
@@ -103,7 +103,6 @@
     "Product report language": "Язык отчёта изделия",
     "Use user preferences language setting": "Использовать язык заданный в настройках пользователя",
     "Select gems by trait": "Выделить камни по характеристике",
-    "Search stone by name": "Искать камень по названию",
     "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
     "Redistribute selected objects along curve": "Перераспределить выделенные объекты по кривой",
 
@@ -386,9 +385,6 @@
     "Replace Preview": "Заменить превью",
     "Create Category": "Создать категорию",
     "Rename Category": "Переименовать категорию",
-    "Rename Asset": "Переименовать ассет",
-    "Remove Asset": "Удалить ассет",
-    "Replace Asset Preview": "Заменить превью ассета",
     "Override": "Переопределить",
     "Clear List": "Очистить список",
     "Add New Material": "Добавить новый материал",
