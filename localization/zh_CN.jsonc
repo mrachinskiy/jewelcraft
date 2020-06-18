@@ -77,7 +77,7 @@
     // "Only ID": "",
     // "Force Edit": "",
     // "Zero dimensions": "",
-    // "Action completed!": "",
+    // "Action completed": "",
     "Add gemstone to the scene": "向场景添加宝石",
     "Edit selected gems": "编辑选中的宝石",
     // "Round diamonds only": "",
@@ -90,7 +90,6 @@
     "Product report language": "产品报告语言",
     "Use user preferences language setting": "使用语言用户首选项设置",
     "Select gems by trait": "按特征选择宝石",
-    "Search stone by name": "按名称搜索石头",
     "Scatter selected object along active curve": "沿活动曲线散射选定对象",
     "Redistribute selected objects along curve": "沿曲线重新分布选定对象",
     "Display weight and volume for selected mesh objects": "显示所选网格对象的权重和体积",
@@ -263,7 +262,7 @@
     // "mm³": "",
     // "g": "",
     // "ct.": "",
-    // "pcs": ""
+    // "pcs": "",
   },
   "JewelCraft": {
     "Cut": "切割",
@@ -295,9 +294,6 @@
     "Replace Preview": "替换预览",
     "Create Category": "创建类别",
     "Rename Category": "重命名类别",
-    "Rename Asset": "重命名资产",
-    "Remove Asset": "删除资产",
-    "Replace Asset Preview": "替换资产预览",
     "Override": "自定义设置",
     "Clear List": "清空列表",
     "Add New Material": "添加新材料",
@@ -311,6 +307,6 @@
     "Append": "追加",
     "Add New Measurement": "添加新度量值",
     "Mark Autoload": "标记自动加载"
-    // "Add To Library": ""
+    // "Add To Library": "",
   }
 }
