@@ -61,7 +61,9 @@ class Offscreen:
 
                 self.draw_gems(context)
 
-    def draw_gems(self, context, ratio_w=1, ratio_h=1):
+    def draw_gems(self, context, ratio_w=1, ratio_h=1, is_viewport=True):
+        gamma = self.gamma_correction if is_viewport else lambda x: x
+
         from_scene_scale = unit.Scale(context).from_scene
 
         view_normal = Vector((0.0, 0.0, 1.0)) @ self.region_3d.view_matrix
@@ -92,7 +94,7 @@ class Offscreen:
 
             for stone, cut, size, size_fmt, color in self.gems_raw:
                 if ob_stone == stone and ob_cut == cut and ob_size == size:
-                    shader.uniform_float("color", color)
+                    shader.uniform_float("color", gamma(color))
                     break
 
             ob_eval = ob.evaluated_get(depsgraph)
