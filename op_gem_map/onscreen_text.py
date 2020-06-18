@@ -29,7 +29,10 @@ shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
 class OnscreenText:
 
-    def onscreen_gem_table(self, x, y, color=(0.97, 0.97, 0.97, 1.0)):
+    def onscreen_gem_table(self, x, y, color=(0.95, 0.95, 0.95, 1.0), is_viewport=True):
+        gamma = self.gamma_correction if is_viewport else lambda x: x
+        color = gamma(color)
+
         fontid = 1
         blf.size(fontid, self.prefs.view_font_size_report, 72)
         blf.color(fontid, *color)
@@ -54,9 +57,11 @@ class OnscreenText:
         return y
 
     def onscreen_warning(self, x, y):
+        gamma = self.gamma_correction
+
         fontid = 1
         blf.size(fontid, self.prefs.view_font_size_report, 72)
-        blf.color(fontid, 1.0, 0.3, 0.3, 1.0)
+        blf.color(fontid, *gamma((1.0, 0.3, 0.3, 1.0)))
 
         _, font_h = blf.dimensions(fontid, "Row Height")
         font_row_height = font_h * 2
@@ -71,6 +76,10 @@ class OnscreenText:
         return y
 
     def onscreen_options(self, x, y):
+        gamma = self.gamma_correction
+        color_white = gamma((0.95, 0.95, 0.95, 1.0))
+        color_grey = gamma((0.67, 0.67, 0.67, 1.0))
+
         fontid = 1
         blf.size(fontid, self.prefs.view_font_size_option, 72)
 
@@ -83,36 +92,36 @@ class OnscreenText:
             x_ofst = x
 
             blf.position(fontid, x, y, 0.0)
-            blf.color(fontid, 0.97, 0.97, 0.97, 1.0)
+            blf.color(fontid, *color_white)
             blf.draw(fontid, option)
 
             x_ofst += font_w_1 + 20
             blf.position(fontid, x_ofst, y, 0.0)
-            blf.color(fontid, 0.7, 0.7, 0.7, 1.0)
+            blf.color(fontid, *color_grey)
             blf.draw(fontid, hotkey)
 
             if prop_type is self.TYPE_BOOL:
                 x_ofst += font_w_2 + 10
                 blf.position(fontid, x_ofst, y, 0.0)
-                blf.color(fontid, 0.97, 0.97, 0.97, 1.0)
+                blf.color(fontid, *color_white)
                 blf.draw(fontid, ":")
 
                 x_ofst += 20
                 blf.position(fontid, x_ofst, y, 0.0)
                 if getattr(self, value):
-                    blf.color(fontid, 0.3, 1.0, 0.3, 1.0)
+                    blf.color(fontid, *gamma((0.3, 1.0, 0.3, 1.0)))
                     blf.draw(fontid, "ON")
                 else:
-                    blf.color(fontid, 1.0, 0.3, 0.3, 1.0)
+                    blf.color(fontid, *gamma((1.0, 0.3, 0.3, 1.0)))
                     blf.draw(fontid, "OFF")
             else:
                 if getattr(self, value):
                     x_ofst += font_w_2 + 10
                     blf.position(fontid, x_ofst, y, 0.0)
-                    blf.color(fontid, 0.97, 0.97, 0.97, 1.0)
+                    blf.color(fontid, *color_white)
                     blf.draw(fontid, ":")
 
                     x_ofst += 20
                     blf.position(fontid, x_ofst, y, 0.0)
-                    blf.color(fontid, 0.9, 0.9, 0.0, 1.0)
+                    blf.color(fontid, *gamma((0.9, 0.9, 0.0, 1.0)))
                     blf.draw(fontid, "PROCESSING...")
