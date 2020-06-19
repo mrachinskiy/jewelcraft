@@ -246,10 +246,10 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
             return {"CANCELLED"}
 
         self.prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.lang = self.prefs.product_report_lang
-        self.use_save = self.prefs.product_report_save
-        self.use_hidden_gems = self.prefs.product_report_use_hidden_gems
-        self.use_overlap = self.prefs.product_report_use_overlap
+        self.lang = self.prefs.design_report_lang
+        self.use_save = self.prefs.design_report_save
+        self.use_hidden_gems = self.prefs.design_report_use_hidden_gems
+        self.use_overlap = self.prefs.design_report_use_overlap
         self.width = self.prefs.gem_map_width
         self.height = self.prefs.gem_map_height
 

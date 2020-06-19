@@ -31,10 +31,10 @@ from .. import var
 from ..lib import asset
 
 
-class WM_OT_product_report(Operator):
+class WM_OT_design_report(Operator):
     bl_label = "JewelCraft Product Report"
     bl_description = "Present summary information about the product, including gems, sizes and weight"
-    bl_idname = "wm.jewelcraft_product_report"
+    bl_idname = "wm.jewelcraft_design_report"
 
     lang: EnumProperty(
         name="Report Language",
@@ -157,11 +157,11 @@ class WM_OT_product_report(Operator):
 
     def invoke(self, context, event):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.lang = prefs.product_report_lang
-        self.use_save = prefs.product_report_save
-        self.show_total_ct = prefs.product_report_show_total_ct
-        self.use_hidden_gems = prefs.product_report_use_hidden_gems
-        self.use_overlap = prefs.product_report_use_overlap
+        self.lang = prefs.design_report_lang
+        self.use_save = prefs.design_report_save
+        self.show_total_ct = prefs.design_report_show_total_ct
+        self.use_hidden_gems = prefs.design_report_use_hidden_gems
+        self.use_overlap = prefs.design_report_use_overlap
 
         if event.ctrl:
             wm = context.window_manager
