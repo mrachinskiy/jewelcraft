@@ -484,21 +484,21 @@ class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
         layout.operator("object.jewelcraft_weight_display", text="Calculate")
 
 
-class VIEW3D_PT_jewelcraft_product_report(Setup, Panel):
+class VIEW3D_PT_jewelcraft_design_report(Setup, Panel):
     bl_label = "Product Report"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("wm.jewelcraft_product_report", text="Product Report")
+        layout.operator("wm.jewelcraft_design_report", text="Product Report")
         layout.operator("view3d.jewelcraft_gem_map", text="Gem Map")
 
 
 class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
     bl_label = "Measurement"
     bl_options = {"DEFAULT_CLOSED"}
-    bl_parent_id = "VIEW3D_PT_jewelcraft_product_report"
+    bl_parent_id = "VIEW3D_PT_jewelcraft_design_report"
 
     def draw(self, context):
         measures_list = context.scene.jewelcraft.measurements
@@ -610,8 +610,8 @@ def prefs_ui(self, context):
 
     elif active_tab == "PRODUCT_REPORT":
         col = box.column()
-        col.prop(self, "product_report_save")
-        col.prop(self, "product_report_lang")
+        col.prop(self, "design_report_save")
+        col.prop(self, "design_report_lang")
 
         box.label(text="Gem Map")
         col = box.column(align=True)
@@ -619,12 +619,12 @@ def prefs_ui(self, context):
         col.prop(self, "gem_map_height", text="Y")
 
         box.label(text="Report")
-        box.prop(self, "product_report_show_total_ct")
+        box.prop(self, "design_report_show_total_ct")
 
         box.label(text="Warnings")
         col = box.column()
-        col.prop(self, "product_report_use_hidden_gems")
-        col.prop(self, "product_report_use_overlap")
+        col.prop(self, "design_report_use_hidden_gems")
+        col.prop(self, "design_report_use_overlap")
 
     elif active_tab == "THEMES":
         box.label(text="Interface")

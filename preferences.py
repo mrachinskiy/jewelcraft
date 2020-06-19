@@ -256,7 +256,7 @@ class JewelCraftPreferences(AddonPreferences):
     # Product Report
     # ------------------------
 
-    product_report_lang: EnumProperty(
+    design_report_lang: EnumProperty(
         name="Report Language",
         description="Product report language",
         items=(
@@ -268,21 +268,21 @@ class JewelCraftPreferences(AddonPreferences):
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
     )
-    product_report_save: BoolProperty(
+    design_report_save: BoolProperty(
         name="Save To File",
         description="Save product report to file in project folder",
         default=True,
     )
-    product_report_show_total_ct: BoolProperty(
+    design_report_show_total_ct: BoolProperty(
         name="Total (ct.)",
         description="Include or exclude given column",
     )
-    product_report_use_hidden_gems: BoolProperty(
+    design_report_use_hidden_gems: BoolProperty(
         name="Hidden Gems",
         description="Enable or disable given warning",
         default=True,
     )
-    product_report_use_overlap: BoolProperty(
+    design_report_use_overlap: BoolProperty(
         name="Overlapping Gems",
         description="Enable or disable given warning",
         default=True,
