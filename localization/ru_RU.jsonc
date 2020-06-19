@@ -84,57 +84,40 @@
     "Add gemstone to the scene": "Добавить камень в сцену",
     "Edit selected gems": "Редактировать выделенные камни",
     "Round diamonds only": "Только бриллианты Кр-57",
-
     "Force edit selected mesh objects, can be used to make gems from non-gem objects":
       "Принудительно редактировать выделенные мэш объекты, можно использовать для создания камней из других объектов",
-
     "Only edit gem identifiers, not affecting object data and materials":
       "Редактировать только идентификаторы камня, не затрагивая объектную информация и материалы.",
-
     "Commonly used precious alloys, physical properties taken directly from suppliers":
       "Распространённые драгоценные сплавы, физические свойства взяты напрямую у поставщиков",
-
     "Set of precious alloys according to Russian regulations": "Драгоценные сплавы согласно ГОСТ 30649-99",
-
     "Set of base metal alloys, physical properties taken directly from suppliers":
       "Сплавы из недрагоценных металлов, физические свойства взяты напрямую у поставщиков",
-
     "Save design report to file in project folder": "Сохранить отчёт изделия в файл в каталоге проекта",
     "Design report language": "Язык отчёта изделия",
     "Use user preferences language setting": "Использовать язык заданный в настройках пользователя",
     "Select gems by trait": "Выделить камни по характеристике",
     "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
     "Redistribute selected objects along curve": "Перераспределить выделенные объекты по кривой",
-
     "Display weight and volume for selected mesh objects":
       "Показать вес и объём выделенных mesh объектов",
-
     "Create instance face for selected objects": "Создать instance face для выделенных объектов",
     "Create size curve": "Создать размерную кривую",
-
     "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices":
       "Растянуть деформированный объект вдоль кривой по оси X, также работает в режиме редактирования с выделенными вершинами",
-
     "Display curve length": "Показать длину кривой",
-
     "Move deformed object over or under the curve":
       "Переместить деформированные объекты под или над кривой",
-
     "Mirror selected objects around one or more axes, keeping object data linked":
       "Отразить выделенные объекты относительно одной или нескольких осей, сохраняя связь данных объекта",
-
     "Project selected objects onto active object using Lattice":
       "Проецировать выделенные объекты на активный объект с помощью Lattice",
-
     "Deform active object profile with Lattice, also works in Edit Mode with selected vertices":
       "Деформировать профиль активного объекта с помощью Lattice, также работает в режиме редактирования с выделенными вершинами",
-
     "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
       "Создать корнера для выделенных камней\n(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)",
-
     "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)":
       "Создать выборку для выделенных камней\n(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)",
-
     "Make curve start at the top": "Расположить начало кривой сверху",
     "Density g/cm³": "Плотность г/см³",
     "Set of materials for weighting": "Набор материалов для оценки веса",
@@ -148,73 +131,51 @@
     "Replace asset preview image": "Заменить превью ассета",
     "Import selected asset": "Импортировать выбранный ассет",
     "Asset category": "Категория ассетов",
-
     "Custom library folder path": "Путь к пользовательскому каталогу библиотеки",
     "Show asset name in sidebar": "Показывать название ассета в боковой панели",
     "Enable widgets drawing": "Активировать отображение виджетов",
     "Use object defined widget overrides": "Использовать переопределения виджетов заданные на объектах",
-
     "Draw widgets in front of objects": "Отображать виджеты поверх объектов",
-
     "Override widget display properties for selected objects":
       "Переопределить отображение виджетов для выделенных объектов",
-
     "Remove widget override properties from selected objects":
       "Удалить настройки переопределяющие отображение виджетов с выделенных объектов",
-
     "Add new material to the list": "Добавить новый материал в список",
     "Display material density in the list": "Отображать в списке плотность материала",
     "Display material composition in the list": "Отображать в списке состав материала",
     "Create weighting set from materials list": "Создать набор материалов из списка материалов",
     "Remove weighting set": "Удалить набор материалов",
     "Rename weighting set": "Переименовать набор материалов",
-
     "Load weighting set to the materials list by replacing existing materials":
       "Загрузить набор материалов в список материалов, заменив текущие материалы",
-
     "Append weighting set at the end of the current materials list":
       "Присоеденить набор материалов в конец текущего списока материалов",
-
     "Hide default JewelCraft sets from weighting sets menu":
       "Скрыть стандартные наборы материалов JewelCraft из меню",
-
     "Replace selected weighting set with current materials list":
       "Заменить активный набор материалов текущим списком материалов",
-
     "Material name": "Название материала",
     "Material composition": "Состав материала",
-
     "Use one-dimensional lattice for even deformation":
       "Использовать одномерный Lattice для равномерной деформации",
-
     "Use two-dimensional lattice for proportional deformation":
       "Использовать двумерный Lattice для пропорциональной деформации",
-
     "Scale selected objects to given size": "Масштабировать выделенные объекты в заданный размер",
     "Move each object individually": "Переместить каждый объект по отдельности",
-
     "Enable material for weighting and design report":
       "Использовать материал для оценки веса и отчёта изделия",
-
     "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)":
       "Привязать импортированный ассет к выделенным объектам (Горячая клавиша: удерживайте Alt при использовании инструмента)",
-
     "Select gems that are less than 0.1 mm distance from each other or overlapping":
       "Выделить перекрывающиеся камни или расположенные на расстоянии менее 0.1 мм друг от друга",
-
     "Display spacing widget for all visible gems": "Отображать виджет расстояния для всех видимых камней",
-
     "Set optimal unit settings for jewelry modelling":
       "Задать оптимальные настройки единиц измерения для моделирования ювелирных изделий",
-
     "Enable or disable given warning": "Включить или отключить данное предупреждение",
-
     "Compose gem table and map it to gems in the scene":
       "Составить таблицу камней и сопоставить её с камнями в сцене",
-
     "Present summary information about the design, including gems, sizes and weight":
       "Предоставить суммарную информацию об изделии, включая камни, размеры и вес",
-
     "Add a new measurement": "Добавить новый замер",
     "Add new item to the list": "Добавить новый элемент в список",
     "Remove selected item": "Удалить выбранный элемент",
@@ -223,45 +184,33 @@
     "Measured object": "Измеряемый объект",
     "Measurement type": "Тип замера",
     "Select material": "Выбрать материал",
-
     "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)":
       "Создать экземпляры коллекции в радиальном порядке\n(Горячая клавиша: удерживайте клавишу Alt при использовании инструмента для использования существующей коллекции)",
-
     "Include or exclude given column": "Включить или исключить данную колонку",
-
     "Autoload marked weighting set on File > Open/New if materials list for given blend file is empty":
       "Автозагрузка отмеченного набора материалов при File > Open/New если список материалов для данного blend файла пуст",
-
     "Asset preview image size when creating new assets":
       "Размер изображения превью ассета при создании новых ассетов",
-
     "Asset preview scale in sidebar": "Масштаб превью ассетов в боковой панели",
     "Filter by name": "Фильтр по имени",
     "Add to favorites": "Добавить в избранное",
     "Remove from favorites": "Удалить из избранного",
-
     // Reports
     "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
     "Possible gem instance face leftovers": "Возможные остатки instance face камней",
     "Hidden gems": "Скрытые камни",
-
     "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
       "Устаревшие идентификаторы камней (используйте Convert Deprecated Gem IDs из меню Operator Search)",
-
     "Unknown gem IDs, carats are not calculated for marked gems (*)":
       "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)",
-
     "Curve Length": "Длина кривой",
-
     "Missing selected objects": "Отсутствуют выделенные объекты",
     "At least two objects must be selected": "Как минимум два объекта должны быть выделены",
     "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
     "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
     "Active object must be a curve": "Активный объект должен быть кривой",
-
     "Selected objects do not have Follow Path constraint":
       "Выделенные объекты не имеют ограничение Follow Path",
-
     "File not found": "Файл не найден",
     "Name must be specified": "Имя должно быть указано",
     "Collection must be specified": "Коллекция должна быть указана",
