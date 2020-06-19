@@ -88,7 +88,7 @@ Contributing
 * After translation is done submit it back through [issues][new_translation].
 
 
-[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.7.3/jewelcraft-2_7_3.zip
+[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/2.7.3/jewelcraft-2_7_3.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
 [new_bug_report]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
