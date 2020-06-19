@@ -123,7 +123,7 @@ class ListProperty:
 
 
 class MaterialCollection(PropertyGroup):
-    enabled: BoolProperty(description="Enable material for weighting and product report", default=True)
+    enabled: BoolProperty(description="Enable material for weighting and design report", default=True)
     name: StringProperty(default="Untitled")
     composition: StringProperty(default="Unknown")
     density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
@@ -253,12 +253,12 @@ class JewelCraftPreferences(AddonPreferences):
     )
     weighting_set_autoload: StringProperty(default="JCASSET_PRECIOUS")
 
-    # Product Report
+    # Design Report
     # ------------------------
 
     design_report_lang: EnumProperty(
         name="Report Language",
-        description="Product report language",
+        description="Design report language",
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
             ("en_US", "English (English)", ""),
@@ -270,7 +270,7 @@ class JewelCraftPreferences(AddonPreferences):
     )
     design_report_save: BoolProperty(
         name="Save To File",
-        description="Save product report to file in project folder",
+        description="Save design report to file in project folder",
         default=True,
     )
     design_report_show_total_ct: BoolProperty(
@@ -385,7 +385,7 @@ class WmProperties(PropertyGroup):
         items=(
             ("ASSET_MANAGER",  "Asset Manager",  ""),
             ("WEIGHTING",      "Weighting",      ""),
-            ("PRODUCT_REPORT", "Product Report", ""),
+            ("DESIGN_REPORT", "Design Report", ""),
             ("THEMES",         "Themes",         ""),
             ("UPDATES",        "Updates",        ""),
         ),
