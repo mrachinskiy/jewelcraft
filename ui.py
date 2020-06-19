@@ -485,13 +485,13 @@ class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
 
 
 class VIEW3D_PT_jewelcraft_design_report(Setup, Panel):
-    bl_label = "Product Report"
+    bl_label = "Design Report"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("wm.jewelcraft_design_report", text="Product Report")
+        layout.operator("wm.jewelcraft_design_report", text="Design Report")
         layout.operator("view3d.jewelcraft_gem_map", text="Gem Map")
 
 
@@ -608,7 +608,7 @@ def prefs_ui(self, context):
         col.prop(self, "weighting_hide_default_sets")
         col.prop(self, "weighting_set_lib_path")
 
-    elif active_tab == "PRODUCT_REPORT":
+    elif active_tab == "DESIGN_REPORT":
         col = box.column()
         col.prop(self, "design_report_save")
         col.prop(self, "design_report_lang")

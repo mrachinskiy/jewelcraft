@@ -32,13 +32,13 @@ from ..lib import asset
 
 
 class WM_OT_design_report(Operator):
-    bl_label = "JewelCraft Product Report"
-    bl_description = "Present summary information about the product, including gems, sizes and weight"
+    bl_label = "JewelCraft Design Report"
+    bl_description = "Present summary information about the design, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_design_report"
 
     lang: EnumProperty(
         name="Report Language",
-        description="Product report language",
+        description="Design report language",
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
             ("en_US", "English (English)", ""),
@@ -51,7 +51,7 @@ class WM_OT_design_report(Operator):
     )
     use_save: BoolProperty(
         name="Save To File",
-        description="Save product report to file in project folder",
+        description="Save design report to file in project folder",
         default=True,
     )
     show_total_ct: BoolProperty(
@@ -111,11 +111,11 @@ class WM_OT_design_report(Operator):
             warn_fmt += sep + "\n\n"
             data_fmt = warn_fmt + data_fmt
 
-        if "Product Report" in bpy.data.texts:
-            txt = bpy.data.texts["Product Report"]
+        if "Design Report" in bpy.data.texts:
+            txt = bpy.data.texts["Design Report"]
             txt.clear()
         else:
-            txt = bpy.data.texts.new("Product Report")
+            txt = bpy.data.texts.new("Design Report")
 
         txt.write(data_fmt)
 

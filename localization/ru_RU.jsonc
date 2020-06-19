@@ -3,7 +3,7 @@
     // Interface
     "Asset Manager": "Менеджер ассетов",
     "Show Asset Name": "Показывать название ассета",
-    "Product Report": "Отчёт изделия",
+    "Design Report": "Отчёт изделия",
     "Report Language": "Язык отчёта",
     "Save To File": "Сохранить в файл",
     "Gems": "Камни",
@@ -99,8 +99,8 @@
     "Set of base metal alloys, physical properties taken directly from suppliers":
       "Сплавы из недрагоценных металлов, физические свойства взяты напрямую у поставщиков",
 
-    "Save product report to file in project folder": "Сохранить отчёт изделия в файл в каталоге проекта",
-    "Product report language": "Язык отчёта изделия",
+    "Save design report to file in project folder": "Сохранить отчёт изделия в файл в каталоге проекта",
+    "Design report language": "Язык отчёта изделия",
     "Use user preferences language setting": "Использовать язык заданный в настройках пользователя",
     "Select gems by trait": "Выделить камни по характеристике",
     "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
@@ -193,7 +193,7 @@
     "Scale selected objects to given size": "Масштабировать выделенные объекты в заданный размер",
     "Move each object individually": "Переместить каждый объект по отдельности",
 
-    "Enable material for weighting and product report":
+    "Enable material for weighting and design report":
       "Использовать материал для оценки веса и отчёта изделия",
 
     "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)":
@@ -212,7 +212,7 @@
     "Compose gem table and map it to gems in the scene":
       "Составить таблицу камней и сопоставить её с камнями в сцене",
 
-    "Present summary information about the product, including gems, sizes and weight":
+    "Present summary information about the design, including gems, sizes and weight":
       "Предоставить суммарную информацию об изделии, включая камни, размеры и вес",
 
     "Add a new measurement": "Добавить новый замер",
@@ -377,7 +377,7 @@
     "Size Curve": "Размерная кривая",
     "Stretch": "Растянуть",
     "Curve Length": "Длина кривой",
-    "Product Report": "Отчёт изделия",
+    "Design Report": "Отчёт изделия",
     "Open Library Folder": "Открыть каталог библиотеки",
     "Import Asset": "Импортировать ассет",
     "Rename": "Переименовать",
