@@ -27,7 +27,7 @@ from bpy.app.translations import pgettext_iface as _
 from . import (
     draw_handler,
     onrender,
-    report_fmt,
+    report_fmt_text,
 )
 from .offscreen import Offscreen
 from .onscreen_text import OnscreenText
@@ -211,7 +211,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
         # Gem report
         # ----------------------------
 
-        report_fmt.data_format(self, context, data)
+        report_fmt_text.data_format(self, context, data)
 
         # Warnings
         # ----------------------------

@@ -26,7 +26,7 @@ from bpy.types import Operator
 from bpy.props import EnumProperty, BoolProperty
 from bpy.app.translations import pgettext_tip as _
 
-from . import report_fmt, report_get
+from . import report_fmt_text, report_get
 from .. import var
 from ..lib import asset
 
@@ -95,7 +95,7 @@ class WM_OT_design_report(Operator):
         version_281 = bpy.app.version >= (2, 81, 14)
 
         data_raw = report_get.data_collect(self, context)
-        data_fmt = report_fmt.data_format(self, context, data_raw)
+        data_fmt = report_fmt_text.data_format(self, context, data_raw)
 
         # Compose text datablock
         # ---------------------------
