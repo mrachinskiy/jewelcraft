@@ -32,7 +32,7 @@ from . import (
 from .offscreen import Offscreen
 from .onscreen_text import OnscreenText
 from .. import var
-from ..op_product_report import report_get
+from ..op_design_report import report_get
 
 
 if bpy.app.version >= (2, 83, 0):  # NOTE T74139
