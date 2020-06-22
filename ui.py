@@ -610,7 +610,6 @@ def prefs_ui(self, context):
 
     elif active_tab == "DESIGN_REPORT":
         col = box.column()
-        col.prop(self, "design_report_save")
         col.prop(self, "design_report_lang")
 
         box.label(text="Gem Map")
@@ -618,13 +617,10 @@ def prefs_ui(self, context):
         col.prop(self, "gem_map_width", text="Resolution X")
         col.prop(self, "gem_map_height", text="Y")
 
-        box.label(text="Report")
-        box.prop(self, "design_report_show_total_ct")
-
         box.label(text="Warnings")
         col = box.column()
-        col.prop(self, "design_report_use_hidden_gems")
-        col.prop(self, "design_report_use_overlap")
+        col.prop(self, "warn_hidden_gems")
+        col.prop(self, "warn_gem_overlap")
 
     elif active_tab == "THEMES":
         box.label(text="Interface")

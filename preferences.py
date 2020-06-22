@@ -268,25 +268,6 @@ class JewelCraftPreferences(AddonPreferences):
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
     )
-    design_report_save: BoolProperty(
-        name="Save To File",
-        description="Save design report to file in project folder",
-        default=True,
-    )
-    design_report_show_total_ct: BoolProperty(
-        name="Total (ct.)",
-        description="Include or exclude given column",
-    )
-    design_report_use_hidden_gems: BoolProperty(
-        name="Hidden Gems",
-        description="Enable or disable given warning",
-        default=True,
-    )
-    design_report_use_overlap: BoolProperty(
-        name="Overlapping Gems",
-        description="Enable or disable given warning",
-        default=True,
-    )
 
     # Gem Map
     # ------------------------
@@ -304,6 +285,20 @@ class JewelCraftPreferences(AddonPreferences):
         default=750,
         min=4,
         subtype="PIXEL",
+    )
+
+    # Warnings
+    # ------------------------
+
+    warn_hidden_gems: BoolProperty(
+        name="Hidden Gems",
+        description="Enable or disable given warning",
+        default=True,
+    )
+    warn_gem_overlap: BoolProperty(
+        name="Overlapping Gems",
+        description="Enable or disable given warning",
+        default=True,
     )
 
     # Widget
@@ -383,11 +378,11 @@ class JewelCraftPreferences(AddonPreferences):
 class WmProperties(PropertyGroup):
     prefs_active_tab: EnumProperty(
         items=(
-            ("ASSET_MANAGER",  "Asset Manager",  ""),
-            ("WEIGHTING",      "Weighting",      ""),
+            ("ASSET_MANAGER", "Asset Manager", ""),
+            ("WEIGHTING", "Weighting", ""),
             ("DESIGN_REPORT", "Design Report", ""),
-            ("THEMES",         "Themes",         ""),
-            ("UPDATES",        "Updates",        ""),
+            ("THEMES", "Themes", ""),
+            ("UPDATES", "Updates", ""),
         ),
     )
     widget_toggle: BoolProperty(description="Enable widgets drawing", update=widget.handler_toggle)
