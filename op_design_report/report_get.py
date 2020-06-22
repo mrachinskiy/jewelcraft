@@ -25,9 +25,19 @@ from .. import var
 from ..lib import unit, mesh, asset
 
 
-def data_collect(self, context, gem_map=False):
-    import collections
+class _Data:
+    __slots__ = ("gems", "materials", "notes", "warnings")
 
+    def __init__(self):
+        import collections
+
+        self.gems = collections.defaultdict(int)
+        self.materials = collections.defaultdict(float)
+        self.notes = []
+        self.warnings = []
+
+
+def data_collect(self, context, gem_map=False):
     UnitScale = unit.Scale(context)
     from_scene_scale = UnitScale.from_scene
     to_scene_scale = UnitScale.to_scene
@@ -35,12 +45,7 @@ def data_collect(self, context, gem_map=False):
     scene = context.scene
     depsgraph = context.evaluated_depsgraph_get()
     props = scene.jewelcraft
-    data = {
-        "gems": collections.defaultdict(int),
-        "materials": collections.defaultdict(float),
-        "warn": [],
-        "notes": [],
-    }
+    Report = _Data()
 
     if not gem_map:
 
@@ -54,7 +59,7 @@ def data_collect(self, context, gem_map=False):
                     name = item.material_name
                     density = unit.convert_cm3_mm3(item.material_density)
                     vol = from_scene_scale(mesh.est_volume((item.object,)), volume=True)
-                    data["materials"][(name, density)] += vol
+                    Report.materials[(name, density)] += vol
 
             elif item.type == "DIMENSIONS":
                 axes = []
@@ -67,17 +72,16 @@ def data_collect(self, context, gem_map=False):
 
                 dim = from_scene_scale(item.object.dimensions, batch=True)
                 values = tuple(round(dim[x], 2) for x in axes)
-                data["notes"].append((item.type, item.name, values))
+                Report.notes.append((item.type, item.name, values))
 
             elif item.type == "RING_SIZE":
                 dim = from_scene_scale(item.object.dimensions[int(item.axis)])
                 values = (round(dim, 2), item.ring_size)
-                data["notes"].append((item.type, item.name, values))
+                Report.notes.append((item.type, item.name, values))
 
     # Gems
     # ---------------------------
 
-    gems = data["gems"]
     known_stones = var.STONES.keys()
     known_cuts = var.CUTS.keys()
     ob_data = []
@@ -133,14 +137,14 @@ def data_collect(self, context, gem_map=False):
         ):
             df_leftovers = True
 
-        gems[(stone, cut, size)] += 1
+        Report.gems[(stone, cut, size)] += 1
 
     # Find overlaps
     # ---------------------------
 
     overlaps = False
 
-    if self.use_overlap:
+    if self.warn_gem_overlap:
         threshold = to_scene_scale(0.1)
         overlaps = asset.gem_overlap(context, ob_data, threshold, first_match=True)
 
@@ -149,7 +153,7 @@ def data_collect(self, context, gem_map=False):
 
     hidden = False
 
-    if self.use_hidden_gems:
+    if self.warn_hidden_gems:
         for ob in scene.objects:
             if "gem" in ob and not ob.visible_get():
                 hidden = True
@@ -159,18 +163,18 @@ def data_collect(self, context, gem_map=False):
     # ---------------------------
 
     if hidden:
-        data["warn"].append("Hidden gems")
+        Report.warnings.append("Hidden gems")
 
     if df_leftovers:
-        data["warn"].append("Possible gem instance face leftovers")
+        Report.warnings.append("Possible gem instance face leftovers")
 
     if overlaps:
-        data["warn"].append("Overlapping gems")
+        Report.warnings.append("Overlapping gems")
 
     if deprecated_id:
-        data["warn"].append("Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)")
+        Report.warnings.append("Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)")
 
     if unknown_id:
-        data["warn"].append("Unknown gem IDs, carats are not calculated for marked gems (*)")
+        Report.warnings.append("Unknown gem IDs, carats are not calculated for marked gems (*)")
 
-    return data
+    return Report

@@ -186,7 +186,6 @@
     "Select material": "Выбрать материал",
     "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)":
       "Создать экземпляры коллекции в радиальном порядке\n(Горячая клавиша: удерживайте клавишу Alt при использовании инструмента для использования существующей коллекции)",
-    "Include or exclude given column": "Включить или исключить данную колонку",
     "Autoload marked weighting set on File > Open/New if materials list for given blend file is empty":
       "Автозагрузка отмеченного набора материалов при File > Open/New если список материалов для данного blend файла пуст",
     "Asset preview image size when creating new assets":
@@ -219,11 +218,12 @@
     "Optimal unit settings are in use": "Используются оптимальные настройки единиц измерения",
     "Volume": "Объём",
     "Settings": "Вставки",
-    "Size": "Размер",
+    "Size (mm)": "Размер (мм)",
     "Gem": "Камень",
     "Cut": "Огранка",
     "Qty": "Кол.",
-    "Total (ct.)": "Всего (кар)",
+    "Sum (ct)": " В сумме (кар)",
+    "Total": "Всего",
     "Carats": "Караты",
     "Materials": "Материалы",
     "Additional Notes": "Дополнительные примечания",
@@ -301,7 +301,7 @@
     "mm": "мм",
     "mm³": "мм³",
     "g": "г",
-    "ct.": "кар",
+    "ct": "кар",
     "pcs": "шт."
   },
   "JewelCraft": {

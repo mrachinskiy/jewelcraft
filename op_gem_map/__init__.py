@@ -24,15 +24,12 @@ from bpy.types import Operator
 from bpy.props import EnumProperty, BoolProperty, IntProperty
 from bpy.app.translations import pgettext_iface as _
 
-from . import (
-    draw_handler,
-    onrender,
-    report_fmt,
-)
-from .offscreen import Offscreen
-from .onscreen_text import OnscreenText
 from .. import var
 from ..op_design_report import report_get
+from . import draw_handler, onrender
+from .offscreen import Offscreen
+from .onscreen_text import OnscreenText
+from .report_proc import ReportProc
 
 
 if bpy.app.version >= (2, 83, 0):  # NOTE T74139
@@ -43,7 +40,7 @@ else:
         return color
 
 
-class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
+class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
     bl_label = "Jewelcraft Gem Map"
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
@@ -70,12 +67,12 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
         description="Save design report to file in project folder",
         default=True,
     )
-    use_hidden_gems: BoolProperty(
+    warn_hidden_gems: BoolProperty(
         name="Hidden Gems",
         description="Enable or disable given warning",
         default=True,
     )
-    use_overlap: BoolProperty(
+    warn_gem_overlap: BoolProperty(
         name="Overlapping Gems",
         description="Enable or disable given warning",
         default=True,
@@ -114,8 +111,8 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
 
         layout.label(text="Warnings")
         col = layout.column()
-        col.prop(self, "use_hidden_gems")
-        col.prop(self, "use_overlap")
+        col.prop(self, "warn_hidden_gems")
+        col.prop(self, "warn_gem_overlap")
 
         layout.separator()
 
@@ -172,9 +169,9 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
         return {"PASS_THROUGH"}
 
     def execute(self, context):
-        data = report_get.data_collect(self, context, gem_map=True)
+        ReportData = report_get.data_collect(self, context, gem_map=True)
 
-        if not data["gems"]:
+        if not ReportData.gems:
             self.report({"ERROR"}, "No gems in the scene")
             return {"CANCELLED"}
 
@@ -211,15 +208,15 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
         # Gem report
         # ----------------------------
 
-        report_fmt.data_format(self, context, data)
+        self.data_process(context, ReportData)
 
         # Warnings
         # ----------------------------
 
-        self.show_warn = bool(data["warn"])
+        self.show_warn = bool(ReportData.warnings)
 
         if self.show_warn:
-            self.warn = [_("WARNING")] + [f"* {_(x)}" for x in data["warn"]]
+            self.warn = [_("WARNING")] + [f"* {_(x)}" for x in ReportData.warnings]
 
         # Options
         # ----------------------------
@@ -247,9 +244,8 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, Operator):
 
         self.prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.lang = self.prefs.design_report_lang
-        self.use_save = self.prefs.design_report_save
-        self.use_hidden_gems = self.prefs.design_report_use_hidden_gems
-        self.use_overlap = self.prefs.design_report_use_overlap
+        self.warn_hidden_gems = self.prefs.warn_hidden_gems
+        self.warn_gem_overlap = self.prefs.warn_gem_overlap
         self.width = self.prefs.gem_map_width
         self.height = self.prefs.gem_map_height
 

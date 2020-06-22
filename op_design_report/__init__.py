@@ -23,12 +23,11 @@ import os
 
 import bpy
 from bpy.types import Operator
-from bpy.props import EnumProperty, BoolProperty
-from bpy.app.translations import pgettext_tip as _
+from bpy.props import EnumProperty, BoolProperty, StringProperty
 
-from . import report_fmt_text, report_get
 from .. import var
-from ..lib import asset
+from ..lib import gettext
+from . import report_get, report_fmt, html_doc
 
 
 class WM_OT_design_report(Operator):
@@ -49,24 +48,19 @@ class WM_OT_design_report(Operator):
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
     )
-    use_save: BoolProperty(
-        name="Save To File",
-        description="Save design report to file in project folder",
-        default=True,
-    )
-    show_total_ct: BoolProperty(
-        name="Total (ct.)",
-        description="Include or exclude given column",
-    )
-    use_hidden_gems: BoolProperty(
+    warn_hidden_gems: BoolProperty(
         name="Hidden Gems",
         description="Enable or disable given warning",
         default=True,
     )
-    use_overlap: BoolProperty(
+    warn_gem_overlap: BoolProperty(
         name="Overlapping Gems",
         description="Enable or disable given warning",
         default=True,
+    )
+    filepath: StringProperty(
+        subtype="FILE_PATH",
+        options={"SKIP_SAVE", "HIDDEN"},
     )
 
     def draw(self, context):
@@ -76,95 +70,46 @@ class WM_OT_design_report(Operator):
 
         layout.separator()
 
-        layout.prop(self, "use_save")
         layout.prop(self, "lang")
-
-        layout.label(text="Report")
-        layout.prop(self, "show_total_ct")
 
         layout.label(text="Warnings")
         col = layout.column()
-        col.prop(self, "use_hidden_gems")
-        col.prop(self, "use_overlap")
+        col.prop(self, "warn_hidden_gems")
+        col.prop(self, "warn_gem_overlap")
 
         layout.separator()
 
     def execute(self, context):
-        # NOTE new method cursor_set()
-        # new behaviour for current_line_index property
-        version_281 = bpy.app.version >= (2, 81, 14)
+        import webbrowser
 
-        data_raw = report_get.data_collect(self, context)
-        data_fmt = report_fmt_text.data_format(self, context, data_raw)
+        _gettext = gettext.GetText(context, self.lang).gettext
 
-        # Compose text datablock
-        # ---------------------------
+        Report = report_get.data_collect(self, context)
+        report_fmt.data_format(Report, _gettext)
+        doc = html_doc.make(Report, self.filename, _gettext)
 
-        if data_raw["warn"]:
-            sep = "-" * 30
-            warn_fmt = sep + "\n"
-            warn_fmt += _("WARNING") + "\n"
-
-            for msg in data_raw["warn"]:
-                warn_fmt += f"* {_(msg)}\n"
-
-            warn_fmt += sep + "\n\n"
-            data_fmt = warn_fmt + data_fmt
-
-        if "Design Report" in bpy.data.texts:
-            txt = bpy.data.texts["Design Report"]
-            txt.clear()
-        else:
-            txt = bpy.data.texts.new("Design Report")
-
-        txt.write(data_fmt)
-
-        if version_281:
-            txt.cursor_set(0)
-        else:
-            txt.current_line_index = 0
-
-        # Save to file
-        # ---------------------------
-
-        if self.use_save and bpy.data.is_saved:
-            filepath = bpy.data.filepath
-            filename = os.path.splitext(os.path.basename(filepath))[0]
-            save_path = os.path.join(os.path.dirname(filepath), filename + " Report.txt")
-
-            with open(save_path, "w", encoding="utf-8") as file:
-                file.write(data_fmt)
-
-        # Display, workaround for T64439
-        # ---------------------------
-
-        self.txt = txt
-        context.window_manager.modal_handler_add(self)
-
-        return {"RUNNING_MODAL"}
-
-    def modal(self, context, event):
-        space_data = {
-            "show_line_numbers": False,
-            "show_word_wrap": False,
-            "show_syntax_highlight": False,
-            "text": self.txt,
-        }
-
-        asset.show_window(800, 540, area_type="TEXT_EDITOR", space_data=space_data)
+        with open(self.filepath, "w", encoding="utf-8") as file:
+            file.write(doc)
+            webbrowser.open(self.filepath)
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.lang = prefs.design_report_lang
-        self.use_save = prefs.design_report_save
-        self.show_total_ct = prefs.design_report_show_total_ct
-        self.use_hidden_gems = prefs.design_report_use_hidden_gems
-        self.use_overlap = prefs.design_report_use_overlap
+        self.warn_hidden_gems = prefs.warn_hidden_gems
+        self.warn_gem_overlap = prefs.warn_gem_overlap
 
-        if event.ctrl:
+        if bpy.data.is_saved:
+            self.filename = os.path.splitext(os.path.basename(bpy.data.filepath))[0] + " Report"
+            self.filepath = os.path.join(os.path.dirname(bpy.data.filepath), self.filename + ".html")
+        else:
+            self.filename = "Design Report"
+            self.filepath = os.path.join(os.path.expanduser("~"), "Design Report.html")
+
+        if event.ctrl or not bpy.data.is_saved:
             wm = context.window_manager
-            return wm.invoke_props_dialog(self)
+            wm.fileselect_add(self)
+            return {"RUNNING_MODAL"}
 
         return self.execute(context)

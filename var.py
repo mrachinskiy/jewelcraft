@@ -52,6 +52,8 @@ DEFAULT_WEIGHTING_SET_DIR = os.path.join(CONFIG_DIR, "Weighting Sets")
 ASSET_LIBS_FILEPATH = os.path.join(CONFIG_DIR, "libraries.json")
 ASSET_FAVS_FILEPATH = os.path.join(CONFIG_DIR, "favorites.json")
 
+HTML_DESIGN_REPORT_DIR = os.path.join(ADDON_DIR, "assets", "templates", "design_report")
+
 
 # Weighting
 # --------------------------------
