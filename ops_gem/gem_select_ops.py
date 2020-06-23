@@ -65,7 +65,7 @@ class OBJECT_OT_select_gems_by_trait(Operator):
         row.prop(self, "filter_stone", text="")
         row.prop(self, "stone", text="")
 
-        row = layout.row(heading="Cut")  # TODO heading_ctxt="JewelCraft"
+        row = layout.row(heading="Cut", heading_ctxt="JewelCraft")
         row.prop(self, "filter_cut", text="")
         row.template_icon_view(self, "cut", show_labels=True)
 
