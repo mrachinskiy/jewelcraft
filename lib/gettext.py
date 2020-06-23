@@ -31,9 +31,6 @@ class GetText:
         if lang == "AUTO":
             lang = bpy.app.translations.locale
 
-        if lang == "es_ES":  # NOTE 2.82 compatibility
-            lang = "es"
-
         if lang in DICTIONARY.keys():
             self.lang = lang
             self.gettext = self._gettext
