@@ -32,14 +32,6 @@ from .onscreen_text import OnscreenText
 from .report_proc import ReportProc
 
 
-if bpy.app.version >= (2, 83, 0):  # NOTE T74139
-    def _gamma_correction(color):
-        return [x ** 2.2 for x in color]
-else:
-    def _gamma_correction(color):
-        return color
-
-
 class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
     bl_label = "Jewelcraft Gem Map"
     bl_description = "Compose gem table and map it to gems in the scene"
@@ -91,9 +83,6 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         min=4,
         subtype="PIXEL",
     )
-
-    def __init__(self):
-        self.gamma_correction = _gamma_correction
 
     def draw(self, context):
         layout = self.layout
@@ -257,3 +246,6 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
             (x + dim_x, y + dim_y),
             (x,         y + dim_y),
         )
+
+    def gamma_correction(self, color):
+        return [x ** 2.2 for x in color]  # NOTE T74139

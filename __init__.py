@@ -23,10 +23,9 @@ bl_info = {
     "name": "JewelCraft",
     "author": "Mikhail Rachinskiy",
     "version": (2, 7, 3),
-    "blender": (2, 80, 0),
+    "blender": (2, 90, 0),
     "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
-    "wiki_url": "https://github.com/mrachinskiy/jewelcraft#readme",  # NOTE 2.82 compatibility
     "doc_url": "https://github.com/mrachinskiy/jewelcraft#readme",
     "tracker_url": "https://github.com/mrachinskiy/jewelcraft/issues",
     "category": "Object",
@@ -231,7 +230,6 @@ def register():
     mod_update.init(
         addon_version=bl_info["version"],
         releases_url="https://api.github.com/repos/mrachinskiy/jewelcraft/releases",
-        interrupt=lambda v_new: v_new >= (2, 8, 0) and bpy.app.version < (2, 90, 0),
     )
 
 

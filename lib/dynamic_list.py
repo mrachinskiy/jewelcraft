@@ -33,25 +33,13 @@ from . import asset
 _cache = {}
 
 
-if bpy.app.version >= (2, 83, 0):  # NOTE use_international_fonts property removed
+def _iface_lang(context):
+    view = context.preferences.view
 
-    def _iface_lang(context):
-        view = context.preferences.view
+    if view.use_translate_interface:
+        return view.language
 
-        if view.use_translate_interface:
-            return view.language
-
-        return "en_US"
-
-else:
-
-    def _iface_lang(context):
-        view = context.preferences.view
-
-        if view.use_international_fonts and view.use_translate_interface:
-            return view.language
-
-        return "DEFAULT"
+    return "en_US"
 
 
 # Gems
