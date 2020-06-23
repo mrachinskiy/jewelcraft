@@ -27,7 +27,7 @@ from ..lib import asset, gettext
 
 class ReportProc:
 
-    def data_process(self, context, ReportData):
+    def data_process(self, ReportData):
         self.gems_raw = []
         self.gems_fmt = []
         gems_fmt_temp = []
@@ -35,7 +35,7 @@ class ReportProc:
         col_cut = 0
         col_size = 0
         color_var = Color((0.85, 0.35, 0.35))
-        _ = gettext.GetText(context, self.lang).gettext
+        _ = gettext.GetText(self.lang).gettext
         _pcs = _("pcs")
         _mm = _("mm")
 

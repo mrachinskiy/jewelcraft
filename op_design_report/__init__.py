@@ -77,7 +77,7 @@ class WM_OT_design_report(Operator):
     def execute(self, context):
         import webbrowser
 
-        _gettext = gettext.GetText(context, self.lang).gettext
+        _gettext = gettext.GetText(self.lang).gettext
 
         Report = report_get.data_collect(self, context)
         report_fmt.data_format(Report, _gettext)

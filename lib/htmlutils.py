@@ -49,7 +49,7 @@ class Document:
             self.template["warning"].format(title, "".join(tag(x, "li") for x in warns))
         )
 
-    def write_table(self, header, body, footer, expr=None):
+    def write_table(self, header, body, footer):
         header = tag_row(header, "th")
         body = "".join(tag_row(x) for x in body)
 
