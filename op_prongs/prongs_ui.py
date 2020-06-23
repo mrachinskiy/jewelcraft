@@ -46,10 +46,9 @@ class UI:
         col.prop(self, "position")
         col.prop(self, "intersection")
         col.prop(self, "alignment")
-
-        split = col.split(factor=0.49)
-        split.prop(self, "use_symmetry")
-        sub = split.row()
+        row = col.row(heading="Symmentry")
+        row.prop(self, "use_symmetry", text="")
+        sub = row.row()
         sub.enabled = self.use_symmetry
         sub.prop(self, "symmetry_pivot", text="")
 

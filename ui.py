@@ -535,7 +535,7 @@ class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
             layout.prop(item, "object", text="")
 
             if item.type == "DIMENSIONS":
-                col = layout.column(align=True)
+                col = layout.column(heading="Dimensions", align=True)
                 col.prop(item, "x")
                 col.prop(item, "y")
                 col.prop(item, "z")

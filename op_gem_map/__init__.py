@@ -100,8 +100,6 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.separator()
-
         layout.prop(self, "use_save")
         layout.prop(self, "lang")
 
@@ -109,12 +107,9 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         col.prop(self, "width", text="Resolution X")
         col.prop(self, "height", text="Y")
 
-        layout.label(text="Warnings")
-        col = layout.column()
+        col = layout.column(heading="Warnings")
         col.prop(self, "warn_hidden_gems")
         col.prop(self, "warn_gem_overlap")
-
-        layout.separator()
 
     def modal(self, context, event):
         import time

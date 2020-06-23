@@ -68,16 +68,11 @@ class WM_OT_design_report(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.separator()
-
         layout.prop(self, "lang")
 
-        layout.label(text="Warnings")
-        col = layout.column()
+        col = layout.column(heading="Warnings")
         col.prop(self, "warn_hidden_gems")
         col.prop(self, "warn_gem_overlap")
-
-        layout.separator()
 
     def execute(self, context):
         import webbrowser

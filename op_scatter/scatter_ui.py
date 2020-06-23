@@ -45,8 +45,8 @@ class UI:
 
         layout.separator()
 
-        split = layout.split(align=True, factor=0.49)
-        split.prop(self, "use_absolute_offset")
-        sub = split.row()
+        row = layout.row(heading="Absolute Offset")
+        row.prop(self, "use_absolute_offset", text="")
+        sub = row.row()
         sub.enabled = self.use_absolute_offset
         sub.prop(self, "spacing", text="")

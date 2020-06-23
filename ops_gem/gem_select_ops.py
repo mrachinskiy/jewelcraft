@@ -57,17 +57,19 @@ class OBJECT_OT_select_gems_by_trait(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        split = layout.split()
-        split.prop(self, "filter_size")
-        split.prop(self, "size", text="")
+        row = layout.row(heading="Size")
+        row.prop(self, "filter_size", text="")
+        row.prop(self, "size", text="")
 
-        split = layout.split()
-        split.prop(self, "filter_stone")
-        split.prop(self, "stone", text="")
+        row = layout.row(heading="Stone")
+        row.prop(self, "filter_stone", text="")
+        row.prop(self, "stone", text="")
 
-        split = layout.split()
-        split.prop(self, "filter_cut", text="Cut", text_ctxt="JewelCraft")
-        split.template_icon_view(self, "cut", show_labels=True)
+        row = layout.row(heading="Cut")  # TODO heading_ctxt="JewelCraft"
+        row.prop(self, "filter_cut", text="")
+        row.template_icon_view(self, "cut", show_labels=True)
+
+        layout.separator()
 
         layout.prop(self, "use_extend")
         layout.prop(self, "use_select_children")
@@ -78,19 +80,17 @@ class OBJECT_OT_select_gems_by_trait(Operator):
         selected = []
         app = selected.append
 
+        size = "and round(ob.dimensions[1], 2) == size" if self.filter_size else ""
+        stone = "and ob['gem']['stone'] == self.stone" if self.filter_stone else ""
+        cut = "and ob['gem']['cut'] == self.cut" if self.filter_cut else ""
+        else_deselect = "" if self.use_extend else "else: ob.select_set(False)"
+
         expr = (
             "for ob in visible:"
-            "\n    if 'gem' in ob {size} {stone} {cut}:"
+            f"\n    if 'gem' in ob {size} {stone} {cut}:"
             "\n        ob.select_set(True)"
             "\n        app(ob)"
-            "\n    {else_deselect}"
-        )
-
-        expr = expr.format(
-            size="and round(ob.dimensions[1], 2) == size" if self.filter_size else "",
-            stone="and ob['gem']['stone'] == self.stone" if self.filter_stone else "",
-            cut="and ob['gem']['cut'] == self.cut" if self.filter_cut else "",
-            else_deselect="" if self.use_extend else "else: ob.select_set(False)",
+            f"\n    {else_deselect}"
         )
 
         exec(expr)
