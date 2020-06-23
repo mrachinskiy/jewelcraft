@@ -192,7 +192,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         # Gem report
         # ----------------------------
 
-        self.data_process(context, ReportData)
+        self.data_process(ReportData)
 
         # Warnings
         # ----------------------------
@@ -239,7 +239,8 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
 
         return self.execute(context)
 
-    def rect_coords(self, x, y, dim_x, dim_y):
+    @staticmethod
+    def rect_coords(x, y, dim_x, dim_y):
         return (
             (x,         y),
             (x + dim_x, y),
@@ -247,5 +248,6 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
             (x,         y + dim_y),
         )
 
-    def gamma_correction(self, color):
+    @staticmethod
+    def gamma_correction(color):
         return [x ** 2.2 for x in color]  # NOTE T74139

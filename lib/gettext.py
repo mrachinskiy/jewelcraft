@@ -27,7 +27,7 @@ from ..localization import DICTIONARY
 class GetText:
     __slots__ = ("lang", "gettext")
 
-    def __init__(self, context, lang):
+    def __init__(self, lang):
         if lang == "AUTO":
             lang = bpy.app.translations.locale
 
