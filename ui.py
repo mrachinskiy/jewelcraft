@@ -98,7 +98,7 @@ class VIEW3D_UL_jewelcraft_asset_libs_select(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         row = layout.row(align=True)
-        row.label(text=item.name)
+        row.label(text=item.name, translate=False)
         row.operator("wm.path_open", text="", icon="FILE_FOLDER", emboss=False).filepath = item.path
 
 
