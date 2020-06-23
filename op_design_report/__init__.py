@@ -31,7 +31,7 @@ from . import report_get, report_fmt, html_doc
 
 
 class WM_OT_design_report(Operator):
-    bl_label = "JewelCraft Design Report"
+    bl_label = "Save Design Report"
     bl_description = "Present summary information about the design, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_design_report"
 
