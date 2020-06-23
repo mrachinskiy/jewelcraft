@@ -46,12 +46,14 @@ class Scatter:
             context.view_layer.objects.active = ob
 
         else:
-            obs = [
-                (ob, con, con.offset)
-                for ob in context.selected_objects
-                for con in ob.constraints
-                if con.type == "FOLLOW_PATH"
-            ]
+            obs = []
+            app = obs.append
+
+            for ob in context.selected_objects:
+                for con in ob.constraints:
+                    if con.type == "FOLLOW_PATH":
+                        app((ob, con, con.offset))
+                        break
 
             obs.sort(key=lambda x: x[2], reverse=True)
             num = len(obs) - 1
@@ -198,6 +200,7 @@ class Scatter:
                 if con.type == "FOLLOW_PATH":
                     values.append(-con.offset)
                     curve = con.target
+                    break
 
         if not curve:
             self.report({"ERROR"}, "Selected objects do not have Follow Path constraint")
