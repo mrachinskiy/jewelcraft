@@ -51,13 +51,19 @@ class OBJECT_OT_mirror(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.label(text="Mirror Axis")
-        layout.prop(self, "x")
-        layout.prop(self, "y")
-        layout.prop(self, "z")
+        layout.separator()
 
-        layout.label(text="Pivot Point")
-        layout.prop(self, "use_cursor")
+        col = layout.column(heading="Mirror Axis", align=True)
+        col.prop(self, "x")
+        col.prop(self, "y")
+        col.prop(self, "z")
+
+        layout.separator()
+
+        col = layout.column(heading="Pivot Point")
+        col.prop(self, "use_cursor")
+
+        layout.separator()
 
     def execute(self, context):
         axes = []
@@ -193,8 +199,12 @@ class OBJECT_OT_radial_instance(Operator):
         layout.prop(self, "angle")
         layout.row().prop(self, "axis", expand=True)
 
-        layout.label(text="Pivot Point")
-        layout.prop(self, "use_cursor")
+        layout.separator()
+
+        col = layout.column(heading="Pivot Point")
+        col.prop(self, "use_cursor")
+
+        layout.separator()
 
     def execute(self, context):
         if self.number == 1 or not self.collection_name:
@@ -615,12 +625,15 @@ class OBJECT_OT_resize(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.row().prop(self, "axis", expand=True)
+        layout.separator()
+
+        col = layout.column()
+        col.row().prop(self, "axis", expand=True)
 
         if self.dim_orig[int(self.axis)]:
-            layout.prop(self, "size")
+            col.prop(self, "size")
         else:
-            row = layout.row()
+            row = col.row()
             row.alignment = "RIGHT"
             row.label(text="Zero dimensions", icon="ERROR")
 

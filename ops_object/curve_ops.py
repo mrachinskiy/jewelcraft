@@ -178,11 +178,11 @@ class CURVE_OT_size_curve_add(Operator):
         layout.label(text="Curve")
 
         col = layout.column()
-        col.active = not self.use_size
-        col.prop(self, "diameter")
-        col.prop(self, "circumference")
-
-        layout.prop(self, "up")
+        sub = col.column()
+        sub.active = not self.use_size
+        sub.prop(self, "diameter")
+        sub.prop(self, "circumference")
+        col.prop(self, "up")
 
         layout.separator()
 

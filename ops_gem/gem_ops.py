@@ -73,7 +73,7 @@ class OBJECT_OT_gem_add(Operator):
         col.enabled = self.stone == "DIAMOND" and self.cut == "ROUND"
         col.prop(self, "weight")
         layout.prop(self, "stone")
-        split = layout.split(factor=0.49)
+        split = layout.split(factor=0.385)
         split.row()
         split.template_icon_view(self, "cut", show_labels=True)
 
@@ -142,9 +142,12 @@ class OBJECT_OT_gem_edit(Operator):
         layout.use_property_decorate = False
 
         layout.prop(self, "stone")
-        split = layout.split(factor=0.49)
+        split = layout.split(factor=0.385)
         split.row()
         split.template_icon_view(self, "cut", show_labels=True)
+
+        layout.separator()
+
         layout.prop(self, "use_id_only")
         layout.prop(self, "use_force")
 
