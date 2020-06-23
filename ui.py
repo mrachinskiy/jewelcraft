@@ -116,7 +116,7 @@ class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
         layout.operator("object.jewelcraft_select_gems_by_trait", text="Stone", text_ctxt="Dative").filter_stone = True
         layout.operator("object.jewelcraft_select_gems_by_trait", text="Cut", text_ctxt="Dative").filter_cut = True
         layout.separator()
-        layout.operator("object.jewelcraft_select_gems_by_trait", text="Similar").filter_similar = True
+        layout.operator("object.jewelcraft_select_gems_by_trait", text="Similar", text_ctxt="Dative").filter_similar = True
         layout.operator("object.jewelcraft_select_overlapping", text="Overlapping")
         layout.separator()
         layout.operator("object.jewelcraft_select_gems_by_trait", text="All")
@@ -532,7 +532,7 @@ class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
         if measures_list.coll:
             item = measures_list.coll[measures_list.index]
 
-            layout.prop(item, "object", text="")
+            layout.prop(item, "object")
 
             if item.type == "DIMENSIONS":
                 col = layout.column(heading="Dimensions", align=True)

@@ -83,7 +83,7 @@ class WM_OT_ul_measurements_add(Operator):
         row.prop(self, "item_name", text="")
 
         if self.type == "DIMENSIONS":
-            col = layout.column(align=True)
+            col = layout.column(heading="Dimensions", align=True)
             col.prop(self, "x")
             col.prop(self, "y")
             col.prop(self, "z")

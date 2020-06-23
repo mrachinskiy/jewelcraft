@@ -46,7 +46,7 @@ class UI:
         col.prop(self, "position")
         col.prop(self, "intersection")
         col.prop(self, "alignment")
-        row = col.row(heading="Symmentry")
+        row = col.row(heading="Symmetry")
         row.prop(self, "use_symmetry", text="")
         sub = row.row()
         sub.enabled = self.use_symmetry
