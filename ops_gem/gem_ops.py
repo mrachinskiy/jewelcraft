@@ -219,16 +219,6 @@ class OBJECT_OT_gem_edit(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_gem_id_add(Operator):
-    bl_label = "JewelCraft Add Gem ID"
-    bl_description = "Add gem identifiers to selected objects"
-    bl_idname = "object.jewelcraft_gem_id_add"
-
-    def execute(self, context):
-        self.report({"ERROR"}, "DEPRECATED! Use Edit Gem tool instead")
-        return {"CANCELLED"}
-
-
 class OBJECT_OT_gem_id_convert_deprecated(Operator):
     bl_label = "JewelCraft Convert Deprecated Gem IDs"
     bl_description = "Convert deprecated gem identifiers to compatible for all objects in the scene"
