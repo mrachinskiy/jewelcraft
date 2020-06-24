@@ -43,7 +43,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
     use_select: BoolProperty()
     lang: EnumProperty(
         name="Report Language",
-        description="Design report language",
+        description="Report language",
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
             ("en_US", "English (English)", ""),
@@ -56,7 +56,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
     )
     use_save: BoolProperty(
         name="Save To File",
-        description="Save design report to file in project folder",
+        description="Save to file in project folder",
         default=True,
     )
     warn_hidden_gems: BoolProperty(

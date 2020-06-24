@@ -123,7 +123,7 @@ class ListProperty:
 
 
 class MaterialCollection(PropertyGroup):
-    enabled: BoolProperty(description="Enable material for weighting and design report", default=True)
+    enabled: BoolProperty(description="Enable material for weighting display", default=True)
     name: StringProperty(default="Untitled")
     composition: StringProperty(default="Unknown")
     density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
@@ -137,19 +137,19 @@ class MeasurementCollection(PropertyGroup):
         description="Measurement type",
         items=(
             ("DIMENSIONS", "", "", 0),
-            ("WEIGHT",     "", "", 1),
-            ("RING_SIZE",  "", "", 2),
+            ("WEIGHT", "", "", 1),
+            ("RING_SIZE", "", "", 2),
         ),
     )
     ring_size: EnumProperty(
         name="Format",
         items=(
-            ("DIA", "Diameter",      "", 0),
+            ("DIA", "Diameter", "", 0),
             ("CIR", "Circumference", "", 1),
-            ("US",  "USA",           "", 2),
-            ("UK",  "Britain",       "", 3),
-            ("CH",  "Swiss",         "", 4),
-            ("JP",  "Japan",         "", 5),
+            ("US", "USA", "", 2),
+            ("UK", "Britain", "", 3),
+            ("CH", "Swiss", "", 4),
+            ("JP", "Japan", "", 5),
         ),
     )
     axis: EnumProperty(
@@ -258,7 +258,7 @@ class JewelCraftPreferences(AddonPreferences):
 
     design_report_lang: EnumProperty(
         name="Report Language",
-        description="Design report language",
+        description="Report language",
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
             ("en_US", "English (English)", ""),
