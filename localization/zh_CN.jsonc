@@ -86,8 +86,7 @@
     "Commonly used precious alloys, physical properties taken directly from suppliers": "常用的贵重合金,直接从供应商处获取的物理特性",
     "Set of precious alloys according to Russian regulations": "根据俄罗斯法规的一套贵重合金",
     "Set of base metal alloys, physical properties taken directly from suppliers": "一套常见的金属合金,直接从供应商处获取的物理特性",
-    // "Save design report to file in project folder": "",
-    // "Design report language": "",
+    // "Save to file in project folder": "",
     "Use user preferences language setting": "使用语言用户首选项设置",
     "Select gems by trait": "按特征选择宝石",
     "Scatter selected object along active curve": "沿活动曲线散射选定对象",
@@ -139,7 +138,7 @@
     // "Use two-dimensional lattice for proportional deformation": "",
     // "Scale selected objects to given size": "",
     // "Move each object individually": "",
-    // "Enable material for weighting and design report": "",
+    // "Enable material for weighting display": "",
     // "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": "",
     // "Select gems that are less than 0.1 mm distance from each other or overlapping": "",
     // "Display spacing widget for all visible gems": "",
@@ -274,6 +273,7 @@
     "Size": "尺寸",
     "Stone": "石头",
     "Cut": "切割"
+    // "Similar": "",
   },
   "Operator": {
     "Add Gem": "添加宝石",
@@ -308,5 +308,6 @@
     "Add New Measurement": "添加新度量值",
     "Mark Autoload": "标记自动加载"
     // "Add To Library": "",
+    // "All": "",
   }
 }

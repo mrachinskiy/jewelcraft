@@ -86,8 +86,7 @@
     "Commonly used precious alloys, physical properties taken directly from suppliers": "Alliages précieux couramment utilisés, propriétés physiques récupérées directement auprès des fournisseurs",
     "Set of precious alloys according to Russian regulations": "Ensemble d'alliages précieux selon la réglementation russe",
     "Set of base metal alloys, physical properties taken directly from suppliers": "Ensemble d'alliages de métaux communs, propriétés physiques récupérées directement auprès des fournisseurs",
-    // "Save design report to file in project folder": "",
-    // "Design report language": "",
+    // "Save to file in project folder": "",
     "Use user preferences language setting": "Utiliser les paramètres de langue des préférences utilisateur",
     "Select gems by trait": "Sélectionnez des pierres par trait",
     "Scatter selected object along active curve": "Distribuer l'objet sélectionné le long de la courbe active",
@@ -139,7 +138,7 @@
     "Use two-dimensional lattice for proportional deformation": "Utiliser un treillis bidimensionnel pour une déformation proportionnelle",
     "Scale selected objects to given size": "Mettre à l'échelle les objets sélectionnés à une taille donnée",
     "Move each object individually": "Déplacer chaque objet individuellement",
-    // "Enable material for weighting and design report": "",
+    // "Enable material for weighting display": "",
     "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": "Aparenter la ressource importée pour les objets sélectionnés (Raccourci: presser la touche Alt en utilisant l'outil)",
     "Select gems that are less than 0.1 mm distance from each other or overlapping": "Sélectionner les pierres qui ont moins de 0,1mm de distance entre elles ou qui se superposent",
     "Display spacing widget for all visible gems": "Afficher les zones d'espacement pour toutes les pierres visibles",
@@ -274,6 +273,7 @@
     "Size": "Dimension",
     "Stone": "Pierre",
     "Cut": "Taille"
+    // "Similar": "",
   },
   "Operator": {
     "Add Gem": "Ajouter une pierre",
@@ -308,5 +308,6 @@
     "Add New Measurement": "Ajouter une nouvelle mesure",
     "Mark Autoload": "Chargement automatique"
     // "Add To Library": "",
+    // "All": "",
   }
 }

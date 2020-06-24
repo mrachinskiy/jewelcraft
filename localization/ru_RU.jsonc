@@ -1,6 +1,8 @@
 {
   "*": {
+    //
     // Interface
+    //
     "Asset Manager": "Менеджер ассетов",
     "Show Asset Name": "Показывать название ассета",
     "Design Report": "Отчёт изделия",
@@ -42,7 +44,9 @@
     "Preview Resolution": "Разрешение превью",
     "Preview Scale": "Масштаб превью",
     "Category is empty": "Категория пуста",
+    //
     // Operator popup
+    //
     "Asset Name": "Название ассета",
     "Category Name": "Название категории",
     "Set Name": "Название набора",
@@ -80,7 +84,9 @@
     "Force Edit": "Принудительное редактирование",
     "Zero dimensions": "Нулевые габариты",
     "Action completed": "Действие выполнено",
+    //
     // Tooltips
+    //
     "Add gemstone to the scene": "Добавить камень в сцену",
     "Edit selected gems": "Редактировать выделенные камни",
     "Round diamonds only": "Только бриллианты Кр-57",
@@ -93,8 +99,7 @@
     "Set of precious alloys according to Russian regulations": "Драгоценные сплавы согласно ГОСТ 30649-99",
     "Set of base metal alloys, physical properties taken directly from suppliers":
       "Сплавы из недрагоценных металлов, физические свойства взяты напрямую у поставщиков",
-    "Save design report to file in project folder": "Сохранить отчёт изделия в файл в каталоге проекта",
-    "Design report language": "Язык отчёта изделия",
+    "Save to file in project folder": "Сохранить в файл в каталоге проекта",
     "Use user preferences language setting": "Использовать язык заданный в настройках пользователя",
     "Select gems by trait": "Выделить камни по характеристике",
     "Scatter selected object along active curve": "Распределить выделенный объект по активной кривой",
@@ -162,8 +167,7 @@
       "Использовать двумерный Lattice для пропорциональной деформации",
     "Scale selected objects to given size": "Масштабировать выделенные объекты в заданный размер",
     "Move each object individually": "Переместить каждый объект по отдельности",
-    "Enable material for weighting and design report":
-      "Использовать материал для оценки веса и отчёта изделия",
+    "Enable material for weighting display": "Использовать материал для оценки веса",
     "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)":
       "Привязать импортированный ассет к выделенным объектам (Горячая клавиша: удерживайте Alt при использовании инструмента)",
     "Select gems that are less than 0.1 mm distance from each other or overlapping":
@@ -194,7 +198,9 @@
     "Filter by name": "Фильтр по имени",
     "Add to favorites": "Добавить в избранное",
     "Remove from favorites": "Удалить из избранного",
+    //
     // Reports
+    //
     "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
     "Possible gem instance face leftovers": "Возможные остатки instance face камней",
     "Hidden gems": "Скрытые камни",
@@ -227,7 +233,9 @@
     "Carats": "Караты",
     "Materials": "Материалы",
     "Additional Notes": "Дополнительные примечания",
+    //
     // Cuts
+    //
     "Round": "Кр-57",
     "Oval": "Овал",
     "Cushion": "Кушон",
@@ -244,7 +252,9 @@
     "Trillion": "Триллион",
     "Trilliant": "Триллиант",
     "Triangle": "Треугольник",
+    //
     // Stones
+    //
     "Alexandrite": "Александрит",
     "Amethyst": "Аметист",
     "Aquamarine": "Аквамарин",
@@ -263,7 +273,9 @@
     "Topaz": "Топаз",
     "Tourmaline": "Турмалин",
     "Zircon": "Циркон",
+    //
     // Alloys
+    //
     "Yellow Gold 24K": "Жёлтое золото 24 кар",
     "Yellow Gold 22K": "Жёлтое золото 22 кар",
     "Yellow Gold 18K": "Жёлтое золото 18 кар",
@@ -297,7 +309,9 @@
     "Bronze": "Бронза",
     "Steel Stainless": "Сталь нержавеющая",
     "Titanium": "Титан",
+    //
     // Units
+    //
     "mm": "мм",
     "mm³": "мм³",
     "g": "г",

@@ -86,8 +86,7 @@
     "Commonly used precious alloys, physical properties taken directly from suppliers": "Leghe preziose comunemente usate, proprietà fisiche prese direttamente dai fornitori",
     "Set of precious alloys according to Russian regulations": "Set di leghe preziose secondo le normative russe",
     "Set of base metal alloys, physical properties taken directly from suppliers": "Set di leghe metalliche comuni, proprietà fisiche acquisite direttamente dai fornitori",
-    // "Save design report to file in project folder": "",
-    // "Design report language": "",
+    // "Save to file in project folder": "",
     "Use user preferences language setting": "Usa le impostazioni delle preferenze utente per la lingua",
     "Select gems by trait": "Seleziona le gemme per tratto",
     "Scatter selected object along active curve": "Distribuisci l'oggetto selezionato lungo la curva attiva",
@@ -139,7 +138,7 @@
     "Use two-dimensional lattice for proportional deformation": "Utilizza lattice bi-dimensionale per una deformazione uniforme",
     "Scale selected objects to given size": "Ridimensiona gli oggetti selezionati in base alle dimensioni indicate",
     "Move each object individually": "Sposta ogni oggetto singolarmente",
-    // "Enable material for weighting and design report": "",
+    // "Enable material for weighting display": "",
     "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": "Risorsa principale importata negli oggetti selezionati (collegamento: tenere premuto il tasto Alt quando si utilizza lo strumento)",
     "Select gems that are less than 0.1 mm distance from each other or overlapping": "Seleziona le gemme che sono ad una distanza inferiore di 0.1 mm dall'altra o sovrapposte",
     "Display spacing widget for all visible gems": "Visualizza il widget spaziatura per tutte le gemme visibili",
@@ -274,6 +273,7 @@
     "Size": "Misura",
     "Stone": "Pietra",
     "Cut": "Taglio"
+    // "Similar": "",
   },
   "Operator": {
     "Add Gem": "Aggiungi gemma",
@@ -308,5 +308,6 @@
     "Add New Measurement": "Aggiungi nuova misurazione",
     "Mark Autoload": "Marca autocaricamento"
     // "Add To Library": "",
+    // "All": "",
   }
 }

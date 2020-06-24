@@ -37,7 +37,7 @@ class WM_OT_design_report(Operator):
 
     lang: EnumProperty(
         name="Report Language",
-        description="Design report language",
+        description="Report language",
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
             ("en_US", "English (English)", ""),

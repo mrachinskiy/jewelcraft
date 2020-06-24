@@ -86,8 +86,7 @@
     "Commonly used precious alloys, physical properties taken directly from suppliers": "Aleaciones preciosas de uso común, propiedades físicas tomadas directamente de los proveedores",
     "Set of precious alloys according to Russian regulations": "Juego de aleaciones preciosas según normativa rusa",
     "Set of base metal alloys, physical properties taken directly from suppliers": "Conjunto de aleaciones de metales comunes, propiedades físicas tomadas directamente de los proveedores",
-    // "Save design report to file in project folder": "",
-    // "Design report language": "",
+    // "Save to file in project folder": "",
     "Use user preferences language setting": "Usar los ajustes de preferencias de usuario del idioma",
     "Select gems by trait": "Seleccionar gemas por rasgo",
     "Scatter selected object along active curve": "Dispersión del objeto seleccionado a lo largo de la curva activa",
@@ -139,7 +138,7 @@
     "Use two-dimensional lattice for proportional deformation": "Usar jaula bidimensional para deformación proporcional",
     "Scale selected objects to given size": "Escalar los objetos seleccionados al tamaño dado",
     "Move each object individually": "Mover cada objeto individualmente",
-    // "Enable material for weighting and design report": "",
+    // "Enable material for weighting display": "",
     "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)": "Activo padre importado a los objetos seleccionados (Atajo: mantener presionada la tecla Alt al usar la herramienta)",
     // "Select gems that are less than 0.1 mm distance from each other or overlapping": "",
     // "Display spacing widget for all visible gems": "",
@@ -274,6 +273,7 @@
     "Size": "Tamaño",
     "Stone": "Piedra",
     "Cut": "Corte"
+    // "Similar": "",
   },
   "Operator": {
     "Add Gem": "Añadir Gema",
@@ -308,5 +308,6 @@
     // "Add New Measurement": "",
     // "Mark Autoload": "",
     // "Add To Library": "",
+    // "All": "",
   }
 }
