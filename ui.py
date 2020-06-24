@@ -242,7 +242,7 @@ class VIEW3D_PT_jewelcraft_gems(Setup, Panel):
         layout = self.layout
 
         row = layout.row(align=True)
-        row.operator("object.jewelcraft_gem_add", text="Add Gem", icon_value=self.icon_get("GEM_ADD"))
+        row.operator("object.jewelcraft_gem_add", icon_value=self.icon_get("GEM_ADD"))
         row.operator("object.jewelcraft_gem_edit", text="", icon_value=self.icon_get("GEM_EDIT"))
 
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
@@ -369,7 +369,7 @@ class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
         col.operator("object.jewelcraft_cutter_add", text="Cutter", icon_value=self.icon_get("CUTTER"))
 
         row = layout.row(align=True)
-        row.operator("object.jewelcraft_curve_scatter", text="Curve Scatter", icon_value=self.icon_get("SCATTER"))
+        row.operator("object.jewelcraft_curve_scatter", icon_value=self.icon_get("SCATTER"))
         row.operator("object.jewelcraft_curve_redistribute", text="", icon_value=self.icon_get("REDISTRIBUTE"))
 
 
@@ -383,15 +383,15 @@ class VIEW3D_PT_jewelcraft_object(Setup, Panel):
 
         col = layout.column(align=True)
         row = col.row(align=True)
-        row.operator("object.jewelcraft_mirror", text="Mirror", icon_value=self.icon_get("MIRROR"))
+        row.operator("object.jewelcraft_mirror", icon_value=self.icon_get("MIRROR"))
         row.operator("object.jewelcraft_radial_instance", text="Radial", text_ctxt="*", icon_value=self.icon_get("RADIAL"))
-        col.operator("object.jewelcraft_make_instance_face", text="Make Instance Face", icon_value=self.icon_get("INSTANCE_FACE"))
+        col.operator("object.jewelcraft_make_instance_face", icon_value=self.icon_get("INSTANCE_FACE"))
 
-        layout.operator("object.jewelcraft_resize", text="Resize", icon_value=self.icon_get("RESIZE"))
+        layout.operator("object.jewelcraft_resize", icon_value=self.icon_get("RESIZE"))
 
         col = layout.column(align=True)
-        col.operator("object.jewelcraft_lattice_project", text="Lattice Project", icon_value=self.icon_get("LATTICE_PROJECT"))
-        col.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.icon_get("LATTICE_PROFILE"))
+        col.operator("object.jewelcraft_lattice_project", icon_value=self.icon_get("LATTICE_PROJECT"))
+        col.operator("object.jewelcraft_lattice_profile", icon_value=self.icon_get("LATTICE_PROFILE"))
 
 
 class VIEW3D_PT_jewelcraft_object_editmesh(Setup, Panel):
@@ -401,7 +401,7 @@ class VIEW3D_PT_jewelcraft_object_editmesh(Setup, Panel):
     def draw(self, context):
         layout = self.layout
 
-        layout.operator("object.jewelcraft_lattice_profile", text="Lattice Profile", icon_value=self.icon_get("LATTICE_PROFILE"))
+        layout.operator("object.jewelcraft_lattice_profile", icon_value=self.icon_get("LATTICE_PROFILE"))
 
 
 class VIEW3D_PT_jewelcraft_curve(Setup, Panel):
@@ -420,7 +420,7 @@ class VIEW3D_PT_jewelcraft_curve(Setup, Panel):
         sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.icon_get("OVER"))
         sub.operator("object.jewelcraft_move_over_under", text="", icon_value=self.icon_get("UNDER")).under = True
 
-        layout.operator("curve.jewelcraft_length_display", text="Curve Length", icon_value=self.icon_get("CURVE_LENGTH"))
+        layout.operator("curve.jewelcraft_length_display", icon_value=self.icon_get("CURVE_LENGTH"))
 
 
 class VIEW3D_PT_jewelcraft_curve_editmesh(Setup, Panel):
@@ -492,7 +492,7 @@ class VIEW3D_PT_jewelcraft_design_report(Setup, Panel):
     def draw(self, context):
         layout = self.layout
         layout.operator("wm.jewelcraft_design_report", text="Design Report")
-        layout.operator("view3d.jewelcraft_gem_map", text="Gem Map")
+        layout.operator("view3d.jewelcraft_gem_map")
 
 
 class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):

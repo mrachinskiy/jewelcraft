@@ -32,7 +32,7 @@ from .prongs_mesh import create_prongs
 
 
 class OBJECT_OT_prongs_add(UI, Operator):
-    bl_label = "JewelCraft Make Prongs"
+    bl_label = "Add Prongs"
     bl_description = (
         "Create prongs for selected gems\n"
         "(Shortcut: hold Ctrl when using the tool to avoid properties reset)"

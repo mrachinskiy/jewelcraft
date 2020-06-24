@@ -38,7 +38,7 @@ def upd_coords_hole(self, context):
 
 
 class OBJECT_OT_cutter_add(UI, Operator):
-    bl_label = "JewelCraft Make Cutter"
+    bl_label = "Add Cutter"
     bl_description = (
         "Create cutter for selected gems\n"
         "(Shortcut: hold Ctrl when using the tool to avoid properties reset)"

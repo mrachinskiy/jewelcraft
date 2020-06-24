@@ -27,7 +27,7 @@ from .scatter_func import Scatter
 
 
 class OBJECT_OT_curve_scatter(UI, Scatter, Operator):
-    bl_label = "JewelCraft Curve Scatter"
+    bl_label = "Curve Scatter"
     bl_description = "Scatter selected object along active curve"
     bl_idname = "object.jewelcraft_curve_scatter"
     bl_options = {"REGISTER", "UNDO"}
@@ -48,7 +48,7 @@ class OBJECT_OT_curve_scatter(UI, Scatter, Operator):
 
 
 class OBJECT_OT_curve_redistribute(UI, Scatter, Operator):
-    bl_label = "JewelCraft Curve Redistribute"
+    bl_label = "Curve Redistribute"
     bl_description = "Redistribute selected objects along curve"
     bl_idname = "object.jewelcraft_curve_redistribute"
     bl_options = {"REGISTER", "UNDO"}

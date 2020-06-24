@@ -36,7 +36,7 @@ from ..lib import asset
 
 
 class OBJECT_OT_mirror(Operator):
-    bl_label = "JewelCraft Mirror"
+    bl_label = "Mirror"
     bl_description = "Mirror selected objects around one or more axes, keeping object data linked"
     bl_idname = "object.jewelcraft_mirror"
     bl_options = {"REGISTER", "UNDO"}
@@ -162,7 +162,7 @@ class OBJECT_OT_mirror(Operator):
 
 
 class OBJECT_OT_radial_instance(Operator):
-    bl_label = "JewelCraft Radial Instance"
+    bl_label = "Radial Instance"
     bl_description = (
         "Make collection instances in radial order\n"
         "(Shortcut: hold Alt when using the tool to use existing collection)"
@@ -262,7 +262,7 @@ class OBJECT_OT_radial_instance(Operator):
 
 
 class OBJECT_OT_make_instance_face(Operator):
-    bl_label = "JewelCraft Make Instance Face"
+    bl_label = "Make Instance Face"
     bl_description = "Create instance face for selected objects"
     bl_idname = "object.jewelcraft_make_instance_face"
     bl_options = {"REGISTER", "UNDO"}
@@ -331,7 +331,7 @@ def get_ratio(a, b):
 
 
 class OBJECT_OT_lattice_project(Operator):
-    bl_label = "JewelCraft Lattice Project"
+    bl_label = "Lattice Project"
     bl_description = "Project selected objects onto active object using Lattice"
     bl_idname = "object.jewelcraft_lattice_project"
     bl_options = {"REGISTER", "UNDO"}
@@ -457,7 +457,7 @@ class OBJECT_OT_lattice_project(Operator):
 
 
 class OBJECT_OT_lattice_profile(Operator):
-    bl_label = "JewelCraft Lattice Profile"
+    bl_label = "Lattice Profile"
     bl_description = (
         "Deform active object profile with Lattice, "
         "also works in Edit Mode with selected vertices"
@@ -604,7 +604,7 @@ def upd_size(self, context):
 
 
 class OBJECT_OT_resize(Operator):
-    bl_label = "JewelCraft Resize"
+    bl_label = "Resize"
     bl_description = "Scale selected objects to given size"
     bl_idname = "object.jewelcraft_resize"
     bl_options = {"REGISTER", "UNDO"}
