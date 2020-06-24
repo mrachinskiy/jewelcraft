@@ -33,7 +33,7 @@ from .report_proc import ReportProc
 
 
 class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
-    bl_label = "Jewelcraft Gem Map"
+    bl_label = "Gem Map"
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
 

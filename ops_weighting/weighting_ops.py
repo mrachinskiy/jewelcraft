@@ -82,7 +82,7 @@ class WM_OT_ul_materials_add(Operator):
 
 
 class OBJECT_OT_weight_display(Operator):
-    bl_label = "JewelCraft Display Weight"
+    bl_label = "Display Weight"
     bl_description = "Display weight and volume for selected mesh objects"
     bl_idname = "object.jewelcraft_weight_display"
 

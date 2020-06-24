@@ -81,7 +81,7 @@ def upd_circumference(self, context):
 
 
 class CURVE_OT_size_curve_add(Operator):
-    bl_label = "JewelCraft Make Size Curve"
+    bl_label = "Add Size Curve"
     bl_description = "Create size curve"
     bl_idname = "curve.jewelcraft_size_curve_add"
     bl_options = {"REGISTER", "UNDO"}
@@ -219,7 +219,7 @@ class CURVE_OT_size_curve_add(Operator):
 
 
 class CURVE_OT_length_display(Operator):
-    bl_label = "JewelCraft Display Length"
+    bl_label = "Curve Length"
     bl_description = "Display curve length"
     bl_idname = "curve.jewelcraft_length_display"
 
@@ -262,7 +262,7 @@ class CURVE_OT_length_display(Operator):
 
 
 class OBJECT_OT_stretch_along_curve(Operator):
-    bl_label = "JewelCraft Stretch Along Curve"
+    bl_label = "Stretch Along Curve"
     bl_description = (
         "Stretch deformed objects along curve on X axis, "
         "also works in Edit Mode with selected vertices"
@@ -314,7 +314,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
 
 
 class OBJECT_OT_move_over_under(Operator):
-    bl_label = "JewelCraft Move Over/Under"
+    bl_label = "Move Over/Under"
     bl_description = "Move deformed object over or under the curve"
     bl_idname = "object.jewelcraft_move_over_under"
     bl_options = {"REGISTER", "UNDO"}

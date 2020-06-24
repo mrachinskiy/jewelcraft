@@ -37,7 +37,7 @@ def upd_weight(self, context):
 
 
 class OBJECT_OT_gem_add(Operator):
-    bl_label = "JewelCraft Make Gem"
+    bl_label = "Add Gem"
     bl_description = "Add gemstone to the scene"
     bl_idname = "object.jewelcraft_gem_add"
     bl_options = {"REGISTER", "UNDO"}
@@ -118,7 +118,7 @@ class OBJECT_OT_gem_add(Operator):
 
 
 class OBJECT_OT_gem_edit(Operator):
-    bl_label = "JewelCraft Edit Gem"
+    bl_label = "Edit Gem"
     bl_description = "Edit selected gems"
     bl_idname = "object.jewelcraft_gem_edit"
     bl_options = {"REGISTER", "UNDO"}
@@ -220,7 +220,7 @@ class OBJECT_OT_gem_edit(Operator):
 
 
 class OBJECT_OT_gem_id_convert_deprecated(Operator):
-    bl_label = "JewelCraft Convert Deprecated Gem IDs"
+    bl_label = "Convert Deprecated Gem IDs"
     bl_description = "Convert deprecated gem identifiers to compatible for all objects in the scene"
     bl_idname = "object.jewelcraft_gem_id_convert_deprecated"
     bl_options = {"REGISTER", "UNDO"}
