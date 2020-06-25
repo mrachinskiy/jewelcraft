@@ -100,11 +100,12 @@ classes = (
     ui.VIEW3D_UL_jewelcraft_measurements,
     ui.VIEW3D_UL_jewelcraft_asset_libs,
     ui.VIEW3D_UL_jewelcraft_asset_libs_select,
+    ui.VIEW3D_MT_jewelcraft,
     ui.VIEW3D_MT_jewelcraft_select_gem_by,
     ui.VIEW3D_MT_jewelcraft_asset_folder,
     ui.VIEW3D_MT_jewelcraft_weighting_set,
     ui.VIEW3D_MT_jewelcraft_weighting_mats,
-    ui.VIEW3D_PT_asset_libs,
+    ui.VIEW3D_PT_jewelcraft_asset_libs,
     ui.VIEW3D_PT_jewelcraft_update,
     ui.VIEW3D_PT_jewelcraft_warning,
     ui.VIEW3D_PT_jewelcraft_gems,
@@ -190,6 +191,11 @@ def register():
     bpy.types.WindowManager.jewelcraft = PointerProperty(type=preferences.WmProperties)
     bpy.types.Scene.jewelcraft = PointerProperty(type=preferences.SceneProperties)
 
+    # Menu
+    # ---------------------------
+
+    bpy.types.VIEW3D_MT_object.append(ui.draw_jewelcraft_menu)
+
     # Translations
     # ---------------------------
 
@@ -221,6 +227,9 @@ def register():
     # On load
     # ---------------------------
 
+    prefs = bpy.context.preferences.addons[__package__].preferences
+    preferences.upd_asset_popover_width(prefs, None)
+
     on_load.handler_add()
 
     # mod_update
@@ -240,6 +249,14 @@ def unregister():
 
     del bpy.types.WindowManager.jewelcraft
     del bpy.types.Scene.jewelcraft
+
+    # Menu
+    # ---------------------------
+
+    bpy.types.VIEW3D_MT_object.remove(ui.draw_jewelcraft_menu)
+
+    # Translations
+    # ---------------------------
 
     bpy.app.translations.unregister(__name__)
 

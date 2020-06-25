@@ -106,6 +106,19 @@ class VIEW3D_UL_jewelcraft_asset_libs_select(UIList):
 # ---------------------------
 
 
+def draw_jewelcraft_menu(self, context):
+    layout = self.layout
+    layout.separator()
+    layout.menu("VIEW3D_MT_jewelcraft")
+
+
+class VIEW3D_MT_jewelcraft(Menu):
+    bl_label = "JewelCraft"
+
+    def draw(self, context):
+        self.layout.operator("wm.call_panel", text="Assets").name = "VIEW3D_PT_jewelcraft_assets"
+
+
 class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
     bl_label = "Select Gems By..."
     bl_description = "Select gems by trait"
@@ -164,7 +177,7 @@ class VIEW3D_MT_jewelcraft_weighting_mats(Menu):
 # ---------------------------
 
 
-class VIEW3D_PT_asset_libs(Panel):
+class VIEW3D_PT_jewelcraft_asset_libs(Panel):
     bl_label = "Libraries"
     bl_space_type = "VIEW_3D"
     bl_region_type = "WINDOW"
@@ -258,8 +271,7 @@ class VIEW3D_PT_jewelcraft_widgets(Setup, Panel):
         return context.mode in {"OBJECT", "EDIT_MESH"}
 
     def draw_header(self, context):
-        layout = self.layout
-        layout.prop(self.wm_props, "widget_toggle", text="")
+        self.layout.prop(self.wm_props, "widget_toggle", text="")
 
     def draw(self, context):
         props = context.scene.jewelcraft
@@ -283,6 +295,7 @@ class VIEW3D_PT_jewelcraft_widgets(Setup, Panel):
 class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
     bl_label = "Assets"
     bl_options = {"DEFAULT_CLOSED"}
+    bl_ui_units_x = 20
 
     @classmethod
     def poll(cls, context):
@@ -290,6 +303,10 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
 
     def draw(self, context):
         layout = self.layout
+
+        if self.is_popover:
+            layout.label(text="Assets")
+            layout.separator()
 
         if not self.wm_props.asset_libs.values():
             layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").active_tab = "ASSET_MANAGER"
@@ -304,7 +321,7 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
         subrow.enabled = not show_favs
         sub = subrow.row(align=True)
         sub.scale_x = 1.28
-        sub.popover(panel="VIEW3D_PT_asset_libs", text="", icon="ASSET_MANAGER")
+        sub.popover(panel="VIEW3D_PT_jewelcraft_asset_libs", text="", icon="ASSET_MANAGER")
 
         if not self.wm_props.asset_folder:
             subrow.operator("wm.jewelcraft_asset_folder_create", icon="ADD")
@@ -600,8 +617,9 @@ def prefs_ui(self, context):
 
         box.label(text="Interface")
         col = box.column()
-        col.prop(self, "asset_show_name")
+        col.prop(self, "asset_popover_width")
         col.prop(self, "asset_ui_preview_scale")
+        col.prop(self, "asset_show_name")
 
     elif active_tab == "WEIGHTING":
         col = box.column()
