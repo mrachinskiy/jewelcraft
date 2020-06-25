@@ -21,6 +21,7 @@
 
 import os
 
+import bpy
 from bpy.types import PropertyGroup, AddonPreferences, Object
 from bpy.props import (
     EnumProperty,
@@ -74,6 +75,12 @@ def upd_folder_list_serialize(self, context):
 def upd_lib_name(self, context):
     self["name"] = os.path.basename(os.path.normpath(self.path)) or self.name
     upd_folder_list_serialize(self, context)
+
+
+def upd_asset_popover_width(self, context):
+    ui.VIEW3D_PT_jewelcraft_assets.bl_ui_units_x = self.asset_popover_width
+    bpy.utils.unregister_class(ui.VIEW3D_PT_jewelcraft_assets)
+    bpy.utils.register_class(ui.VIEW3D_PT_jewelcraft_assets)
 
 
 # Custom properties
@@ -223,6 +230,13 @@ class JewelCraftPreferences(AddonPreferences):
         description="Asset preview image size when creating new assets",
         default=256,
         subtype="PIXEL",
+    )
+    asset_popover_width: IntProperty(
+        name="Popover Width",
+        description="Assets popover width",
+        default=20,
+        min=0,
+        update=upd_asset_popover_width,
     )
     asset_ui_preview_scale: FloatProperty(
         name="Preview Scale",
