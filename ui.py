@@ -112,11 +112,40 @@ def draw_jewelcraft_menu(self, context):
     layout.menu("VIEW3D_MT_jewelcraft")
 
 
-class VIEW3D_MT_jewelcraft(Menu):
+class VIEW3D_MT_jewelcraft(Setup, Menu):
     bl_label = "JewelCraft"
 
     def draw(self, context):
-        self.layout.operator("wm.call_panel", text="Assets").name = "VIEW3D_PT_jewelcraft_assets"
+        layout = self.layout
+        layout.operator("object.jewelcraft_gem_add", icon_value=self.icon_get("GEM_ADD"))
+        layout.operator("object.jewelcraft_gem_edit", icon_value=self.icon_get("GEM_EDIT"))
+        layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
+        layout.operator("object.jewelcraft_gem_id_convert_deprecated")
+        layout.separator()
+        layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
+        layout.separator()
+        layout.operator("object.jewelcraft_prongs_add", icon_value=self.icon_get("PRONGS"))
+        layout.operator("object.jewelcraft_cutter_add", icon_value=self.icon_get("CUTTER"))
+        layout.operator("object.jewelcraft_curve_scatter", icon_value=self.icon_get("SCATTER"))
+        layout.operator("object.jewelcraft_curve_redistribute", icon_value=self.icon_get("REDISTRIBUTE"))
+        layout.separator()
+        layout.operator("object.jewelcraft_mirror", icon_value=self.icon_get("MIRROR"))
+        layout.operator("object.jewelcraft_radial_instance", icon_value=self.icon_get("RADIAL"))
+        layout.operator("object.jewelcraft_make_instance_face", icon_value=self.icon_get("INSTANCE_FACE"))
+        layout.operator("object.jewelcraft_resize", icon_value=self.icon_get("RESIZE"))
+        layout.operator("object.jewelcraft_lattice_project", icon_value=self.icon_get("LATTICE_PROJECT"))
+        layout.operator("object.jewelcraft_lattice_profile", icon_value=self.icon_get("LATTICE_PROFILE"))
+        layout.separator()
+        layout.operator("curve.jewelcraft_size_curve_add", icon_value=self.icon_get("SIZE_CURVE"))
+        layout.operator("object.jewelcraft_stretch_along_curve", icon_value=self.icon_get("STRETCH"))
+        layout.operator("object.jewelcraft_move_over_under", text="Move Over", icon_value=self.icon_get("OVER"))
+        layout.operator("object.jewelcraft_move_over_under", text="Move Under", icon_value=self.icon_get("UNDER")).under = True
+        layout.operator("curve.jewelcraft_length_display", icon_value=self.icon_get("CURVE_LENGTH"))
+        layout.separator()
+        layout.operator("object.jewelcraft_weight_display")
+        layout.separator()
+        layout.operator("wm.jewelcraft_design_report", text="Design Report")
+        layout.operator("view3d.jewelcraft_gem_map")
 
 
 class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
