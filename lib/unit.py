@@ -83,5 +83,6 @@ class Scale:
 
         return x / 1000 / self.scale
 
-    def _blank(self, x, volume=False, batch=False):
+    @staticmethod
+    def _blank(x, volume=False, batch=False):
         return x
