@@ -52,6 +52,6 @@ def make(Report, filename, _):
 
     if Report.notes:
         Doc.write_list(Report.notes)
-        Doc.write_section(_("Additional Notes"))
+        Doc.write_section(_("Notes"))
 
     return Doc.make(filename)
