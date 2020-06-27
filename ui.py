@@ -121,6 +121,7 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
         layout.operator("object.jewelcraft_gem_edit", icon_value=self.icon_get("GEM_EDIT"))
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
         layout.operator("object.jewelcraft_gem_id_convert_deprecated")
+        layout.operator("wm.call_panel", text="Widgets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_widgets"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
         layout.separator()
@@ -142,10 +143,11 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
         layout.operator("object.jewelcraft_move_over_under", text="Move Under", icon_value=self.icon_get("UNDER")).under = True
         layout.operator("curve.jewelcraft_length_display", icon_value=self.icon_get("CURVE_LENGTH"))
         layout.separator()
-        layout.operator("object.jewelcraft_weight_display")
+        layout.operator("wm.call_panel", text="Weighting", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_weighting"
         layout.separator()
         layout.operator("wm.jewelcraft_design_report", text="Design Report")
         layout.operator("view3d.jewelcraft_gem_map")
+        layout.operator("wm.call_panel", text="Measurement", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_measurement"
 
 
 class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
@@ -306,17 +308,25 @@ class VIEW3D_PT_jewelcraft_widgets(Setup, Panel):
         props = context.scene.jewelcraft
 
         layout = self.layout
+
+        if self.is_popover:
+            row = layout.row(align=True)
+            row.prop(self.wm_props, "widget_toggle", text="")
+            row.label(text="Widgets")
+
         layout.use_property_split = True
         layout.use_property_decorate = False
-        layout.active = self.wm_props.widget_toggle
 
-        col = layout.column()
+        col = layout.column(align=True)
+        col.active = self.wm_props.widget_toggle
         col.prop(props, "widget_show_all")
         col.prop(props, "widget_show_in_front")
         col.prop(props, "widget_use_overrides")
         col.prop(props, "widget_spacing", text="Spacing", text_ctxt="JewelCraft")
 
-        row = layout.row(align=True)
+        col.separator()
+
+        row = col.row(align=True)
         row.operator("object.jewelcraft_widget_override_set")
         row.operator("object.jewelcraft_widget_override_del")
 
@@ -493,6 +503,10 @@ class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
 
         layout = self.layout
 
+        if self.is_popover:
+            layout.label(text="Weighting")
+            layout.separator()
+
         row = layout.row(align=True)
         row.prop(self.wm_props, "weighting_set", text="")
         row.menu("VIEW3D_MT_jewelcraft_weighting_set", icon="THREE_DOTS")
@@ -552,6 +566,10 @@ class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
+
+        if self.is_popover:
+            layout.label(text="Measurement")
+            layout.separator()
 
         row = layout.row()
 
