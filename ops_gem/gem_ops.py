@@ -227,9 +227,11 @@ class OBJECT_OT_gem_id_convert_deprecated(Operator):
 
     def execute(self, context):
         obs = context.scene.objects
+        i = 0
 
         for ob in obs:
             if ob.type == "MESH" and "gem" in ob.data:
+                i += 1
 
                 if "gem" not in ob:
                     ob["gem"] = {}
@@ -246,6 +248,8 @@ class OBJECT_OT_gem_id_convert_deprecated(Operator):
                     for link in obs:
                         if link.data is ob.data:
                             link["gem"] = ob["gem"]
+
+        self.report({"INFO"}, f"{i} gems converted")
 
         return {"FINISHED"}
 
