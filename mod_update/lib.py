@@ -33,8 +33,19 @@ RELEASES_URL = None
 SAVE_STATE_FILEPATH = os.path.join(var.CONFIG_DIR, "update_state.json")
 
 
-def _interrupt(update_version):
-    return False
+def _parse_tag(tag):
+    import re
+
+    vers = [
+        tuple(int(x) for x in ver_str)
+        for ver_str in
+        [re.sub(r"[^0-9]", " ", ver_raw).split() for ver_raw in tag.split("-")]
+    ]
+
+    if len(vers) == 1:
+        vers.append((0, 0, 0))
+
+    return vers
 
 
 def _save_state_deserialize():
@@ -118,14 +129,13 @@ def _update_check(use_force_check):
                     continue
 
                 if not release["draft"]:
-                    version_string = re.sub(r"[^0-9]", " ", release["tag_name"])
-                    update_version = tuple(int(x) for x in version_string.split())
-
-                    if _interrupt(update_version):
-                        continue
+                    update_version, required_blender = _parse_tag(release["tag_name"])
 
                     if update_version > ADDON_VERSION:
-                        break
+                        if required_blender <= bpy.app.version:
+                            break
+                        else:
+                            continue
                     else:
                         _save_state_serialize()
                         _runtime_state_set(None)
@@ -141,7 +151,7 @@ def _update_check(use_force_check):
                 prerelease_note = " (pre-release)" if release["prerelease"] else ""
 
                 state.update_available = True
-                state.update_version = release["tag_name"] + prerelease_note
+                state.update_version = release["tag_name"].split("-")[0] + prerelease_note
                 state.download_url = asset["browser_download_url"]
                 state.changelog_url = release["html_url"]
 
@@ -196,15 +206,11 @@ def update_init_download():
     threading.Thread(target=_update_download).start()
 
 
-def init(addon_version=None, releases_url=None, interrupt=None):
+def init(addon_version=None, releases_url=None):
     global ADDON_VERSION
     global RELEASES_URL
-    global _interrupt
 
     ADDON_VERSION = addon_version
     RELEASES_URL = releases_url
-
-    if interrupt is not None:
-        _interrupt = interrupt
 
     update_init_check()
