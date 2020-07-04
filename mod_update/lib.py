@@ -151,7 +151,7 @@ def _update_check(use_force_check):
                 prerelease_note = " (pre-release)" if release["prerelease"] else ""
 
                 state.update_available = True
-                state.update_version = release["tag_name"].split("-")[0] + prerelease_note
+                state.update_version = ".".join(str(x) for x in update_version) + prerelease_note
                 state.download_url = asset["browser_download_url"]
                 state.changelog_url = release["html_url"]
 
