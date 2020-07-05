@@ -67,7 +67,7 @@ Contributing
 
 ### Known issues
 
-* Product Report/Gem Map:
+* Product Report/Gem Map
   * [[T74368](https://developer.blender.org/T74368)] Gems from hidden collections appear in report, this happens when collection is hidden with  `Hide in Viewport` (eye icon), instead use `Disable in Viewports` (display icon) or `Exclude from View Layer` (checkbox left from collection).
 * Assets
   * [[T69001](https://developer.blender.org/T69001)] Asset previews do not load if render engine set to `Workbench`.
