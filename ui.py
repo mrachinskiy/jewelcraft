@@ -121,6 +121,7 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
         layout.operator("object.jewelcraft_gem_edit", icon_value=self.icon_get("GEM_EDIT"))
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
         layout.operator("object.jewelcraft_gem_id_convert_deprecated")
+        layout.operator("object.jewelcraft_gem_normalize")
         layout.operator("wm.call_panel", text="Widgets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_widgets"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"

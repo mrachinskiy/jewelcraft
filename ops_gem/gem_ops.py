@@ -22,9 +22,11 @@
 import bpy
 from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
+from bpy.app.translations import pgettext_iface as _
+from mathutils import Matrix
 
 from .. import var
-from ..lib import asset, dynamic_list, unit
+from ..lib import asset, dynamic_list, unit, view3d_lib
 
 
 def upd_set_weight(self, context):
@@ -256,3 +258,252 @@ class OBJECT_OT_gem_id_convert_deprecated(Operator):
     def invoke(self, context, event):
         wm = context.window_manager
         return wm.invoke_confirm(self, event)
+
+
+class OBJECT_OT_gem_normalize(Operator):
+    bl_label = "Normalize Gem"
+    bl_description = (
+        "Separate loose, center origin and fix orientation."
+        "\nNOTE: gem ID can be added with Edit Gem tool"
+    )
+    bl_idname = "object.jewelcraft_gem_normalize"
+    bl_options = {"REGISTER", "UNDO"}
+
+    axis_size: FloatProperty(default=1.0, options={"HIDDEN"})
+    axis_width: FloatProperty(default=7.0, options={"HIDDEN"})
+    axis_in_front: BoolProperty(default=True, options={"HIDDEN"})
+    y_align: BoolProperty(options={"HIDDEN"})
+    snap_to_edge: BoolProperty(options={"HIDDEN"})
+
+    @classmethod
+    def poll(cls, context):
+        return context.mode == "OBJECT"
+
+    def modal(self, context, event):
+        if event.type in {"ESC", "RET", "SPACE"}:
+            bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
+            bpy.types.SpaceView3D.draw_handler_remove(self.handler_text, "WINDOW")
+            context.workspace.status_text_set(None)
+            context.region.tag_redraw()
+
+            if event.type == "ESC":
+                return {"CANCELLED"}
+
+            return self.execute(context)
+
+        elif event.type in {"LEFT_ARROW", "RIGHT_ARROW"} and event.value == "PRESS":
+
+            if event.ctrl:
+                if event.type == "LEFT_ARROW":
+                    if self.y_var > 1:
+                        self.y_var -= 1
+                        self.modal_pass(context)
+                else:
+                    self.y_var += 1
+                    self.modal_pass(context)
+
+            else:
+                if event.type == "LEFT_ARROW":
+                    if self.rot_var > 1:
+                        self.rot_var -= 1
+                        self.modal_pass(context)
+                else:
+                    self.rot_var += 1
+                    self.modal_pass(context)
+
+        elif event.type == "Y" and event.value == "PRESS":
+            self.y_align = not self.y_align
+            self.modal_pass(context)
+
+        elif event.type == "E" and event.value == "PRESS":
+            self.snap_to_edge = not self.snap_to_edge
+            self.modal_pass(context)
+
+        elif event.type == "X" and event.value == "PRESS":
+            self.axis_in_front = not self.axis_in_front
+            context.region.tag_redraw()
+
+        elif event.type in {"LEFT_BRACKET", "RIGHT_BRACKET"} and event.value == "PRESS":
+            if event.type == "LEFT_BRACKET":
+                if self.axis_width > 0.5:
+                    self.axis_width -= 0.1
+            else:
+                self.axis_width += 0.1
+
+            context.region.tag_redraw()
+
+        elif event.type in {"MINUS", "EQUAL"} and event.value == "PRESS":
+            if event.type == "MINUS":
+                if self.axis_size > 0.1:
+                    self.axis_size -= 0.1
+            else:
+                self.axis_size += 0.1
+
+            context.region.tag_redraw()
+
+        elif (
+            event.type in {
+                "MIDDLEMOUSE", "WHEELUPMOUSE", "WHEELDOWNMOUSE",
+                "NUMPAD_1", "NUMPAD_2", "NUMPAD_3", "NUMPAD_4", "NUMPAD_5",
+                "NUMPAD_6", "NUMPAD_7", "NUMPAD_8", "NUMPAD_9",
+                "NUMPAD_MINUS", "NUMPAD_PLUS",
+            }
+        ):
+            return {"PASS_THROUGH"}
+
+        return {"RUNNING_MODAL"}
+
+    def execute(self, context):
+        import collections
+        import operator
+        import itertools
+
+        rotvar = self.rot_var - 1
+        yvar = self.y_var - 1
+        app = self.mats.append
+
+        bpy.ops.mesh.separate(type="LOOSE")
+        bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
+
+        for ob in context.selected_objects:
+            normal_groups = collections.defaultdict(float)
+
+            for poly in ob.data.polygons:
+                normal_groups[poly.normal.copy().freeze()] += poly.area
+
+            normals = sorted(normal_groups.items(), key=operator.itemgetter(1), reverse=True)
+
+            try:
+                normal = normals[rotvar][0]
+            except IndexError:
+                normal = normals[0][0]
+
+            mat = normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+            ob.matrix_world @= mat
+            ob.data.transform(mat.inverted())
+
+            # Adjust origin
+            # ------------------------------
+
+            verts = sorted(
+                sorted(ob.data.vertices, key=operator.attrgetter("co.xy.length"), reverse=True)[:8],
+                key=operator.attrgetter("co.z"),
+            )
+
+            # Z height
+
+            if verts[0].co.z != 0.0:
+                mat = Matrix.Translation((0.0, 0.0, verts[0].co.z))
+                ob.matrix_world @= mat
+                ob.data.transform(mat.inverted())
+
+            # Y align
+
+            if self.y_align:
+
+                if self.snap_to_edge:
+                    cos = [
+                        (
+                            (v1.co.xy + v2.co.xy) / 2,
+                            (v1.co.xy - v2.co.xy).length,
+                        )
+                        for v1, v2 in itertools.combinations(verts, 2)
+                    ]
+                    cos.sort(key=operator.itemgetter(1))
+
+                    try:
+                        vec = cos[yvar][0]
+                    except IndexError:
+                        vec = cos[0][0]
+
+                else:
+                    try:
+                        vec = verts[yvar].co.xy
+                    except IndexError:
+                        vec = verts[0].co.xy
+
+                vec.negate()
+                vec.resize_3d()
+
+                mat_rot = vec.to_track_quat("Y", "Z").to_matrix().to_4x4()
+                ob.matrix_world @= mat_rot
+                ob.data.transform(mat_rot.inverted())
+
+            app(ob.matrix_world.copy())
+
+        return {"FINISHED"}
+
+    def modal_pass(self, context):
+        self.mats.clear()
+        bpy.ops.object.duplicate()
+
+        self.execute(context)
+
+        # Cleanup
+
+        for ob in context.selected_objects:
+            me = ob.data
+            bpy.data.objects.remove(ob)
+            bpy.data.meshes.remove(me)
+
+        # Restore selection
+
+        for ob_name in self.ob_names:
+            bpy.data.objects[ob_name].select_set(True)
+
+        context.view_layer.objects.active = bpy.data.objects[self.ob_active_name]
+
+    def invoke(self, context, event):
+        self.ob_names = tuple(x.name for x in context.selected_objects if x.type == "MESH")
+
+        if not self.ob_names:
+            self.report({"ERROR"}, "At least one mesh object must be selected")
+            return {"CANCELLED"}
+
+        self.ob_active_name = context.object.name
+        self.mats = []
+        self.rot_var = 1
+        self.y_var = 1
+        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
+
+        self.modal_pass(context)
+
+        # Onscreen
+
+        self.padding_x, self.padding_y = view3d_lib.padding_init(context)
+
+        view3d_lib.options_init(
+            self,
+            (
+                (_("In Front"), "(X)", "axis_in_front", view3d_lib.TYPE_BOOL),
+                (_("Size"), "(-/=)", "axis_size", view3d_lib.TYPE_NUM),
+                (_("Width"), "([/])", "axis_width", view3d_lib.TYPE_NUM),
+                ("", "", None, None),
+                (_("Orientation"), "(←/→)", "rot_var", view3d_lib.TYPE_NUM),
+                ("", "", None, None),
+                (_("Align Y"), "(Y)", "y_align", view3d_lib.TYPE_BOOL),
+                ("", "", "y_align", view3d_lib.TYPE_DEP_ON),
+                (_("Snap to Edges"), "(E)", "snap_to_edge", view3d_lib.TYPE_BOOL),
+                (_("Direction"), "(Ctrl ←/→)", "y_var", view3d_lib.TYPE_NUM),
+            ),
+        )
+
+        # Draw handlers
+
+        self.handler = bpy.types.SpaceView3D.draw_handler_add(
+            view3d_lib.draw_axis,
+            (self, context),
+            "WINDOW",
+            "POST_VIEW",
+        )
+        self.handler_text = bpy.types.SpaceView3D.draw_handler_add(
+            view3d_lib.options_display,
+            (self, context, self.padding_x, self.padding_y),
+            "WINDOW",
+            "POST_PIXEL",
+        )
+
+        context.window_manager.modal_handler_add(self)
+        context.workspace.status_text_set("ESC: Cancel, ↵/␣: Confirm")
+
+        return {"RUNNING_MODAL"}

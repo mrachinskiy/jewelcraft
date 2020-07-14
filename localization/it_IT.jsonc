@@ -162,6 +162,7 @@
     // "Filter by name": "",
     // "Add to favorites": "",
     // "Remove from favorites": "",
+    // "Separate loose, center origin and fix orientation.\nNOTE: gem ID can be added with Edit Gem tool": "",
     "WARNING": "AVVERTENZA",
     "Possible gem instance face leftovers": "Posibles restos de instance face de gemas",
     "Hidden gems": "Nascondi gemme",
@@ -278,6 +279,7 @@
   },
   "Operator": {
     "Add Gem": "Aggiungi gemma",
+    // "Normalize Gem": "",
     "Curve Scatter": "Distribuisci curva",
     "Prongs": "Griffe",
     "Cutter": "Fresa",
