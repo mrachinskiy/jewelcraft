@@ -23,6 +23,8 @@ import bgl
 import gpu
 from gpu_extras.batch import batch_for_shader
 
+from ..lib import view3d_lib
+
 
 shader_img = gpu.shader.from_builtin("2D_IMAGE")
 
@@ -31,7 +33,7 @@ def draw(self, context):
     width = self.region.width
     height = self.region.height
     x = self.view_padding_left
-    y = height - self.view_padding_top
+    y = self.view_padding_top
 
     # Gem map
     # -----------------------------
@@ -63,7 +65,7 @@ def draw(self, context):
         y = self.onscreen_warning(x, y)
         y -= self.view_margin
 
-    self.onscreen_options(x, y)
+    view3d_lib.options_display(self, context, x, y, gamma=self.gamma_correction)
 
     # Restore OpenGL defaults
     # ----------------------------

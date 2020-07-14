@@ -25,6 +25,7 @@ from bpy.props import EnumProperty, BoolProperty, IntProperty
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
+from ..lib import view3d_lib
 from ..op_design_report import report_get
 from . import draw_handler, onrender
 from .offscreen import Offscreen
@@ -36,9 +37,6 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
     bl_label = "Gem Map"
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
-
-    TYPE_BOOL = 0
-    TYPE_RENDER = 1
 
     use_select: BoolProperty()
     lang: EnumProperty(
@@ -122,6 +120,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         elif event.type in {"ESC", "RET", "SPACE"}:
             bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
             self.offscreen.free()
+            context.workspace.status_text_set(None)
             return {"FINISHED"}
 
         elif event.type == "S" and event.value == "PRESS":
@@ -170,24 +169,19 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         self.is_rendering = False
         self.time_tag = time.time()
 
-        # View margins
+        # 3D View
         # ----------------------------
 
-        self.view_padding_top = 10
-        self.view_padding_left = 20
+        self.view_padding_left, self.view_padding_top = view3d_lib.padding_init(context)
         self.view_margin = 40
 
-        for region in context.area.regions:
-            if region.type == "HEADER":
-                self.view_padding_top += region.height
-            elif region.type == "TOOLS":
-                self.view_padding_left += region.width
-
-        view = context.preferences.view
-        show_text = context.space_data.overlay.show_text
-        view_text = show_text and (view.show_view_name or view.show_object_info)
-        if view_text:
-            self.view_padding_top += 60
+        view3d_lib.options_init(
+            self,
+            (
+                (_("Limit By Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
+                (_("Save To Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
+            ),
+        )
 
         # Gem report
         # ----------------------------
@@ -202,22 +196,14 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         if self.show_warn:
             self.warn = [_("WARNING")] + [f"* {_(x)}" for x in ReportData.warnings]
 
-        # Options
-        # ----------------------------
-
-        self.option_list = (
-            (_("Limit By Selection"), "(S)",   "use_select",   self.TYPE_BOOL),
-            (_("Save To Image"),      "(F12)", "is_rendering", self.TYPE_RENDER),
-        )
-        self.option_col_1_max = max(self.option_list, key=lambda x: len(x[0]))[0]
-        self.option_col_2_max = max(self.option_list, key=lambda x: len(x[1]))[1]
-
         # Handlers
         # ----------------------------
 
         self.offscreen_refresh(context)
         self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_handler.draw, (self, context), "WINDOW", "POST_PIXEL")
+
         context.window_manager.modal_handler_add(self)
+        context.workspace.status_text_set("ESC/↵/␣: Exit")
 
         return {"RUNNING_MODAL"}
 

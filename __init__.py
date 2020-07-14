@@ -140,6 +140,7 @@ classes = (
     ops_gem.OBJECT_OT_gem_add,
     ops_gem.OBJECT_OT_gem_edit,
     ops_gem.OBJECT_OT_gem_id_convert_deprecated,
+    ops_gem.OBJECT_OT_gem_normalize,
     ops_gem.OBJECT_OT_select_gems_by_trait,
     ops_gem.OBJECT_OT_select_overlapping,
     ops_measurement.WM_OT_ul_measurements_add,
