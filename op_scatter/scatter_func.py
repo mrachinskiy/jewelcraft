@@ -27,6 +27,8 @@ from ..lib import mesh, asset
 class Scatter:
 
     def execute(self, context):
+        import operator
+
         space_data = context.space_data
         use_local_view = bool(space_data.local_view)
         collection = context.collection
@@ -55,7 +57,7 @@ class Scatter:
                         app((ob, con, con.offset))
                         break
 
-            obs.sort(key=lambda x: x[2], reverse=True)
+            obs.sort(key=operator.itemgetter(2), reverse=True)
             num = len(obs) - 1
             ob = context.object
 
