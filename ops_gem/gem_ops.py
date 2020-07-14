@@ -221,45 +221,6 @@ class OBJECT_OT_gem_edit(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_gem_id_convert_deprecated(Operator):
-    bl_label = "Convert Deprecated Gem IDs"
-    bl_description = "Convert deprecated gem identifiers to compatible for all objects in the scene"
-    bl_idname = "object.jewelcraft_gem_id_convert_deprecated"
-    bl_options = {"REGISTER", "UNDO"}
-
-    def execute(self, context):
-        obs = context.scene.objects
-        i = 0
-
-        for ob in obs:
-            if ob.type == "MESH" and "gem" in ob.data:
-                i += 1
-
-                if "gem" not in ob:
-                    ob["gem"] = {}
-
-                    for k, v in ob.data["gem"].items():
-                        if k.lower() == "cut":
-                            ob["gem"]["cut"] = v
-                        elif k.lower() == "type":
-                            ob["gem"]["stone"] = v
-
-                del ob.data["gem"]
-
-                if ob.data.users > 1:
-                    for link in obs:
-                        if link.data is ob.data:
-                            link["gem"] = ob["gem"]
-
-        self.report({"INFO"}, f"{i} gems converted")
-
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_confirm(self, event)
-
-
 class OBJECT_OT_gem_normalize(Operator):
     bl_label = "Normalize Gem"
     bl_description = (

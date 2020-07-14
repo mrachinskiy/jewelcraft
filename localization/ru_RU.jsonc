@@ -207,8 +207,6 @@
     "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
     "Possible gem instance face leftovers": "Возможные остатки instance face камней",
     "Hidden gems": "Скрытые камни",
-    "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)":
-      "Устаревшие идентификаторы камней (используйте Convert Deprecated Gem IDs из меню Operator Search)",
     "Unknown gem IDs, carats are not calculated for marked gems (*)":
       "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)",
     "Curve Length": "Длина кривой",

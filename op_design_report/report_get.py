@@ -86,7 +86,6 @@ def data_collect(self, context, gem_map=False):
     known_cuts = var.CUTS.keys()
     ob_data = []
     df_leftovers = False
-    deprecated_id = False
     unknown_id = False
     orig_instance_obs = {dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance}
 
@@ -96,9 +95,6 @@ def data_collect(self, context, gem_map=False):
             ob = dup.instance_object.original
         else:
             ob = dup.object.original
-
-        if not deprecated_id:
-            deprecated_id = ob.type == "MESH" and "gem" in ob.data
 
         if "gem" not in ob or (not dup.is_instance and ob in orig_instance_obs):
             continue
@@ -170,9 +166,6 @@ def data_collect(self, context, gem_map=False):
 
     if overlaps:
         Report.warnings.append("Overlapping gems")
-
-    if deprecated_id:
-        Report.warnings.append("Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)")
 
     if unknown_id:
         Report.warnings.append("Unknown gem IDs, carats are not calculated for marked gems (*)")
