@@ -80,6 +80,8 @@ def cuts(self, context):
 
 
 def stones(self, context):
+    import operator
+
     lang = _iface_lang(context)
 
     if lang == _cache.get("stones__LANG"):
@@ -90,7 +92,7 @@ def stones(self, context):
         for i, (k, v) in enumerate(var.STONES.items())
     ]
 
-    list_.sort(key=lambda x: x[1])
+    list_.sort(key=operator.itemgetter(1))
     list_ = tuple(list_)
 
     _cache["stones__RESULT"] = list_

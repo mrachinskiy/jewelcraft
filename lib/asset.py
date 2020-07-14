@@ -103,12 +103,14 @@ def girdle_coords(radius, mat):
 
 @lru_cache(maxsize=128)
 def find_nearest(loc1, rad1, coords1, coords2):
-    dis, co2 = min((((co - loc1).length, co) for co in coords2), key=lambda x: x[0])
+    import operator
+
+    dis, co2 = min((((co - loc1).length, co) for co in coords2), key=operator.itemgetter(0))
 
     if dis < rad1:
         return dis - rad1, co2, co2
 
-    dis, co1 = min((((co - co2).length, co) for co in coords1), key=lambda x: x[0])
+    dis, co1 = min((((co - co2).length, co) for co in coords1), key=operator.itemgetter(0))
 
     return dis, co1, co2
 
