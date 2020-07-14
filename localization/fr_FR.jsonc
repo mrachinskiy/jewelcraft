@@ -166,7 +166,6 @@
     "WARNING": "AVERTISSEMENT",
     "Possible gem instance face leftovers": "Restes d'instance de face de pierres possibles",
     "Hidden gems": "Pierres cachées",
-    "Deprecated gem IDs (use Convert Deprecated Gem IDs from Operator Search menu)": "ID de pierre obsolète (utiliser Convertir les IDs de pierres Obsolètes dans le menu de recherche de fonction)",
     "Unknown gem IDs, carats are not calculated for marked gems (*)": "IDs de pierre inconnus, les carats ne sont pas calculés pour des pierres marquées (*)",
     "Curve Length": "Longueur de la courbe",
     "Missing selected objects": "Pas d'objets sélectionnés",
