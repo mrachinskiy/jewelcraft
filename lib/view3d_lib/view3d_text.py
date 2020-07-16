@@ -25,8 +25,9 @@ import blf
 TYPE_BOOL = 0
 TYPE_NUM = 1
 TYPE_PROC = 2
-TYPE_DEP_ON = 3
-TYPE_DEP_OFF = 4
+TYPE_ENUM = 3
+TYPE_DEP_ON = 4
+TYPE_DEP_OFF = 5
 
 
 def padding_init(context, x=20, y=10):
@@ -124,6 +125,17 @@ def options_display(self, context, x, y, gamma=lambda x: x):
             blf.position(fontid, x_ofst, y, 0.0)
             blf.color(fontid, 0.3, 0.3, 1.0, 1.0)
             blf.draw(fontid, str(round(getattr(self, prop), 1)))
+
+        elif type_ is TYPE_ENUM:
+            x_ofst += font_w_2 + 10
+            blf.position(fontid, x_ofst, y, 0.0)
+            blf.color(fontid, *color_white)
+            blf.draw(fontid, ":")
+
+            x_ofst += 20
+            blf.position(fontid, x_ofst, y, 0.0)
+            blf.color(fontid, 0.3, 0.3, 1.0, 1.0)
+            blf.draw(fontid, getattr(self, f"{prop}_enum")[getattr(self, prop)])
 
         elif type_ is TYPE_PROC:
             if getattr(self, prop):

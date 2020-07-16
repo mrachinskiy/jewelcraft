@@ -272,6 +272,16 @@ class OBJECT_OT_gem_normalize(Operator):
                     self.rot_var += 1
                     self.modal_pass(context)
 
+        elif event.type in {"DOWN_ARROW", "UP_ARROW"} and event.value == "PRESS":
+            if event.type == "DOWN_ARROW":
+                if self.xy_loc > 0:
+                    self.xy_loc -= 1
+                    self.modal_pass(context)
+            else:
+                if self.xy_loc < 2:
+                    self.xy_loc += 1
+                    self.modal_pass(context)
+
         elif event.type == "Y" and event.value == "PRESS":
             self.y_align = not self.y_align
             self.modal_pass(context)
@@ -346,15 +356,14 @@ class OBJECT_OT_gem_normalize(Operator):
             # Adjust origin
             # ------------------------------
 
-            verts = sorted(
-                sorted(ob.data.vertices, key=operator.attrgetter("co.xy.length"), reverse=True)[:8],
-                key=operator.attrgetter("co.z"),
-            )
+            verts = sorted(ob.data.vertices, key=operator.attrgetter("co.xy.length"), reverse=True)[:8]
 
             # Z height
 
-            if verts[0].co.z != 0.0:
-                mat = Matrix.Translation((0.0, 0.0, verts[0].co.z))
+            co_z_low = min(verts, key=operator.attrgetter("co.z")).co.z
+
+            if co_z_low != 0.0:
+                mat = Matrix.Translation((0.0, 0.0, co_z_low))
                 ob.matrix_world @= mat
                 ob.data.transform(mat.inverted())
 
@@ -386,9 +395,34 @@ class OBJECT_OT_gem_normalize(Operator):
                 vec.negate()
                 vec.resize_3d()
 
-                mat_rot = vec.to_track_quat("Y", "Z").to_matrix().to_4x4()
-                ob.matrix_world @= mat_rot
-                ob.data.transform(mat_rot.inverted())
+                mat = vec.to_track_quat("Y", "Z").to_matrix().to_4x4()
+                ob.matrix_world @= mat
+                ob.data.transform(mat.inverted())
+
+            # XY center
+
+            if self.xy_loc != 0:
+
+                if self.xy_loc == 1:
+                    context.view_layer.update()
+
+                    xy_min = min((x[0], x[1]) for x in ob.bound_box)
+                    xy_max = max((x[0], x[1]) for x in ob.bound_box)
+
+                    x_loc = (xy_min[0] + xy_max[0]) / 2
+                    y_loc = (xy_min[1] + xy_max[1]) / 2
+
+                    co_xy = (x_loc, y_loc)
+
+                elif self.xy_loc == 2:
+                    co_xy = min(ob.data.vertices, key=operator.attrgetter("co.z")).co.xy
+
+                if co_xy[0] != 0.0 or co_xy[1] != 0.0:
+                    mat = Matrix.Translation((*co_xy, 0.0))
+                    ob.matrix_world @= mat
+                    ob.data.transform(mat.inverted())
+
+            # Display axis
 
             app(ob.matrix_world.copy())
 
@@ -425,6 +459,8 @@ class OBJECT_OT_gem_normalize(Operator):
         self.mats = []
         self.rot_var = 1
         self.y_var = 1
+        self.xy_loc = 0
+        self.xy_loc_enum = (_("Median"), _("Bounds"), _("Culet"))
         self.prefs = context.preferences.addons[var.ADDON_ID].preferences
 
         self.modal_pass(context)
@@ -441,6 +477,7 @@ class OBJECT_OT_gem_normalize(Operator):
                 (_("Width"), "([/])", "axis_width", view3d_lib.TYPE_NUM),
                 ("", "", None, None),
                 (_("Orientation"), "(←/→)", "rot_var", view3d_lib.TYPE_NUM),
+                (_("Center"), "(↓/↑)", "xy_loc", view3d_lib.TYPE_ENUM),
                 ("", "", None, None),
                 (_("Align Y"), "(Y)", "y_align", view3d_lib.TYPE_BOOL),
                 ("", "", "y_align", view3d_lib.TYPE_DEP_ON),
