@@ -437,25 +437,30 @@ class OBJECT_OT_gem_normalize(Operator):
         # Cleanup
 
         for ob in context.selected_objects:
-            me = ob.data
-            bpy.data.objects.remove(ob)
-            bpy.data.meshes.remove(me)
+            bpy.data.meshes.remove(ob.data)
 
         # Restore selection
 
         for ob_name in self.ob_names:
             bpy.data.objects[ob_name].select_set(True)
 
-        context.view_layer.objects.active = bpy.data.objects[self.ob_active_name]
+        context.view_layer.objects.active = bpy.data.objects[ob_name]
 
     def invoke(self, context, event):
-        self.ob_names = tuple(x.name for x in context.selected_objects if x.type == "MESH")
+        self.ob_names = []
+        unique_meshes = set()
+
+        for ob in context.selected_objects:
+            if ob.type != "MESH" or ob.data in unique_meshes:
+                ob.select_set(False)
+                continue
+            self.ob_names.append(ob.name)
+            unique_meshes.add(ob.data)
 
         if not self.ob_names:
             self.report({"ERROR"}, "At least one mesh object must be selected")
             return {"CANCELLED"}
 
-        self.ob_active_name = context.object.name
         self.mats = []
         self.rot_var = 1
         self.y_var = 1
