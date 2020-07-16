@@ -292,14 +292,20 @@ class VIEW3D_PT_jewelcraft_gems(Setup, Panel):
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
 
 
+class VIEW3D_PT_jewelcraft_gem_extras(Setup, Panel):
+    bl_label = "Extras"
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
+
+    def draw(self, context):
+        layout = self.layout
+        layout.operator("object.jewelcraft_gem_normalize")
+
+
 class VIEW3D_PT_jewelcraft_widgets(Setup, Panel):
     bl_label = "Widgets"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
-
-    @classmethod
-    def poll(cls, context):
-        return context.mode in {"OBJECT", "EDIT_MESH"}
 
     def draw_header(self, context):
         self.layout.prop(self.wm_props, "widget_toggle", text="")

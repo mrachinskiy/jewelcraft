@@ -109,6 +109,7 @@ classes = (
     ui.VIEW3D_PT_jewelcraft_update,
     ui.VIEW3D_PT_jewelcraft_warning,
     ui.VIEW3D_PT_jewelcraft_gems,
+    ui.VIEW3D_PT_jewelcraft_gem_extras,
     ui.VIEW3D_PT_jewelcraft_widgets,
     ui.VIEW3D_PT_jewelcraft_assets,
     ui.VIEW3D_PT_jewelcraft_jeweling,
