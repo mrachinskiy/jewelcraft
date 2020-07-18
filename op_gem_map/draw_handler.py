@@ -65,7 +65,7 @@ def draw(self, context):
         y = self.onscreen_warning(x, y)
         y -= self.view_margin
 
-    view3d_lib.options_display(self, context, x, y, gamma=self.gamma_correction)
+    view3d_lib.options_display(self, context, x, y)
 
     # Restore OpenGL defaults
     # ----------------------------

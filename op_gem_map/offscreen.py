@@ -28,7 +28,7 @@ import gpu
 from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix, Vector
 
-from ..lib import unit
+from ..lib import unit, view3d_lib
 
 
 def loc_3d_to_2d(region, region_3d, loc, ratio_w, ratio_h):
@@ -62,7 +62,10 @@ class Offscreen:
                 self.draw_gems(context)
 
     def draw_gems(self, context, ratio_w=1, ratio_h=1, is_viewport=True):
-        gamma = self.gamma_correction if is_viewport else lambda x: x
+        if is_viewport:
+            _c = view3d_lib.gamma_correction
+        else:
+            _c = lambda x: x
 
         from_scene_scale = unit.Scale(context).from_scene
 
@@ -94,7 +97,7 @@ class Offscreen:
 
             for stone, cut, size, size_fmt, color in self.gems_raw:
                 if ob_stone == stone and ob_cut == cut and ob_size == size:
-                    shader.uniform_float("color", gamma(color))
+                    shader.uniform_float("color", _c(color))
                     break
 
             ob_eval = ob.evaluated_get(depsgraph)

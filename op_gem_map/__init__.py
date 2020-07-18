@@ -233,7 +233,3 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
             (x + dim_x, y + dim_y),
             (x,         y + dim_y),
         )
-
-    @staticmethod
-    def gamma_correction(color):
-        return [x ** 2.2 for x in color]  # NOTE T74139
