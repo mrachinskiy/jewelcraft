@@ -30,6 +30,10 @@ TYPE_DEP_ON = 4
 TYPE_DEP_OFF = 5
 
 
+def gamma_correction(color):
+    return [x ** 2.2 for x in color]  # NOTE T74139
+
+
 def padding_init(context, x=20, y=10):
     for region in context.area.regions:
         if region.type == "HEADER":
@@ -58,12 +62,15 @@ def options_init(self, values):
     self.option_col_2_max = max(self.option_list, key=lambda x: len(x[1]))[1]
 
 
-def options_display(self, context, x, y, gamma=lambda x: x):
-    color_white = gamma((0.95, 0.95, 0.95, 1.0))
-    color_grey = gamma((0.67, 0.67, 0.67, 1.0))
-    color_green = gamma((0.3, 1.0, 0.3, 1.0))
-    color_red = gamma((1.0, 0.3, 0.3, 1.0))
-    color_yellow = gamma((0.9, 0.9, 0.0, 1.0))
+def options_display(self, context, x, y):
+    _c = gamma_correction  # NOTE T78977
+
+    color_white = _c((0.95, 0.95, 0.95, 1.0))
+    color_grey = _c((0.67, 0.67, 0.67, 1.0))
+    color_green = _c((0.3, 1.0, 0.3, 1.0))
+    color_red = _c((1.0, 0.3, 0.3, 1.0))
+    color_yellow = _c((0.9, 0.9, 0.0, 1.0))
+    color_blue = _c((0.5, 0.6, 1.0, 1.0))
 
     fontid = 1
     blf.size(fontid, self.prefs.view_font_size_option, 72)
@@ -123,7 +130,7 @@ def options_display(self, context, x, y, gamma=lambda x: x):
 
             x_ofst += 20
             blf.position(fontid, x_ofst, y, 0.0)
-            blf.color(fontid, 0.3, 0.3, 1.0, 1.0)
+            blf.color(fontid, *color_blue)
             blf.draw(fontid, str(round(getattr(self, prop), 1)))
 
         elif type_ is TYPE_ENUM:
@@ -134,7 +141,7 @@ def options_display(self, context, x, y, gamma=lambda x: x):
 
             x_ofst += 20
             blf.position(fontid, x_ofst, y, 0.0)
-            blf.color(fontid, 0.3, 0.3, 1.0, 1.0)
+            blf.color(fontid, *color_white)
             blf.draw(fontid, getattr(self, f"{prop}_enum")[getattr(self, prop)])
 
         elif type_ is TYPE_PROC:
