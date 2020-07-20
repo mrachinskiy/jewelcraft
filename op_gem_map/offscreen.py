@@ -93,16 +93,17 @@ class Offscreen:
             if "gem" not in ob or (self.use_select and not ob.select_get()):
                 continue
 
-            shader.bind()
-
             ob_stone = ob["gem"]["stone"]
             ob_cut = ob["gem"]["cut"]
             ob_size = tuple(round(x, 2) for x in from_scene_scale(ob.dimensions, batch=True))
 
-            for stone, cut, size, size_fmt, color in self.gems_raw:
-                if ob_stone == stone and ob_cut == cut and ob_size == size:
-                    shader.uniform_float("color", _c(color))
-                    break
+            size_fmt, color = self.view_data.get((ob_stone, ob_cut, ob_size), (None, None))
+
+            if color is None:
+                continue
+
+            shader.bind()
+            shader.uniform_float("color", _c(color))
 
             ob_eval = ob.evaluated_get(depsgraph)
             me = ob_eval.to_mesh()

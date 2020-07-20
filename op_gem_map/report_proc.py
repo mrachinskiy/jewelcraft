@@ -28,9 +28,9 @@ from ..lib import asset, gettext
 class ReportProc:
 
     def data_process(self, ReportData):
-        self.gems_raw = []
-        self.gems_fmt = []
-        gems_fmt_temp = []
+        self.view_data = {}
+        self.table_data = []
+        _table_tmp = []
         col_stone = 0
         col_cut = 0
         col_size = 0
@@ -78,8 +78,8 @@ class ReportProc:
 
             qty_fmt = f"{qty} {_pcs}"
 
-            self.gems_raw.append((stone, cut, size, size_raw_fmt, color))
-            gems_fmt_temp.append((stone_fmt, cut_fmt, size_fmt, qty_fmt, color))
+            self.view_data[(stone, cut, size)] = (size_raw_fmt, color)
+            _table_tmp.append((stone_fmt, cut_fmt, size_fmt, qty_fmt, color))
 
             # Columns width
             # ---------------------------
@@ -88,6 +88,6 @@ class ReportProc:
             col_cut = max(col_cut, len(cut_fmt))
             col_size = max(col_size, len(size_fmt))
 
-        for stone, cut, size, qty, color in gems_fmt_temp:
+        for stone, cut, size, qty, color in _table_tmp:
             row = f"{cut:{col_cut}}   {size:{col_size}}   {stone:{col_stone}}   {qty}"
-            self.gems_fmt.append((row, color))
+            self.table_data.append((row, color))
