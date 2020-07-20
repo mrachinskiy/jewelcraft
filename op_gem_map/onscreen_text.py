@@ -23,22 +23,13 @@ import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
 
-from ..lib import view3d_lib
-
 
 shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
 
 class OnscreenText:
 
-    def onscreen_gem_table(self, x, y, color=(0.95, 0.95, 0.95, 1.0), is_viewport=True):
-        if is_viewport:
-            _c = view3d_lib.gamma_correction
-        else:
-            _c = lambda x: x
-
-        color = _c(color)
-
+    def onscreen_gem_table(self, x, y, color=(0.95, 0.95, 0.95, 1.0)):
         fontid = 1
         blf.size(fontid, self.prefs.view_font_size_report, 72)
         blf.color(fontid, *color)
@@ -63,11 +54,9 @@ class OnscreenText:
         return y
 
     def onscreen_warning(self, x, y):
-        _c = view3d_lib.gamma_correction  # NOTE T78977
-
         fontid = 1
         blf.size(fontid, self.prefs.view_font_size_report, 72)
-        blf.color(fontid, *_c((1.0, 0.3, 0.3, 1.0)))
+        blf.color(fontid, 1.0, 0.3, 0.3, 1.0)
 
         _, font_h = blf.dimensions(fontid, "Row Height")
         font_row_height = font_h * 2
