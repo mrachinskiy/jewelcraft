@@ -28,7 +28,11 @@ import gpu
 from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix, Vector
 
-from ..lib import unit, view3d_lib
+from ..lib import unit
+
+
+def gamma_correction(color):
+    return [x ** 2.2 for x in color]  # NOTE T74139
 
 
 def loc_3d_to_2d(region, region_3d, loc, ratio_w, ratio_h):
@@ -59,11 +63,11 @@ class Offscreen:
                 gpu.matrix.load_matrix(mat_offscreen)
                 gpu.matrix.load_projection_matrix(Matrix())
 
-                self.draw_gems(context)
+                self.draw_gems(context, gamma_corr=True)
 
-    def draw_gems(self, context, ratio_w=1, ratio_h=1, is_viewport=True):
-        if is_viewport:
-            _c = view3d_lib.gamma_correction
+    def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
+        if gamma_corr:
+            _c = gamma_correction
         else:
             _c = lambda x: x
 

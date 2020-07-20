@@ -30,10 +30,6 @@ TYPE_DEP_ON = 4
 TYPE_DEP_OFF = 5
 
 
-def gamma_correction(color):
-    return [x ** 2.2 for x in color]  # NOTE T74139
-
-
 def padding_init(context, x=20, y=10):
     for region in context.area.regions:
         if region.type == "HEADER":
@@ -63,14 +59,12 @@ def options_init(self, values):
 
 
 def options_display(self, context, x, y):
-    _c = gamma_correction  # NOTE T78977
-
-    color_white = _c((0.95, 0.95, 0.95, 1.0))
-    color_grey = _c((0.67, 0.67, 0.67, 1.0))
-    color_green = _c((0.3, 1.0, 0.3, 1.0))
-    color_red = _c((1.0, 0.3, 0.3, 1.0))
-    color_yellow = _c((0.9, 0.9, 0.0, 1.0))
-    color_blue = _c((0.5, 0.6, 1.0, 1.0))
+    color_white = (0.95, 0.95, 0.95, 1.0)
+    color_grey = (0.67, 0.67, 0.67, 1.0)
+    color_green = (0.3, 1.0, 0.3, 1.0)
+    color_red = (1.0, 0.3, 0.3, 1.0)
+    color_yellow = (0.9, 0.9, 0.0, 1.0)
+    color_blue = (0.5, 0.6, 1.0, 1.0)
 
     fontid = 1
     blf.size(fontid, self.prefs.view_font_size_option, 72)
