@@ -40,7 +40,7 @@ class OnscreenText:
         box_size = font_h * 1.5
         y += font_baseline
 
-        for row, color in self.gems_fmt:
+        for row, color in self.table_data:
             y -= font_row_height
 
             shader.bind()
