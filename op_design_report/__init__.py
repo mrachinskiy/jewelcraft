@@ -75,11 +75,15 @@ class WM_OT_design_report(Operator):
         col.prop(self, "warn_gem_overlap")
 
     def execute(self, context):
+        Report = report_get.data_collect(self, context)
+
+        if Report.is_empty():
+            self.report({"ERROR"}, "Nothing to report")
+            return {"CANCELLED"}
+
         import webbrowser
 
         _gettext = gettext.GetText(self.lang).gettext
-
-        Report = report_get.data_collect(self, context)
         report_fmt.data_format(Report, _gettext)
         doc = html_doc.make(Report, self.filename, _gettext)
 
