@@ -36,6 +36,12 @@ class _Data:
         self.notes = []
         self.warnings = []
 
+    def is_empty(self):
+        for prop in self.__slots__:
+            if getattr(self, prop):
+                return False
+        return True
+
 
 def data_collect(self, context, gem_map=False):
     UnitScale = unit.Scale(context)
