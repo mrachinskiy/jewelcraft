@@ -83,6 +83,18 @@ def get_cut(self, ob):
         self.shape_rnd = True
 
 
+def nearest_coords(rad1, rad2, mat1, mat2):
+    vec1 = mat1.inverted() @ mat2.translation
+    vec1.z = 0.0
+    vec1 *= rad1 / vec1.length
+
+    vec2 = mat2.inverted() @ mat1.translation
+    vec2.z = 0.0
+    vec2 *= rad2 / vec2.length
+
+    return mat1 @ vec1, mat2 @ vec2
+
+
 @lru_cache(maxsize=128)
 def girdle_coords(radius, mat):
     angle = tau / 64
@@ -99,20 +111,6 @@ def girdle_coords(radius, mat):
         ).freeze()
         for i in range(64)
     )
-
-
-@lru_cache(maxsize=128)
-def find_nearest(loc1, rad1, coords1, coords2):
-    import operator
-
-    dis, co2 = min((((co - loc1).length, co) for co in coords2), key=operator.itemgetter(0))
-
-    if dis < rad1:
-        return dis - rad1, co2, co2
-
-    dis, co1 = min((((co - co2).length, co) for co in coords1), key=operator.itemgetter(0))
-
-    return dis, co1, co2
 
 
 def gem_overlap(context, data, threshold, first_match=False):
@@ -135,8 +133,6 @@ def gem_overlap(context, data, threshold, first_match=False):
         if i1 in overlap_indices:
             continue
 
-        girdle1 = girdle_coords(rad1, mat1)
-
         for loc2, i2, dis_ob in kd.find_range(loc1, seek_range):
 
             _, rad2, mat2 = data[i2]
@@ -145,8 +141,12 @@ def gem_overlap(context, data, threshold, first_match=False):
             if dis_gap > threshold or i1 == i2:
                 continue
 
-            girdle2 = girdle_coords(rad2, mat2)
-            dis_gap, _, _ = find_nearest(loc1, rad1, girdle1, girdle2)
+            co1, co2 = nearest_coords(rad1, rad2, mat1, mat2)
+            dis_gap = (co1 - co2).length
+
+            if (loc1 - co2).length < rad1:
+                dis_gap = -dis_gap
+
             dis_gap = from_scene_scale(dis_gap)
 
             if dis_gap < threshold:
