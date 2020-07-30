@@ -29,7 +29,7 @@ from mathutils import Matrix
 
 from .. import var
 from . import unit
-from .asset import girdle_coords, find_nearest
+from .asset import nearest_coords, girdle_coords
 
 
 _handler = None
@@ -100,6 +100,8 @@ def _draw(self, context):
         ob_act = context.object
         if ob_act:
             is_gem = "gem" in ob_act
+        else:
+            is_gem = False
 
     if not (show_all or is_gem):
         return
@@ -135,14 +137,11 @@ def _draw(self, context):
             ob_act_loc = ob_act.matrix_world.to_translation()
             mat_rot = ob_act.matrix_world.to_quaternion().to_matrix().to_4x4()
 
-        ob_act_loc.freeze()
-        ob_act_rad = max(ob_act.dimensions[:2]) / 2
+        rad1 = max(ob_act.dimensions[:2]) / 2
 
         mat_loc = Matrix.Translation(ob_act_loc)
-        mat = mat_loc @ mat_rot
-        mat.freeze()
-
-        girdle_act = girdle_coords(ob_act_rad, mat)
+        mat1 = mat_loc @ mat_rot
+        mat1.freeze()
 
     shader.bind()
     bgl.glEnable(bgl.GL_BLEND)
@@ -161,13 +160,13 @@ def _draw(self, context):
         if "gem" not in ob:
             continue
 
-        ob_rad = max(ob.dimensions[:2]) / 2
+        rad2 = max(ob.dimensions[:2]) / 2
         ob_loc = dup.matrix_world.translation
         spacing_thold = False
 
         if is_gem:
             dis_ob = (ob_act_loc - ob_loc).length
-            dis_gap = from_scene_scale(dis_ob - (ob_act_rad + ob_rad))
+            dis_gap = from_scene_scale(dis_ob - (rad1 + rad2))
             dis_thold = dis_gap < diplay_thold
 
             if not (show_all or dis_thold):
@@ -202,18 +201,21 @@ def _draw(self, context):
             shader.uniform_float("color", _color)
 
             if dup.is_instance:
-                mat = dup.matrix_world.copy()
+                mat2 = dup.matrix_world.copy()
             else:
                 mat_loc = Matrix.Translation(ob_loc)
                 mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
-                mat = mat_loc @ mat_rot
+                mat2 = mat_loc @ mat_rot
 
-            mat.freeze()
+            mat2.freeze()
 
         if use_diplay_dis:
             if dis_ob:
-                girdle_ob = girdle_coords(ob_rad, mat)
-                dis_gap, start, end = find_nearest(ob_act_loc, ob_act_rad, girdle_act, girdle_ob)
+                co1, co2 = nearest_coords(rad1, rad2, mat1, mat2)
+                dis_gap = (co1 - co2).length
+
+                if (ob_act_loc - co2).length < rad1:
+                    dis_gap = -dis_gap
 
                 dis_gap = from_scene_scale(dis_gap)
                 dis_thold = dis_gap < diplay_thold
@@ -222,9 +224,9 @@ def _draw(self, context):
                 if not (show_all or dis_thold):
                     continue
 
-                mid = start.lerp(end, 0.5)
+                mid = co1.lerp(co2, 0.5)
             else:
-                start = end = mid = ob_loc.copy()
+                co1 = co2 = mid = ob_loc.copy()
 
             if dis_thold:
                 if dis_gap < 0.1:
@@ -234,12 +236,12 @@ def _draw(self, context):
 
                 _font_loc.append((dis_gap, mid, from_scene_scale(max(ob_act_spacing, _spacing))))
 
-                batch = batch_for_shader(shader, "LINES", {"pos": (start, end)})
+                batch = batch_for_shader(shader, "LINES", {"pos": (co1, co2)})
                 batch.draw(shader)
 
         if show_all or spacing_thold:
-            radius = ob_rad + _spacing
-            coords = girdle_coords(radius, mat)
+            radius = rad2 + _spacing
+            coords = girdle_coords(radius, mat2)
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
             batch.draw(shader)
 
