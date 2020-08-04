@@ -21,7 +21,7 @@
 
 from math import pi
 
-from bpy_extras.view3d_utils import location_3d_to_region_2d
+from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
 import bgl
 import blf
 import gpu
@@ -57,6 +57,7 @@ class Offscreen:
         mat_offscreen[1][3] = -1
 
         with self.offscreen.bind():
+            bgl.glClearColor(0.0, 0.0, 0.0, 0.0)
             bgl.glClear(bgl.GL_COLOR_BUFFER_BIT)
 
             with gpu.matrix.push_pop():
@@ -66,15 +67,23 @@ class Offscreen:
                 self.draw_gems(context, gamma_corr=True)
 
     def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
+        import operator
+
         if gamma_corr:
             _c = gamma_correction
         else:
             _c = lambda x: x
 
         from_scene_scale = unit.Scale(context).from_scene
+        view_normal = self.region_3d.view_rotation @ Vector((0.0, 0.0, 1.0))
 
-        view_normal = Vector((0.0, 0.0, 1.0)) @ self.region_3d.view_matrix
-        angle_thold = pi / 1.8
+        if self.region_3d.is_perspective:
+            angle_thold = pi / 1.8
+            view_loc = self.region_3d.view_matrix.inverted().translation
+        else:
+            angle_thold = pi / 2.0
+            center_xy = (self.region.width / 2.0, self.region.height / 2.0)
+            view_loc = region_2d_to_origin_3d(self.region, self.region_3d, center_xy)
 
         fontid = 0
         blf.size(fontid, self.prefs.view_font_size_gem_size, 72)
@@ -82,6 +91,8 @@ class Offscreen:
 
         shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
         depsgraph = context.evaluated_depsgraph_get()
+        gems = []
+        app = gems.append
 
         for dup in depsgraph.object_instances:
 
@@ -102,12 +113,23 @@ class Offscreen:
             if color is None:
                 continue
 
+            mat = dup.matrix_world.copy()
+            dist_from_view = (mat.translation - view_loc).length
+            app((dist_from_view, ob, mat, size_fmt, color))
+
+        gems.sort(key=operator.itemgetter(0), reverse=True)
+
+        for _, ob, mat, size_fmt, color in gems:
+
+            # Shape
+            # -----------------------------
+
             shader.bind()
             shader.uniform_float("color", _c(color))
 
             ob_eval = ob.evaluated_get(depsgraph)
             me = ob_eval.to_mesh()
-            me.transform(dup.matrix_world)
+            me.transform(mat)
             verts = me.vertices
 
             for poly in me.polygons:
@@ -124,8 +146,7 @@ class Offscreen:
             # Size
             # -----------------------------
 
-            ob_loc = dup.matrix_world.translation.to_tuple()
-            loc_x, loc_y = loc_3d_to_2d(self.region, self.region_3d, ob_loc, ratio_w, ratio_h)
+            loc_x, loc_y = loc_3d_to_2d(self.region, self.region_3d, mat.translation, ratio_w, ratio_h)
             dim_x, dim_y = blf.dimensions(fontid, size_fmt)
 
             blf.position(fontid, loc_x - dim_x / 2, loc_y - dim_y / 2, 0.0)
