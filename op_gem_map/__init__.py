@@ -114,7 +114,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
 
         elif self.use_navigate:
             self.use_navigate = False
-            self.view_mat = self.region_3d.perspective_matrix.copy()
+            self.view_state = self.region_3d.perspective_matrix.copy()
             self.offscreen_refresh(context)
 
         elif event.type in {"ESC", "RET", "SPACE"}:
@@ -145,8 +145,8 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         elif time.time() - self.time_tag > 1.0:
             self.time_tag = time.time()
 
-            if self.view_mat != self.region_3d.perspective_matrix:
-                self.view_mat = self.region_3d.perspective_matrix.copy()
+            if self.view_state != self.region_3d.perspective_matrix:
+                self.view_state = self.region_3d.perspective_matrix.copy()
                 self.offscreen_refresh(context)
 
         return {"PASS_THROUGH"}
@@ -162,7 +162,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
 
         self.region = context.region
         self.region_3d = context.space_data.region_3d
-        self.view_mat = self.region_3d.perspective_matrix.copy()
+        self.view_state = self.region_3d.perspective_matrix.copy()
         self.offscreen = None
         self.handler = None
         self.use_navigate = False
