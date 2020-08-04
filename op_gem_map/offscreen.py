@@ -74,7 +74,6 @@ class Offscreen:
         else:
             _c = lambda x: x
 
-        from_scene_scale = unit.Scale(context).from_scene
         view_normal = self.region_3d.view_rotation @ Vector((0.0, 0.0, 1.0))
 
         if self.region_3d.is_perspective:
@@ -85,11 +84,7 @@ class Offscreen:
             center_xy = (self.region.width / 2.0, self.region.height / 2.0)
             view_loc = region_2d_to_origin_3d(self.region, self.region_3d, center_xy)
 
-        fontid = 0
-        blf.size(fontid, self.prefs.view_font_size_gem_size, 72)
-        blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
-
-        shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+        from_scene_scale = unit.Scale(context).from_scene
         depsgraph = context.evaluated_depsgraph_get()
         gems = []
         app = gems.append
@@ -117,6 +112,11 @@ class Offscreen:
             dist_from_view = (mat.translation - view_loc).length
             app((dist_from_view, ob, mat, size_fmt, color))
 
+        shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+        fontid = 0
+        blf.size(fontid, self.prefs.view_font_size_gem_size, 72)
+        blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
+
         gems.sort(key=operator.itemgetter(0), reverse=True)
 
         for _, ob, mat, size_fmt, color in gems:
@@ -124,13 +124,13 @@ class Offscreen:
             # Shape
             # -----------------------------
 
-            shader.bind()
-            shader.uniform_float("color", _c(color))
-
             ob_eval = ob.evaluated_get(depsgraph)
             me = ob_eval.to_mesh()
             me.transform(mat)
             verts = me.vertices
+
+            shader.bind()
+            shader.uniform_float("color", _c(color))
 
             for poly in me.polygons:
                 if view_normal.angle(poly.normal) < angle_thold:
