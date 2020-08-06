@@ -91,7 +91,7 @@ class WM_OT_ul_measurements_add(Operator):
             layout.prop(self, "material")
         elif self.type == "RING_SIZE":
             layout.prop(self, "ring_size")
-            layout.prop(self, "axis")
+            layout.prop(self, "axis", expand=True)
 
         layout.separator()
 
