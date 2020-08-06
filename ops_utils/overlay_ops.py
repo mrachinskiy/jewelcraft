@@ -25,14 +25,14 @@ from bpy.props import FloatProperty, FloatVectorProperty
 from .. import var
 
 
-class OBJECT_OT_widget_override_set(Operator):
+class OBJECT_OT_overlay_override_add(Operator):
     bl_label = "Override"
-    bl_description = "Override widget display properties for selected objects"
-    bl_idname = "object.jewelcraft_widget_override_set"
+    bl_description = "Override overlay settings for selected objects"
+    bl_idname = "object.jewelcraft_overlay_override_add"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     color: FloatVectorProperty(
-        name="Widget Color",
+        name="Color",
         default=(1.0, 1.0, 1.0, 1.0),
         size=4,
         min=0.0,
@@ -68,7 +68,7 @@ class OBJECT_OT_widget_override_set(Operator):
     def execute(self, context):
         for ob in context.selected_objects:
             if "gem" in ob:
-                ob["jewelcraft_widget"] = {
+                ob["gem_overlay"] = {
                     "color": self.color,
                     "linewidth": self.linewidth,
                     "spacing": self.spacing,
@@ -83,12 +83,12 @@ class OBJECT_OT_widget_override_set(Operator):
         props = context.scene.jewelcraft
 
         default_settings = {
-            "color": prefs.widget_color,
-            "linewidth": prefs.widget_linewidth,
-            "spacing": props.widget_spacing,
+            "color": prefs.overlay_color,
+            "linewidth": prefs.overlay_linewidth,
+            "spacing": props.overlay_spacing,
         }
 
-        ovrd = context.object.get("jewelcraft_widget")
+        ovrd = context.object.get("gem_overlay")
         if ovrd:
             default_settings.update(ovrd)
 
@@ -100,16 +100,16 @@ class OBJECT_OT_widget_override_set(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_widget_override_del(Operator):
+class OBJECT_OT_overlay_override_del(Operator):
     bl_label = "Clear"
-    bl_description = "Remove widget override properties from selected objects"
-    bl_idname = "object.jewelcraft_widget_override_del"
+    bl_description = "Remove overrides from selected objects"
+    bl_idname = "object.jewelcraft_overlay_override_del"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     def execute(self, context):
         for ob in context.selected_objects:
-            if "jewelcraft_widget" in ob:
-                del ob["jewelcraft_widget"]
+            if "gem_overlay" in ob:
+                del ob["gem_overlay"]
 
         context.area.tag_redraw()
 

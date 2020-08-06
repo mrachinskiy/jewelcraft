@@ -121,7 +121,7 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
         layout.operator("object.jewelcraft_gem_edit", icon_value=self.icon_get("GEM_EDIT"))
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
         layout.operator("object.jewelcraft_gem_normalize")
-        layout.operator("wm.call_panel", text="Widgets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_widgets"
+        layout.operator("wm.call_panel", text="Spacing Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing_overlay"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
         layout.separator()
@@ -302,13 +302,13 @@ class VIEW3D_PT_jewelcraft_gem_extras(Setup, Panel):
         layout.operator("object.jewelcraft_gem_normalize")
 
 
-class VIEW3D_PT_jewelcraft_widgets(Setup, Panel):
-    bl_label = "Widgets"
+class VIEW3D_PT_jewelcraft_spacing_overlay(Setup, Panel):
+    bl_label = "Spacing Overlay"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
 
     def draw_header(self, context):
-        self.layout.prop(self.wm_props, "widget_toggle", text="")
+        self.layout.prop(self.wm_props, "show_spacing", text="")
 
     def draw(self, context):
         props = context.scene.jewelcraft
@@ -317,24 +317,24 @@ class VIEW3D_PT_jewelcraft_widgets(Setup, Panel):
 
         if self.is_popover:
             row = layout.row(align=True)
-            row.prop(self.wm_props, "widget_toggle", text="")
-            row.label(text="Widgets")
+            row.prop(self.wm_props, "show_spacing", text="")
+            row.label(text="Spacing Overlay")
 
         layout.use_property_split = True
         layout.use_property_decorate = False
 
         col = layout.column(align=True)
-        col.active = self.wm_props.widget_toggle
-        col.prop(props, "widget_show_all")
-        col.prop(props, "widget_show_in_front")
-        col.prop(props, "widget_use_overrides")
-        col.prop(props, "widget_spacing", text="Spacing", text_ctxt="JewelCraft")
+        col.active = self.wm_props.show_spacing
+        col.prop(props, "overlay_show_all")
+        col.prop(props, "overlay_show_in_front")
+        col.prop(props, "overlay_use_overrides")
+        col.prop(props, "overlay_spacing", text="Spacing", text_ctxt="JewelCraft")
 
         col.separator()
 
         row = col.row(align=True)
-        row.operator("object.jewelcraft_widget_override_set")
-        row.operator("object.jewelcraft_widget_override_del")
+        row.operator("object.jewelcraft_overlay_override_add")
+        row.operator("object.jewelcraft_overlay_override_del")
 
 
 class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
@@ -698,22 +698,25 @@ def prefs_ui(self, context):
         col = box.column()
         col.prop(self, "theme_icon")
 
-        box.label(text="Widgets")
+        box.label(text="Spacing Overlay")
         col = box.column()
-        col.prop(self, "widget_color")
-        col.prop(self, "widget_linewidth")
+        col.prop(self, "overlay_color")
+        col.prop(self, "overlay_linewidth")
+        col.prop(self, "view_font_size_distance")
+
+        box.label(text="Viewport Options")
+        col = box.column()
+        col.prop(self, "view_font_size_option")
+
+        box.label(text="Gem Map Font Size")
+        col = box.column()
+        col.prop(self, "view_font_size_report")
+        col.prop(self, "view_font_size_gem_size")
 
         box.label(text="Materials")
         col = box.column()
         col.prop(self, "color_prongs")
         col.prop(self, "color_cutter")
-
-        box.label(text="Viewport Text Size")
-        col = box.column()
-        col.prop(self, "view_font_size_report")
-        col.prop(self, "view_font_size_option")
-        col.prop(self, "view_font_size_gem_size")
-        col.prop(self, "view_font_size_distance")
 
     elif active_tab == "UPDATES":
         mod_update.prefs_ui(self, box)
