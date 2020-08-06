@@ -221,13 +221,13 @@ class OBJECT_OT_gem_edit(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_gem_normalize(Operator):
-    bl_label = "Normalize Gem"
+class OBJECT_OT_gem_recover(Operator):
+    bl_label = "Recover Gem"
     bl_description = (
         "Separate loose, center origin and fix orientation."
         "\nNOTE: gem ID can be added with Edit Gem tool"
     )
-    bl_idname = "object.jewelcraft_gem_normalize"
+    bl_idname = "object.jewelcraft_gem_recover"
     bl_options = {"REGISTER", "UNDO"}
 
     axis_size: FloatProperty(default=1.0, options={"HIDDEN"})

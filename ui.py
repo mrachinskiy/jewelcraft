@@ -120,7 +120,7 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
         layout.operator("object.jewelcraft_gem_add", icon_value=self.icon_get("GEM_ADD"))
         layout.operator("object.jewelcraft_gem_edit", icon_value=self.icon_get("GEM_EDIT"))
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
-        layout.operator("object.jewelcraft_gem_normalize")
+        layout.operator("object.jewelcraft_gem_recover")
         layout.operator("wm.call_panel", text="Spacing Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing_overlay"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
@@ -299,7 +299,7 @@ class VIEW3D_PT_jewelcraft_gem_extras(Setup, Panel):
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("object.jewelcraft_gem_normalize")
+        layout.operator("object.jewelcraft_gem_recover")
 
 
 class VIEW3D_PT_jewelcraft_spacing_overlay(Setup, Panel):
