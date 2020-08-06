@@ -86,6 +86,11 @@ def get_cut(self, ob):
 def nearest_coords(rad1, rad2, mat1, mat2):
     vec1 = mat1.inverted() @ mat2.translation
     vec1.z = 0.0
+
+    if not vec1.length:
+        vec1.x = rad1
+        return mat1 @ vec1, mat2 @ Vector((rad2, 0.0, 0.0))
+
     vec1 *= rad1 / vec1.length
 
     vec2 = mat2.inverted() @ mat1.translation
@@ -93,6 +98,13 @@ def nearest_coords(rad1, rad2, mat1, mat2):
     vec2 *= rad2 / vec2.length
 
     return mat1 @ vec1, mat2 @ vec2
+
+
+def calc_gap(co1, co2, loc1, dist_locs, rad1):
+    if (loc1 - co2).length < rad1 or dist_locs < rad1:
+        return -(co1 - co2).length
+
+    return (co1 - co2).length
 
 
 @lru_cache(maxsize=128)
@@ -133,21 +145,16 @@ def gem_overlap(context, data, threshold, first_match=False):
         if i1 in overlap_indices:
             continue
 
-        for loc2, i2, dis_ob in kd.find_range(loc1, seek_range):
+        for loc2, i2, dis_obs in kd.find_range(loc1, seek_range):
 
             _, rad2, mat2 = data[i2]
-            dis_gap = dis_ob - (rad1 + rad2)
+            dis_gap = dis_obs - (rad1 + rad2)
 
             if dis_gap > threshold or i1 == i2:
                 continue
 
             co1, co2 = nearest_coords(rad1, rad2, mat1, mat2)
-            dis_gap = (co1 - co2).length
-
-            if (loc1 - co2).length < rad1:
-                dis_gap = -dis_gap
-
-            dis_gap = from_scene_scale(dis_gap)
+            dis_gap = from_scene_scale(calc_gap(co1, co2, loc1, dis_obs, rad1))
 
             if dis_gap < threshold:
                 if first_match:
