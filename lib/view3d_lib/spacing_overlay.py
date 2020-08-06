@@ -27,16 +27,16 @@ import gpu
 from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix
 
-from .. import var
-from . import unit
-from .asset import nearest_coords, girdle_coords
+from ... import var
+from .. import unit
+from ..asset import nearest_coords, girdle_coords, calc_gap
+from .view3d_overlay import restore_gl
 
 
 _handler = None
-shader = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
-
 _handler_font = None
 _font_loc = []
+shader_3d = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
 shader_2d = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
 
@@ -62,44 +62,41 @@ def handler_del():
 
 def handler_toggle(self, context):
     if context.area.type == "VIEW_3D":
-        if self.widget_toggle:
+        if self.show_spacing:
             handler_add(self, context)
         else:
             handler_del()
 
 
 def _draw(self, context):
-    if (
-        not context.window_manager.jewelcraft.widget_toggle or
-        not context.space_data.overlay.show_overlays
-    ):
+    if not context.space_data.overlay.show_overlays:
         return
 
     global _font_loc
 
     prefs = context.preferences.addons[var.ADDON_ID].preferences
     props = context.scene.jewelcraft
-    show_all = props.widget_show_all
-    use_ovrd = props.widget_use_overrides
-    default_spacing = props.widget_spacing
-    default_color = prefs.widget_color
-    default_linewidth = prefs.widget_linewidth
+    show_all = props.overlay_show_all
+    use_ovrd = props.overlay_use_overrides
+    default_spacing = props.overlay_spacing
+    default_color = prefs.overlay_color
+    default_linewidth = prefs.overlay_linewidth
     is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
     diplay_thold = default_spacing + 0.5
     depsgraph = context.evaluated_depsgraph_get()
 
     if is_df:
         df = context.edit_object
-        for ob_act in df.children:
-            if "gem" in ob_act:
+        for ob1 in df.children:
+            if "gem" in ob1:
                 is_gem = True
                 break
         else:
             is_gem = False
     else:
-        ob_act = context.object
-        if ob_act:
-            is_gem = "gem" in ob_act
+        ob1 = context.object
+        if ob1:
+            is_gem = "gem" in ob1
         else:
             is_gem = False
 
@@ -107,10 +104,10 @@ def _draw(self, context):
         return
 
     if is_gem:
-        if use_ovrd and "jewelcraft_widget" in ob_act:
-            ob_act_spacing = ob_act["jewelcraft_widget"].get("spacing", default_spacing)
+        if use_ovrd and "gem_overlay" in ob1:
+            ob1_spacing = ob1["gem_overlay"].get("spacing", default_spacing)
         else:
-            ob_act_spacing = default_spacing
+            ob1_spacing = default_spacing
 
         from_scene_scale = unit.Scale(context).from_scene
 
@@ -123,7 +120,7 @@ def _draw(self, context):
                 polys = df_eval.to_mesh().polygons
                 poly = polys[polys.active]
 
-                ob_act_loc = df.matrix_world @ poly.center
+                loc1 = df.matrix_world @ poly.center
                 mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
 
                 df_eval.to_mesh_clear()
@@ -131,42 +128,42 @@ def _draw(self, context):
                 polys = df.data.polygons
                 poly = polys[polys.active]
 
-                ob_act_loc = df.matrix_world @ poly.center
+                loc1 = df.matrix_world @ poly.center
                 mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
         else:
-            ob_act_loc = ob_act.matrix_world.to_translation()
-            mat_rot = ob_act.matrix_world.to_quaternion().to_matrix().to_4x4()
+            loc1 = ob1.matrix_world.to_translation()
+            mat_rot = ob1.matrix_world.to_quaternion().to_matrix().to_4x4()
 
-        rad1 = max(ob_act.dimensions[:2]) / 2
+        rad1 = max(ob1.dimensions[:2]) / 2
 
-        mat_loc = Matrix.Translation(ob_act_loc)
+        mat_loc = Matrix.Translation(loc1)
         mat1 = mat_loc @ mat_rot
         mat1.freeze()
 
-    shader.bind()
+    shader_3d.bind()
     bgl.glEnable(bgl.GL_BLEND)
     bgl.glEnable(bgl.GL_LINE_SMOOTH)
-    if not props.widget_show_in_front:
+    if not props.overlay_show_in_front:
         bgl.glEnable(bgl.GL_DEPTH_TEST)
     bgl.glDepthMask(bgl.GL_FALSE)
 
     for dup in depsgraph.object_instances:
 
         if dup.is_instance:
-            ob = dup.instance_object.original
+            ob2 = dup.instance_object.original
         else:
-            ob = dup.object.original
+            ob2 = dup.object.original
 
-        if "gem" not in ob:
+        if "gem" not in ob2:
             continue
 
-        rad2 = max(ob.dimensions[:2]) / 2
-        ob_loc = dup.matrix_world.translation
+        rad2 = max(ob2.dimensions[:2]) / 2
+        loc2 = dup.matrix_world.translation
         spacing_thold = False
 
         if is_gem:
-            dis_ob = (ob_act_loc - ob_loc).length
-            dis_gap = from_scene_scale(dis_ob - (rad1 + rad2))
+            dis_obs = (loc1 - loc2).length
+            dis_gap = from_scene_scale(dis_obs - (rad1 + rad2))
             dis_thold = dis_gap < diplay_thold
 
             if not (show_all or dis_thold):
@@ -176,48 +173,43 @@ def _draw(self, context):
                 if df_pass:
                     is_act = False
                 else:
-                    df_pass = is_act = dup.matrix_world.translation == ob_act_loc
+                    df_pass = is_act = dup.matrix_world.translation == loc1
             else:
                 if dup.is_instance:
                     is_act = False
                 else:
-                    is_act = ob is ob_act
+                    is_act = ob2 is ob1
 
             use_diplay_dis = not is_act and dis_thold
         else:
             use_diplay_dis = False
 
         if show_all or use_diplay_dis:
-            if use_ovrd and "jewelcraft_widget" in ob:
-                _color = ob["jewelcraft_widget"].get("color", default_color)
-                _linewidth = ob["jewelcraft_widget"].get("linewidth", default_linewidth)
-                _spacing = ob["jewelcraft_widget"].get("spacing", default_spacing)
+            if use_ovrd and "gem_overlay" in ob2:
+                _color = ob2["gem_overlay"].get("color", default_color)
+                _linewidth = ob2["gem_overlay"].get("linewidth", default_linewidth)
+                _spacing = ob2["gem_overlay"].get("spacing", default_spacing)
             else:
                 _color = default_color
                 _linewidth = default_linewidth
                 _spacing = default_spacing
 
             bgl.glLineWidth(_linewidth)
-            shader.uniform_float("color", _color)
+            shader_3d.uniform_float("color", _color)
 
             if dup.is_instance:
                 mat2 = dup.matrix_world.copy()
             else:
-                mat_loc = Matrix.Translation(ob_loc)
+                mat_loc = Matrix.Translation(loc2)
                 mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
                 mat2 = mat_loc @ mat_rot
 
             mat2.freeze()
 
         if use_diplay_dis:
-            if dis_ob:
+            if dis_obs:
                 co1, co2 = nearest_coords(rad1, rad2, mat1, mat2)
-                dis_gap = (co1 - co2).length
-
-                if (ob_act_loc - co2).length < rad1:
-                    dis_gap = -dis_gap
-
-                dis_gap = from_scene_scale(dis_gap)
+                dis_gap = from_scene_scale(calc_gap(co1, co2, loc1, dis_obs, rad1))
                 dis_thold = dis_gap < diplay_thold
                 spacing_thold = dis_gap < (_spacing + 0.3)
 
@@ -226,33 +218,26 @@ def _draw(self, context):
 
                 mid = co1.lerp(co2, 0.5)
             else:
-                co1 = co2 = mid = ob_loc.copy()
+                co1 = co2 = mid = loc2.copy()
 
             if dis_thold:
                 if dis_gap < 0.1:
-                    shader.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
+                    shader_3d.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
                 elif dis_gap < _spacing:
-                    shader.uniform_float("color", (1.0, 0.9, 0.0, 1.0))
+                    shader_3d.uniform_float("color", (1.0, 0.9, 0.0, 1.0))
 
-                _font_loc.append((dis_gap, mid, from_scene_scale(max(ob_act_spacing, _spacing))))
+                _font_loc.append((dis_gap, mid, from_scene_scale(max(ob1_spacing, _spacing))))
 
-                batch = batch_for_shader(shader, "LINES", {"pos": (co1, co2)})
-                batch.draw(shader)
+                batch = batch_for_shader(shader_3d, "LINES", {"pos": (co1, co2)})
+                batch.draw(shader_3d)
 
         if show_all or spacing_thold:
             radius = rad2 + _spacing
             coords = girdle_coords(radius, mat2)
-            batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
-            batch.draw(shader)
+            batch = batch_for_shader(shader_3d, "LINE_LOOP", {"pos": coords})
+            batch.draw(shader_3d)
 
-    # Restore OpenGL defaults
-    # ----------------------------
-
-    bgl.glDisable(bgl.GL_BLEND)
-    bgl.glDisable(bgl.GL_LINE_SMOOTH)
-    bgl.glDisable(bgl.GL_DEPTH_TEST)
-    bgl.glDepthMask(bgl.GL_TRUE)
-    bgl.glLineWidth(1.0)
+    restore_gl()
 
 
 def _draw_font(self, context):
@@ -269,18 +254,17 @@ def _draw_font(self, context):
     blf.size(fontid, font_size, 72)
     blf.color(fontid, 1.0, 1.0, 1.0, 1.0)
 
-    for dis, loc, spacing in _font_loc:
+    for dist, loc, spacing in _font_loc:
         bgl.glEnable(bgl.GL_BLEND)
-        shader_2d.bind()
 
-        if dis < 0.1:
+        if dist < 0.1:
             color = (0.9, 0.0, 0.0, 1.0)
-        elif dis < spacing:
+        elif dist < spacing:
             color = (0.9, 0.7, 0.0, 1.0)
         else:
-            color = (0.0, 0.0, 0.0, 0.2)
+            color = (0.0, 0.0, 0.0, 0.3)
 
-        dis_str = f"{dis:.2f}"
+        dis_str = f"{dist:.2f}"
         dim_x, dim_y = blf.dimensions(fontid, dis_str)
         loc_x, loc_y = location_3d_to_region_2d(region, region_3d, loc)
 
@@ -291,6 +275,7 @@ def _draw_font(self, context):
             (loc_x - 3,         loc_y + 4 + dim_y),
         )
 
+        shader_2d.bind()
         shader_2d.uniform_float("color", color)
         batch_font = batch_for_shader(shader_2d, "TRI_FAN", {"pos": verts})
         batch_font.draw(shader_2d)

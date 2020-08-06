@@ -163,8 +163,8 @@ classes = (
     ops_utils.WM_OT_ul_move,
     ops_utils.SCENE_OT_scene_units_set,
     ops_utils.WM_OT_goto_prefs,
-    ops_utils.OBJECT_OT_widget_override_set,
-    ops_utils.OBJECT_OT_widget_override_del,
+    ops_utils.OBJECT_OT_overlay_override_add,
+    ops_utils.OBJECT_OT_overlay_override_del,
     ops_weighting.WM_OT_ul_materials_add,
     ops_weighting.OBJECT_OT_weight_display,
     ops_weighting.WM_OT_weighting_set_add,
@@ -243,7 +243,8 @@ def register():
 
 
 def unregister():
-    from .lib import dynamic_list, widget
+    from .lib import dynamic_list
+    from .lib.view3d_lib import spacing_overlay
 
     for cls in classes:
         bpy.utils.unregister_class(cls)
@@ -274,7 +275,7 @@ def unregister():
     # Handlers
     # ---------------------------
 
-    widget.handler_del()
+    spacing_overlay.handler_del()
     on_load.handler_del()
 
 

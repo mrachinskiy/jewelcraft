@@ -19,5 +19,5 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from .view3d_overlay import *
 from .view3d_text import *
-from .view3d_widget import *

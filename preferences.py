@@ -35,7 +35,8 @@ from bpy.props import (
 )
 
 from . import ui, var
-from .lib import widget, dynamic_list, asset
+from .lib import dynamic_list, asset
+from .lib.view3d_lib import spacing_overlay
 
 
 # Update callbacks
@@ -315,10 +316,10 @@ class JewelCraftPreferences(AddonPreferences):
         default=True,
     )
 
-    # Widget
+    # Overlays
     # ------------------------
 
-    widget_color: FloatVectorProperty(
+    overlay_color: FloatVectorProperty(
         name="Color",
         default=(0.9, 0.9, 0.9, 1.0),
         size=4,
@@ -326,7 +327,7 @@ class JewelCraftPreferences(AddonPreferences):
         soft_max=1.0,
         subtype="COLOR",
     )
-    widget_linewidth: FloatProperty(
+    overlay_linewidth: FloatProperty(
         name="Line Width",
         default=1.2,
         min=1.0,
@@ -366,7 +367,7 @@ class JewelCraftPreferences(AddonPreferences):
         min=1,
     )
     view_font_size_option: IntProperty(
-        name="Options",
+        name="Font Size",
         default=17,
         min=1,
     )
@@ -376,7 +377,7 @@ class JewelCraftPreferences(AddonPreferences):
         min=1,
     )
     view_font_size_distance: IntProperty(
-        name="Distance",
+        name="Font Size",
         default=16,
         min=1,
     )
@@ -399,7 +400,11 @@ class WmProperties(PropertyGroup):
             ("UPDATES", "Updates", ""),
         ),
     )
-    widget_toggle: BoolProperty(description="Enable widgets drawing", update=widget.handler_toggle)
+    show_spacing: BoolProperty(
+        name="Spacing Overlay",
+        description="Show distance to nearby gems",
+        update=spacing_overlay.handler_toggle,
+    )
     asset_folder: EnumProperty(
         name="Category",
         description="Asset category",
@@ -435,20 +440,20 @@ class SceneProperties(PropertyGroup):
         description="Display material density in the list",
     )
     measurements: PointerProperty(type=MeasurementsList)
-    widget_show_all: BoolProperty(
+    overlay_show_all: BoolProperty(
         name="Show All",
-        description="Display spacing widget for all visible gems",
+        description="Show spacing guide for all visible gems",
     )
-    widget_show_in_front: BoolProperty(
+    overlay_show_in_front: BoolProperty(
         name="In Front",
-        description="Draw widgets in front of objects",
+        description="Draw overlay in front of objects",
     )
-    widget_use_overrides: BoolProperty(
-        name="Use Overrides",
-        description="Use object defined widget overrides",
+    overlay_use_overrides: BoolProperty(
+        name="Overrides",
+        description="Use object defined overlay settings",
         default=True,
     )
-    widget_spacing: FloatProperty(
+    overlay_spacing: FloatProperty(
         name="Spacing",
         default=0.2,
         min=0.0,
