@@ -182,7 +182,7 @@ class VIEW3D_MT_jewelcraft_weighting_set(Menu):
         library_folder = asset.get_weighting_lib_path()
         layout = self.layout
         layout.operator("wm.jewelcraft_weighting_set_add", icon="ADD")
-        layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", icon="REMOVE")
+        layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", text_ctxt="*", icon="REMOVE")
         layout.operator("wm.jewelcraft_weighting_set_rename", text="Rename")
         layout.operator("wm.jewelcraft_weighting_set_replace")
         layout.operator("wm.jewelcraft_weighting_set_autoload_mark", icon="DOT")
@@ -428,7 +428,7 @@ class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
 
         col = layout.column(align=True)
         col.operator("object.jewelcraft_prongs_add", text="Prongs", icon_value=self.icon_get("PRONGS"))
-        col.operator("object.jewelcraft_cutter_add", text="Cutter", icon_value=self.icon_get("CUTTER"))
+        col.operator("object.jewelcraft_cutter_add", text="Cutter", text_ctxt="JewelCraft", icon_value=self.icon_get("CUTTER"))
 
         row = layout.row(align=True)
         row.operator("object.jewelcraft_curve_distribute", icon_value=self.icon_get("DISTRIBUTE"))
@@ -616,7 +616,7 @@ class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
                 row.operator("wm.jewelcraft_ul_measurements_material_select", text="", icon="DOWNARROW_HLT", emboss=False)
             elif item.type == "RING_SIZE":
                 layout.prop(item, "ring_size")
-                layout.prop(item, "axis")
+                layout.prop(item, "axis", expand=True)
 
 
 # Preferences
