@@ -22,17 +22,17 @@
 from bpy.types import Operator
 from bpy.props import IntProperty, FloatProperty, BoolProperty
 
-from .scatter_ui import UI
-from .scatter_func import Scatter
+from .distribute_ui import UI
+from .distribute_func import Distribute
 
 
-class OBJECT_OT_curve_scatter(UI, Scatter, Operator):
-    bl_label = "Curve Scatter"
-    bl_description = "Scatter selected object along active curve"
-    bl_idname = "object.jewelcraft_curve_scatter"
+class OBJECT_OT_curve_distribute(UI, Distribute, Operator):
+    bl_label = "Distribute on Curve"
+    bl_description = "Distribute selected object along active curve"
+    bl_idname = "object.jewelcraft_curve_distribute"
     bl_options = {"REGISTER", "UNDO"}
 
-    is_scatter = True
+    is_distribute = True
 
     number: IntProperty(name="Objects", default=10, min=1, soft_max=100)
 
@@ -47,13 +47,13 @@ class OBJECT_OT_curve_scatter(UI, Scatter, Operator):
     spacing: FloatProperty(name="Spacing", default=0.2, step=1, unit="LENGTH")
 
 
-class OBJECT_OT_curve_redistribute(UI, Scatter, Operator):
-    bl_label = "Curve Redistribute"
+class OBJECT_OT_curve_redistribute(UI, Distribute, Operator):
+    bl_label = "Redistribute"
     bl_description = "Redistribute selected objects along curve"
     bl_idname = "object.jewelcraft_curve_redistribute"
     bl_options = {"REGISTER", "UNDO"}
 
-    is_scatter = False
+    is_distribute = False
 
     rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION", options={"SKIP_SAVE"})
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
