@@ -119,8 +119,8 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
         layout = self.layout
         layout.operator("object.jewelcraft_gem_add", icon_value=self.icon_get("GEM_ADD"))
         layout.operator("object.jewelcraft_gem_edit", icon_value=self.icon_get("GEM_EDIT"))
+        layout.operator("object.jewelcraft_gem_recover", icon_value=self.icon_get("GEM_RECOVER"))
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
-        layout.operator("object.jewelcraft_gem_recover")
         layout.operator("wm.call_panel", text="Spacing Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing_overlay"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
@@ -288,18 +288,9 @@ class VIEW3D_PT_jewelcraft_gems(Setup, Panel):
         row = layout.row(align=True)
         row.operator("object.jewelcraft_gem_add", icon_value=self.icon_get("GEM_ADD"))
         row.operator("object.jewelcraft_gem_edit", text="", icon_value=self.icon_get("GEM_EDIT"))
+        row.operator("object.jewelcraft_gem_recover", text="", icon_value=self.icon_get("GEM_RECOVER"))
 
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
-
-
-class VIEW3D_PT_jewelcraft_gem_extras(Setup, Panel):
-    bl_label = "Extras"
-    bl_options = {"DEFAULT_CLOSED"}
-    bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
-
-    def draw(self, context):
-        layout = self.layout
-        layout.operator("object.jewelcraft_gem_recover")
 
 
 class VIEW3D_PT_jewelcraft_spacing_overlay(Setup, Panel):
