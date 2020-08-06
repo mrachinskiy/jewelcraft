@@ -26,7 +26,7 @@ class UI:
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        if self.is_scatter:
+        if self.is_distribute:
             layout.prop(self, "number")
             layout.separator()
 
@@ -38,7 +38,7 @@ class UI:
 
         layout.separator()
 
-        layout.label(text="Scatter (%)")
+        layout.label(text="Distribution (%)")
         col = layout.column(align=True)
         col.prop(self, "start")
         col.prop(self, "end")

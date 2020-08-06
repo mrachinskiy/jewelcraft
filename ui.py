@@ -127,7 +127,7 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
         layout.separator()
         layout.operator("object.jewelcraft_prongs_add", icon_value=self.icon_get("PRONGS"))
         layout.operator("object.jewelcraft_cutter_add", icon_value=self.icon_get("CUTTER"))
-        layout.operator("object.jewelcraft_curve_scatter", icon_value=self.icon_get("SCATTER"))
+        layout.operator("object.jewelcraft_curve_distribute", icon_value=self.icon_get("DISTRIBUTE"))
         layout.operator("object.jewelcraft_curve_redistribute", icon_value=self.icon_get("REDISTRIBUTE"))
         layout.separator()
         layout.operator("object.jewelcraft_mirror", icon_value=self.icon_get("MIRROR"))
@@ -431,7 +431,7 @@ class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
         col.operator("object.jewelcraft_cutter_add", text="Cutter", icon_value=self.icon_get("CUTTER"))
 
         row = layout.row(align=True)
-        row.operator("object.jewelcraft_curve_scatter", icon_value=self.icon_get("SCATTER"))
+        row.operator("object.jewelcraft_curve_distribute", icon_value=self.icon_get("DISTRIBUTE"))
         row.operator("object.jewelcraft_curve_redistribute", text="", icon_value=self.icon_get("REDISTRIBUTE"))
 
 

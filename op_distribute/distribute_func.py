@@ -24,7 +24,7 @@ from mathutils import Matrix, Vector
 from ..lib import mesh, asset
 
 
-class Scatter:
+class Distribute:
 
     def execute(self, context):
         import operator
@@ -38,7 +38,7 @@ class Scatter:
         # Init
         # ---------------------------
 
-        if self.is_scatter:
+        if self.is_distribute:
             num = self.number - 1
 
             curve = context.object
@@ -86,9 +86,9 @@ class Scatter:
                 ofst = base_unit * (ob_size + self.spacing)
 
             else:
-                closed_scattering = True if round(end - start, 1) == 100.0 else False
+                closed_distribution = True if round(end - start, 1) == 100.0 else False
 
-                if self.cyclic and closed_scattering:
+                if self.cyclic and closed_distribution:
                     ofst = (end - start) / (num + 1)
                 else:
                     if not self.cyclic:
@@ -97,10 +97,10 @@ class Scatter:
 
                     ofst = (end - start) / num
 
-        # Scatter/Redistribute
+        # (Re)Distribute
         # ---------------------------
 
-        if self.is_scatter:
+        if self.is_distribute:
 
             mat_sca = Matrix.Diagonal(ob.scale).to_4x4()
             ob.matrix_world = mat_sca
@@ -175,7 +175,7 @@ class Scatter:
     def invoke(self, context, event):
         wm = context.window_manager
 
-        if self.is_scatter:
+        if self.is_distribute:
 
             if len(context.selected_objects) < 2:
                 self.report({"ERROR"}, "At least two objects must be selected")
