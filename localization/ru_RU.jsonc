@@ -196,8 +196,8 @@
     "Filter by name": "Фильтр по имени",
     "Add to favorites": "Добавить в избранное",
     "Remove from favorites": "Удалить из избранного",
-    "Separate loose, center origin and fix orientation.\nNOTE: gem ID can be added with Edit Gem tool":
-      "Разделить несвязанные части, центрировать origin и исправить ориентацию.\nПРИМЕЧАНИЕ: идентификатор камня можно добавить инструментом Edit Gem",
+    "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool":
+      "Разделить несвязанные части, центрировать origin и исправить ориентацию (может восстанавливать камни из STL файла).\nПРИМЕЧАНИЕ: идентификатор камня можно добавить инструментом Edit Gem",
     //
     // Reports
     //

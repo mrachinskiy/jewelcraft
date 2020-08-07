@@ -224,7 +224,7 @@ class OBJECT_OT_gem_edit(Operator):
 class OBJECT_OT_gem_recover(Operator):
     bl_label = "Recover Gem"
     bl_description = (
-        "Separate loose, center origin and fix orientation."
+        "Separate loose, center origin and fix orientation (can recover gems from STL file)."
         "\nNOTE: gem ID can be added with Edit Gem tool"
     )
     bl_idname = "object.jewelcraft_gem_recover"
