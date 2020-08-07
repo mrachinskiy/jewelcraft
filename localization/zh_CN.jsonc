@@ -161,7 +161,7 @@
     // "Filter by name": "",
     // "Add to favorites": "",
     // "Remove from favorites": "",
-    // "Separate loose, center origin and fix orientation.\nNOTE: gem ID can be added with Edit Gem tool": "",
+    // "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool": "",
     "WARNING": "警告",
     "Possible gem instance face leftovers": "宝石实例面的可能残留物",
     "Hidden gems": "隐藏宝石",
