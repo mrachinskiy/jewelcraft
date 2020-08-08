@@ -43,6 +43,32 @@ from ..lib import (
 )
 
 
+def set_diameter(self, context):
+    if self.warn_scale:
+        self["diameter"] = self.circumference / pi
+    else:
+        self["diameter"] = round(self.circumference / pi, 2)
+
+
+def set_ring_size(self, context):
+    size = asset.to_ring_size(self.circumference, self.size_format)
+
+    if size == "[NO CORRESPONDING SIZE]":
+        self.warn_no_size = True
+        return
+
+    self.warn_no_size = False
+
+    if self.size_format == "US":
+        self["size_float"] = size
+    elif self.size_format == "JP":
+        self["size_int"] = size
+    elif self.size_format == "UK":
+        import string
+        self["size_abc"] = string.ascii_uppercase.index(size.split()[0])
+        self["use_half_size"] = "1/2" in size
+
+
 def upd_size(self, context):
     if self.size_format == "CH":
         cir = self.size_float + 40.0
@@ -63,7 +89,8 @@ def upd_size(self, context):
 
         cir = var.CIR_BASE_US + var.CIR_STEP_US * size
 
-    self.circumference = unit.Scale(context).to_scene(round(cir, 4))
+    self["circumference"] = unit.Scale(context).to_scene(round(cir, 4))
+    set_diameter(self, context)
 
 
 def upd_diameter(self, context):
@@ -72,12 +99,12 @@ def upd_diameter(self, context):
     else:
         self["circumference"] = round(self.diameter * pi, 4)
 
+    set_ring_size(self, context)
+
 
 def upd_circumference(self, context):
-    if self.warn_scale:
-        self["diameter"] = self.circumference / pi
-    else:
-        self["diameter"] = round(self.circumference / pi, 2)
+    set_diameter(self, context)
+    set_ring_size(self, context)
 
 
 class CURVE_OT_size_curve_add(Operator):
@@ -118,7 +145,7 @@ class CURVE_OT_size_curve_add(Operator):
     )
     diameter: FloatProperty(
         name="Diameter",
-        default=15.28,
+        default=15.29,
         min=0.001,
         step=10,
         unit="LENGTH",
@@ -126,7 +153,7 @@ class CURVE_OT_size_curve_add(Operator):
     )
     circumference: FloatProperty(
         name="Circumference",
-        default=48.0,
+        default=48.035,
         min=0.001,
         step=100,
         precision=1,
@@ -139,15 +166,12 @@ class CURVE_OT_size_curve_add(Operator):
         default=True,
         options={"SKIP_SAVE"},
     )
-    use_size: BoolProperty(
-        name="Ring Size",
-        update=upd_size,
-    )
     use_half_size: BoolProperty(
         name="1/2",
         update=upd_size,
     )
     warn_scale: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
+    warn_no_size: BoolProperty(options={"HIDDEN"})
 
     def draw(self, context):
         layout = self.layout
@@ -156,32 +180,31 @@ class CURVE_OT_size_curve_add(Operator):
 
         layout.separator()
 
-        col = layout.column()
-        col.use_property_split = False
-        col.prop(self, "use_size")
+        layout.label(text="Ring Size")
 
         col = layout.column()
-        col.active = self.use_size
         col.prop(self, "size_format")
 
-        if self.size_format == "UK":
-            row = col.row(align=True)
-            row.prop(self, "size_abc")
-            row.prop(self, "use_half_size")
-        elif self.size_format == "JP":
-            col.prop(self, "size_int")
+        if self.warn_no_size:
+            row = col.row()
+            row.alignment = "RIGHT"
+            row.label(text="No corresponding size", icon="ERROR")
         else:
-            col.prop(self, "size_float")
-
-        layout.separator()
+            if self.size_format == "UK":
+                row = col.row()
+                row.prop(self, "size_abc")
+                row.separator()
+                row.prop(self, "use_half_size")
+            elif self.size_format == "JP":
+                col.prop(self, "size_int")
+            else:
+                col.prop(self, "size_float")
 
         layout.label(text="Curve")
 
         col = layout.column()
-        sub = col.column()
-        sub.active = not self.use_size
-        sub.prop(self, "diameter")
-        sub.prop(self, "circumference")
+        col.prop(self, "diameter")
+        col.prop(self, "circumference")
         col.prop(self, "up")
 
         layout.separator()
