@@ -59,7 +59,7 @@ def set_ring_size(self, context):
 
     self.warn_no_size = False
 
-    if self.size_format == "US":
+    if self.size_format in {"US", "CH"}:
         self["size_float"] = size
     elif self.size_format == "JP":
         self["size_int"] = size
