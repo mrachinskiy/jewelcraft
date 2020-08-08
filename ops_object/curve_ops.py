@@ -51,7 +51,10 @@ def set_diameter(self, context):
 
 
 def set_ring_size(self, context):
-    size = asset.to_ring_size(self.circumference, self.size_format)
+    size = asset.to_ring_size(
+        unit.Scale(context).from_scene(self.circumference),
+        self.size_format,
+    )
 
     if size == "[NO CORRESPONDING SIZE]":
         self.warn_no_size = True
