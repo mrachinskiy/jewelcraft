@@ -117,7 +117,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
             self.view_state = self.region_3d.perspective_matrix.copy()
             self.offscreen_refresh(context)
 
-        elif event.type in {"ESC", "RET", "SPACE"}:
+        elif event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
             bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
             self.offscreen.free()
             context.workspace.status_text_set(None)

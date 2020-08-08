@@ -241,7 +241,7 @@ class OBJECT_OT_gem_recover(Operator):
         return context.mode == "OBJECT"
 
     def modal(self, context, event):
-        if event.type in {"ESC", "RET", "SPACE"}:
+        if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
             bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
             bpy.types.SpaceView3D.draw_handler_remove(self.handler_text, "WINDOW")
             context.workspace.status_text_set(None)
