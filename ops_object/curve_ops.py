@@ -118,6 +118,7 @@ class CURVE_OT_size_curve_add(Operator):
 
     size_format: EnumProperty(
         name="Format",
+        description="Ring size format",
         items=(
             ("US", "USA", ""),
             ("UK", "Britain", ""),
@@ -181,10 +182,6 @@ class CURVE_OT_size_curve_add(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.separator()
-
-        layout.label(text="Ring Size")
-
         col = layout.column()
         col.prop(self, "size_format")
 
@@ -203,7 +200,7 @@ class CURVE_OT_size_curve_add(Operator):
             else:
                 col.prop(self, "size_float")
 
-        layout.label(text="Curve")
+        layout.separator()
 
         col = layout.column()
         col.prop(self, "diameter")
