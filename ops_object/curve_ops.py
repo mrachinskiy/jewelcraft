@@ -31,7 +31,7 @@ from bpy.props import (
 )
 from bpy.app.translations import pgettext_iface as _
 import bmesh
-from mathutils import Matrix, Vector
+from mathutils import Matrix
 
 from .. import var
 from ..lib import (
@@ -278,7 +278,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
 
             for ob in context.objects_in_mode:
                 me = ob.data
-                bbox, curve = asset.mod_curve_off(ob)
+                bbox, curve = asset.mod_curve_off(ob, Matrix())
 
                 if curve:
                     length = mesh.est_curve_length(curve)
@@ -299,16 +299,15 @@ class OBJECT_OT_stretch_along_curve(Operator):
         else:
 
             for ob in context.selected_objects:
-                bbox, curve = asset.mod_curve_off(ob)
+                bbox, curve = asset.mod_curve_off(ob, ob.matrix_world)
 
                 if curve:
                     length = mesh.est_curve_length(curve)
 
-                    bbox = [ob.matrix_world @ Vector(x) for x in bbox]
                     dim = max(x[0] for x in bbox) - min(x[0] for x in bbox)
 
                     scaling = ob.matrix_local @ ob.scale
-                    scaling[0] = length / dim * scaling[0]
+                    scaling.x = length / dim * scaling.x
 
                     ob.scale = ob.matrix_local.inverted() @ scaling
 
@@ -333,8 +332,7 @@ class OBJECT_OT_move_over_under(Operator):
                 return {"CANCELLED"}
 
             context.view_layer.update()
-            bbox, curve = asset.mod_curve_off(ob)
-            bbox = [ob.matrix_world @ Vector(x) for x in bbox]
+            bbox, curve = asset.mod_curve_off(ob, ob.matrix_world)
 
             if self.under:
                 z_object = max(x[2] for x in bbox)
@@ -353,8 +351,7 @@ class OBJECT_OT_move_over_under(Operator):
         else:
 
             for ob in context.selected_objects:
-                bbox, curve = asset.mod_curve_off(ob)
-                bbox = [ob.matrix_local @ Vector(x) for x in bbox]
+                bbox, curve = asset.mod_curve_off(ob, ob.matrix_local)
 
                 if self.under:
                     z_object = max(x[2] for x in bbox)
