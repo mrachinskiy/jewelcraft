@@ -532,21 +532,22 @@ def apply_scale(ob):
     ob.scale = (1.0, 1.0, 1.0)
 
 
-def mod_curve_off(ob, reverse=False):
+def mod_curve_off(ob, mat):
     """return -> bound box, curve object"""
+    curve = None
 
-    mods = reversed(ob.modifiers) if reverse else ob.modifiers
-
-    for mod in mods:
+    for mod in ob.modifiers:
         if mod.type == "CURVE" and mod.object:
+
             if mod.show_viewport:
                 mod.show_viewport = False
                 bpy.context.view_layer.update()
                 mod.show_viewport = True
 
-            return ob.bound_box, mod.object
+            curve = mod.object
+            break
 
-    return ob.bound_box, None
+    return [mat @ Vector(x) for x in ob.bound_box], curve
 
 
 def calc_bbox(obs):
