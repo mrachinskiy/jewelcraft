@@ -78,7 +78,7 @@ def create_cutter(self):
                 vs = make_rect(bm, x, y, z)
                 make_edges(bm, vs)
 
-                bv = bmesh.ops.bevel(bm, geom=bm.verts, clamp_overlap=True, vertex_only=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
+                bv = bmesh.ops.bevel(bm, geom=bm.verts, affect="VERTICES", clamp_overlap=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
                 bv_coords = edge_loop_walk(bv["verts"])
                 coords.append(bv_coords)
 
@@ -186,7 +186,7 @@ def create_cutter(self):
                 make_edges(bm, v_profile)
 
                 if self.use_bevel_corners:
-                    bmesh.ops.bevel(bm, geom=v_profile, clamp_overlap=True, vertex_only=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
+                    bmesh.ops.bevel(bm, geom=v_profile, affect="VERTICES", clamp_overlap=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
 
                 if self.use_curve_profile:
                     bm.edges.ensure_lookup_table()
@@ -470,7 +470,7 @@ def create_cutter(self):
     # ---------------------------
 
     if self.use_curve_seat:
-        bmesh.ops.bevel(bm, geom=e_sm[:] + v_sm[:], offset=100.0, offset_type="PERCENT", segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
+        bmesh.ops.bevel(bm, geom=e_sm[:] + v_sm[:], affect="EDGES", offset=100.0, offset_type="PERCENT", segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
 
     return bm
