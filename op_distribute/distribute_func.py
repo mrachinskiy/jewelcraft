@@ -188,7 +188,7 @@ class Distribute:
                 return {"CANCELLED"}
 
             self.cyclic = curve.data.splines[0].use_cyclic_u
-            self.curve_length = mesh.curve_length(curve)
+            self.curve_length = mesh.est_curve_length(curve)
 
             wm.invoke_props_popup(self, event)
             return self.execute(context)
@@ -211,6 +211,6 @@ class Distribute:
         self.end = max(values)
 
         self.cyclic = curve.data.splines[0].use_cyclic_u
-        self.curve_length = mesh.curve_length(curve)
+        self.curve_length = mesh.est_curve_length(curve)
 
         return wm.invoke_props_popup(self, event)

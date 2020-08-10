@@ -354,7 +354,9 @@ class OBJECT_OT_lattice_project(Operator):
         layout = self.layout
 
         split = layout.split()
-        split.label(text="Direction")
+        row = split.row()
+        row.alignment = "RIGHT"
+        row.label(text="Direction")
 
         col = split.column(align=True)
         row = col.row(align=True)
@@ -488,9 +490,13 @@ class OBJECT_OT_lattice_profile(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
+        layout.separator()
+
         layout.row().prop(self, "axis", expand=True)
         layout.row().prop(self, "lat_type", expand=True)
         layout.prop(self, "scale")
+
+        layout.separator()
 
     def execute(self, context):
         ob = context.object

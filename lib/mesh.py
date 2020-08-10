@@ -96,7 +96,7 @@ def est_volume(obs):
     return vol
 
 
-def curve_length(ob):
+def est_curve_length(ob):
     curve = ob.data.copy()
     curve.transform(ob.matrix_world)
 
