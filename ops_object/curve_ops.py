@@ -182,6 +182,8 @@ class CURVE_OT_size_curve_add(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
+        layout.separator()
+
         col = layout.column()
         col.prop(self, "size_format")
 
@@ -253,33 +255,10 @@ class CURVE_OT_length_display(Operator):
             self.report({"ERROR"}, "Active object must be a curve")
             return {"CANCELLED"}
 
-        # Reset curve
-        # ---------------------------
+        length = unit.Scale(context).from_scene(mesh.est_curve_length(ob))
+        report = f"{length:.2f} {_('mm')}"
 
-        settings = {
-            "bevel_object": None,
-            "bevel_depth": 0.0,
-            "extrude": 0.0,
-        }
-
-        for k, v in settings.items():
-            x = getattr(ob.data, k)
-            setattr(ob.data, k, v)
-            settings[k] = x
-
-        # Display length
-        # ---------------------------
-
-        length = unit.Scale(context).from_scene(mesh.curve_length(ob))
-        lengthf = "{:.2f} {}".format(length, _("mm"))
-
-        ui_lib.popup_report(self, context, text=lengthf, title=_("Curve Length"))
-
-        # Restore curve
-        # ---------------------------
-
-        for k, v in settings.items():
-            setattr(ob.data, k, v)
+        ui_lib.popup_report(self, context, msg=report, title=_("Curve Length"))
 
         return {"FINISHED"}
 
@@ -302,7 +281,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
                 bbox, curve = asset.mod_curve_off(ob)
 
                 if curve:
-                    length = mesh.curve_length(curve)
+                    length = mesh.est_curve_length(curve)
                     length_halved = length / 2 / ob.matrix_world.to_scale()[0]
 
                     bm = bmesh.from_edit_mesh(me)
@@ -323,7 +302,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
                 bbox, curve = asset.mod_curve_off(ob)
 
                 if curve:
-                    length = mesh.curve_length(curve)
+                    length = mesh.est_curve_length(curve)
 
                     bbox = [ob.matrix_world @ Vector(x) for x in bbox]
                     dim = max(x[0] for x in bbox) - min(x[0] for x in bbox)
