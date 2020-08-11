@@ -116,9 +116,12 @@ def est_curve_length(ob):
     # Calculate length
     # ---------------------------
 
-    depsgraph = bpy.context.evaluated_depsgraph_get()
+    if ob.modifiers:
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        ob_eval = ob.evaluated_get(depsgraph)
+    else:
+        ob_eval = ob
 
-    ob_eval = ob.evaluated_get(depsgraph)
     me = ob_eval.to_mesh()
     me.transform(ob.matrix_world)
 
