@@ -15,9 +15,8 @@
     "Weighting": "Оценка веса",
     "Weighting Set": "Набор материалов",
     "Hide Default Sets": "Спрятать стандартные наборы",
-    "[JewelCraft] Precious": "[JewelCraft] Драгоценные",
-    "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[JewelCraft] Драгоценные RU (ГОСТ 30649-99)",
-    "[JewelCraft] Base": "[JewelCraft] Недрагоценные",
+    "Precious": "Драгоценные",
+    "Precious RU (ГОСТ 30649-99)": "Драгоценные RU (ГОСТ 30649-99)",
     "Prongs": "Крапана",
     "Cutter": "Выборка",
     "Library Folder": "Каталог библиотеки",
@@ -323,7 +322,8 @@
     "Diamond": "Бриллиант",
     "Round": "Кр-57",
     "Spacing": "Расстояние",
-    "Cutter": "Выборка"
+    "Cutter": "Выборка",
+    "Base": "Недрагоценные"
   },
   "Dative": {
     "Size": "Размеру",

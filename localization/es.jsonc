@@ -12,9 +12,8 @@
     "Weighting": "Evaluación del Peso",
     "Weighting Set": "Conjunto de Materiales",
     "Hide Default Sets": "Ocultar Conjuntos por defecto",
-    "[JewelCraft] Precious": "[JewelCraft] Preciosa",
-    "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[JewelCraft] Preciosa RU (ГОСТ 30649-99)",
-    // "[JewelCraft] Base": "",
+    "Precious": "Preciosa",
+    "Precious RU (ГОСТ 30649-99)": "Preciosa RU (ГОСТ 30649-99)",
     "Prongs": "Dientes",
     "Cutter": "Cortador",
     "Library Folder": "Ruta a Carpeta Biblioteca",
@@ -271,6 +270,7 @@
     "Round": "Redonda",
     // "Spacing": "",
     "Cutter": "Cortador"
+    // "Base": "",
   },
   "Dative": {
     "Size": "Tamaño",

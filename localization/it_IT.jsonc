@@ -12,9 +12,8 @@
     "Weighting": "Stima del Peso",
     "Weighting Set": "Set di Stima",
     "Hide Default Sets": "Nascondi Impostazioni Predefinite",
-    "[JewelCraft] Precious": "[JewelCraft] Prezioso",
-    "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[JewelCraft] Prezioso RU (ГОСТ 30649-99)",
-    // "[JewelCraft] Base": "",
+    "Precious": "Prezioso",
+    "Precious RU (ГОСТ 30649-99)": "Prezioso RU (ГОСТ 30649-99)",
     "Prongs": "Griffe",
     "Cutter": "Fresa",
     "Library Folder": "Percorso Cartella Libreria",
@@ -271,6 +270,7 @@
     "Round": "Brillante",
     "Spacing": "Spaziatura",
     "Cutter": "Fresa"
+    // "Base": "",
   },
   "Dative": {
     "Size": "Misura",

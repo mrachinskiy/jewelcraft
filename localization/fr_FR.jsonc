@@ -12,9 +12,8 @@
     "Weighting": "Poids",
     "Weighting Set": "Catégories de poids",
     "Hide Default Sets": "Cacher les catégories par défaut",
-    "[JewelCraft] Precious": "[JewelCraft] Précieux",
-    "[JewelCraft] Precious RU (ГОСТ 30649-99)": "[JewelCraft] Précieux RU (ГОСТ 30649-99)",
-    // "[JewelCraft] Base": "",
+    "Precious": "Précieux",
+    "Precious RU (ГОСТ 30649-99)": "Précieux RU (ГОСТ 30649-99)",
     "Prongs": "Grains",
     "Cutter": "Alésage",
     "Library Folder": "Chemin du dossier de librairie",
@@ -271,6 +270,7 @@
     "Round": "Rond",
     "Spacing": "Espace",
     "Cutter": "Alésage"
+    // "Base": "",
   },
   "Dative": {
     "Size": "Dimension",
