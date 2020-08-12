@@ -110,54 +110,44 @@ def weighting_set(self, context):
         return _cache["weighting_set__RESULT"]
 
     prefs = context.preferences.addons[var.ADDON_ID].preferences
+    lib_path = asset.get_weighting_lib_path()
+    wsets = {}
     list_ = []
 
     if not prefs.weighting_hide_default_sets:
-        list_ += [
-            (
-                "JCASSET_PRECIOUS",
-                "[JewelCraft] Precious",
-                "Commonly used precious alloys, physical properties taken directly from suppliers",
-                "BLANK1",
-                0,
-            ),
-            (
-                "JCASSET_PRECIOUS_RU",
-                "[JewelCraft] Precious RU (ГОСТ 30649-99)",
-                "Set of precious alloys according to Russian regulations",
-                "BLANK1",
-                1,
-            ),
-            (
-                "JCASSET_BASE",
-                "[JewelCraft] Base",
-                "Set of base metal alloys, physical properties taken directly from suppliers",
-                "BLANK1",
-                2,
-            ),
-        ]
-
-    lib_path = asset.get_weighting_lib_path()
+        wsets["JCASSET_PRECIOUS"] = (
+            "Precious",
+            "Commonly used precious alloys, physical properties taken directly from suppliers",
+        )
+        wsets["JCASSET_PRECIOUS_RU"] = (
+            "Precious RU (ГОСТ 30649-99)",
+            "Set of precious alloys according to Russian regulations",
+        )
+        wsets["JCASSET_BASE"] = (
+            _("Base", "JewelCraft"),
+            "Set of base metal alloys, physical properties taken directly from suppliers",
+        )
 
     if os.path.exists(lib_path):
-        for i, entry in enumerate(
-            (x for x in os.scandir(lib_path) if x.is_file() and x.name.endswith(".json")),
-            start=len(list_)
-        ):
-            id_ = entry.name
-            name = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
-            list_.append((id_, name, "", "BLANK1", i))
+        for entry in os.scandir(lib_path):
+            if entry.is_file() and entry.name.endswith(".json"):
+                name = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
+                wsets[entry.name] = (name, "")
 
-    if list_:
-        for id_, name, desc, icon, i in list_:
-            if id_ == prefs.weighting_set_autoload:
-                list_[i] = (id_, name, desc, "DOT", i)
-                break
-        else:
-            id_, name, desc, icon, i = list_[0]
-            list_[0] = (id_, name, desc, "DOT", i)
-            prefs.weighting_set_autoload = id_
+    if wsets:
+
+        if prefs.weighting_set_autoload not in wsets:
+            prefs.weighting_set_autoload = next(iter(wsets))
             context.preferences.is_dirty = True
+
+        i = 1
+
+        for k, v in wsets.items():
+            if k == prefs.weighting_set_autoload:
+                list_.append((k, *v, "DOT", 0))
+            else:
+                list_.append((k, *v, "BLANK1", i))
+                i += 1
 
     list_ = tuple(list_)
     _cache["weighting_set__RESULT"] = list_

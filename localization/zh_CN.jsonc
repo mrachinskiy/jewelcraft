@@ -12,9 +12,8 @@
     "Weighting": "重量评估",
     "Weighting Set": "材料设定",
     "Hide Default Sets": "隐藏默认设置",
-    // "[JewelCraft] Precious": "",
-    // "[JewelCraft] Precious RU (ГОСТ 30649-99)": "",
-    "[JewelCraft] Base": "[JewelCraft] 基础",
+    // "Precious": "",
+    // "Precious RU (ГОСТ 30649-99)": "",
     "Prongs": "起钉",
     "Cutter": "开孔器",
     "Library Folder": "库文件夹的路径",
@@ -270,7 +269,8 @@
     "Diamond": "钻石",
     "Round": "圆形",
     "Spacing": "设置距离",
-    "Cutter": "开孔器"
+    "Cutter": "开孔器",
+    "Base": "基础"
   },
   "Dative": {
     "Size": "尺寸",
