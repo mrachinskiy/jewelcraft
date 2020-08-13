@@ -1,6 +1,7 @@
 # IDE
 .idea/
 .vscode/
+assets/
 
 # Python byte-compiled
 __pycache__/
