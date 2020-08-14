@@ -130,7 +130,7 @@
     "Rename weighting set": "Renommer la catégorie de poids",
     "Load weighting set to the materials list by replacing existing materials": "Charger la catégorie de poids dans la liste des matériaux en remplaçant les matériaux existants",
     "Append weighting set at the end of the current materials list": "Ajouter la catégorie de poids à la fin de la liste des matières en cours",
-    "Hide default JewelCraft sets from weighting sets menu": "Masquer les catégories par défaut de JewelCraft dans le menu des catégories de poids",
+    "Hide default weighting sets from menu": "Masquer les catégories par défaut de JewelCraft dans le menu des catégories de poids",
     "Replace selected weighting set with current materials list": "Remplacer la catégorie de poids sélectionnée par la liste des matériaux en cours",
     "Material name": "Nom du matériau",
     "Material composition": "Composition du matériau",

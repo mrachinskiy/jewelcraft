@@ -130,7 +130,7 @@
     "Rename weighting set": "Renombrar un conjunto de materiales",
     "Load weighting set to the materials list by replacing existing materials": "Cargar el conjunto de materiales a la lista de materiales, reemplazando los materiales actuales",
     "Append weighting set at the end of the current materials list": "Anexar un conjunto de materiales al final de la lista actual de materiales",
-    "Hide default JewelCraft sets from weighting sets menu": "Ocultar conjuntos por defecto de Joyería del menú de conjuntos",
+    "Hide default weighting sets from menu": "Ocultar conjuntos por defecto de Joyería del menú de conjuntos",
     "Replace selected weighting set with current materials list": "Reemplazar el conjunto activo de materiales con la lista actual de materiales",
     "Material name": "Nombre del material",
     "Material composition": "Composición del material",
