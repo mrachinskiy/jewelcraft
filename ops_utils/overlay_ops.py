@@ -63,7 +63,7 @@ class OBJECT_OT_overlay_override_add(Operator):
         col = layout.column()
         col.prop(self, "color")
         col.prop(self, "linewidth")
-        col.prop(self, "spacing", text="Spacing", text_ctxt="JewelCraft")
+        col.prop(self, "spacing", text="Spacing", text_ctxt="Jewelry")
 
     def execute(self, context):
         for ob in context.selected_objects:
