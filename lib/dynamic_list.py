@@ -68,7 +68,7 @@ def cuts(self, context):
         var.preview_collections["cuts"] = pcoll
 
     list_ = tuple(
-        (k, _(_(v.name, "JewelCraft")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround
+        (k, _(_(v.name, "Jewelry")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround
         for i, (k, v) in enumerate(var.CUTS.items())
     )
 
@@ -88,7 +88,7 @@ def stones(self, context):
         return _cache["stones__RESULT"]
 
     list_ = [
-        (k, _(_(v.name, "JewelCraft")), "", i)  # _(_()) default return value workaround
+        (k, _(_(v.name, "Jewelry")), "", i)  # _(_()) default return value workaround
         for i, (k, v) in enumerate(var.STONES.items())
     ]
 
@@ -124,7 +124,7 @@ def weighting_set(self, context):
             "Set of precious alloys according to Russian regulations",
         )
         wsets["JCASSET_BASE"] = (
-            _("Base", "JewelCraft"),
+            _("Base", "Jewelry"),
             "Set of base metal alloys, physical properties taken directly from suppliers",
         )
 

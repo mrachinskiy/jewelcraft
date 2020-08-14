@@ -319,7 +319,7 @@ class VIEW3D_PT_jewelcraft_spacing_overlay(Setup, Panel):
         col.prop(props, "overlay_show_all")
         col.prop(props, "overlay_show_in_front")
         col.prop(props, "overlay_use_overrides")
-        col.prop(props, "overlay_spacing", text="Spacing", text_ctxt="JewelCraft")
+        col.prop(props, "overlay_spacing", text="Spacing", text_ctxt="Jewelry")
 
         col.separator()
 
@@ -419,7 +419,7 @@ class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
 
         col = layout.column(align=True)
         col.operator("object.jewelcraft_prongs_add", text="Prongs", icon_value=self.icon_get("PRONGS"))
-        col.operator("object.jewelcraft_cutter_add", text="Cutter", text_ctxt="JewelCraft", icon_value=self.icon_get("CUTTER"))
+        col.operator("object.jewelcraft_cutter_add", text="Cutter", text_ctxt="Jewelry", icon_value=self.icon_get("CUTTER"))
 
         row = layout.row(align=True)
         row.operator("object.jewelcraft_curve_distribute", icon_value=self.icon_get("DISTRIBUTE"))
