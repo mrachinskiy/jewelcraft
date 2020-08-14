@@ -256,7 +256,7 @@ class JewelCraftPreferences(AddonPreferences):
 
     weighting_hide_default_sets: BoolProperty(
         name="Hide Default Sets",
-        description="Hide default JewelCraft sets from weighting sets menu",
+        description="Hide default weighting sets from menu",
         update=dynamic_list.weighting_set_refresh,
     )
     weighting_set_lib_path: StringProperty(

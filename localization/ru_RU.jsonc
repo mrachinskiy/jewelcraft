@@ -153,8 +153,8 @@
       "Загрузить набор материалов в список материалов, заменив текущие материалы",
     "Append weighting set at the end of the current materials list":
       "Присоеденить набор материалов в конец текущего списока материалов",
-    "Hide default JewelCraft sets from weighting sets menu":
-      "Скрыть стандартные наборы материалов JewelCraft из меню",
+    "Hide default weighting sets from menu":
+      "Скрыть стандартные наборы материалов из меню",
     "Replace selected weighting set with current materials list":
       "Заменить активный набор материалов текущим списком материалов",
     "Material name": "Название материала",

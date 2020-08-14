@@ -130,7 +130,7 @@
     "Rename weighting set": "Rinomina set di stima",
     "Load weighting set to the materials list by replacing existing materials": "Caricare il set di stima nell'elencoa materiali, sostituendo i materiali correnti",
     "Append weighting set at the end of the current materials list": "Allega un set di stima alla fine dell'elenco corrente di materiali",
-    "Hide default JewelCraft sets from weighting sets menu": "Nascondi i set di default di JewelCraft dal menù Set Stima",
+    "Hide default weighting sets from menu": "Nascondi i set di default di JewelCraft dal menù Set Stima",
     "Replace selected weighting set with current materials list": "Sostituisci il set di stima con l'elenco dei materiali corrente",
     "Material name": "Nome del materiale",
     "Material composition": "Composizione del materiale",
