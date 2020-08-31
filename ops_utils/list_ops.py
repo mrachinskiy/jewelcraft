@@ -106,6 +106,20 @@ class WM_OT_ul_del(Operator):
         return {"FINISHED"}
 
 
+class WM_OT_ul_clear(Operator):
+    bl_label = "Clear List"
+    bl_description = "Remove all list items"
+    bl_idname = "wm.jewelcraft_ul_clear"
+    bl_options = {"INTERNAL"}
+
+    prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
+
+    def execute(self, context):
+        getattr(context.window_manager.jewelcraft, self.prop).clear()
+        serialize(self.prop)
+        return {"FINISHED"}
+
+
 class WM_OT_ul_move(Operator):
     bl_label = "Move Item"
     bl_description = "Move selected item up/down in the list"
