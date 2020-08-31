@@ -175,6 +175,11 @@ class MeasurementCollection(PropertyGroup):
     material_density: FloatProperty()
 
 
+class SizeCollection(PropertyGroup):
+    size: FloatProperty(name="Size", default=1.0, min=0.0001, step=10, unit="LENGTH")
+    qty: IntProperty(name="Qty", default=1, min=1)
+
+
 class AssetLibsCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
@@ -191,6 +196,10 @@ class MeasurementsList(ListProperty, PropertyGroup):
 class AssetLibsList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_folder_list)
     coll: CollectionProperty(type=AssetLibsCollection)
+
+
+class SizeList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=SizeCollection)
 
 
 # Preferences
@@ -423,6 +432,7 @@ class WmProperties(PropertyGroup):
     asset_menu_ui_lock: BoolProperty()
     asset_show_favs: BoolProperty(name="Favorites")
     asset_libs: PointerProperty(type=AssetLibsList)
+    sizes: PointerProperty(type=SizeList)
 
 
 # Scene properties

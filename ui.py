@@ -102,6 +102,23 @@ class VIEW3D_UL_jewelcraft_asset_libs_select(UIList):
         row.operator("wm.path_open", text="", icon="FILE_FOLDER", emboss=False).filepath = item.path
 
 
+class VIEW3D_UL_jewelcraft_sizes(UIList):
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        row = layout.row(align=True)
+        sub = row.row(align=True)
+        sub.alignment = "RIGHT"
+        sub.active = False
+        sub.label(text="Qty")
+        row.prop(item, "qty", text="", emboss=False)
+
+        row = layout.row(align=True)
+        sub = row.row(align=True)
+        sub.alignment = "RIGHT"
+        sub.active = False
+        sub.label(text="Size")
+        row.prop(item, "size", text="", emboss=False)
+
 # Menus
 # ---------------------------
 
