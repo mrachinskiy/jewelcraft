@@ -25,13 +25,9 @@ from bpy.types import Operator
 from bpy.props import BoolProperty, FloatProperty, IntProperty
 
 from .. import var
-from ..lib import asset
-from .prongs_ui import UI
-from .prongs_presets import init_presets
-from .prongs_mesh import create_prongs
 
 
-class OBJECT_OT_prongs_add(UI, Operator):
+class OBJECT_OT_prongs_add(Operator):
     bl_label = "Add Prongs"
     bl_description = (
         "Create prongs for selected gems\n"
@@ -65,13 +61,24 @@ class OBJECT_OT_prongs_add(UI, Operator):
 
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
+    def draw(self, context):
+        from . import prongs_ui
+
+        prongs_ui.draw(self, context)
+
     def execute(self, context):
-        bm = create_prongs(self)
+        from ..lib import asset
+        from . import prongs_mesh
+
+        bm = prongs_mesh.create_prongs(self)
         asset.bm_to_scene(bm, name="Prongs", color=self.color)
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        from ..lib import asset
+        from . import prongs_presets
+
         ob = context.object
 
         if not ob or not context.selected_objects:
@@ -83,7 +90,7 @@ class OBJECT_OT_prongs_add(UI, Operator):
         self.color = prefs.color_prongs
 
         if not event.ctrl:
-            init_presets(self)
+            prongs_presets.init_presets(self)
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)

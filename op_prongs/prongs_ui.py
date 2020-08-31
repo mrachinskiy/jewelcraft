@@ -19,44 +19,42 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-class UI:
+def draw(self, context):
+    layout = self.layout
+    layout.use_property_split = True
+    layout.use_property_decorate = False
 
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
+    layout.separator()
 
-        layout.separator()
+    layout.prop(self, "number")
 
-        layout.prop(self, "number")
+    layout.separator()
 
-        layout.separator()
+    layout.label(text="Dimensions")
 
-        layout.label(text="Dimensions")
+    col = layout.column()
+    col.prop(self, "z_top")
+    col.prop(self, "diameter")
+    col.prop(self, "z_btm")
 
-        col = layout.column()
-        col.prop(self, "z_top")
-        col.prop(self, "diameter")
-        col.prop(self, "z_btm")
+    layout.separator()
 
-        layout.separator()
+    col = layout.column()
+    col.label(text="Position")
+    col.prop(self, "position")
+    col.prop(self, "intersection")
+    col.prop(self, "alignment")
+    row = col.row(heading="Symmetry")
+    row.prop(self, "use_symmetry", text="")
+    sub = row.row()
+    sub.enabled = self.use_symmetry
+    sub.prop(self, "symmetry_pivot", text="")
 
-        col = layout.column()
-        col.label(text="Position")
-        col.prop(self, "position")
-        col.prop(self, "intersection")
-        col.prop(self, "alignment")
-        row = col.row(heading="Symmetry")
-        row.prop(self, "use_symmetry", text="")
-        sub = row.row()
-        sub.enabled = self.use_symmetry
-        sub.prop(self, "symmetry_pivot", text="")
+    layout.separator()
 
-        layout.separator()
+    layout.label(text="Shape")
 
-        layout.label(text="Shape")
-
-        col = layout.column()
-        col.prop(self, "bump_scale")
-        col.prop(self, "taper")
-        col.prop(self, "detalization")
+    col = layout.column()
+    col.prop(self, "bump_scale")
+    col.prop(self, "taper")
+    col.prop(self, "detalization")

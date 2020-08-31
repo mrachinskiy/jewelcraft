@@ -50,7 +50,10 @@ if "bpy" in locals():
                         continue
                     module = filename
 
-                importlib.reload(eval(module))
+                try:
+                    importlib.reload(eval(module))
+                except AttributeError:
+                    pass
 
             elif entry.is_dir() and not entry.name.startswith((".", "__")):
                 dirname = f"{parent_dir}.{entry.name}" if parent_dir else entry.name
