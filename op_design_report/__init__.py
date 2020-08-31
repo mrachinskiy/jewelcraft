@@ -26,8 +26,6 @@ from bpy.types import Operator
 from bpy.props import EnumProperty, BoolProperty, StringProperty
 
 from .. import var
-from ..lib import gettext
-from . import report_get, report_fmt, html_doc
 
 
 class WM_OT_design_report(Operator):
@@ -75,6 +73,9 @@ class WM_OT_design_report(Operator):
         col.prop(self, "warn_gem_overlap")
 
     def execute(self, context):
+        from ..lib import gettext
+        from . import report_get, report_fmt, html_doc
+
         Report = report_get.data_collect(self, context)
 
         if Report.is_empty():

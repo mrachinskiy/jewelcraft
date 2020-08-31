@@ -19,6 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import collections
+
 from mathutils import Matrix
 
 from .. import var
@@ -29,8 +31,6 @@ class _Data:
     __slots__ = ("gems", "materials", "notes", "warnings")
 
     def __init__(self):
-        import collections
-
         self.gems = collections.defaultdict(int)
         self.materials = collections.defaultdict(float)
         self.notes = []

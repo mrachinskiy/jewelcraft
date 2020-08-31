@@ -23,10 +23,6 @@ from bpy.types import Operator
 from bpy.props import BoolProperty, FloatProperty, IntProperty
 
 from .. import var
-from ..lib import asset
-from .cutter_mesh import create_cutter
-from .cutter_ui import UI
-from .cutter_presets import init_presets
 
 
 def upd_coords_handle(self, context):
@@ -37,7 +33,7 @@ def upd_coords_hole(self, context):
     self.hole_z_top, self.culet_z = self.culet_z, self.hole_z_top
 
 
-class OBJECT_OT_cutter_add(UI, Operator):
+class OBJECT_OT_cutter_add(Operator):
     bl_label = "Add Cutter"
     bl_description = (
         "Create cutter for selected gems\n"
@@ -122,13 +118,24 @@ class OBJECT_OT_cutter_add(UI, Operator):
         subtype="FACTOR",
     )
 
+    def draw(self, context):
+        from . import cutter_ui
+
+        cutter_ui.draw(self, context)
+
     def execute(self, context):
-        bm = create_cutter(self)
+        from ..lib import asset
+        from . import cutter_mesh
+
+        bm = cutter_mesh.create_cutter(self)
         asset.bm_to_scene(bm, name="Cutter", color=self.color)
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        from ..lib import asset
+        from .cutter_presets import init_presets
+
         ob = context.object
 
         if not ob or not context.selected_objects:
