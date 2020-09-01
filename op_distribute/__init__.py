@@ -70,14 +70,16 @@ class Distribute:
         layout.label(text="Distribution (%)")
         col = layout.column(align=True)
         col.prop(self, "start")
-        col.prop(self, "end")
+        sub = col.column(align=True)
+        sub.active = not self.use_absolute_offset
+        sub.prop(self, "end")
 
         layout.separator()
 
         row = layout.row(heading="Absolute Offset")
         row.prop(self, "use_absolute_offset", text="")
         sub = row.row()
-        sub.enabled = self.use_absolute_offset
+        sub.active = self.use_absolute_offset
         sub.prop(self, "spacing", text="")
 
     def execute(self, context):
