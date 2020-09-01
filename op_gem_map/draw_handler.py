@@ -24,6 +24,7 @@ import gpu
 from gpu_extras.batch import batch_for_shader
 
 from ..lib import view3d_lib
+from . import onscreen_text
 
 
 shader_img = gpu.shader.from_builtin("2D_IMAGE")
@@ -58,11 +59,11 @@ def draw(self, context):
     # Onscreen text
     # -----------------------------
 
-    y = self.onscreen_gem_table(x, y)
+    y = onscreen_text.onscreen_gem_table(self, x, y)
     y -= self.view_margin
 
     if self.show_warn:
-        y = self.onscreen_warning(x, y)
+        y = onscreen_text.onscreen_warning(self, x, y)
         y -= self.view_margin
 
     view3d_lib.options_display(self, context, x, y)

@@ -25,13 +25,9 @@ from bpy.props import EnumProperty, BoolProperty, IntProperty
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
-from . import draw_handler, onrender
-from .offscreen import Offscreen
-from .onscreen_text import OnscreenText
-from .report_proc import ReportProc
 
 
-class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
+class VIEW3D_OT_gem_map(Operator):
     bl_label = "Gem Map"
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
@@ -107,6 +103,8 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         )
 
         if self.is_rendering:
+            from . import onrender
+
             onrender.render_map(self, context)
             self.is_rendering = False
 
@@ -153,6 +151,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         import time
         from ..lib import view3d_lib
         from ..op_design_report import report_get
+        from . import draw_handler, report_proc
 
         ReportData = report_get.data_collect(self, context, gem_map=True)
 
@@ -186,7 +185,7 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         # Gem report
         # ----------------------------
 
-        self.data_process(ReportData)
+        self.view_data, self.table_data = report_proc.data_process(ReportData, self.lang)
 
         # Warnings
         # ----------------------------
@@ -224,6 +223,10 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
             return wm.invoke_props_dialog(self)
 
         return self.execute(context)
+
+    def offscreen_refresh(self, context):
+        from .import offscreen
+        offscreen.offscreen_refresh(self, context)
 
     @staticmethod
     def rect_coords(x, y, dim_x, dim_y):

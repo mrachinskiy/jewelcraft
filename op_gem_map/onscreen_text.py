@@ -27,45 +27,44 @@ from gpu_extras.batch import batch_for_shader
 shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
 
-class OnscreenText:
+def onscreen_gem_table(self, x, y, color=(0.95, 0.95, 0.95, 1.0)):
+    fontid = 1
+    blf.size(fontid, self.prefs.view_font_size_report, 72)
+    blf.color(fontid, *color)
 
-    def onscreen_gem_table(self, x, y, color=(0.95, 0.95, 0.95, 1.0)):
-        fontid = 1
-        blf.size(fontid, self.prefs.view_font_size_report, 72)
-        blf.color(fontid, *color)
+    _, font_h = blf.dimensions(fontid, "Row Height")
+    font_baseline = font_h * 0.4
+    font_row_height = font_h * 2
+    box_size = font_h * 1.5
+    y += font_baseline
 
-        _, font_h = blf.dimensions(fontid, "Row Height")
-        font_baseline = font_h * 0.4
-        font_row_height = font_h * 2
-        box_size = font_h * 1.5
-        y += font_baseline
+    for row, color in self.table_data:
+        y -= font_row_height
 
-        for row, color in self.table_data:
-            y -= font_row_height
+        shader.bind()
+        shader.uniform_float("color", color)
+        batch_font = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(x, y, box_size, box_size)})
+        batch_font.draw(shader)
 
-            shader.bind()
-            shader.uniform_float("color", color)
-            batch_font = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(x, y, box_size, box_size)})
-            batch_font.draw(shader)
+        blf.position(fontid, x + font_row_height, y + font_baseline, 0.0)
+        blf.draw(fontid, row)
 
-            blf.position(fontid, x + font_row_height, y + font_baseline, 0.0)
-            blf.draw(fontid, row)
+    return y
 
-        return y
 
-    def onscreen_warning(self, x, y):
-        fontid = 1
-        blf.size(fontid, self.prefs.view_font_size_report, 72)
-        blf.color(fontid, 1.0, 0.3, 0.3, 1.0)
+def onscreen_warning(self, x, y):
+    fontid = 1
+    blf.size(fontid, self.prefs.view_font_size_report, 72)
+    blf.color(fontid, 1.0, 0.3, 0.3, 1.0)
 
-        _, font_h = blf.dimensions(fontid, "Row Height")
-        font_row_height = font_h * 2
-        y += font_h
+    _, font_h = blf.dimensions(fontid, "Row Height")
+    font_row_height = font_h * 2
+    y += font_h
 
-        for row in self.warn:
-            y -= font_row_height
+    for row in self.warn:
+        y -= font_row_height
 
-            blf.position(fontid, x, y, 0.0)
-            blf.draw(fontid, row)
+        blf.position(fontid, x, y, 0.0)
+        blf.draw(fontid, row)
 
-        return y
+    return y
