@@ -63,7 +63,6 @@ class OBJECT_OT_prongs_add(Operator):
 
     def draw(self, context):
         from . import prongs_ui
-
         prongs_ui.draw(self, context)
 
     def execute(self, context):
