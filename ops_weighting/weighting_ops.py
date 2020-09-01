@@ -23,8 +23,6 @@ from bpy.types import Operator
 from bpy.props import StringProperty, FloatProperty
 from bpy.app.translations import pgettext_iface as _
 
-from ..lib import unit, mesh, ui_lib
-
 
 class WM_OT_ul_materials_add(Operator):
     bl_label = "Add New Material"
@@ -87,6 +85,8 @@ class OBJECT_OT_weight_display(Operator):
     bl_idname = "object.jewelcraft_weight_display"
 
     def execute(self, context):
+        from ..lib import unit, mesh, ui_lib
+
         obs = [ob for ob in context.selected_objects if ob.type == "MESH"]
 
         if not obs:

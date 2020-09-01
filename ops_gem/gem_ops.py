@@ -26,7 +26,7 @@ from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix
 
 from .. import var
-from ..lib import asset, dynamic_list, unit, view3d_lib
+from ..lib import asset, dynamic_list, unit
 
 
 def upd_set_weight(self, context):
@@ -447,6 +447,8 @@ class OBJECT_OT_gem_recover(Operator):
         context.view_layer.objects.active = bpy.data.objects[ob_name]
 
     def invoke(self, context, event):
+        from ..lib import view3d_lib
+
         self.ob_names = []
         unique_meshes = set()
 

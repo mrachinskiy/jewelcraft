@@ -34,13 +34,7 @@ import bmesh
 from mathutils import Matrix
 
 from .. import var
-from ..lib import (
-    asset,
-    unit,
-    mesh,
-    ui_lib,
-    dynamic_list,
-)
+from ..lib import asset, unit, dynamic_list
 
 
 def set_diameter(self, context):
@@ -249,6 +243,8 @@ class CURVE_OT_length_display(Operator):
     bl_idname = "curve.jewelcraft_length_display"
 
     def execute(self, context):
+        from ..lib import ui_lib, mesh
+
         ob = context.object
 
         if not ob or ob.type != "CURVE":
@@ -273,6 +269,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
+        from ..lib import mesh
 
         if context.mode == "EDIT_MESH":
 
