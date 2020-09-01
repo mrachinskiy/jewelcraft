@@ -24,15 +24,6 @@ from bpy.props import FloatProperty, BoolProperty
 
 
 class Distribute:
-    rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
-    rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
-    loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
-
-    start: FloatProperty(name="Start", step=5)
-    end: FloatProperty(name="End", default=100.0, step=5)
-
-    use_absolute_offset: BoolProperty(name="Absolute Offset")
-    spacing: FloatProperty(name="Spacing", default=0.2, step=1, unit="LENGTH")
 
     def draw(self, context):
         layout = self.layout
@@ -106,6 +97,16 @@ class OBJECT_OT_curve_distribute(Distribute, Operator):
 
     is_distribute = True
 
+    rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
+    rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
+    loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
+
+    start: FloatProperty(name="Start", step=5)
+    end: FloatProperty(name="End", default=100.0, step=5)
+
+    use_absolute_offset: BoolProperty(name="Absolute Offset")
+    spacing: FloatProperty(name="Spacing", default=0.2, step=1, unit="LENGTH")
+
 
 class OBJECT_OT_curve_redistribute(Distribute, Operator):
     bl_label = "Redistribute"
@@ -114,3 +115,13 @@ class OBJECT_OT_curve_redistribute(Distribute, Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     is_distribute = False
+
+    rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION", options={"SKIP_SAVE"})
+    rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION", options={"SKIP_SAVE"})
+    loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH", options={"SKIP_SAVE"})
+
+    start: FloatProperty(name="Start", step=5, options={"SKIP_SAVE"})
+    end: FloatProperty(name="End", default=100.0, step=5, options={"SKIP_SAVE"})
+
+    use_absolute_offset: BoolProperty(name="Absolute Offset", options={"SKIP_SAVE"})
+    spacing: FloatProperty(name="Spacing", default=0.2, step=1, unit="LENGTH")

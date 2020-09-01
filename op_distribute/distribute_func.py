@@ -38,6 +38,9 @@ def execute(self, context):
     # Prepare objects
     # ---------------------------
 
+    obs = []
+    app = obs.append
+
     if self.is_distribute:
 
         if not sizes.values():
@@ -64,7 +67,6 @@ def execute(self, context):
             mat_loc = Matrix.Translation((0.0, 0.0, self.loc_z))
             ob.matrix_world @= mat_loc
 
-        obs = []
         first_cycle = True
 
         for item in sizes.values():
@@ -79,7 +81,7 @@ def execute(self, context):
                     ob.scale *= item.size / ob.dimensions.y
                     view_layer_upd()
 
-                    obs.append((ob, con, None))
+                    app((ob, con, None))
 
                     first_cycle = False
                     continue
@@ -104,12 +106,9 @@ def execute(self, context):
                 ob_copy.scale *= item.size / ob_copy.dimensions.y
                 view_layer_upd()
 
-                obs.append((ob_copy, con, None))
+                app((ob_copy, con, None))
 
     else:
-
-        obs = []
-        app = obs.append
 
         for ob in context.selected_objects:
             for con in ob.constraints:
@@ -222,12 +221,13 @@ def invoke(self, context, event):
         return self.execute(context)
 
     values = []
+    app = values.append
     curve = None
 
     for ob in context.selected_objects:
         for con in ob.constraints:
             if con.type == "FOLLOW_PATH":
-                values.append(-con.offset)
+                app(-con.offset)
                 curve = con.target
                 break
 
@@ -235,10 +235,6 @@ def invoke(self, context, event):
         self.report({"ERROR"}, "Selected objects do not have Follow Path constraint")
         return {"CANCELLED"}
 
-    self.rot_x = 0.0
-    self.rot_z = 0.0
-    self.loc_z = 0.0
-    self.use_absolute_offset = False
     self.start = min(values)
     self.end = max(values)
     self.cyclic = curve.data.splines[0].use_cyclic_u
