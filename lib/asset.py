@@ -459,6 +459,7 @@ def weighting_set_deserialize(filename):
 def bm_to_scene(bm, name="New object", color=None):
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
+    size = bpy.context.object.dimensions.y
 
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
@@ -476,6 +477,7 @@ def bm_to_scene(bm, name="New object", color=None):
 
         ob.location = parent.location
         ob.rotation_euler = parent.rotation_euler
+        ob.scale *= parent.dimensions.y / size
         ob.parent = parent
         ob.matrix_parent_inverse = parent.matrix_basis.inverted()
 
