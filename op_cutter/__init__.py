@@ -120,7 +120,6 @@ class OBJECT_OT_cutter_add(Operator):
 
     def draw(self, context):
         from . import cutter_ui
-
         cutter_ui.draw(self, context)
 
     def execute(self, context):

@@ -25,8 +25,6 @@ from bpy.props import EnumProperty, BoolProperty, IntProperty
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
-from ..lib import view3d_lib
-from ..op_design_report import report_get
 from . import draw_handler, onrender
 from .offscreen import Offscreen
 from .onscreen_text import OnscreenText
@@ -152,13 +150,15 @@ class VIEW3D_OT_gem_map(Offscreen, OnscreenText, ReportProc, Operator):
         return {"PASS_THROUGH"}
 
     def execute(self, context):
+        import time
+        from ..lib import view3d_lib
+        from ..op_design_report import report_get
+
         ReportData = report_get.data_collect(self, context, gem_map=True)
 
         if not ReportData.gems:
             self.report({"ERROR"}, "No gems in the scene")
             return {"CANCELLED"}
-
-        import time
 
         self.region = context.region
         self.region_3d = context.space_data.region_3d
