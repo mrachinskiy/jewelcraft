@@ -19,6 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import operator
 from math import pi
 
 from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
@@ -40,114 +41,112 @@ def loc_3d_to_2d(region, region_3d, loc, ratio_w, ratio_h):
     return x * ratio_w, y * ratio_h
 
 
-class Offscreen:
+def offscreen_refresh(self, context):
+    if self.offscreen is not None:
+        self.offscreen.free()
 
-    def offscreen_refresh(self, context):
-        if self.offscreen is not None:
-            self.offscreen.free()
+    width = self.region.width
+    height = self.region.height
+    self.offscreen = gpu.types.GPUOffScreen(width, height)
 
-        width = self.region.width
-        height = self.region.height
-        self.offscreen = gpu.types.GPUOffScreen(width, height)
+    mat_offscreen = Matrix()
+    mat_offscreen[0][0] = 2 / width
+    mat_offscreen[0][3] = -1
+    mat_offscreen[1][1] = 2 / height
+    mat_offscreen[1][3] = -1
 
-        mat_offscreen = Matrix()
-        mat_offscreen[0][0] = 2 / width
-        mat_offscreen[0][3] = -1
-        mat_offscreen[1][1] = 2 / height
-        mat_offscreen[1][3] = -1
+    with self.offscreen.bind():
+        bgl.glClearColor(0.0, 0.0, 0.0, 0.0)
+        bgl.glClear(bgl.GL_COLOR_BUFFER_BIT)
 
-        with self.offscreen.bind():
-            bgl.glClearColor(0.0, 0.0, 0.0, 0.0)
-            bgl.glClear(bgl.GL_COLOR_BUFFER_BIT)
+        with gpu.matrix.push_pop():
+            gpu.matrix.load_matrix(mat_offscreen)
+            gpu.matrix.load_projection_matrix(Matrix())
 
-            with gpu.matrix.push_pop():
-                gpu.matrix.load_matrix(mat_offscreen)
-                gpu.matrix.load_projection_matrix(Matrix())
+            draw_gems(self, context, gamma_corr=True)
 
-                self.draw_gems(context, gamma_corr=True)
 
-    def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
-        import operator
+def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
 
-        if gamma_corr:
-            _c = gamma_correction
+    if gamma_corr:
+        _c = gamma_correction
+    else:
+        _c = lambda x: x
+
+    view_normal = self.region_3d.view_rotation @ Vector((0.0, 0.0, 1.0))
+
+    if self.region_3d.is_perspective:
+        angle_thold = pi / 1.8
+        view_loc = self.region_3d.view_matrix.inverted().translation
+    else:
+        angle_thold = pi / 2.0
+        center_xy = (self.region.width / 2.0, self.region.height / 2.0)
+        view_loc = region_2d_to_origin_3d(self.region, self.region_3d, center_xy)
+
+    from_scene_scale = unit.Scale(context).from_scene
+    depsgraph = context.evaluated_depsgraph_get()
+    gems = []
+    app = gems.append
+
+    for dup in depsgraph.object_instances:
+
+        if dup.is_instance:
+            ob = dup.instance_object.original
         else:
-            _c = lambda x: x
+            ob = dup.object.original
 
-        view_normal = self.region_3d.view_rotation @ Vector((0.0, 0.0, 1.0))
+        if "gem" not in ob or (self.use_select and not ob.select_get()):
+            continue
 
-        if self.region_3d.is_perspective:
-            angle_thold = pi / 1.8
-            view_loc = self.region_3d.view_matrix.inverted().translation
-        else:
-            angle_thold = pi / 2.0
-            center_xy = (self.region.width / 2.0, self.region.height / 2.0)
-            view_loc = region_2d_to_origin_3d(self.region, self.region_3d, center_xy)
+        ob_stone = ob["gem"]["stone"]
+        ob_cut = ob["gem"]["cut"]
+        ob_size = tuple(round(x, 2) for x in from_scene_scale(ob.dimensions, batch=True))
 
-        from_scene_scale = unit.Scale(context).from_scene
-        depsgraph = context.evaluated_depsgraph_get()
-        gems = []
-        app = gems.append
+        size_fmt, color = self.view_data.get((ob_stone, ob_cut, ob_size), (None, None))
 
-        for dup in depsgraph.object_instances:
+        if color is None:
+            continue
 
-            if dup.is_instance:
-                ob = dup.instance_object.original
-            else:
-                ob = dup.object.original
+        mat = dup.matrix_world.copy()
+        dist_from_view = (mat.translation - view_loc).length
+        app((dist_from_view, ob, mat, size_fmt, color))
 
-            if "gem" not in ob or (self.use_select and not ob.select_get()):
-                continue
+    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+    fontid = 0
+    blf.size(fontid, self.prefs.view_font_size_gem_size, 72)
+    blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
 
-            ob_stone = ob["gem"]["stone"]
-            ob_cut = ob["gem"]["cut"]
-            ob_size = tuple(round(x, 2) for x in from_scene_scale(ob.dimensions, batch=True))
+    gems.sort(key=operator.itemgetter(0), reverse=True)
 
-            size_fmt, color = self.view_data.get((ob_stone, ob_cut, ob_size), (None, None))
+    for _, ob, mat, size_fmt, color in gems:
 
-            if color is None:
-                continue
+        # Shape
+        # -----------------------------
 
-            mat = dup.matrix_world.copy()
-            dist_from_view = (mat.translation - view_loc).length
-            app((dist_from_view, ob, mat, size_fmt, color))
+        ob_eval = ob.evaluated_get(depsgraph)
+        me = ob_eval.to_mesh()
+        me.transform(mat)
+        verts = me.vertices
 
-        shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
-        fontid = 0
-        blf.size(fontid, self.prefs.view_font_size_gem_size, 72)
-        blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
+        shader.bind()
+        shader.uniform_float("color", _c(color))
 
-        gems.sort(key=operator.itemgetter(0), reverse=True)
+        for poly in me.polygons:
+            if view_normal.angle(poly.normal) < angle_thold:
+                cos = [
+                    loc_3d_to_2d(self.region, self.region_3d, verts[v].co, ratio_w, ratio_h)
+                    for v in poly.vertices
+                ]
+                batch = batch_for_shader(shader, "TRI_FAN", {"pos": cos})
+                batch.draw(shader)
 
-        for _, ob, mat, size_fmt, color in gems:
+        ob_eval.to_mesh_clear()
 
-            # Shape
-            # -----------------------------
+        # Size
+        # -----------------------------
 
-            ob_eval = ob.evaluated_get(depsgraph)
-            me = ob_eval.to_mesh()
-            me.transform(mat)
-            verts = me.vertices
+        loc_x, loc_y = loc_3d_to_2d(self.region, self.region_3d, mat.translation, ratio_w, ratio_h)
+        dim_x, dim_y = blf.dimensions(fontid, size_fmt)
 
-            shader.bind()
-            shader.uniform_float("color", _c(color))
-
-            for poly in me.polygons:
-                if view_normal.angle(poly.normal) < angle_thold:
-                    cos = [
-                        loc_3d_to_2d(self.region, self.region_3d, verts[v].co, ratio_w, ratio_h)
-                        for v in poly.vertices
-                    ]
-                    batch = batch_for_shader(shader, "TRI_FAN", {"pos": cos})
-                    batch.draw(shader)
-
-            ob_eval.to_mesh_clear()
-
-            # Size
-            # -----------------------------
-
-            loc_x, loc_y = loc_3d_to_2d(self.region, self.region_3d, mat.translation, ratio_w, ratio_h)
-            dim_x, dim_y = blf.dimensions(fontid, size_fmt)
-
-            blf.position(fontid, loc_x - dim_x / 2, loc_y - dim_y / 2, 0.0)
-            blf.draw(fontid, size_fmt)
+        blf.position(fontid, loc_x - dim_x / 2, loc_y - dim_y / 2, 0.0)
+        blf.draw(fontid, size_fmt)

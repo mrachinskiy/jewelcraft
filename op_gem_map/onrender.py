@@ -20,6 +20,7 @@
 
 
 import os
+import tempfile
 
 import bpy
 from bpy_extras.image_utils import load_image
@@ -29,11 +30,11 @@ from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix
 
 from ..lib import asset
+from . import onscreen_text
+from .offscreen import draw_gems
 
 
 def render_map(self, context):
-    import tempfile
-
     image_name = "Gem Map"
     width = self.width
     height = self.height
@@ -95,8 +96,8 @@ def render_map(self, context):
             # Gem map
             # --------------------------------
 
-            self.draw_gems(context, ratio_w=ratio_w, ratio_h=ratio_h)
-            self.onscreen_gem_table(x, y, color=(0.0, 0.0, 0.0, 1.0))
+            draw_gems(self, context, ratio_w=ratio_w, ratio_h=ratio_h)
+            onscreen_text.onscreen_gem_table(self, x, y, color=(0.0, 0.0, 0.0, 1.0))
 
         buffer = bgl.Buffer(bgl.GL_BYTE, width * height * 4)
         bgl.glReadBuffer(bgl.GL_BACK)
