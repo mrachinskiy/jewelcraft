@@ -459,6 +459,8 @@ def weighting_set_deserialize(filename):
 def bm_to_scene(bm, name="New object", color=None):
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
+
+    bpy.context.view_layer.update()
     size = bpy.context.object.dimensions.y
 
     me = bpy.data.meshes.new(name)
