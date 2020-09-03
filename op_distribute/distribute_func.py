@@ -81,7 +81,7 @@ def execute(self, context):
                     ob.scale *= item.size / ob.dimensions.y
                     view_layer_upd()
 
-                    app((ob, con, None))
+                    app((ob, con, None, item.size))
 
                     first_cycle = False
                     continue
@@ -104,9 +104,8 @@ def execute(self, context):
                         break
 
                 ob_copy.scale *= item.size / ob_copy.dimensions.y
-                view_layer_upd()
 
-                app((ob_copy, con, None))
+                app((ob_copy, con, None, item.size))
 
     else:
 
@@ -128,7 +127,7 @@ def execute(self, context):
                         mat_rot = ob.matrix_basis.to_quaternion().to_matrix()
                         ob.matrix_basis.translation = mat_rot @ Vector((0.0, 0.0, dist + self.loc_z))
 
-                    app((ob, con, con.offset))
+                    app((ob, con, con.offset, ob.dimensions.y))
                     break
 
         obs.sort(key=operator.itemgetter(2), reverse=True)
@@ -172,11 +171,9 @@ def execute(self, context):
     size_prev = 0.0
     consecutive_cycle = False
 
-    for ob, con, _ in obs:
+    for ob, con, _, size in obs:
 
         if self.use_absolute_offset:
-            bbox_x = [(ob.matrix_world @ Vector(x))[0] for x in ob.bound_box]
-            size = max(bbox_x) - min(bbox_x)
             ofst = base_unit * ((size + size_prev) / 2 + self.spacing)
             size_prev = size
 
