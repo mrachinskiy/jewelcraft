@@ -23,10 +23,10 @@ from bpy.types import Operator
 from bpy.props import FloatProperty
 
 
-class OBJECT_OT_micro_prong_cutter_add(Operator):
-    bl_label = "Add Micro Prong Cutter"
-    bl_description = "Create cutter for micro prong setting for selected gems"
-    bl_idname = "object.jewelcraft_micro_prong_cutter_add"
+class OBJECT_OT_microprong_cutter_add(Operator):
+    bl_label = "Add Microprong Cutter"
+    bl_description = "Create microprong cutter between selected gems"
+    bl_idname = "object.jewelcraft_microprong_cutter_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
     dim_x: FloatProperty(name="Width", default=0.3, min=0.0, step=1, unit="LENGTH")
@@ -61,9 +61,9 @@ class OBJECT_OT_micro_prong_cutter_add(Operator):
         col.prop(self, "loc_z")
 
     def execute(self, context):
-        from . import micro_prong_func
-        return micro_prong_func.execute(self, context)
+        from . import microprong_func
+        return microprong_func.execute(self, context)
 
     def invoke(self, context, event):
-        from . import micro_prong_func
-        return micro_prong_func.invoke(self, context, event)
+        from . import microprong_func
+        return microprong_func.invoke(self, context, event)
