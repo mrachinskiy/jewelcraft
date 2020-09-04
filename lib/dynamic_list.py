@@ -48,11 +48,12 @@ def _iface_lang(context):
 
 def cuts(self, context):
     lang = _iface_lang(context)
-    theme = context.preferences.addons[var.ADDON_ID].preferences.theme_icon
+    color = context.preferences.themes[0].user_interface.wcol_menu_item.text.v
 
-    if lang == _cache.get("cuts__LANG") and theme == _cache.get("cuts__THEME"):
+    if lang == _cache.get("cuts__LANG") and color == _cache.get("cuts__COLOR"):
         return _cache["cuts__RESULT"]
 
+    theme = "DARK" if color < 0.5 else "LIGHT"
     pcoll = var.preview_collections.get("cuts")
 
     if not pcoll:
@@ -74,7 +75,7 @@ def cuts(self, context):
 
     _cache["cuts__RESULT"] = list_
     _cache["cuts__LANG"] = lang
-    _cache["cuts__THEME"] = theme
+    _cache["cuts__COLOR"] = color
 
     return list_
 

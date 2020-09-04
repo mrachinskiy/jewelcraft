@@ -363,13 +363,6 @@ class JewelCraftPreferences(AddonPreferences):
         soft_max=1.0,
         subtype="COLOR",
     )
-    theme_icon: EnumProperty(
-        name="Icons",
-        items=(
-            ("LIGHT", "Light", ""),
-            ("DARK", "Dark", ""),
-        ),
-    )
     view_font_size_report: IntProperty(
         name="Gem Table",
         default=19,
