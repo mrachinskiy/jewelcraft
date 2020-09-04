@@ -43,6 +43,7 @@
     "Popover Width": "Ширина всплывающей панели",
     "Snap to Edges": "Привязка к рёбрам",
     "Spacing Overlay": "Наложение расстояния",
+    "Microprong Cutter": "Выборка микрокрапана",
     //
     // Operator popup
     //
@@ -199,6 +200,7 @@
     "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool":
       "Разделить несвязанные части, центрировать origin и исправить ориентацию (может восстанавливать камни из STL файла).\nПРИМЕЧАНИЕ: идентификатор камня можно добавить инструментом Edit Gem",
     "Ring size format": "Формат размера кольца",
+    "Create microprong cutter between selected gems": "Создать выборку микрокрапана между выделенными камнями",
     //
     // Reports
     //
