@@ -40,7 +40,6 @@
     // "Popover Width": "",
     // "Snap to Edges": "",
     // "Spacing Overlay": "",
-    // "Microprong Cutter": "",
     "Asset Name": "Nom de la ressources",
     "Category Name": "Nom des catégories",
     "Set Name": "Nommer",
@@ -79,6 +78,7 @@
     // "Zero dimensions": "",
     // "Action completed": "",
     // "No corresponding size": "",
+    // "Wedge": "",
     "Add gemstone to the scene": "Ajouter une pierre précieuse à la scène",
     "Edit selected gems": "Editer les pierres sélectionnées",
     // "Round diamonds only": "",
@@ -315,5 +315,6 @@
     // "All": "",
     // "Calculate": "",
     // "Load": "",
+    // "Microprong Cutter": "",
   }
 }

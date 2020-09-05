@@ -40,7 +40,6 @@
     // "Popover Width": "",
     // "Snap to Edges": "",
     // "Spacing Overlay": "",
-    // "Microprong Cutter": "",
     "Asset Name": "资产名称",
     "Category Name": "类别名称",
     "Set Name": "设置名称",
@@ -79,6 +78,7 @@
     // "Zero dimensions": "",
     // "Action completed": "",
     // "No corresponding size": "",
+    // "Wedge": "",
     "Add gemstone to the scene": "向场景添加宝石",
     "Edit selected gems": "编辑选中的宝石",
     // "Round diamonds only": "",
@@ -315,5 +315,6 @@
     // "All": "",
     // "Calculate": "",
     // "Load": "",
+    // "Microprong Cutter": "",
   }
 }
