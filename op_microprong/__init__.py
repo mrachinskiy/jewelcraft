@@ -33,7 +33,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
     dim_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
 
     handle_z: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
-    keel_z: FloatProperty(name="Keel", default=0.3, min=0.0, step=1, unit="LENGTH")
+    wedge_z: FloatProperty(name="Wedge", default=0.3, min=0.0, step=1, unit="LENGTH")
 
     rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
@@ -52,7 +52,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.prop(self, "dim_y")
         col.separator()
         col.prop(self, "handle_z")
-        col.prop(self, "keel_z")
+        col.prop(self, "wedge_z")
 
         layout.label(text="Transforms")
         col = layout.column(align=True)

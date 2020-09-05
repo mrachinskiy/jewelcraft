@@ -43,7 +43,6 @@
     "Popover Width": "Ширина всплывающей панели",
     "Snap to Edges": "Привязка к рёбрам",
     "Spacing Overlay": "Наложение расстояния",
-    "Microprong Cutter": "Выборка микрокрапана",
     //
     // Operator popup
     //
@@ -85,6 +84,7 @@
     "Zero dimensions": "Нулевые габариты",
     "Action completed": "Действие выполнено",
     "No corresponding size": "Нет соответствующего размера",
+    "Wedge": "Клин",
     //
     // Tooltips
     //
@@ -367,6 +367,7 @@
     "Add To Library": "Добавить в библиотеку",
     "All": "Все",
     "Calculate": "Вычислить",
-    "Load": "Загрузить"
+    "Load": "Загрузить",
+    "Microprong Cutter": "Выборка микрокрапана"
   }
 }
