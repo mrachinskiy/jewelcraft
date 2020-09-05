@@ -100,7 +100,7 @@ def execute(self, context):
     verts = (
         bm.verts.new((w_half,  -l_half, self.handle_z)),
         bm.verts.new((w_half,  -l_half, 0.0)),
-        bm.verts.new((0.0,     -l_half, -self.keel_z)),
+        bm.verts.new((0.0,     -l_half, -self.wedge_z)),
         bm.verts.new((-w_half, -l_half, 0.0)),
         bm.verts.new((-w_half, -l_half, self.handle_z)),
     )
