@@ -39,7 +39,6 @@ def execute(self, context):
     start = self.start
     end = self.end
     sizes = context.window_manager.jewelcraft.sizes
-    view_layer_upd = context.view_layer.update
 
     # Prepare objects
     # ---------------------------
