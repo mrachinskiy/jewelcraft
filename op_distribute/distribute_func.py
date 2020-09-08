@@ -23,7 +23,13 @@ import operator
 
 from mathutils import Matrix, Vector
 
-from ..lib import mesh, asset
+from ..lib import mesh, asset, iterutils
+
+
+def _flatten(iterable):
+    for item in iterable:
+        for _ in range(item.qty):
+            yield item.size
 
 
 def execute(self, context):
@@ -67,26 +73,15 @@ def execute(self, context):
             mat_loc = Matrix.Translation((0.0, 0.0, self.loc_z))
             ob.matrix_world @= mat_loc
 
-        first_cycle = True
+        sizes_flat = _flatten(sizes.values())
 
-        for item in sizes.values():
-            for _ in range(item.qty):
+        for is_last, size in iterutils.spot_last(sizes_flat):
 
-                if first_cycle:
-                    con = ob.constraints.new("FOLLOW_PATH")
-                    con.target = curve
-                    con.use_curve_follow = True
-                    con.forward_axis = "FORWARD_X"
-
-                    ob.scale *= item.size / ob.dimensions.y
-                    view_layer_upd()
-
-                    app((ob, con, None, item.size))
-
-                    first_cycle = False
-                    continue
-
+            if is_last:
+                ob_copy = ob
+            else:
                 ob_copy = ob.copy()
+
                 collection.objects.link(ob_copy)
 
                 if use_local_view:
@@ -99,13 +94,14 @@ def execute(self, context):
                         child_copy.parent = ob_copy
                         child_copy.matrix_parent_inverse = child.matrix_parent_inverse
 
-                for con in ob_copy.constraints:
-                    if con.type == "FOLLOW_PATH":
-                        break
+            con = ob_copy.constraints.new("FOLLOW_PATH")
+            con.target = curve
+            con.use_curve_follow = True
+            con.forward_axis = "FORWARD_X"
 
-                ob_copy.scale *= item.size / ob_copy.dimensions.y
+            ob_copy.scale *= size / ob_copy.dimensions.y
 
-                app((ob_copy, con, None, item.size))
+            app((ob_copy, con, None, size))
 
     else:
 
