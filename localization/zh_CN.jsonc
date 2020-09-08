@@ -7,7 +7,7 @@
     "Save To File": "保存到文件",
     "Gems": "宝石",
     "Assets": "资源库",
-    "Select Gems By...": "选择宝石...",
+    "Select by Trait": "按特征选择",
     "Jeweling": "珠宝",
     "Weighting": "重量评估",
     "Weighting Set": "材料设定",
@@ -274,12 +274,6 @@
     "Cutter": "开孔器",
     "Base": "基础"
   },
-  "Dative": {
-    "Size": "尺寸",
-    "Stone": "石头",
-    "Cut": "切割"
-    // "Similar": "",
-  },
   "Operator": {
     "Add Gem": "添加宝石",
     // "Recover Gem": "",
@@ -316,5 +310,6 @@
     // "Calculate": "",
     // "Load": "",
     // "Microprong Cutter": "",
+    // "Similar": "",
   }
 }
