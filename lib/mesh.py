@@ -23,50 +23,32 @@ import bpy
 import bmesh
 from mathutils import Matrix
 
-
-# Utils
-# ---------------------------
-
-
-def pairwise_cyclic(a):
-    import itertools
-    b = itertools.cycle(a)
-    next(b)
-    return zip(a, b)
-
-
-def quadwise_cyclic(a1, b1):
-    import itertools
-    a2 = itertools.cycle(a1)
-    next(a2)
-    b2 = itertools.cycle(b1)
-    next(b2)
-    return zip(a2, a1, b1, b2)
+from .iterutils import pairwise_cyclic, quadwise_cyclic
 
 
 # Primitives
 # ---------------------------
 
 
-def make_rect(bm, x, y, h):
+def make_rect(bm, x, y, z):
     return [
         bm.verts.new(co)
         for co in (
-            ( x,  y, h),
-            (-x,  y, h),
-            (-x, -y, h),
-            ( x, -y, h),
+            ( x,  y, z),
+            (-x,  y, z),
+            (-x, -y, z),
+            ( x, -y, z),
         )
     ]
 
 
-def make_tri(bm, x, y, h):
+def make_tri(bm, x, y, z):
     return [
         bm.verts.new(co)
         for co in (
-            (  x,  y / 3.0, h),
-            ( -x,  y / 3.0, h),
-            (0.0, -y / 1.5, h),
+            (  x,  y / 3.0, z),
+            ( -x,  y / 3.0, z),
+            (0.0, -y / 1.5, z),
         )
     ]
 
@@ -165,25 +147,25 @@ def bridge_verts(bm, v1, v2):
     return {"faces": faces, "edges": edges}
 
 
-def duplicate_verts(bm, verts, z=False):
+def duplicate_verts(bm, verts, z=None):
     dup = bmesh.ops.duplicate(bm, geom=verts)
     verts = [x for x in dup["geom"] if isinstance(x, bmesh.types.BMVert)]
 
-    if z is not False:
+    if z is not None:
         for v in verts:
-            v.co[2] = z
+            v.co.z = z
 
     return verts
 
 
-def duplicate_edges(bm, edges, z=False):
+def duplicate_edges(bm, edges, z=None):
     dup = bmesh.ops.duplicate(bm, geom=edges)
     edges = [x for x in dup["geom"] if isinstance(x, bmesh.types.BMEdge)]
 
-    if z is not False:
-        verts = [x for x in dup["geom"] if isinstance(x, bmesh.types.BMVert)]
-        for v in verts:
-            v.co[2] = z
+    if z is not None:
+        for v in dup["geom"]:
+            if isinstance(v, bmesh.types.BMVert):
+                v.co.z = z
 
     return edges
 
