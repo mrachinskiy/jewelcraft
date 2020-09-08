@@ -7,7 +7,7 @@
     "Save To File": "Enregistre vers un fichier",
     "Gems": "Pierres précieuses",
     "Assets": "Ressources",
-    "Select Gems By...": "Sélectionner les pierres par...",
+    "Select by Trait": "Sélectionnez par trait",
     "Jeweling": "Bijouterie",
     "Weighting": "Poids",
     "Weighting Set": "Catégories de poids",
@@ -274,12 +274,6 @@
     "Cutter": "Alésage"
     // "Base": "",
   },
-  "Dative": {
-    "Size": "Dimension",
-    "Stone": "Pierre",
-    "Cut": "Taille"
-    // "Similar": "",
-  },
   "Operator": {
     "Add Gem": "Ajouter une pierre",
     // "Recover Gem": "",
@@ -316,5 +310,6 @@
     // "Calculate": "",
     // "Load": "",
     // "Microprong Cutter": "",
+    // "Similar": "",
   }
 }

@@ -7,7 +7,7 @@
     "Save To File": "Sava File",
     "Gems": "Gemme",
     "Assets": "Risorse",
-    "Select Gems By...": "Seleziona gemme per...",
+    "Select by Trait": "Seleziona per Tratto",
     "Jeweling": "Gioielleria",
     "Weighting": "Stima del Peso",
     "Weighting Set": "Set di Stima",
@@ -274,12 +274,6 @@
     "Cutter": "Fresa"
     // "Base": "",
   },
-  "Dative": {
-    "Size": "Misura",
-    "Stone": "Pietra",
-    "Cut": "Taglio"
-    // "Similar": "",
-  },
   "Operator": {
     "Add Gem": "Aggiungi gemma",
     // "Recover Gem": "",
@@ -316,5 +310,6 @@
     // "Calculate": "",
     // "Load": "",
     // "Microprong Cutter": "",
+    // "Similar": "",
   }
 }

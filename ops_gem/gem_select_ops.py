@@ -27,10 +27,10 @@ from mathutils import Matrix
 from ..lib import asset, dynamic_list
 
 
-class OBJECT_OT_select_gems_by_trait(Operator):
-    bl_label = "Select Gems By Trait"
+class OBJECT_OT_gem_select_by_trait(Operator):
+    bl_label = "Select Gems by Trait"
     bl_description = "Select gems by trait"
-    bl_idname = "object.jewelcraft_select_gems_by_trait"
+    bl_idname = "object.jewelcraft_gem_select_by_trait"
     bl_options = {"REGISTER", "UNDO"}
 
     filter_size: BoolProperty(name="Size", options={"SKIP_SAVE"})
@@ -127,10 +127,10 @@ class OBJECT_OT_select_gems_by_trait(Operator):
         return self.execute(context)
 
 
-class OBJECT_OT_select_overlapping(Operator):
+class OBJECT_OT_gem_select_overlapping(Operator):
     bl_label = "Select Overlapping"
     bl_description = "Select gems that are less than 0.1 mm distance from each other or overlapping"
-    bl_idname = "object.jewelcraft_select_overlapping"
+    bl_idname = "object.jewelcraft_gem_select_overlapping"
     bl_options = {"REGISTER", "UNDO"}
 
     threshold: FloatProperty(

@@ -174,19 +174,19 @@ class VIEW3D_MT_jewelcraft(Setup, Menu):
 
 
 class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
-    bl_label = "Select Gems By..."
+    bl_label = "Select by Trait"
     bl_description = "Select gems by trait"
 
     def draw(self, context):
         layout = self.layout
-        layout.operator("object.jewelcraft_select_gems_by_trait", text="Size", text_ctxt="Dative").filter_size = True
-        layout.operator("object.jewelcraft_select_gems_by_trait", text="Stone", text_ctxt="Dative").filter_stone = True
-        layout.operator("object.jewelcraft_select_gems_by_trait", text="Cut", text_ctxt="Dative").filter_cut = True
+        layout.operator("object.jewelcraft_gem_select_by_trait", text="Size", text_ctxt="*").filter_size = True
+        layout.operator("object.jewelcraft_gem_select_by_trait", text="Stone", text_ctxt="*").filter_stone = True
+        layout.operator("object.jewelcraft_gem_select_by_trait", text="Cut", text_ctxt="Jewelry").filter_cut = True
         layout.separator()
-        layout.operator("object.jewelcraft_select_gems_by_trait", text="Similar", text_ctxt="Dative").filter_similar = True
-        layout.operator("object.jewelcraft_select_overlapping", text="Overlapping")
+        layout.operator("object.jewelcraft_gem_select_by_trait", text="Similar").filter_similar = True
+        layout.operator("object.jewelcraft_gem_select_overlapping", text="Overlapping")
         layout.separator()
-        layout.operator("object.jewelcraft_select_gems_by_trait", text="All")
+        layout.operator("object.jewelcraft_gem_select_by_trait", text="All")
 
 
 class VIEW3D_MT_jewelcraft_asset_folder(Menu):

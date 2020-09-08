@@ -7,7 +7,7 @@
     "Save To File": "Guardar en Archivo",
     "Gems": "Gemas",
     "Assets": "Activos",
-    "Select Gems By...": "Seleccionar Gemas por...",
+    "Select by Trait": "Seleccionar por Rasgo",
     "Jeweling": "Joyería",
     "Weighting": "Evaluación del Peso",
     "Weighting Set": "Conjunto de Materiales",
@@ -274,12 +274,6 @@
     "Cutter": "Cortador"
     // "Base": "",
   },
-  "Dative": {
-    "Size": "Tamaño",
-    "Stone": "Piedra",
-    "Cut": "Corte"
-    // "Similar": "",
-  },
   "Operator": {
     "Add Gem": "Añadir Gema",
     // "Recover Gem": "",
@@ -316,5 +310,6 @@
     // "Calculate": "",
     // "Load": "",
     // "Microprong Cutter": "",
+    // "Similar": "",
   }
 }
