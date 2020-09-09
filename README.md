@@ -19,11 +19,13 @@ Features:
 
 Video:
 
-* [Demo v1.0](https://youtu.be/XZ6uIdNnrHk)
 * [Prongs & Cutters v2.0](https://youtu.be/AZlCFg8bDSg)
 * [Widgets v2.3](https://youtu.be/9VN_-seau3k)
 * [Gem Map v2.3](https://youtu.be/aQ__ec0BAbE)
 * [Asset Manager v2.6](https://youtu.be/SYMHsImXe_c)
+* [Distribute on Curve v2.8](https://youtu.be/h4-emum2orE)
+* [Design Report v2.8](https://youtu.be/6UxJAw_t5R0)
+* [Recover Gem v2.8](https://youtu.be/dn1XBbslgEw)
 
 [More videos][playlist_en] | [Больше видео][playlist_ru]
 
@@ -31,8 +33,8 @@ Video:
 How to install
 ==========================
 
-1. Download [JewelCraft 2.7.3][v_latest].<sup>1</sup>
-2. Make sure you have Blender 2.80 or newer.
+1. Download [JewelCraft 2.8.0][v_latest].<sup>1</sup>
+2. Make sure you have Blender 2.90 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
 5. Check [known issues](#known-issues).
@@ -45,8 +47,8 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.7.3][v_latest].<sup>1</sup>
-2. Убедитесь, что у вас установлен Blender 2.80 или новее.
+1. Загрузите [JewelCraft 2.8.0][v_latest].<sup>1</sup>
+2. Убедитесь, что у вас установлен Blender 2.90 или новее.
 3. Откройте `Preferences` → `Add-ons`.
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
 5. Ознакомьтесь с [известными проблемами](#known-issues).
@@ -89,7 +91,7 @@ Contributing
 * After translation is done submit it back through [issues][new_translation].
 
 
-[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/2.7.3/jewelcraft-2_7_3.zip
+[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.8.0-blender2.90.0/jewelcraft-2_8_0.zip
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
 [new_bug_report]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
