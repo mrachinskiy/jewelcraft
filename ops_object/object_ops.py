@@ -32,8 +32,6 @@ from bpy.props import (
 )
 from mathutils import Matrix
 
-from ..lib import asset
-
 
 class OBJECT_OT_mirror(Operator):
     bl_label = "Mirror"
@@ -66,6 +64,8 @@ class OBJECT_OT_mirror(Operator):
         layout.separator()
 
     def execute(self, context):
+        from ..lib import asset
+
         axes = []
         if self.x: axes.append(0)
         if self.y: axes.append(1)
@@ -270,6 +270,8 @@ class OBJECT_OT_make_instance_face(Operator):
     apply_scale: BoolProperty(name="Apply Scale", default=True)
 
     def execute(self, context):
+        from ..lib import asset
+
         space_data = context.space_data
         obs = context.selected_objects
         ob = context.object or obs[0]
@@ -445,6 +447,8 @@ class OBJECT_OT_lattice_project(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        from ..lib import asset
+
         obs = context.selected_objects
 
         if len(obs) < 2:
@@ -593,6 +597,8 @@ class OBJECT_OT_lattice_profile(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        from ..lib import asset
+
         ob = context.object
 
         if not ob:

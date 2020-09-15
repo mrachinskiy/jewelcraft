@@ -25,7 +25,7 @@ from bpy.types import Operator
 from bpy.props import StringProperty
 
 from .. import var
-from ..lib import asset, dynamic_list
+from ..lib import data, dynamic_list, pathutils
 
 
 class EditCheck:
@@ -58,13 +58,13 @@ class WM_OT_weighting_set_add(Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        lib_path = asset.get_weighting_lib_path()
+        lib_path = pathutils.get_weighting_lib_path()
         set_path = os.path.join(lib_path, self.set_name + ".json")
 
         if not os.path.exists(lib_path):
             os.makedirs(lib_path)
 
-        asset.weighting_set_serialize(set_path)
+        data.weighting_set_serialize(set_path)
 
         dynamic_list.weighting_set_refresh()
         props = context.window_manager.jewelcraft
@@ -84,9 +84,9 @@ class WM_OT_weighting_set_replace(EditCheck, Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        set_path = asset.get_weighting_set_path()
+        set_path = pathutils.get_weighting_set_path()
         if os.path.exists(set_path):
-            asset.weighting_set_serialize(set_path)
+            data.weighting_set_serialize(set_path)
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -102,7 +102,7 @@ class WM_OT_weighting_set_del(EditCheck, Operator):
 
     def execute(self, context):
         props = context.window_manager.jewelcraft
-        set_path = asset.get_weighting_set_path()
+        set_path = pathutils.get_weighting_set_path()
 
         list_ = [x[0] for x in dynamic_list.weighting_set(self, context)]
         index = max(0, list_.index(props.weighting_set) - 1)
@@ -145,8 +145,8 @@ class WM_OT_weighting_set_rename(EditCheck, Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        set_path_current = asset.get_weighting_set_path()
-        set_path_new = os.path.join(asset.get_weighting_lib_path(), self.set_name + ".json")
+        set_path_current = pathutils.get_weighting_set_path()
+        set_path_new = os.path.join(pathutils.get_weighting_lib_path(), self.set_name + ".json")
 
         if not os.path.exists(set_path_current):
             self.report({"ERROR"}, "File not found")
@@ -218,7 +218,7 @@ class WeightingSetLoad:
         if self.clear_materials:
             materials.clear()
 
-        asset.weighting_set_deserialize(props.weighting_set)
+        data.weighting_set_deserialize(props.weighting_set)
 
         return {"FINISHED"}
 

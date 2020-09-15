@@ -34,7 +34,7 @@ import bmesh
 from mathutils import Matrix
 
 from .. import var
-from ..lib import asset, unit, dynamic_list
+from ..lib import dynamic_list, unit
 
 
 def set_diameter(self, context):
@@ -45,6 +45,8 @@ def set_diameter(self, context):
 
 
 def set_ring_size(self, context):
+    from ..lib import asset
+
     size = asset.to_ring_size(
         unit.Scale(context).from_scene(self.circumference),
         self.size_format,
@@ -269,7 +271,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        from ..lib import mesh
+        from ..lib import asset, mesh
 
         if context.mode == "EDIT_MESH":
 
@@ -321,6 +323,8 @@ class OBJECT_OT_move_over_under(Operator):
     individual: BoolProperty(name="Individual", description="Move each object individually")
 
     def execute(self, context):
+        from ..lib import asset
+
         if not self.individual or context.mode == "EDIT_MESH":
 
             ob = context.edit_object or context.object

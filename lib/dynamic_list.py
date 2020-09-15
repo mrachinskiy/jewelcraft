@@ -27,7 +27,7 @@ import bpy.utils.previews
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
-from . import asset
+from . import pathutils
 
 
 _cache = {}
@@ -111,7 +111,7 @@ def weighting_set(self, context):
         return _cache["weighting_set__RESULT"]
 
     prefs = context.preferences.addons[var.ADDON_ID].preferences
-    lib_path = asset.get_weighting_lib_path()
+    lib_path = pathutils.get_weighting_lib_path()
     wsets = {}
     list_ = []
 
@@ -193,7 +193,7 @@ def asset_folders(self, context):
     if "asset_folders__RESULT" in _cache:
         return _cache["asset_folders__RESULT"]
 
-    folder = asset.get_asset_lib_path()
+    folder = pathutils.get_asset_lib_path()
 
     if not os.path.exists(folder):
         _cache["asset_folders__RESULT"] = ()

@@ -24,7 +24,7 @@ from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
 from mathutils import Matrix
 
-from ..lib import asset, dynamic_list
+from ..lib import dynamic_list
 
 
 class OBJECT_OT_gem_select_by_trait(Operator):
@@ -134,6 +134,8 @@ class OBJECT_OT_gem_select_overlapping(Operator):
     )
 
     def execute(self, context):
+        from ..lib import asset
+
         obs = []
         ob_data = []
         depsgraph = context.evaluated_depsgraph_get()
