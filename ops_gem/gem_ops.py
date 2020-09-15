@@ -26,7 +26,7 @@ from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix
 
 from .. import var
-from ..lib import asset, dynamic_list, unit
+from ..lib import dynamic_list, unit
 
 
 def upd_set_weight(self, context):
@@ -80,6 +80,8 @@ class OBJECT_OT_gem_add(Operator):
         split.template_icon_view(self, "cut", show_labels=True)
 
     def execute(self, context):
+        from ..lib import asset
+
         scene = context.scene
         view_layer = context.view_layer
         space_data = context.space_data
@@ -113,6 +115,8 @@ class OBJECT_OT_gem_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        from ..lib import asset
+
         self.color = asset.color_rnd()
 
         wm = context.window_manager
@@ -154,6 +158,8 @@ class OBJECT_OT_gem_edit(Operator):
         layout.prop(self, "use_force")
 
     def execute(self, context):
+        from ..lib import asset
+
         obs = context.selected_objects
         cut_name = var.CUTS[self.cut].name
         stone_name = var.STONES[self.stone].name
@@ -205,6 +211,8 @@ class OBJECT_OT_gem_edit(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        from ..lib import asset
+
         if not context.selected_objects:
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}

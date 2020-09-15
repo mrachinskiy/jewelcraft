@@ -35,7 +35,7 @@ from bpy.props import (
 )
 
 from . import ui, var
-from .lib import dynamic_list, asset
+from .lib import data, dynamic_list
 from .lib.view3d_lib import spacing_overlay
 
 
@@ -70,7 +70,7 @@ def upd_folder_list(self, context):
 
 def upd_folder_list_serialize(self, context):
     upd_folder_list(self, context)
-    asset.asset_libs_serialize()
+    data.asset_libs_serialize()
 
 
 def upd_lib_name(self, context):

@@ -24,7 +24,7 @@ import os
 from bpy.types import Operator
 from bpy.props import StringProperty
 
-from ..lib import asset, dynamic_list
+from ..lib import data, dynamic_list, pathutils
 
 
 class WM_OT_asset_folder_create(Operator):
@@ -49,7 +49,7 @@ class WM_OT_asset_folder_create(Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        folder = os.path.join(asset.get_asset_lib_path(), self.folder_name)
+        folder = os.path.join(pathutils.get_asset_lib_path(), self.folder_name)
 
         if not os.path.exists(folder):
             os.makedirs(folder)
@@ -90,7 +90,7 @@ class WM_OT_asset_folder_rename(Operator):
             return {"CANCELLED"}
 
         props = context.window_manager.jewelcraft
-        lib_path = asset.get_asset_lib_path()
+        lib_path = pathutils.get_asset_lib_path()
 
         folder_current = os.path.join(lib_path, props.asset_folder)
         folder_new = os.path.join(lib_path, self.folder_name)
@@ -115,7 +115,7 @@ class WM_OT_asset_ui_refresh(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        asset.asset_libs_deserialize()
+        data.asset_libs_deserialize()
         dynamic_list.asset_folders_refresh()
         dynamic_list.assets_refresh(hard=True, favs=True)
         context.area.tag_redraw()

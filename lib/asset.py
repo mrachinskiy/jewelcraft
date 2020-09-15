@@ -225,21 +225,6 @@ def add_material(ob, name="New Material", color=None, is_gem=False):
 # ------------------------------------
 
 
-def get_asset_lib_path():
-    wm_props = bpy.context.window_manager.jewelcraft
-    return bpy.path.abspath(wm_props.asset_libs.active_item().path)
-
-
-def get_weighting_lib_path():
-    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    return bpy.path.abspath(prefs.weighting_set_lib_path)
-
-
-def get_weighting_set_path():
-    props = bpy.context.window_manager.jewelcraft
-    return os.path.join(get_weighting_lib_path(), props.weighting_set)
-
-
 def asset_import(filepath, ob_name=False, me_name=False):
 
     with bpy.data.libraries.load(filepath) as (data_from, data_to):
@@ -378,78 +363,6 @@ def show_window(width, height, area_type=None, space_data=None):
 
     prefs.view.render_display_type = display_type
     prefs.is_dirty = _is_dirty
-
-
-# UL Serialization
-# ------------------------------------
-
-
-def ul_serialize(ul, filepath, keys, fmt=lambda k, v: v):
-    import json
-
-    data = [
-        {k: fmt(k, getattr(item, k)) for k in keys}
-        for item in ul.values()
-    ]
-
-    with open(filepath, "w", encoding="utf-8") as file:
-        json.dump(data, file, indent=4, ensure_ascii=False)
-
-
-def ul_deserialize(ul, filepath):
-    import json
-
-    with open(filepath, "r", encoding="utf-8") as file:
-        data = json.load(file)
-
-        for data_item in data:
-            item = ul.add()
-            for k, v in data_item.items():
-                setattr(item, k, v)
-
-        ul.index = 0
-
-
-def asset_libs_serialize():
-    if not os.path.exists(var.CONFIG_DIR):
-        os.makedirs(var.CONFIG_DIR)
-
-    ul_serialize(
-        bpy.context.window_manager.jewelcraft.asset_libs,
-        var.ASSET_LIBS_FILEPATH,
-        ("name", "path"),
-    )
-
-
-def asset_libs_deserialize():
-    if os.path.exists(var.ASSET_LIBS_FILEPATH):
-        libs = bpy.context.window_manager.jewelcraft.asset_libs
-        libs.clear()
-        ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
-
-
-def weighting_set_serialize(filepath):
-    ul_serialize(
-        bpy.context.scene.jewelcraft.weighting_materials,
-        filepath,
-        ("name", "composition", "density"),
-        lambda k, v: round(v, 2) if k == "density" else v,
-    )
-
-
-def weighting_set_deserialize(filename):
-    mats = bpy.context.scene.jewelcraft.weighting_materials
-
-    if filename.startswith("JCASSET"):
-        for name, dens, comp in var.DEFAULT_WEIGHTING_SETS[filename]:
-            item = mats.add()
-            item.name = _(name)
-            item.composition = comp
-            item.density = dens
-        mats.index = 0
-    else:
-        filepath = os.path.join(get_weighting_lib_path(), filename)
-        ul_deserialize(mats, filepath)
 
 
 # Object

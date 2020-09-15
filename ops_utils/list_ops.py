@@ -22,7 +22,7 @@
 from bpy.types import Operator
 from bpy.props import BoolProperty, StringProperty
 
-from ..lib import asset
+from ..lib import data
 
 
 # Scene
@@ -75,7 +75,7 @@ class SCENE_OT_ul_move(Operator):
 
 def serialize(prop):
     if prop == "asset_libs":
-        asset.asset_libs_serialize()
+        data.asset_libs_serialize()
 
 
 class WM_OT_ul_add(Operator):

@@ -23,7 +23,7 @@ import bpy
 from bpy.types import Panel, Menu, UIList
 
 from . import var, mod_update
-from .lib import asset, unit, dynamic_list
+from .lib import dynamic_list, pathutils, unit
 
 
 # Utils
@@ -202,7 +202,7 @@ class VIEW3D_MT_jewelcraft_weighting_set(Menu):
     bl_label = ""
 
     def draw(self, context):
-        library_folder = asset.get_weighting_lib_path()
+        library_folder = pathutils.get_weighting_lib_path()
         layout = self.layout
         layout.operator("wm.jewelcraft_weighting_set_add", icon="ADD")
         layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", text_ctxt="*", icon="REMOVE")
@@ -408,7 +408,7 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
         if show_favs:
             assets = dynamic_list.favorites()
         else:
-            assets = dynamic_list.assets(asset.get_asset_lib_path(), wm_props.asset_folder)
+            assets = dynamic_list.assets(pathutils.get_asset_lib_path(), wm_props.asset_folder)
 
         if not assets:
             flow.box().label(text="Category is empty")

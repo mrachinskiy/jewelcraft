@@ -19,38 +19,23 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import os
+
 import bpy
-from bpy.app.handlers import persistent
 
 from .. import var
-from . import data
 
 
-def handler_add():
-    bpy.app.handlers.load_post.append(_execute)
+def get_asset_lib_path():
+    wm_props = bpy.context.window_manager.jewelcraft
+    return bpy.path.abspath(wm_props.asset_libs.active_item().path)
 
 
-def handler_del():
-    bpy.app.handlers.load_post.remove(_execute)
-
-
-@persistent
-def _execute(dummy):
-    _load_weighting_mats()
-    data.asset_libs_deserialize()
-
-
-def _load_weighting_mats():
-    materials = bpy.context.scene.jewelcraft.weighting_materials
-
-    if materials.coll:
-        return
-
+def get_weighting_lib_path():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+    return bpy.path.abspath(prefs.weighting_set_lib_path)
 
-    try:
-        data.weighting_set_deserialize(prefs.weighting_set_autoload)
-    except FileNotFoundError:
-        prefs.property_unset("weighting_set_autoload")
-        bpy.context.preferences.is_dirty = True
-        data.weighting_set_deserialize(prefs.weighting_set_autoload)
+
+def get_weighting_set_path():
+    props = bpy.context.window_manager.jewelcraft
+    return os.path.join(get_weighting_lib_path(), props.weighting_set)

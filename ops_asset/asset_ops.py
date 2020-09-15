@@ -26,7 +26,7 @@ from bpy.types import Operator
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 
 from .. import var
-from ..lib import asset, dynamic_list
+from ..lib import dynamic_list, pathutils
 
 
 def asset_menu_lock(context):
@@ -76,6 +76,8 @@ class AssetAdd:
         layout.separator()
 
     def execute(self, context):
+        from ..lib import asset
+
         if self.type == "SELECTION":
             if not context.selected_objects:
                 self.report({"ERROR"}, "Missing selected objects")
@@ -91,7 +93,7 @@ class AssetAdd:
 
         if self.is_add:
             wm_props = context.window_manager.jewelcraft
-            filepath = os.path.join(asset.get_asset_lib_path(), wm_props.asset_folder, self.asset_name)
+            filepath = os.path.join(pathutils.get_asset_lib_path(), wm_props.asset_folder, self.asset_name)
         else:
             filepath = self.filepath
 
@@ -233,6 +235,8 @@ class WM_OT_asset_preview_replace(Operator):
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
+        from ..lib import asset
+
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         resolution = prefs.asset_preview_resolution
 
@@ -262,6 +266,8 @@ class WM_OT_asset_import(Operator):
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
+        from ..lib import asset
+
         space_data = context.space_data
         use_local_view = bool(space_data.local_view)
         collection = context.collection
