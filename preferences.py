@@ -36,7 +36,6 @@ from bpy.props import (
 
 from . import ui, var
 from .lib import data, dynamic_list
-from .lib.view3d_lib import spacing_overlay
 
 
 # Update callbacks
@@ -82,6 +81,11 @@ def upd_asset_popover_width(self, context):
     ui.VIEW3D_PT_jewelcraft_assets.bl_ui_units_x = self.asset_popover_width
     bpy.utils.unregister_class(ui.VIEW3D_PT_jewelcraft_assets)
     bpy.utils.register_class(ui.VIEW3D_PT_jewelcraft_assets)
+
+
+def upd_spacing_overlay(self, context):
+    from .lib.view3d_lib import spacing_overlay
+    spacing_overlay.handler_toggle(self, context)
 
 
 # Custom properties
@@ -405,7 +409,7 @@ class WmProperties(PropertyGroup):
     show_spacing: BoolProperty(
         name="Spacing Overlay",
         description="Show distance to nearby gems",
-        update=spacing_overlay.handler_toggle,
+        update=upd_spacing_overlay,
     )
     asset_folder: EnumProperty(
         name="Category",

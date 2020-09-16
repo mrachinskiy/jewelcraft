@@ -245,7 +245,7 @@ class CURVE_OT_length_display(Operator):
     bl_idname = "curve.jewelcraft_length_display"
 
     def execute(self, context):
-        from ..lib import ui_lib, mesh
+        from ..lib import mesh, ui_lib
 
         ob = context.object
 

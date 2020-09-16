@@ -20,16 +20,16 @@
 
 
 import os
+import json
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
+from . import pathutils
 
 
 def ul_serialize(ul, filepath, keys, fmt=lambda k, v: v):
-    import json
-
     data = [
         {k: fmt(k, getattr(item, k)) for k in keys}
         for item in ul.values()
@@ -40,8 +40,6 @@ def ul_serialize(ul, filepath, keys, fmt=lambda k, v: v):
 
 
 def ul_deserialize(ul, filepath):
-    import json
-
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
 
@@ -91,6 +89,5 @@ def weighting_set_deserialize(filename):
             item.density = dens
         mats.index = 0
     else:
-        from . import pathutils
         filepath = os.path.join(pathutils.get_weighting_lib_path(), filename)
         ul_deserialize(mats, filepath)

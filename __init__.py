@@ -34,6 +34,7 @@ bl_info = {
 
 if "bpy" in locals():
 
+
     def reload_recursive(path, mods):
         import importlib
 
@@ -53,6 +54,7 @@ if "bpy" in locals():
                     continue
 
                 reload_recursive(entry.path, mods)
+
 
     reload_recursive(var.ADDON_DIR, locals())
 else:
