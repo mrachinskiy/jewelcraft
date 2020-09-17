@@ -61,7 +61,6 @@ else:
     import os
 
     import bpy
-    import bpy.utils.previews
     from bpy.props import PointerProperty
 
     from . import (
@@ -212,23 +211,6 @@ def register():
 
     bpy.app.translations.register(__name__, localization.DICTIONARY)
 
-    # Previews
-    # ---------------------------
-
-    pcoll = bpy.utils.previews.new()
-
-    for entry in os.scandir(var.ICONS_DIR):
-        if entry.is_file() and entry.name.endswith(".png"):
-            name = os.path.splitext(entry.name)[0]
-            pcoll.load(name.upper(), entry.path, "IMAGE")
-        if entry.is_dir():
-            for subentry in os.scandir(entry.path):
-                if subentry.is_file() and subentry.name.endswith(".png"):
-                    name = entry.name + os.path.splitext(subentry.name)[0]
-                    pcoll.load(name.upper(), subentry.path, "IMAGE")
-
-    var.preview_collections["icons"] = pcoll
-
     # On load
     # ---------------------------
 
@@ -247,6 +229,7 @@ def register():
 
 
 def unregister():
+    import bpy.utils.previews
     from .lib import dynamic_list
     from .lib.view3d_lib import spacing_overlay
 
