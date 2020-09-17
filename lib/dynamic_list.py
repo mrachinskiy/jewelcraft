@@ -22,8 +22,6 @@
 import os
 from functools import lru_cache
 
-import bpy
-import bpy.utils.previews
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
@@ -42,6 +40,41 @@ def _iface_lang(context):
     return "en_US"
 
 
+def scan_icons():
+    import bpy.utils.previews
+
+    pcoll = bpy.utils.previews.new()
+
+    for entry in os.scandir(var.ICONS_DIR):
+        if entry.is_file() and entry.name.endswith(".png"):
+            filename = os.path.splitext(entry.name)[0]
+            pcoll.load(filename.upper(), entry.path, "IMAGE")
+        elif entry.is_dir():
+            for subentry in os.scandir(entry.path):
+                if subentry.is_file() and subentry.name.endswith(".png"):
+                    filename = entry.name + os.path.splitext(subentry.name)[0]
+                    pcoll.load(filename.upper(), subentry.path, "IMAGE")
+
+    var.preview_collections["icons"] = pcoll
+
+
+def _get_icon(name):
+    if "icons" not in var.preview_collections:
+        scan_icons()
+
+    return var.preview_collections["icons"][name].icon_id
+
+
+def _preview_get(filepath, pcoll, default):
+    if os.path.exists(filepath + ".png"):
+        preview_id = str(hash(filepath))
+        if preview_id not in pcoll:
+            pcoll.load(preview_id, filepath + ".png", "IMAGE")
+        return pcoll[preview_id].icon_id
+
+    return default
+
+
 # Gems
 # ---------------------------
 
@@ -57,6 +90,8 @@ def cuts(self, context):
     pcoll = var.preview_collections.get("cuts")
 
     if not pcoll:
+        import bpy.utils.previews
+
         pcoll = bpy.utils.previews.new()
 
         for entry in os.scandir(var.GEM_ASSET_DIR):
@@ -215,14 +250,6 @@ def asset_folders_refresh():
         del _cache["asset_folders__RESULT"]
 
 
-def _preview_get(filepath, pcoll):
-    if os.path.exists(filepath + ".png"):
-        preview_id = str(hash(filepath))
-        if preview_id not in pcoll:
-            pcoll.load(preview_id, filepath + ".png", "IMAGE")
-        return pcoll[preview_id].icon_id
-
-
 @lru_cache(maxsize=32)
 def assets(lib_path, category):
     folder = os.path.join(lib_path, category)
@@ -233,18 +260,19 @@ def assets(lib_path, category):
     pcoll = var.preview_collections.get("assets")
 
     if not pcoll:
+        import bpy.utils.previews
         pcoll = bpy.utils.previews.new()
 
     list_ = []
     app = list_.append
-    no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
+    no_preview = _get_icon("NO_PREVIEW")
     favs = _favs_deserialize()
 
     for entry in os.scandir(folder):
         if entry.is_file() and entry.name.endswith(".blend"):
             filename = os.path.splitext(entry.name)[0]
             filepath = os.path.splitext(entry.path)[0]
-            app((filepath, filename, _preview_get(filepath, pcoll) or no_preview, filepath in favs))
+            app((filepath, filename, _preview_get(filepath, pcoll, no_preview), filepath in favs))
 
     var.preview_collections["assets"] = pcoll
 
@@ -265,16 +293,17 @@ def favorites():
     pcoll = var.preview_collections.get("assets")
 
     if not pcoll:
+        import bpy.utils.previews
         pcoll = bpy.utils.previews.new()
 
     list_ = []
     app = list_.append
-    no_preview = var.preview_collections["icons"]["NO_PREVIEW"].icon_id
+    no_preview = _get_icon("NO_PREVIEW")
 
     with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
         for filepath in json.load(file):
             filename = os.path.basename(filepath)
-            app((filepath, filename, _preview_get(filepath, pcoll) or no_preview, True))
+            app((filepath, filename, _preview_get(filepath, pcoll, no_preview), True))
 
     var.preview_collections["assets"] = pcoll
 
@@ -301,6 +330,7 @@ def assets_refresh(preview_id=None, hard=False, favs=False):
         pcoll = var.preview_collections.get("assets")
 
         if pcoll:
+            import bpy.utils.previews
 
             if preview_id:
                 preview_id = str(hash(preview_id))
