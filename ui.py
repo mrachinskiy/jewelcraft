@@ -30,12 +30,6 @@ from .lib import dynamic_list, pathutils, unit
 # ---------------------------
 
 
-class Setup:
-    bl_category = "JewelCraft"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-
 def _get_icon(name, override=None):
     if override is not None:
         value = override
@@ -144,7 +138,7 @@ def draw_jewelcraft_menu(self, context):
     layout.menu("VIEW3D_MT_jewelcraft")
 
 
-class VIEW3D_MT_jewelcraft(Setup, Menu):
+class VIEW3D_MT_jewelcraft(Menu):
     bl_label = "JewelCraft"
 
     def draw(self, context):
@@ -274,7 +268,13 @@ class VIEW3D_PT_jewelcraft_asset_libs(Panel):
 # ---------------------------
 
 
-class VIEW3D_PT_jewelcraft_update(Setup, Panel):
+class SidebarSetup:
+    bl_category = "JewelCraft"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+
+
+class VIEW3D_PT_jewelcraft_update(SidebarSetup, Panel):
     bl_label = "Update"
 
     @classmethod
@@ -285,7 +285,7 @@ class VIEW3D_PT_jewelcraft_update(Setup, Panel):
         mod_update.sidebar_ui(self, context)
 
 
-class VIEW3D_PT_jewelcraft_warning(Setup, Panel):
+class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
     bl_label = "Warning"
 
     @classmethod
@@ -308,7 +308,7 @@ class VIEW3D_PT_jewelcraft_warning(Setup, Panel):
         col.operator("scene.jewelcraft_scene_units_set")
 
 
-class VIEW3D_PT_jewelcraft_gems(Setup, Panel):
+class VIEW3D_PT_jewelcraft_gems(SidebarSetup, Panel):
     bl_label = "Gems"
 
     @classmethod
@@ -326,7 +326,7 @@ class VIEW3D_PT_jewelcraft_gems(Setup, Panel):
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
 
 
-class VIEW3D_PT_jewelcraft_spacing_overlay(Setup, Panel):
+class VIEW3D_PT_jewelcraft_spacing_overlay(SidebarSetup, Panel):
     bl_label = "Spacing Overlay"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
@@ -363,7 +363,7 @@ class VIEW3D_PT_jewelcraft_spacing_overlay(Setup, Panel):
         row.operator("object.jewelcraft_overlay_override_del")
 
 
-class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
+class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
     bl_label = "Assets"
     bl_options = {"DEFAULT_CLOSED"}
     bl_ui_units_x = 20
@@ -447,7 +447,7 @@ class VIEW3D_PT_jewelcraft_assets(Setup, Panel):
                 split.operator("wm.jewelcraft_asset_favorite_add", text="", icon="SOLO_OFF", emboss=False).filepath = asset_path
 
 
-class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
+class VIEW3D_PT_jewelcraft_jeweling(SidebarSetup, Panel):
     bl_label = "Jeweling"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -465,7 +465,7 @@ class VIEW3D_PT_jewelcraft_jeweling(Setup, Panel):
         row.operator("object.jewelcraft_curve_redistribute", text="", icon_value=_icon("REDISTRIBUTE"))
 
 
-class VIEW3D_PT_jewelcraft_object(Setup, Panel):
+class VIEW3D_PT_jewelcraft_object(SidebarSetup, Panel):
     bl_label = "Object"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -486,7 +486,7 @@ class VIEW3D_PT_jewelcraft_object(Setup, Panel):
         col.operator("object.jewelcraft_lattice_profile", icon_value=_icon("LATTICE_PROFILE"))
 
 
-class VIEW3D_PT_jewelcraft_object_editmesh(Setup, Panel):
+class VIEW3D_PT_jewelcraft_object_editmesh(SidebarSetup, Panel):
     bl_label = "Object"
     bl_context = "mesh_edit"
 
@@ -495,7 +495,7 @@ class VIEW3D_PT_jewelcraft_object_editmesh(Setup, Panel):
         layout.operator("object.jewelcraft_lattice_profile", icon_value=_icon("LATTICE_PROFILE"))
 
 
-class VIEW3D_PT_jewelcraft_curve(Setup, Panel):
+class VIEW3D_PT_jewelcraft_curve(SidebarSetup, Panel):
     bl_label = "Curve"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -514,7 +514,7 @@ class VIEW3D_PT_jewelcraft_curve(Setup, Panel):
         layout.operator("curve.jewelcraft_length_display", icon_value=_icon("CURVE_LENGTH"))
 
 
-class VIEW3D_PT_jewelcraft_curve_editmesh(Setup, Panel):
+class VIEW3D_PT_jewelcraft_curve_editmesh(SidebarSetup, Panel):
     bl_label = "Curve"
     bl_context = "mesh_edit"
 
@@ -528,7 +528,7 @@ class VIEW3D_PT_jewelcraft_curve_editmesh(Setup, Panel):
         sub.operator("object.jewelcraft_move_over_under", text="", icon_value=_icon("UNDER")).under = True
 
 
-class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
+class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
     bl_label = "Weighting"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -580,7 +580,7 @@ class VIEW3D_PT_jewelcraft_weighting(Setup, Panel):
         layout.operator("object.jewelcraft_weight_display", text="Calculate")
 
 
-class VIEW3D_PT_jewelcraft_design_report(Setup, Panel):
+class VIEW3D_PT_jewelcraft_design_report(SidebarSetup, Panel):
     bl_label = "Design Report"
     bl_context = "objectmode"
     bl_options = {"DEFAULT_CLOSED"}
@@ -591,7 +591,7 @@ class VIEW3D_PT_jewelcraft_design_report(Setup, Panel):
         layout.operator("view3d.jewelcraft_gem_map")
 
 
-class VIEW3D_PT_jewelcraft_measurement(Setup, Panel):
+class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
     bl_label = "Measurement"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_design_report"
