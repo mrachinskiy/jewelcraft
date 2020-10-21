@@ -217,7 +217,9 @@ class SizeList(ListProperty, PropertyGroup):
             if index_curr != index_new:
                 self.coll.move(index_curr, index_new)
 
-        self.index += 1
+            self.index = index_new
+        else:
+            self.index = self.length() - 1
 
         return item
 
