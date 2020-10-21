@@ -179,14 +179,14 @@ class MeasurementCollection(PropertyGroup):
     material_density: FloatProperty()
 
 
-class SizeCollection(PropertyGroup):
-    size: FloatProperty(name="Size", default=1.0, min=0.0001, step=10, unit="LENGTH")
-    qty: IntProperty(name="Qty", default=1, min=1)
-
-
 class AssetLibsCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
+
+
+class SizeCollection(PropertyGroup):
+    size: FloatProperty(name="Size", default=1.0, min=0.0001, step=10, unit="LENGTH")
+    qty: IntProperty(name="Qty", default=1, min=1)
 
 
 class MaterialsList(ListProperty, PropertyGroup):
@@ -204,6 +204,22 @@ class AssetLibsList(ListProperty, PropertyGroup):
 
 class SizeList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=SizeCollection)
+
+    def add(self):
+        item = self.coll.add()
+
+        if self.length() > 1:
+            item.size = self.coll[self.index].size
+
+            index_curr = self.length() - 1
+            index_new = self.index + 1
+
+            if index_curr != index_new:
+                self.coll.move(index_curr, index_new)
+
+        self.index += 1
+
+        return item
 
 
 # Preferences
