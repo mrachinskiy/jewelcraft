@@ -36,8 +36,6 @@ from .view3d_overlay import restore_gl
 _handler = None
 _handler_font = None
 _font_loc = []
-shader_3d = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
-shader_2d = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
 
 def handler_add(self, context):
@@ -140,12 +138,19 @@ def _draw(self, context):
         mat1 = mat_loc @ mat_rot
         mat1.freeze()
 
-    shader_3d.bind()
     bgl.glEnable(bgl.GL_BLEND)
-    bgl.glEnable(bgl.GL_LINE_SMOOTH)
+
+    if var.USE_POLYLINE:
+        shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
+    else:
+        shader = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
+        bgl.glEnable(bgl.GL_LINE_SMOOTH)
+        bgl.glDepthMask(bgl.GL_FALSE)
+
     if not props.overlay_show_in_front:
         bgl.glEnable(bgl.GL_DEPTH_TEST)
-    bgl.glDepthMask(bgl.GL_FALSE)
+
+    shader.bind()
 
     for dup in depsgraph.object_instances:
 
@@ -194,8 +199,12 @@ def _draw(self, context):
                 _linewidth = default_linewidth
                 _spacing = default_spacing
 
-            bgl.glLineWidth(_linewidth)
-            shader_3d.uniform_float("color", _color)
+            shader.uniform_float("color", _color)
+
+            if var.USE_POLYLINE:
+                shader.uniform_float("lineWidth", _linewidth)
+            else:
+                bgl.glLineWidth(_linewidth)
 
             if dup.is_instance:
                 mat2 = dup.matrix_world.copy()
@@ -222,20 +231,20 @@ def _draw(self, context):
 
             if dis_thold:
                 if dis_gap < 0.1:
-                    shader_3d.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
+                    shader.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
                 elif dis_gap < _spacing:
-                    shader_3d.uniform_float("color", (1.0, 0.9, 0.0, 1.0))
+                    shader.uniform_float("color", (1.0, 0.9, 0.0, 1.0))
 
                 _font_loc.append((dis_gap, mid, from_scene_scale(max(ob1_spacing, _spacing))))
 
-                batch = batch_for_shader(shader_3d, "LINES", {"pos": (co1, co2)})
-                batch.draw(shader_3d)
+                batch = batch_for_shader(shader, "LINES", {"pos": (co1, co2)})
+                batch.draw(shader)
 
         if show_all or spacing_thold:
             radius = rad2 + _spacing
             coords = girdle_coords(radius, mat2)
-            batch = batch_for_shader(shader_3d, "LINE_LOOP", {"pos": coords})
-            batch.draw(shader_3d)
+            batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
+            batch.draw(shader)
 
     restore_gl()
 
@@ -253,6 +262,7 @@ def _draw_font(self, context):
     fontid = 0
     blf.size(fontid, font_size, 72)
     blf.color(fontid, 1.0, 1.0, 1.0, 1.0)
+    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
     for dist, loc, spacing in _font_loc:
         bgl.glEnable(bgl.GL_BLEND)
@@ -275,10 +285,10 @@ def _draw_font(self, context):
             (loc_x - 3,         loc_y + 4 + dim_y),
         )
 
-        shader_2d.bind()
-        shader_2d.uniform_float("color", color)
-        batch_font = batch_for_shader(shader_2d, "TRI_FAN", {"pos": verts})
-        batch_font.draw(shader_2d)
+        shader.bind()
+        shader.uniform_float("color", color)
+        batch_font = batch_for_shader(shader, "TRI_FAN", {"pos": verts})
+        batch_font.draw(shader)
 
         blf.position(fontid, loc_x, loc_y, 0.0)
         blf.draw(fontid, dis_str)
