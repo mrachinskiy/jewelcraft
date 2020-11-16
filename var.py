@@ -22,6 +22,8 @@
 import os
 import collections
 
+import bpy
+
 
 preview_collections = {}
 
@@ -182,3 +184,10 @@ CIR_STEP_US = 2.5535
 CIR_BASE_UK = 37.5
 CIR_STEP_UK = 1.25
 MAP_SIZE_JP_TO_US = (1, 2, 2.5, 3, 3.25, 3.75, 4, 4.5, 5, 5.5, 6, 6.25, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.25, 10.5, 11, 11.5, 12, 12.5, 13)
+
+
+# Versioning
+# --------------------------------
+
+
+USE_POLYLINE = bpy.app.version >= (2, 92, 0)
