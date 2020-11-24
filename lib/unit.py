@@ -19,11 +19,14 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Union, Tuple
+
+
 WARN_SCALE = 1
 WARN_SYSTEM = 2
 
 
-def check(context):
+def check(context) -> Union[int, bool]:
     unit = context.scene.unit_settings
 
     if unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001:
@@ -35,20 +38,20 @@ def check(context):
     return False
 
 
-def convert_cm3_mm3(x):
+def convert_cm3_mm3(x: float) -> float:
     return x / 1000
 
 
-def convert_g_ct(x):
+def convert_g_ct(x: float) -> float:
     return x * 5
 
 
-def convert_ct_mm(x):
+def convert_ct_mm(x: float) -> float:
     """Round diamonds only"""
     return round(x ** (1 / 3) / 0.00365 ** (1 / 3), 2)
 
 
-def convert_mm_ct(x):
+def convert_mm_ct(x: float) -> float:
     """Round diamonds only"""
     return round(x ** 3 * 0.00365, 3)
 
@@ -56,7 +59,7 @@ def convert_mm_ct(x):
 class Scale:
     __slots__ = ("scale", "from_scene", "to_scene")
 
-    def __init__(self, context):
+    def __init__(self, context) -> None:
         unit = context.scene.unit_settings
         self.scale = round(unit.scale_length, 4)
 
@@ -67,7 +70,7 @@ class Scale:
             self.from_scene = self._blank
             self.to_scene = self._blank
 
-    def _from_scene(self, x, volume=False, batch=False):
+    def _from_scene(self, x: float, volume: bool = False, batch: bool = False) -> Union[float, Tuple[float, ...]]:
         if volume:
             return x * 1000 ** 3 * self.scale ** 3
         if batch:
@@ -75,7 +78,7 @@ class Scale:
 
         return x * 1000 * self.scale
 
-    def _to_scene(self, x, volume=False, batch=False):
+    def _to_scene(self, x: float, volume: bool = False, batch: bool = False) -> Union[float, Tuple[float, ...]]:
         if volume:
             return x / 1000 ** 3 / self.scale ** 3
         if batch:
@@ -84,5 +87,5 @@ class Scale:
         return x / 1000 / self.scale
 
     @staticmethod
-    def _blank(x, volume=False, batch=False):
+    def _blank(x, y=False, z=False):
         return x

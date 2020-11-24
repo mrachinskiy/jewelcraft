@@ -26,16 +26,16 @@ import bpy
 from .. import var
 
 
-def get_asset_lib_path():
+def get_asset_lib_path() -> str:
     wm_props = bpy.context.window_manager.jewelcraft
     return bpy.path.abspath(wm_props.asset_libs.active_item().path)
 
 
-def get_weighting_lib_path():
+def get_weighting_lib_path() -> str:
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     return bpy.path.abspath(prefs.weighting_set_lib_path)
 
 
-def get_weighting_set_path():
+def get_weighting_set_path() -> str:
     props = bpy.context.window_manager.jewelcraft
     return os.path.join(get_weighting_lib_path(), props.weighting_set)

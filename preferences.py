@@ -111,7 +111,7 @@ class ListProperty:
     def clear(self):
         self.coll.clear()
 
-    def move(self, move_up):
+    def move(self, move_up: bool):
         if self.length() < 2:
             return
 

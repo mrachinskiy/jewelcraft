@@ -20,20 +20,21 @@
 
 
 import os
+from typing import Any, Iterable
 
 
-def tag(value, tag_name):
+def tag(value: Any, tag_name: str) -> str:
     return f"<{tag_name}>{value}</{tag_name}>"
 
 
-def tag_row(values, tag_name="td"):
+def tag_row(values: Iterable, tag_name: str = "td") -> str:
     return tag("".join(tag(v, tag_name) for v in values), "tr")
 
 
 class Document:
     __slots__ = ("template", "sections", "contents")
 
-    def __init__(self, template_path):
+    def __init__(self, template_path: str) -> None:
         self.template = {}
         self.sections = []
         self.contents = []
@@ -44,23 +45,23 @@ class Document:
                     name = os.path.splitext(entry.name)[0]
                     self.template[name] = file.read()
 
-    def write_warning(self, title, warns):
+    def write_warning(self, title: str, warns: Iterable) -> None:
         self.contents.append(
             self.template["warning"].format(title, "".join(tag(x, "li") for x in warns))
         )
 
-    def write_table(self, header, body, footer):
+    def write_table(self, header: Iterable, body: Iterable[tuple], footer: Iterable) -> None:
         header = tag_row(header, "th")
         body = "".join(tag_row(x) for x in body)
 
         self.contents.append(self.template["table"].format(header, body, *footer))
 
-    def write_list(self, values):
+    def write_list(self, values: Iterable[tuple]) -> None:
         self.contents.append(self.template["list"].format("".join(tag_row(x) for x in values)))
 
-    def write_section(self, title):
+    def write_section(self, title: str) -> None:
         self.sections.append(self.template["section"].format(title, "".join(self.contents)))
         self.contents.clear()
 
-    def make(self, title):
+    def make(self, title: str) -> str:
         return self.template["document"].format(title, "".join(self.sections)).format(self.template["styles"])

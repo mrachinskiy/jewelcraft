@@ -22,8 +22,10 @@
 import os
 from math import tau, pi, sin, cos, modf
 from functools import lru_cache
+from typing import Tuple, Set, Sequence, Union, Optional, List, Iterable
 
 import bpy
+from bpy.types import Object, BlendData, ID, Space
 from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix, Vector, kdtree
 
@@ -31,11 +33,17 @@ from . import mesh, unit
 from .. import var
 
 
+ObjectData = Tuple[Vector, float, Matrix]
+Color = Tuple[float, float, float, float]
+BoundBox = List[Vector]
+Loc = Dim = BBoxMin = BBoxMax = Tuple[float, float, float]
+
+
 # Gem
 # ------------------------------------
 
 
-def ct_calc(stone, cut, size):
+def ct_calc(stone: str, cut: str, size: float) -> float:
     try:
         dens = unit.convert_cm3_mm3(var.STONES[stone].density)
         cut = var.CUTS[cut]
@@ -61,7 +69,7 @@ def ct_calc(stone, cut, size):
     return round(ct, 3)
 
 
-def get_cut(self, ob):
+def get_cut(self, ob: Object) -> None:
     self.gem_w, self.gem_l, self.gem_h = ob.dimensions
     self.cut = ob["gem"]["cut"] if "gem" in ob else None
     self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
@@ -83,7 +91,7 @@ def get_cut(self, ob):
         self.shape_rnd = True
 
 
-def nearest_coords(rad1, rad2, mat1, mat2):
+def nearest_coords(rad1: float, rad2: float, mat1: Matrix, mat2: Matrix) -> Tuple[Vector, Vector]:
     vec1 = mat1.inverted() @ mat2.translation
     vec1.z = 0.0
 
@@ -100,7 +108,7 @@ def nearest_coords(rad1, rad2, mat1, mat2):
     return mat1 @ vec1, mat2 @ vec2
 
 
-def calc_gap(co1, co2, loc1, dist_locs, rad1):
+def calc_gap(co1: Vector, co2: Vector, loc1: Vector, dist_locs: float, rad1: float) -> float:
     if (loc1 - co2).length < rad1 or dist_locs < rad1:
         return -(co1 - co2).length
 
@@ -108,7 +116,7 @@ def calc_gap(co1, co2, loc1, dist_locs, rad1):
 
 
 @lru_cache(maxsize=128)
-def girdle_coords(radius, mat):
+def girdle_coords(radius: float, mat: Matrix) -> Tuple[Vector, ...]:
     angle = tau / 64
 
     return tuple(
@@ -125,7 +133,7 @@ def girdle_coords(radius, mat):
     )
 
 
-def gem_overlap(context, data, threshold, first_match=False):
+def gem_overlap(context, data: Sequence[ObjectData], threshold: float, first_match=False) -> Union[Set[int], bool]:
     kd = kdtree.KDTree(len(data))
 
     for i, (loc, _, _) in enumerate(data):
@@ -168,7 +176,7 @@ def gem_overlap(context, data, threshold, first_match=False):
     return overlap_indices
 
 
-def to_int(x):
+def to_int(x: float) -> Union[int, float]:
     if x.is_integer():
         return int(x)
     return x
@@ -178,13 +186,13 @@ def to_int(x):
 # ------------------------------------
 
 
-def color_rnd():
+def color_rnd() -> Color:
     import random
     seq = (0.0, 0.5, 1.0)
     return random.choice(seq), random.choice(seq), random.choice(seq), 1.0
 
 
-def add_material(ob, name="New Material", color=None, is_gem=False):
+def add_material(ob: Object, name="New Material", color: Optional[Color] = None, is_gem=False) -> None:
     mat = bpy.data.materials.get(name)
 
     if not mat:
@@ -225,7 +233,7 @@ def add_material(ob, name="New Material", color=None, is_gem=False):
 # ------------------------------------
 
 
-def asset_import(filepath, ob_name=False, me_name=False):
+def asset_import(filepath: str, ob_name=False, me_name=False) -> BlendData:
 
     with bpy.data.libraries.load(filepath) as (data_from, data_to):
 
@@ -238,7 +246,7 @@ def asset_import(filepath, ob_name=False, me_name=False):
     return data_to
 
 
-def asset_import_batch(filepath):
+def asset_import_batch(filepath: str) -> BlendData:
 
     with bpy.data.libraries.load(filepath) as (data_from, data_to):
         data_to.objects = data_from.objects
@@ -247,7 +255,7 @@ def asset_import_batch(filepath):
     return data_to
 
 
-def asset_export(data_blocks, filepath):
+def asset_export(data_blocks: Set[ID], filepath: str) -> None:
     folder = os.path.dirname(filepath)
 
     if not os.path.exists(folder):
@@ -256,7 +264,7 @@ def asset_export(data_blocks, filepath):
     bpy.data.libraries.write(filepath, data_blocks, compress=True)
 
 
-def render_preview(width, height, filepath, compression=100, gamma=None):
+def render_preview(width: int, height: int, filepath: str, compression=100, gamma: Optional[float] = None) -> None:
     scene = bpy.context.scene
     render_props = scene.render
     image_props = render_props.image_settings
@@ -314,7 +322,7 @@ def render_preview(width, height, filepath, compression=100, gamma=None):
             setattr(props, k, v)
 
 
-def show_window(width, height, area_type=None, space_data=None):
+def show_window(width: int, height: int, area_type: Optional[str] = None, space_data: Optional[Space] = None) -> None:
     render = bpy.context.scene.render
 
     render_config = {
@@ -369,7 +377,7 @@ def show_window(width, height, area_type=None, space_data=None):
 # ------------------------------------
 
 
-def bm_to_scene(bm, name="New object", color=None):
+def bm_to_scene(bm, name="New object", color: Optional[Color] = None) -> None:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
 
@@ -399,7 +407,7 @@ def bm_to_scene(bm, name="New object", color=None):
         add_material(ob, name=name, color=color)
 
 
-def ob_copy_and_parent(ob, parents):
+def ob_copy_and_parent(ob: Object, parents: Iterable[Object]) -> None:
     is_orig = True
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
@@ -424,7 +432,7 @@ def ob_copy_and_parent(ob, parents):
         ob.matrix_parent_inverse = parent.matrix_basis.inverted()
 
 
-def ob_copy_to_faces(ob):
+def ob_copy_to_faces(ob: Object) -> None:
     mats = mesh.face_pos()
 
     if mats:
@@ -443,14 +451,13 @@ def ob_copy_to_faces(ob):
                 ob_copy.local_view_set(space_data, True)
 
 
-def apply_scale(ob):
+def apply_scale(ob: Object) -> None:
     mat = Matrix.Diagonal(ob.scale).to_4x4()
     ob.data.transform(mat)
     ob.scale = (1.0, 1.0, 1.0)
 
 
-def mod_curve_off(ob, mat):
-    """return -> bound box, curve object"""
+def mod_curve_off(ob: Object, mat: Matrix) -> Tuple[BoundBox, Optional[Object]]:
     curve = None
 
     for mod in ob.modifiers:
@@ -467,7 +474,7 @@ def mod_curve_off(ob, mat):
     return [mat @ Vector(x) for x in ob.bound_box], curve
 
 
-def calc_bbox(obs):
+def calc_bbox(obs: Iterable[Object]) -> Tuple[Loc, Dim, BBoxMin, BBoxMax]:
     bbox = []
 
     for ob in obs:
@@ -490,14 +497,14 @@ def calc_bbox(obs):
     z_dim = z_max - z_min
 
     return (
-        (x_loc, y_loc, z_loc),  # location
-        (x_dim, y_dim, z_dim),  # dimensions
-        (x_min, y_min, z_min),  # bbox min
-        (x_max, y_max, z_max),  # bbox max
+        (x_loc, y_loc, z_loc),
+        (x_dim, y_dim, z_dim),
+        (x_min, y_min, z_min),
+        (x_max, y_max, z_max),
     )
 
 
-def to_ring_size(cir, size_format):
+def to_ring_size(cir: float, size_format: str) -> Union[float, int, str]:
     if size_format in {"US", "JP"}:
         size = round((cir - var.CIR_BASE_US) / var.CIR_STEP_US, 2)
 

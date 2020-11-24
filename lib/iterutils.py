@@ -19,7 +19,10 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-def spot_last(iterable):
+from typing import Iterator, Tuple, Any
+
+
+def spot_last(iterable) -> Iterator[Tuple[bool, Any]]:
     iterator = iter(iterable)
     ret = next(iterator)
 
