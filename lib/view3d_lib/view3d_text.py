@@ -19,6 +19,9 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Tuple
+
+
 import blf
 
 
@@ -30,7 +33,7 @@ TYPE_DEP_ON = 4
 TYPE_DEP_OFF = 5
 
 
-def padding_init(context, x=20, y=10):
+def padding_init(context, x=20, y=10) -> Tuple[int, int]:
     for region in context.area.regions:
         if region.type == "HEADER":
             y += region.height
@@ -50,7 +53,7 @@ def padding_init(context, x=20, y=10):
     return x, y
 
 
-def options_init(self, values):
+def options_init(self, values: Tuple[Tuple[str, str, str, int], ...]) -> None:
     self.font_size_options = 17
 
     self.option_list = values
@@ -58,7 +61,7 @@ def options_init(self, values):
     self.option_col_2_max = max(self.option_list, key=lambda x: len(x[1]))[1]
 
 
-def options_display(self, context, x, y):
+def options_display(self, context, x: int, y: int) -> None:
     color_white = (0.95, 0.95, 0.95, 1.0)
     color_grey = (0.67, 0.67, 0.67, 1.0)
     color_green = (0.3, 1.0, 0.3, 1.0)

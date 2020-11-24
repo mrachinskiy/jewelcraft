@@ -20,7 +20,7 @@
 
 
 import os
-import collections
+from typing import NamedTuple, Tuple, Optional
 
 import bpy
 
@@ -111,8 +111,19 @@ DEFAULT_WEIGHTING_SETS = {
 # --------------------------------
 
 
-Stone = collections.namedtuple("Stone", ("name", "density", "color"), defaults=(None,))
-Cut = collections.namedtuple("Cut", ("name", "shape", "vol_shape", "vol_correction", "xy_symmetry"), defaults=(False,))
+class Stone(NamedTuple):
+    name: str
+    density: float
+    color: Optional[Tuple[float, float, float, float]] = None
+
+
+class Cut(NamedTuple):
+    name: str
+    shape: int
+    vol_shape: int
+    vol_correction: float
+    xy_symmetry: bool = False
+
 
 CORUNDUM = 4.1
 BERYL = 2.76

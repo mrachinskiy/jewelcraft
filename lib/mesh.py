@@ -19,9 +19,13 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Sequence, List, Optional, Iterable
+
 import bpy
+from bpy.types import Object
 import bmesh
-from mathutils import Matrix
+from bmesh.types import BMesh, BMVert, BMEdge
+from mathutils import Matrix, Vector
 
 from .iterutils import pairwise_cyclic, quadwise_cyclic
 
@@ -30,7 +34,7 @@ from .iterutils import pairwise_cyclic, quadwise_cyclic
 # ---------------------------
 
 
-def make_rect(bm, x, y, z):
+def make_rect(bm: BMesh, x: float, y: float, z: float) -> List[BMVert]:
     return [
         bm.verts.new(co)
         for co in (
@@ -42,7 +46,7 @@ def make_rect(bm, x, y, z):
     ]
 
 
-def make_tri(bm, x, y, z):
+def make_tri(bm: BMesh, x: float, y: float, z: float) -> List[BMVert]:
     return [
         bm.verts.new(co)
         for co in (
@@ -57,7 +61,7 @@ def make_tri(bm, x, y, z):
 # ---------------------------
 
 
-def est_volume(obs):
+def est_volume(obs: Iterable[Object]) -> float:
     depsgraph = bpy.context.evaluated_depsgraph_get()
     bm = bmesh.new()
 
@@ -78,7 +82,7 @@ def est_volume(obs):
     return vol
 
 
-def est_curve_length(ob):
+def est_curve_length(ob: Object) -> float:
     if ob.modifiers:
 
         # Reset curve
@@ -136,18 +140,18 @@ def est_curve_length(ob):
     return length
 
 
-def make_edges(bm, verts):
+def make_edges(bm: BMesh, verts: Iterable[BMVert]) -> List[BMEdge]:
     return [bm.edges.new(x) for x in pairwise_cyclic(verts)]
 
 
-def bridge_verts(bm, v1, v2):
+def bridge_verts(bm: BMesh, v1: Iterable[BMVert], v2: Iterable[BMVert]) -> dict:
     faces = [bm.faces.new(x) for x in quadwise_cyclic(v1, v2)]
     edges = [f.edges[1] for f in faces]
 
     return {"faces": faces, "edges": edges}
 
 
-def duplicate_verts(bm, verts, z=None):
+def duplicate_verts(bm: BMesh, verts: Sequence[BMVert], z: Optional[float] = None) -> List[BMVert]:
     dup = bmesh.ops.duplicate(bm, geom=verts)
     verts = [x for x in dup["geom"] if isinstance(x, bmesh.types.BMVert)]
 
@@ -158,7 +162,7 @@ def duplicate_verts(bm, verts, z=None):
     return verts
 
 
-def duplicate_edges(bm, edges, z=None):
+def duplicate_edges(bm: BMesh, edges: Sequence[BMEdge], z: Optional[float] = None) -> List[BMEdge]:
     dup = bmesh.ops.duplicate(bm, geom=edges)
     edges = [x for x in dup["geom"] if isinstance(x, bmesh.types.BMEdge)]
 
@@ -170,7 +174,7 @@ def duplicate_edges(bm, edges, z=None):
     return edges
 
 
-def edge_loop_expand(e, limit=0):
+def edge_loop_expand(e: BMEdge, limit: int = 0) -> List[BMEdge]:
     edges = []
     app = edges.append
 
@@ -188,7 +192,7 @@ def edge_loop_expand(e, limit=0):
     return edges
 
 
-def edge_loop_walk(verts):
+def edge_loop_walk(verts: Sequence[BMVert]) -> List[Vector]:
     v = verts[0]
     e = v.link_edges[1]
 
@@ -210,7 +214,7 @@ def edge_loop_walk(verts):
     return coords
 
 
-def face_pos():
+def face_pos() -> List[Matrix]:
     depsgraph = bpy.context.evaluated_depsgraph_get()
     mats = []
 

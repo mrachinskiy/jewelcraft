@@ -21,17 +21,24 @@
 
 import os
 from functools import lru_cache
+from typing import Mapping, Optional, Tuple, FrozenSet, Union
 
 from bpy.app.translations import pgettext_iface as _
+from bpy.types import ImagePreview
 
 from .. import var
 from . import pathutils
 
 
+EnumItems3 = Tuple[Tuple[str, str, str], ...]
+EnumItems4 = Tuple[Tuple[str, str, str, int], ...]
+EnumItems5 = Tuple[Tuple[str, str, str, Union[str, int], int], ...]
+AssetItems = Tuple[Tuple[str, str, int, bool], ...]
+
 _cache = {}
 
 
-def _iface_lang(context):
+def _iface_lang(context) -> str:
     view = context.preferences.view
 
     if view.use_translate_interface:
@@ -40,7 +47,7 @@ def _iface_lang(context):
     return "en_US"
 
 
-def scan_icons():
+def scan_icons() -> None:
     import bpy.utils.previews
 
     pcoll = bpy.utils.previews.new()
@@ -58,14 +65,14 @@ def scan_icons():
     var.preview_collections["icons"] = pcoll
 
 
-def _get_icon(name):
+def _get_icon(name: str) -> int:
     if "icons" not in var.preview_collections:
         scan_icons()
 
     return var.preview_collections["icons"][name].icon_id
 
 
-def _preview_get(filepath, pcoll, default):
+def _preview_get(filepath: str, pcoll: Mapping[str, ImagePreview], default: int) -> int:
     if os.path.exists(filepath + ".png"):
         preview_id = str(hash(filepath))
         if preview_id not in pcoll:
@@ -79,7 +86,7 @@ def _preview_get(filepath, pcoll, default):
 # ---------------------------
 
 
-def cuts(self, context):
+def cuts(self, context) -> EnumItems5:
     lang = _iface_lang(context)
     color = context.preferences.themes[0].user_interface.wcol_menu_item.text.v
 
@@ -115,7 +122,7 @@ def cuts(self, context):
     return list_
 
 
-def stones(self, context):
+def stones(self, context) -> EnumItems4:
     import operator
 
     lang = _iface_lang(context)
@@ -141,7 +148,7 @@ def stones(self, context):
 # ---------------------------
 
 
-def weighting_set(self, context):
+def weighting_set(self, context) -> EnumItems4:
     if "weighting_set__RESULT" in _cache:
         return _cache["weighting_set__RESULT"]
 
@@ -191,7 +198,7 @@ def weighting_set(self, context):
     return list_
 
 
-def weighting_set_refresh(self=None, context=None):
+def weighting_set_refresh(self=None, context=None) -> None:
     if "weighting_set__RESULT" in _cache:
         del _cache["weighting_set__RESULT"]
 
@@ -199,7 +206,7 @@ def weighting_set_refresh(self=None, context=None):
         context.window_manager.jewelcraft.property_unset("weighting_set")
 
 
-def weighting_materials(self, context):
+def weighting_materials(self, context) -> EnumItems3:
     if "weighting_materials__RESULT" in _cache:
         return _cache["weighting_materials__RESULT"]
 
@@ -215,7 +222,7 @@ def weighting_materials(self, context):
     return list_
 
 
-def weighting_materials_refresh(self=None, context=None):
+def weighting_materials_refresh(self=None, context=None) -> None:
     if "weighting_materials__RESULT" in _cache:
         del _cache["weighting_materials__RESULT"]
 
@@ -224,7 +231,7 @@ def weighting_materials_refresh(self=None, context=None):
 # ---------------------------
 
 
-def asset_folders(self, context):
+def asset_folders(self, context) -> EnumItems3:
     if "asset_folders__RESULT" in _cache:
         return _cache["asset_folders__RESULT"]
 
@@ -245,13 +252,13 @@ def asset_folders(self, context):
     return list_
 
 
-def asset_folders_refresh():
+def asset_folders_refresh() -> None:
     if "asset_folders__RESULT" in _cache:
         del _cache["asset_folders__RESULT"]
 
 
 @lru_cache(maxsize=32)
-def assets(lib_path, category):
+def assets(lib_path: str, category: str) -> AssetItems:
     folder = os.path.join(lib_path, category)
 
     if not os.path.exists(folder):
@@ -284,7 +291,7 @@ def assets(lib_path, category):
 
 
 @lru_cache(maxsize=1)
-def favorites():
+def favorites() -> AssetItems:
     if not os.path.exists(var.ASSET_FAVS_FILEPATH):
         return ()
 
@@ -315,7 +322,7 @@ def favorites():
 
 
 @lru_cache(maxsize=1)
-def _favs_deserialize():
+def _favs_deserialize() -> FrozenSet[str]:
     if not os.path.exists(var.ASSET_FAVS_FILEPATH):
         return ()
 
@@ -325,7 +332,7 @@ def _favs_deserialize():
         return frozenset(json.load(file))
 
 
-def assets_refresh(preview_id=None, hard=False, favs=False):
+def assets_refresh(preview_id: Optional[str] = None, hard: bool = False, favs: bool = False) -> None:
     if preview_id or hard:
         pcoll = var.preview_collections.get("assets")
 
@@ -356,7 +363,7 @@ def assets_refresh(preview_id=None, hard=False, favs=False):
 # ---------------------------
 
 
-def abc(self, context):
+def abc(self, context) -> EnumItems3:
     if "abc__RESULT" in _cache:
         return _cache["abc__RESULT"]
 

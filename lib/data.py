@@ -21,6 +21,7 @@
 
 import os
 import json
+from typing import Callable, Iterable
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
@@ -29,7 +30,7 @@ from .. import var
 from . import pathutils
 
 
-def ul_serialize(ul, filepath, keys, fmt=lambda k, v: v):
+def ul_serialize(ul, filepath: str, keys: Iterable[str], fmt: Callable = lambda k, v: v) -> None:
     data = [
         {k: fmt(k, getattr(item, k)) for k in keys}
         for item in ul.values()
@@ -39,7 +40,7 @@ def ul_serialize(ul, filepath, keys, fmt=lambda k, v: v):
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def ul_deserialize(ul, filepath):
+def ul_deserialize(ul, filepath: str) -> None:
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
 
@@ -51,7 +52,7 @@ def ul_deserialize(ul, filepath):
         ul.index = 0
 
 
-def asset_libs_serialize():
+def asset_libs_serialize() -> None:
     if not os.path.exists(var.CONFIG_DIR):
         os.makedirs(var.CONFIG_DIR)
 
@@ -62,14 +63,14 @@ def asset_libs_serialize():
     )
 
 
-def asset_libs_deserialize():
+def asset_libs_deserialize() -> None:
     if os.path.exists(var.ASSET_LIBS_FILEPATH):
         libs = bpy.context.window_manager.jewelcraft.asset_libs
         libs.clear()
         ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
 
 
-def weighting_set_serialize(filepath):
+def weighting_set_serialize(filepath: str) -> None:
     ul_serialize(
         bpy.context.scene.jewelcraft.weighting_materials,
         filepath,
@@ -78,7 +79,7 @@ def weighting_set_serialize(filepath):
     )
 
 
-def weighting_set_deserialize(filename):
+def weighting_set_deserialize(filename: str) -> None:
     mats = bpy.context.scene.jewelcraft.weighting_materials
 
     if filename.startswith("JCASSET"):
