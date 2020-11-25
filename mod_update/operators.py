@@ -22,7 +22,7 @@
 from bpy.types import Operator
 
 from .. import var
-from . import state, lib
+from . import state, updatelib
 
 
 class WM_OT_update_check(Operator):
@@ -39,7 +39,7 @@ class WM_OT_update_check(Operator):
         ):
             return {"CANCELLED"}
 
-        lib.update_init_check(use_force_check=True)
+        updatelib.update_init_check(use_force_check=True)
 
         return {"FINISHED"}
 
@@ -58,7 +58,7 @@ class WM_OT_update_download(Operator):
         ):
             return {"CANCELLED"}
 
-        lib.update_init_download()
+        updatelib.update_init_download()
 
         return {"FINISHED"}
 

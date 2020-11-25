@@ -34,7 +34,7 @@ from bpy.props import (
     CollectionProperty,
 )
 
-from . import ui, var
+from . import ui, var, mod_update
 from .lib import data, dynamic_list
 
 
@@ -228,31 +228,8 @@ class SizeList(ListProperty, PropertyGroup):
 # ------------------------------------------
 
 
-class JewelCraftPreferences(AddonPreferences):
+class Preferences(mod_update.Preferences, AddonPreferences):
     bl_idname = __package__
-
-    # Updates
-    # ------------------------
-
-    update_use_auto_check: BoolProperty(
-        name="Automatically check for updates",
-        description="Automatically check for updates with specified interval",
-        default=True,
-    )
-    update_interval: EnumProperty(
-        name="Auto-check interval",
-        description="Auto-check interval",
-        items=(
-            ("1", "Once a day", ""),
-            ("7", "Once a week", ""),
-            ("30", "Once a month", ""),
-        ),
-        default="7",
-    )
-    update_use_prerelease: BoolProperty(
-        name="Update to pre-release",
-        description="Update add-on to pre-release version if available",
-    )
 
     # Asset
     # ------------------------

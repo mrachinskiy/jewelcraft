@@ -24,11 +24,11 @@ INSTALLING = 1
 COMPLETED = 2
 ERROR = 3
 
-status = None
-days_passed = None
-update_version = None
-download_url = None
-changelog_url = None
-error_msg = None
+status: int = None
+days_passed: int = None
+update_version: str = None
+download_url: str = None
+changelog_url: str = None
+error_msg: str = None
 
-update_available = False
+update_available: bool = False

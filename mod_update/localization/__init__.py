@@ -19,23 +19,32 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-def _walk():
-    import os
-    import json
-
-    for entry in os.scandir(os.path.dirname(__file__)):
-        if entry.is_file() and entry.name.endswith(".json"):
-            with open(entry, "r", encoding="utf-8") as file:
-                yield os.path.splitext(entry.name)[0], json.load(file)
+import os
+import json
+from typing import Dict, Tuple, Iterator
 
 
-def _convert(dictionary):
+Translation = Dict[Tuple[str, str], str]
+
+
+def _convert(d: Dict[str, Dict[str, str]]) -> Translation:
     return {
         (ctxt, msg_key): msg_translation
-        for ctxt, msgs in dictionary.items()
+        for ctxt, msgs in d.items()
         for msg_key, msg_translation in msgs.items()
     }
 
 
-def init():
-    return {k: _convert(v) for k, v in _walk()}
+def _walk() -> Iterator[Tuple[str, Translation]]:
+    for entry in os.scandir(os.path.dirname(__file__)):
+        if entry.is_file() and entry.name.endswith(".json"):
+            with open(entry, "r", encoding="utf-8") as file:
+                yield os.path.splitext(entry.name)[0], _convert(json.load(file))
+
+
+def extend(d: Dict[str, Translation]) -> None:
+    for k, v in _walk():
+        if k in d.keys():
+            d[k].update(v)
+        else:
+            d[k] = v

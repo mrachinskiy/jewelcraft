@@ -19,25 +19,26 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Optional, Tuple
-
-from . import operators, state
-from .preferences import Preferences
-from .ui import SidebarPanel, sidebar_ui, prefs_ui
+from bpy.props import BoolProperty, EnumProperty
 
 
-ops = (
-    operators.WM_OT_update_check,
-    operators.WM_OT_update_download,
-    operators.WM_OT_update_whats_new,
-)
-
-
-def init(addon_version: Tuple[int, int, int], repo_url: str, translation_dict: Optional[dict] = None) -> None:
-    from . import updatelib
-
-    if translation_dict is not None:
-        from . import localization
-        localization.extend(translation_dict)
-
-    updatelib.init(addon_version, repo_url)
+class Preferences:
+    mod_update_autocheck: BoolProperty(
+        name="Automatically check for updates",
+        description="Automatically check for updates with specified interval",
+        default=True,
+    )
+    mod_update_prerelease: BoolProperty(
+        name="Update to pre-release",
+        description="Update add-on to pre-release version if available",
+    )
+    mod_update_interval: EnumProperty(
+        name="Auto-check interval",
+        description="Auto-check interval",
+        items=(
+            ("1", "Once a day", ""),
+            ("7", "Once a week", ""),
+            ("30", "Once a month", ""),
+        ),
+        default="7",
+    )
