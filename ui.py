@@ -276,15 +276,8 @@ class SidebarSetup:
     bl_region_type = "UI"
 
 
-class VIEW3D_PT_jewelcraft_update(SidebarSetup, Panel):
+class VIEW3D_PT_jewelcraft_update(mod_update.SidebarPanel, SidebarSetup, Panel):
     bl_label = "Update"
-
-    @classmethod
-    def poll(cls, context):
-        return mod_update.state.update_available
-
-    def draw(self, context):
-        mod_update.sidebar_ui(self, context)
 
 
 class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):

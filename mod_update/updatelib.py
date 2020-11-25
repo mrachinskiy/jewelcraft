@@ -21,6 +21,7 @@
 
 import threading
 import os
+from typing import Dict, Tuple, Union
 
 import bpy
 
@@ -28,27 +29,27 @@ from .. import var
 from . import state
 
 
-ADDON_VERSION = None
-RELEASES_URL = None
+ADDON_VERSION: Tuple[int, int, int] = None
+RELEASES_URL: str = None
 SAVE_STATE_FILEPATH = os.path.join(var.CONFIG_DIR, "update_state.json")
 
 
-def _parse_tag(tag):
+def _parse_tag(tag: str) -> Tuple[Tuple[int, int, int], Tuple[int, int, int]]:
     import re
 
-    vers = [
+    vers = tuple(
         tuple(int(x) for x in ver_str)
         for ver_str in
         [re.sub(r"[^0-9]", " ", ver_raw).split() for ver_raw in tag.split("-")]
-    ]
+    )
 
     if len(vers) == 1:
-        vers.append((0, 0, 0))
+        return vers[0], (0, 0, 0)
 
     return vers
 
 
-def _save_state_deserialize():
+def _save_state_deserialize() -> Dict[str, Union[bool, int]]:
     import datetime
     import json
 
@@ -68,7 +69,7 @@ def _save_state_deserialize():
     return data
 
 
-def _save_state_serialize():
+def _save_state_serialize() -> None:
     import datetime
     import json
 
@@ -85,7 +86,7 @@ def _save_state_serialize():
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def _runtime_state_set(status):
+def _runtime_state_set(status: int) -> None:
     state.status = status
 
     for window in bpy.context.window_manager.windows:
@@ -93,7 +94,7 @@ def _runtime_state_set(status):
             area.tag_redraw()
 
 
-def _update_check(use_force_check):
+def _update_check(use_force_check: bool) -> None:
     import re
     import urllib.request
     import urllib.error
@@ -103,7 +104,7 @@ def _update_check(use_force_check):
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     save_state = _save_state_deserialize()
 
-    if not use_force_check and not prefs.update_use_auto_check:
+    if not use_force_check and not prefs.mod_update_autocheck:
         return
 
     if save_state["update_available"]:
@@ -111,7 +112,7 @@ def _update_check(use_force_check):
 
     if not use_force_check and (
         state.days_passed is not None and
-        state.days_passed < int(prefs.update_interval)
+        state.days_passed < int(prefs.mod_update_interval)
     ):
         return
 
@@ -125,7 +126,7 @@ def _update_check(use_force_check):
 
             for release in data:
 
-                if not prefs.update_use_prerelease and release["prerelease"]:
+                if not prefs.mod_update_prerelease and release["prerelease"]:
                     continue
 
                 if not release["draft"]:
@@ -166,7 +167,7 @@ def _update_check(use_force_check):
         _runtime_state_set(state.ERROR)
 
 
-def _update_download():
+def _update_download() -> None:
     import io
     import pathlib
     import zipfile
@@ -198,19 +199,19 @@ def _update_download():
         _runtime_state_set(state.ERROR)
 
 
-def update_init_check(use_force_check=False):
+def update_init_check(use_force_check: bool = False) -> None:
     threading.Thread(target=_update_check, args=(use_force_check,)).start()
 
 
-def update_init_download():
+def update_init_download() -> None:
     threading.Thread(target=_update_download).start()
 
 
-def init(addon_version=None, releases_url=None):
+def init(addon_version: Tuple[int, int, int], repo_url: str) -> None:
     global ADDON_VERSION
     global RELEASES_URL
 
     ADDON_VERSION = addon_version
-    RELEASES_URL = releases_url
+    RELEASES_URL = f"https://api.github.com/repos/{repo_url}/releases"
 
     update_init_check()

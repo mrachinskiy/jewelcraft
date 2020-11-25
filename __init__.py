@@ -96,7 +96,7 @@ classes = (
     preferences.MaterialsList,
     preferences.AssetLibsList,
     preferences.SizeList,
-    preferences.JewelCraftPreferences,
+    preferences.Preferences,
     preferences.WmProperties,
     preferences.SceneProperties,
     ui.VIEW3D_UL_jewelcraft_weighting_set,
@@ -180,9 +180,7 @@ classes = (
     ops_weighting.WM_OT_weighting_set_autoload_mark,
     ops_weighting.WM_OT_weighting_set_load,
     ops_weighting.WM_OT_weighting_set_load_append,
-    mod_update.WM_OT_update_check,
-    mod_update.WM_OT_update_download,
-    mod_update.WM_OT_update_whats_new,
+    *mod_update.ops,
 )
 
 
@@ -202,17 +200,6 @@ def register():
 
     bpy.types.VIEW3D_MT_object.append(ui.draw_jewelcraft_menu)
 
-    # Translations
-    # ---------------------------
-
-    for k, v in mod_update.localization.init().items():
-        if k in localization.DICTIONARY.keys():
-            localization.DICTIONARY[k].update(v)
-        else:
-            localization.DICTIONARY[k] = v
-
-    bpy.app.translations.register(__name__, localization.DICTIONARY)
-
     # On load
     # ---------------------------
 
@@ -226,8 +213,14 @@ def register():
 
     mod_update.init(
         addon_version=bl_info["version"],
-        releases_url="https://api.github.com/repos/mrachinskiy/jewelcraft/releases",
+        repo_url="mrachinskiy/jewelcraft",
+        translation_dict=localization.DICTIONARY,
     )
+
+    # Translations
+    # ---------------------------
+
+    bpy.app.translations.register(__name__, localization.DICTIONARY)
 
 
 def unregister():
@@ -246,6 +239,12 @@ def unregister():
 
     bpy.types.VIEW3D_MT_object.remove(ui.draw_jewelcraft_menu)
 
+    # Handlers
+    # ---------------------------
+
+    spacing_overlay.handler_del()
+    on_load.handler_del()
+
     # Translations
     # ---------------------------
 
@@ -260,12 +259,6 @@ def unregister():
     var.preview_collections.clear()
     dynamic_list._cache.clear()
     preferences._folder_cache.clear()
-
-    # Handlers
-    # ---------------------------
-
-    spacing_overlay.handler_del()
-    on_load.handler_del()
 
 
 if __name__ == "__main__":
