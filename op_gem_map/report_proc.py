@@ -21,8 +21,7 @@
 
 from mathutils import Color
 
-from .. import var
-from ..lib import asset, gettext
+from ..lib import asset, gettext, gemlib
 
 
 def data_process(ReportData, lang):
@@ -59,9 +58,9 @@ def data_process(ReportData, lang):
         w = asset.to_int(size[0])
 
         try:
-            stone_fmt = _(var.STONES[stone].name)
-            cut_fmt = _(var.CUTS[cut].name)
-            xy_symmetry = var.CUTS[cut].xy_symmetry
+            stone_fmt = _(gemlib.STONES[stone].name)
+            cut_fmt = _(gemlib.CUTS[cut].name)
+            xy_symmetry = gemlib.CUTS[cut].xy_symmetry
         except KeyError:
             stone_fmt = stone
             cut_fmt = cut

@@ -23,8 +23,7 @@ import collections
 
 from mathutils import Matrix
 
-from .. import var
-from ..lib import unit, mesh, asset
+from ..lib import unit, mesh, asset, gemlib
 
 
 class _Data:
@@ -88,8 +87,8 @@ def data_collect(self, context, gem_map: bool = False) -> _Data:
     # Gems
     # ---------------------------
 
-    known_stones = var.STONES.keys()
-    known_cuts = var.CUTS.keys()
+    known_stones = gemlib.STONES.keys()
+    known_cuts = gemlib.CUTS.keys()
     ob_data = []
     df_leftovers = False
     unknown_id = False

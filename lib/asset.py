@@ -29,7 +29,7 @@ from bpy.types import Object, BlendData, ID, Space
 from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix, Vector, kdtree
 
-from . import mesh, unit
+from . import mesh, unit, gemlib
 from .. import var
 
 
@@ -45,23 +45,23 @@ Loc = Dim = BBoxMin = BBoxMax = Tuple[float, float, float]
 
 def ct_calc(stone: str, cut: str, size: float) -> float:
     try:
-        dens = unit.convert_cm3_mm3(var.STONES[stone].density)
-        cut = var.CUTS[cut]
-        vol_corr = cut.vol_correction
-        shape = cut.vol_shape
+        dens = unit.convert_cm3_mm3(gemlib.STONES[stone].density)
+        _cut = gemlib.CUTS[cut]
+        vol_corr = _cut.vol_correction
+        shape = _cut.vol_shape
     except KeyError:
         return 0
 
     w, l, h = size
 
-    if shape is var.VOL_CONE:
+    if shape is gemlib.VOL_CONE:
         vol = pi * (l / 2) * (w / 2) * (h / 3)
-    elif shape is var.VOL_PYRAMID:
-        vol = l * w * h / 3
-    elif shape is var.VOL_PRISM:
+    elif shape is gemlib.VOL_PYRAMID:
+        vol = (l * w * h) / 3
+    elif shape is gemlib.VOL_PRISM:
         vol = l * w * (h / 2)
-    elif shape is var.VOL_TETRAHEDRON:
-        vol = l * w * h / 6
+    elif shape is gemlib.VOL_TETRAHEDRON:
+        vol = (l * w * h) / 6
 
     g = vol * vol_corr * dens
     ct = unit.convert_g_ct(g)
@@ -75,17 +75,17 @@ def get_cut(self, ob: Object) -> None:
     self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
 
     try:
-        shape = var.CUTS[self.cut].shape
+        shape = gemlib.CUTS[self.cut].shape
     except KeyError:
-        shape = var.SHAPE_ROUND
+        shape = gemlib.SHAPE_ROUND
 
-    if shape is var.SHAPE_SQUARE:
+    if shape is gemlib.SHAPE_SQUARE:
         self.shape_sq = True
-    elif shape is var.SHAPE_RECTANGLE:
+    elif shape is gemlib.SHAPE_RECTANGLE:
         self.shape_rect = True
-    elif shape is var.SHAPE_TRIANGLE:
+    elif shape is gemlib.SHAPE_TRIANGLE:
         self.shape_tri = True
-    elif shape is var.SHAPE_FANTASY:
+    elif shape is gemlib.SHAPE_FANTASY:
         self.shape_fant = True
     else:
         self.shape_rnd = True
