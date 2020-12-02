@@ -19,13 +19,15 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Callable
+
 from math import pi
 
 from .. import var
 from ..lib import asset
 
 
-def data_format(Report, _):
+def data_format(Report, _: Callable[[str], str]) -> None:
     _mm = _("mm")
     _g = _("g")
 
