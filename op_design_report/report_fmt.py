@@ -23,8 +23,7 @@ from typing import Callable
 
 from math import pi
 
-from .. import var
-from ..lib import asset
+from ..lib import asset, gemlib
 
 
 def data_format(Report, _: Callable[[str], str]) -> None:
@@ -45,9 +44,9 @@ def data_format(Report, _: Callable[[str], str]) -> None:
             total_ct = round(ct * qty, 3)
 
             try:
-                stonef = _(var.STONES[stone].name)
-                cutf = _(var.CUTS[cut].name)
-                xy_symmetry = var.CUTS[cut].xy_symmetry
+                stonef = _(gemlib.STONES[stone].name)
+                cutf = _(gemlib.CUTS[cut].name)
+                xy_symmetry = gemlib.CUTS[cut].xy_symmetry
             except KeyError:
                 stonef = stone
                 cutf = cut

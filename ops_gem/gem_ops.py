@@ -80,14 +80,14 @@ class OBJECT_OT_gem_add(Operator):
         split.template_icon_view(self, "cut", show_labels=True)
 
     def execute(self, context):
-        from ..lib import asset
+        from ..lib import asset, gemlib
 
         scene = context.scene
         view_layer = context.view_layer
         space_data = context.space_data
-        cut_name = var.CUTS[self.cut].name
-        stone_name = var.STONES[self.stone].name
-        color = var.STONES[self.stone].color or self.color
+        cut_name = gemlib.CUTS[self.cut].name
+        stone_name = gemlib.STONES[self.stone].name
+        color = gemlib.STONES[self.stone].color or self.color
 
         for ob in context.selected_objects:
             ob.select_set(False)
@@ -158,12 +158,12 @@ class OBJECT_OT_gem_edit(Operator):
         layout.prop(self, "use_force")
 
     def execute(self, context):
-        from ..lib import asset
+        from ..lib import asset, gemlib
 
         obs = context.selected_objects
-        cut_name = var.CUTS[self.cut].name
-        stone_name = var.STONES[self.stone].name
-        color = var.STONES[self.stone].color or self.color
+        cut_name = gemlib.CUTS[self.cut].name
+        stone_name = gemlib.STONES[self.stone].name
+        color = gemlib.STONES[self.stone].color or self.color
 
         imported = asset.asset_import(var.GEM_ASSET_FILEPATH, me_name=cut_name)
         me = imported.meshes[0]

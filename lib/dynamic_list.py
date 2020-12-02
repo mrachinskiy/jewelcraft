@@ -93,6 +93,8 @@ def cuts(self, context) -> EnumItems5:
     if lang == _cache.get("cuts__LANG") and color == _cache.get("cuts__COLOR"):
         return _cache["cuts__RESULT"]
 
+    from . import gemlib
+
     theme = "DARK" if color < 0.5 else "LIGHT"
     pcoll = var.preview_collections.get("cuts")
 
@@ -112,7 +114,7 @@ def cuts(self, context) -> EnumItems5:
 
     list_ = tuple(
         (k, _(_(v.name, "Jewelry")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround
-        for i, (k, v) in enumerate(var.CUTS.items())
+        for i, (k, v) in enumerate(gemlib.CUTS.items())
     )
 
     _cache["cuts__RESULT"] = list_
@@ -123,16 +125,17 @@ def cuts(self, context) -> EnumItems5:
 
 
 def stones(self, context) -> EnumItems4:
-    import operator
-
     lang = _iface_lang(context)
 
     if lang == _cache.get("stones__LANG"):
         return _cache["stones__RESULT"]
 
+    import operator
+    from . import gemlib
+
     list_ = [
         (k, _(_(v.name, "Jewelry")), "", i)  # _(_()) default return value workaround
-        for i, (k, v) in enumerate(var.STONES.items())
+        for i, (k, v) in enumerate(gemlib.STONES.items())
     ]
 
     list_.sort(key=operator.itemgetter(1))

@@ -20,7 +20,6 @@
 
 
 import os
-from typing import NamedTuple, Tuple, Optional
 
 import bpy
 
@@ -104,85 +103,6 @@ DEFAULT_WEIGHTING_SETS = {
         ("Steel Stainless", 7.75, "Grade 420"),
         ("Titanium", 4.43, "Ti6Al4V"),
     ),
-}
-
-
-# Gems
-# --------------------------------
-
-
-class Stone(NamedTuple):
-    name: str
-    density: float
-    color: Optional[Tuple[float, float, float, float]] = None
-
-
-class Cut(NamedTuple):
-    name: str
-    shape: int
-    vol_shape: int
-    vol_correction: float
-    xy_symmetry: bool = False
-
-
-CORUNDUM = 4.1
-BERYL = 2.76
-QUARTZ = 2.65
-
-WHITE = (1.0, 1.0, 1.0, 1.0)
-RED = (0.57, 0.011, 0.005, 1.0)
-BLUE = (0.004, 0.019, 0.214, 1.0)
-
-SHAPE_ROUND = 0
-SHAPE_SQUARE = 1
-SHAPE_RECTANGLE = 2
-SHAPE_TRIANGLE = 3
-SHAPE_FANTASY = 4
-
-VOL_CONE = 0
-VOL_PYRAMID = 1
-VOL_PRISM = 2
-VOL_TETRAHEDRON = 3
-
-STONES = {
-    "DIAMOND": Stone("Diamond", 3.53, WHITE),
-    "ALEXANDRITE": Stone("Alexandrite", 3.73, (0.153, 0.0705, 0.595, 1.0)),
-    "AMETHYST": Stone("Amethyst", QUARTZ, (0.415, 0.041, 0.523, 1.0)),
-    "AQUAMARINE": Stone("Aquamarine", BERYL, (0.0, 0.748, 1.0, 1.0)),
-    "CITRINE": Stone("Citrine", QUARTZ, (1.0, 0.355, 0.0, 1.0)),
-    "CUBIC_ZIRCONIA": Stone("Cubic Zirconia", 5.9, WHITE),
-    "EMERALD": Stone("Emerald", BERYL, (0.062, 0.748, 0.057, 1.0)),
-    "GARNET": Stone("Garnet", 4.3, (0.319, 0.0, 0.0, 1.0)),
-    "MORGANITE": Stone("Morganite", BERYL, (0.41, 0.21, 0.09, 1.0)),
-    "PERIDOT": Stone("Peridot", 3.34, (0.201, 0.748, 0.026, 1.0)),
-    "QUARTZ": Stone("Quartz", QUARTZ),
-    "RUBY": Stone("Ruby", CORUNDUM, RED),
-    "SAPPHIRE": Stone("Sapphire", CORUNDUM, BLUE),
-    "SPINEL": Stone("Spinel", 3.8, RED),
-    "TANZANITE": Stone("Tanzanite", 3.38, BLUE),
-    "TOPAZ": Stone("Topaz", 3.57),
-    "TOURMALINE": Stone("Tourmaline", 3.22),
-    "ZIRCON": Stone("Zircon", 4.73),
-}
-
-CUTS = {
-    "ROUND": Cut("Round", SHAPE_ROUND, VOL_CONE, 1.3056, True),
-    "OVAL": Cut("Oval", SHAPE_FANTASY, VOL_CONE, 1.34455),
-    "CUSHION": Cut("Cushion", SHAPE_SQUARE, VOL_PYRAMID, 1.2852),
-    "PEAR": Cut("Pear", SHAPE_FANTASY, VOL_CONE, 1.24936),
-    "MARQUISE": Cut("Marquise", SHAPE_FANTASY, VOL_CONE, 1.20412),
-    "PRINCESS": Cut("Princess", SHAPE_SQUARE, VOL_PYRAMID, 1.43301),
-    "BAGUETTE": Cut("Baguette", SHAPE_RECTANGLE, VOL_PRISM, 1.197),
-    "SQUARE": Cut("Square", SHAPE_SQUARE, VOL_PYRAMID, 1.6, True),
-    "EMERALD": Cut("Emerald", SHAPE_RECTANGLE, VOL_PRISM, 1.025),
-    "ASSCHER": Cut("Asscher", SHAPE_SQUARE, VOL_PYRAMID, 1.379, True),
-    "RADIANT": Cut("Radiant", SHAPE_SQUARE, VOL_PYRAMID, 1.3494),
-    "FLANDERS": Cut("Flanders", SHAPE_SQUARE, VOL_PYRAMID, 1.2407, True),
-    "OCTAGON": Cut("Octagon", SHAPE_SQUARE, VOL_CONE, 1.479, True),
-    "HEART": Cut("Heart", SHAPE_FANTASY, VOL_CONE, 1.29),
-    "TRILLION": Cut("Trillion", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.644),
-    "TRILLIANT": Cut("Trilliant", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.888),
-    "TRIANGLE": Cut("Triangle", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.531),
 }
 
 
