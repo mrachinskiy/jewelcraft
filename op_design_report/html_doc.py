@@ -19,11 +19,13 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Callable
+
 from .. import var
 from ..lib import htmlutils
 
 
-def make(Report, filename, _):
+def make(Report, filename: str, _: Callable[[str], str]) -> str:
     Doc = htmlutils.Document(var.HTML_DESIGN_REPORT_DIR)
 
     if Report.gems:

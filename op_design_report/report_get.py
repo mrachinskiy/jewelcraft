@@ -43,7 +43,7 @@ class _Data:
         return True
 
 
-def data_collect(self, context, gem_map=False):
+def data_collect(self, context, gem_map: bool = False) -> _Data:
     UnitScale = unit.Scale(context)
     from_scene_scale = UnitScale.from_scene
     to_scene_scale = UnitScale.to_scene
