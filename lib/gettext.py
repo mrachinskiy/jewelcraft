@@ -41,5 +41,5 @@ class GetText:
         return DICTIONARY[self.lang].get((ctxt, text), text)
 
     @staticmethod
-    def _blank(x, y=None):
-        return x
+    def _blank(text, ctxt=None):
+        return text
