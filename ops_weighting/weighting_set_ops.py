@@ -33,7 +33,7 @@ class EditCheck:
     @classmethod
     def poll(cls, context):
         props = context.window_manager.jewelcraft
-        return bool(props.weighting_set) and not props.weighting_set.startswith("JCASSET")
+        return bool(props.weighting_set) and not props.weighting_set.startswith("__ASSET__")
 
 
 class WM_OT_weighting_set_add(Operator):

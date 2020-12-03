@@ -30,6 +30,12 @@ from .. import var
 from . import pathutils
 
 
+def _translate_item_name(k, v):
+    if k == "name":
+        return _(v)
+    return v
+
+
 def ul_serialize(ul, filepath: str, keys: Iterable[str], fmt: Callable = lambda k, v: v) -> None:
     data = [
         {k: fmt(k, getattr(item, k)) for k in keys}
@@ -40,14 +46,14 @@ def ul_serialize(ul, filepath: str, keys: Iterable[str], fmt: Callable = lambda 
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def ul_deserialize(ul, filepath: str) -> None:
+def ul_deserialize(ul, filepath: str, fmt: Callable = lambda k, v: v) -> None:
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
 
         for data_item in data:
             item = ul.add()
             for k, v in data_item.items():
-                setattr(item, k, v)
+                setattr(item, k, fmt(k, v))
 
         ul.index = 0
 
@@ -82,13 +88,9 @@ def weighting_set_serialize(filepath: str) -> None:
 def weighting_set_deserialize(filename: str) -> None:
     mats = bpy.context.scene.jewelcraft.weighting_materials
 
-    if filename.startswith("JCASSET"):
-        for name, dens, comp in var.DEFAULT_WEIGHTING_SETS[filename]:
-            item = mats.add()
-            item.name = _(name)
-            item.composition = comp
-            item.density = dens
-        mats.index = 0
+    if filename.startswith("__ASSET__"):
+        filepath = os.path.join(var.WEIGHTING_SET_DIR, filename[len("__ASSET__"):])
+        ul_deserialize(mats, filepath, fmt=_translate_item_name)
     else:
         filepath = os.path.join(pathutils.get_weighting_lib_path(), filename)
         ul_deserialize(mats, filepath)
