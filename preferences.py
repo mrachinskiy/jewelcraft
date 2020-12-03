@@ -274,7 +274,7 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         subtype="DIR_PATH",
         update=dynamic_list.weighting_set_refresh,
     )
-    weighting_set_autoload: StringProperty(default="JCASSET_PRECIOUS")
+    weighting_set_autoload: StringProperty(default="__ASSET__Precious.json")
 
     # Design Report
     # ------------------------

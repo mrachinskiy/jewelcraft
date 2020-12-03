@@ -160,19 +160,16 @@ def weighting_set(self, context) -> EnumItems4:
     wsets = {}
     list_ = []
 
-    if not prefs.weighting_hide_default_sets:
-        wsets["JCASSET_PRECIOUS"] = (
-            "Precious",
-            "Commonly used precious alloys, physical properties taken directly from suppliers",
-        )
-        wsets["JCASSET_PRECIOUS_RU"] = (
-            "Precious RU (ГОСТ 30649-99)",
-            "Set of precious alloys according to Russian regulations",
-        )
-        wsets["JCASSET_BASE"] = (
-            _("Base", "Jewelry"),
-            "Set of base metal alloys, physical properties taken directly from suppliers",
-        )
+    if not prefs.weighting_hide_default_sets and os.path.exists(var.WEIGHTING_SET_DIR):
+        description = {
+            "Base.json": "Set of base metal alloys, physical properties taken directly from suppliers",
+            "Precious RU (ГОСТ 30649-99).json": "Set of precious alloys according to Russian regulations",
+            "Precious.json": "Commonly used precious alloys, physical properties taken directly from suppliers",
+        }
+        for entry in os.scandir(var.WEIGHTING_SET_DIR):
+            if entry.is_file() and entry.name.endswith(".json"):
+                name = _(os.path.splitext(entry.name)[0], "Jewelry")
+                wsets[f"__ASSET__{entry.name}"] = (name, description.get(entry.name, ""))
 
     if os.path.exists(lib_path):
         for entry in os.scandir(lib_path):
