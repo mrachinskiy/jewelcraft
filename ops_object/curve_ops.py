@@ -33,7 +33,6 @@ from bpy.app.translations import pgettext_iface as _
 import bmesh
 from mathutils import Matrix
 
-from .. import var
 from ..lib import dynamic_list, unit
 
 
@@ -45,9 +44,9 @@ def set_diameter(self, context):
 
 
 def set_ring_size(self, context):
-    from ..lib import asset
+    from ..lib import ringsizelib
 
-    size = asset.to_ring_size(
+    size = ringsizelib.cir_to_size(
         unit.Scale(context).from_scene(self.circumference),
         self.size_format,
     )
@@ -69,26 +68,22 @@ def set_ring_size(self, context):
 
 
 def upd_size(self, context):
-    if self.size_format == "CH":
-        cir = self.size_float + 40.0
+    from ..lib import ringsizelib
 
+    if self.size_format == "CH":
+        size = self.size_float
     elif self.size_format == "UK":
         size = float(self.size_abc)
-
         if self.use_half_size:
             size += 0.5
-
-        cir = var.CIR_BASE_UK + var.CIR_STEP_UK * size
-
-    elif self.size_format in {"US", "JP"}:
+    elif self.size_format == "US":
         size = self.size_float
+    elif self.size_format == "JP":
+        size = self.size_int
 
-        if self.size_format == "JP":
-            size = var.MAP_SIZE_JP_TO_US[self.size_int - 1]
+    cir = ringsizelib.size_to_cir(size, self.size_format)
 
-        cir = var.CIR_BASE_US + var.CIR_STEP_US * size
-
-    self["circumference"] = unit.Scale(context).to_scene(round(cir, 4))
+    self["circumference"] = unit.Scale(context).to_scene(cir)
     set_diameter(self, context)
 
 
