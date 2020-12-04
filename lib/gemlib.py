@@ -20,6 +20,9 @@
 
 
 from typing import NamedTuple, Tuple, Optional
+from math import pi
+
+from . import unit
 
 
 class Stone(NamedTuple):
@@ -95,3 +98,29 @@ CUTS = {
     "TRILLIANT": Cut("Trilliant", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.888),
     "TRIANGLE": Cut("Triangle", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.531),
 }
+
+
+def ct_calc(stone: str, cut: str, size: Tuple[float, float, float]) -> float:
+    try:
+        dens = unit.convert_cm3_mm3(STONES[stone].density)
+        _cut = CUTS[cut]
+        vol_corr = _cut.vol_correction
+        shape = _cut.vol_shape
+    except KeyError:
+        return 0
+
+    w, l, h = size
+
+    if shape is VOL_CONE:
+        vol = pi * (l / 2) * (w / 2) * (h / 3)
+    elif shape is VOL_PYRAMID:
+        vol = (l * w * h) / 3
+    elif shape is VOL_PRISM:
+        vol = l * w * (h / 2)
+    elif shape is VOL_TETRAHEDRON:
+        vol = (l * w * h) / 6
+
+    g = vol * vol_corr * dens
+    ct = unit.convert_g_ct(g)
+
+    return round(ct, 3)
