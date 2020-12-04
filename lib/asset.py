@@ -20,7 +20,7 @@
 
 
 import os
-from math import tau, pi, sin, cos, modf
+from math import tau, pi, sin, cos
 from functools import lru_cache
 from typing import Tuple, Set, Sequence, Union, Optional, List, Iterable
 
@@ -30,7 +30,6 @@ from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix, Vector, kdtree
 
 from . import mesh, unit, gemlib
-from .. import var
 
 
 ObjectData = Tuple[Vector, float, Matrix]
@@ -502,41 +501,3 @@ def calc_bbox(obs: Iterable[Object]) -> Tuple[Loc, Dim, BBoxMin, BBoxMax]:
         (x_min, y_min, z_min),
         (x_max, y_max, z_max),
     )
-
-
-def to_ring_size(cir: float, size_format: str) -> Union[float, int, str]:
-    if size_format in {"US", "JP"}:
-        size = round((cir - var.CIR_BASE_US) / var.CIR_STEP_US, 2)
-
-        if size >= 0.0:
-
-            if size_format == "US":
-                return to_int(size)
-
-            for size_jp, size_us in enumerate(var.MAP_SIZE_JP_TO_US, start=1):
-                if size_us - 0.2 < size < size_us + 0.2:
-                    return size_jp
-
-    if size_format == "UK":
-        import string
-
-        size_raw = (cir - var.CIR_BASE_UK) / var.CIR_STEP_UK
-
-        if size_raw >= 0.0:
-            fraction, integer = modf(size_raw)
-            half_size = 0.25 < fraction < 0.75
-            if fraction > 0.75:
-                integer += 1.0
-
-            if integer < len(string.ascii_uppercase):
-                size = string.ascii_uppercase[int(integer)]
-                if half_size:
-                    size += " 1/2"
-                return size
-
-    if size_format == "CH":
-        size = round(cir - 40.0, 2)
-        if size >= 0.0:
-            return to_int(size)
-
-    return "[NO CORRESPONDING SIZE]"

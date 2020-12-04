@@ -23,7 +23,7 @@ from typing import Callable
 
 from math import pi
 
-from ..lib import asset, gemlib
+from ..lib import asset, gemlib, ringsizelib
 
 
 def data_format(Report, _: Callable[[str], str]) -> None:
@@ -92,7 +92,7 @@ def data_format(Report, _: Callable[[str], str]) -> None:
                 elif size_format == "CIR":
                     valuef = f"{round(cir, 2)} {_mm}"
                 else:
-                    valuef = asset.to_ring_size(cir, size_format)
+                    valuef = ringsizelib.cir_to_size(cir, size_format)
 
             notes_fmt.append((name, valuef))
 
