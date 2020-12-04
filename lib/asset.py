@@ -20,7 +20,7 @@
 
 
 import os
-from math import tau, pi, sin, cos
+from math import tau, sin, cos
 from functools import lru_cache
 from typing import Tuple, Set, Sequence, Union, Optional, List, Iterable
 
@@ -40,32 +40,6 @@ Loc = Dim = BBoxMin = BBoxMax = Tuple[float, float, float]
 
 # Gem
 # ------------------------------------
-
-
-def ct_calc(stone: str, cut: str, size: float) -> float:
-    try:
-        dens = unit.convert_cm3_mm3(gemlib.STONES[stone].density)
-        _cut = gemlib.CUTS[cut]
-        vol_corr = _cut.vol_correction
-        shape = _cut.vol_shape
-    except KeyError:
-        return 0
-
-    w, l, h = size
-
-    if shape is gemlib.VOL_CONE:
-        vol = pi * (l / 2) * (w / 2) * (h / 3)
-    elif shape is gemlib.VOL_PYRAMID:
-        vol = (l * w * h) / 3
-    elif shape is gemlib.VOL_PRISM:
-        vol = l * w * (h / 2)
-    elif shape is gemlib.VOL_TETRAHEDRON:
-        vol = (l * w * h) / 6
-
-    g = vol * vol_corr * dens
-    ct = unit.convert_g_ct(g)
-
-    return round(ct, 3)
 
 
 def get_cut(self, ob: Object) -> None:
@@ -173,12 +147,6 @@ def gem_overlap(context, data: Sequence[ObjectData], threshold: float, first_mat
         return False
 
     return overlap_indices
-
-
-def to_int(x: float) -> Union[int, float]:
-    if x.is_integer():
-        return int(x)
-    return x
 
 
 # Material

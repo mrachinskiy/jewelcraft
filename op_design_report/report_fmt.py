@@ -23,7 +23,7 @@ from typing import Callable
 
 from math import pi
 
-from ..lib import asset, gemlib, ringsizelib
+from ..lib import gemlib, ringsizelib
 
 
 def data_format(Report, _: Callable[[str], str]) -> None:
@@ -40,7 +40,7 @@ def data_format(Report, _: Callable[[str], str]) -> None:
         ):
 
             w, l, h = size
-            ct = asset.ct_calc(stone, cut, size)
+            ct = gemlib.ct_calc(stone, cut, size)
             total_ct = round(ct * qty, 3)
 
             try:

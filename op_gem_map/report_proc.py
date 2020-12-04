@@ -19,9 +19,17 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Union
+
 from mathutils import Color
 
-from ..lib import asset, gettext, gemlib
+from ..lib import gettext, gemlib
+
+
+def _to_int(x: float) -> Union[int, float]:
+    if x.is_integer():
+        return int(x)
+    return x
 
 
 def data_process(ReportData, lang):
@@ -54,8 +62,8 @@ def data_process(ReportData, lang):
         # Format
         # ---------------------------
 
-        l = asset.to_int(size[1])
-        w = asset.to_int(size[0])
+        l = _to_int(size[1])
+        w = _to_int(size[0])
 
         try:
             stone_fmt = _(gemlib.STONES[stone].name)
