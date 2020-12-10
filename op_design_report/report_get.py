@@ -21,6 +21,7 @@
 
 import collections
 
+import bpy
 from mathutils import Matrix
 
 from ..lib import unit, mesh, gemlib
@@ -43,13 +44,13 @@ class _Data:
         return True
 
 
-def data_collect(self, context, gem_map: bool = False) -> _Data:
-    scene = context.scene
-    depsgraph = context.evaluated_depsgraph_get()
+def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
+    scene = bpy.context.scene
+    depsgraph = bpy.context.evaluated_depsgraph_get()
     props = scene.jewelcraft
-    from_scene_scale = unit.Scale(context).from_scene
+    from_scene_scale = unit.Scale(bpy.context).from_scene
     Report = _Data()
-    Warn = report_warn.Warnings(self.show_warnings)
+    Warn = report_warn.Warnings(show_warnings)
 
     if not gem_map:
 

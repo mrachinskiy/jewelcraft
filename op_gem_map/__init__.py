@@ -52,10 +52,6 @@ class VIEW3D_OT_gem_map(Operator):
         description="Save to file in project folder",
         default=True,
     )
-    show_warnings: BoolProperty(
-        default=True,
-        options={"SKIP_SAVE", "HIDDEN"}
-    )
     width: IntProperty(
         name="Width",
         description="Number of horizontal pixels in the rendered image",
@@ -146,7 +142,7 @@ class VIEW3D_OT_gem_map(Operator):
         from ..op_design_report import report_get
         from . import draw_handler, report_proc
 
-        ReportData = report_get.data_collect(self, context, gem_map=True)
+        ReportData = report_get.data_collect(gem_map=True)
 
         if not ReportData.gems:
             self.report({"ERROR"}, "No gems in the scene")
