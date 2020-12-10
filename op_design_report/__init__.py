@@ -69,7 +69,7 @@ class WM_OT_design_report(Operator):
         from ..lib import gettext
         from . import report_get, report_fmt, html_doc
 
-        Report = report_get.data_collect(self, context)
+        Report = report_get.data_collect(show_warnings=self.show_warnings)
 
         if Report.is_empty():
             self.report({"ERROR"}, "Nothing to report")
