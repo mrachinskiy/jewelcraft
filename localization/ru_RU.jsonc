@@ -26,7 +26,6 @@
     "Show Density": "Показать плотность",
     "Composition": "Состав",
     "Warnings": "Предупреждения",
-    "Hidden Gems": "Скрытые камни",
     "Show All": "Показать все",
     "Scene scale is not optimal": "Масштаб сцены не оптимален",
     "Unsupported unit system": "Неподдерживаемая система единиц измерения",
@@ -205,8 +204,9 @@
     // Reports
     //
     "WARNING": "ПРЕДУПРЕЖДЕНИЕ",
+    "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)":
+      "Камни из скрытых коллекций отображаются в отчете (не используйте Hide in Viewport на коллекциях)",
     "Possible gem instance face leftovers": "Возможные остатки instance face камней",
-    "Hidden gems": "Скрытые камни",
     "Unknown gem IDs, carats are not calculated for marked gems (*)":
       "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)",
     "Curve Length": "Длина кривой",

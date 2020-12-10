@@ -45,21 +45,16 @@ class VIEW3D_OT_gem_map(Operator):
             ("ru_RU", "Russian (Русский)", ""),
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
+        options={"SKIP_SAVE"},
     )
     use_save: BoolProperty(
         name="Save To File",
         description="Save to file in project folder",
         default=True,
     )
-    warn_hidden_gems: BoolProperty(
-        name="Hidden Gems",
-        description="Enable or disable given warning",
+    show_warnings: BoolProperty(
         default=True,
-    )
-    warn_gem_overlap: BoolProperty(
-        name="Overlapping Gems",
-        description="Enable or disable given warning",
-        default=True,
+        options={"SKIP_SAVE", "HIDDEN"}
     )
     width: IntProperty(
         name="Width",
@@ -67,6 +62,7 @@ class VIEW3D_OT_gem_map(Operator):
         default=1200,
         min=4,
         subtype="PIXEL",
+        options={"SKIP_SAVE"},
     )
     height: IntProperty(
         name="Height",
@@ -74,6 +70,7 @@ class VIEW3D_OT_gem_map(Operator):
         default=750,
         min=4,
         subtype="PIXEL",
+        options={"SKIP_SAVE"},
     )
 
     def draw(self, context):
@@ -87,10 +84,6 @@ class VIEW3D_OT_gem_map(Operator):
         col = layout.column(align=True)
         col.prop(self, "width", text="Resolution X")
         col.prop(self, "height", text="Y")
-
-        col = layout.column(heading="Warnings")
-        col.prop(self, "warn_hidden_gems")
-        col.prop(self, "warn_gem_overlap")
 
     def modal(self, context, event):
         import time
@@ -213,8 +206,6 @@ class VIEW3D_OT_gem_map(Operator):
 
         self.prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.lang = self.prefs.design_report_lang
-        self.warn_hidden_gems = self.prefs.warn_hidden_gems
-        self.warn_gem_overlap = self.prefs.warn_gem_overlap
         self.width = self.prefs.gem_map_width
         self.height = self.prefs.gem_map_height
 
