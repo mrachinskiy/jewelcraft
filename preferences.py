@@ -353,11 +353,6 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         default=19,
         min=1,
     )
-    view_font_size_option: IntProperty(
-        name="Font Size",
-        default=17,
-        min=1,
-    )
     view_font_size_gem_size: IntProperty(
         name="Gem Size",
         default=18,

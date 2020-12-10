@@ -32,11 +32,11 @@ from mathutils import Matrix, Vector
 from ..lib import unit
 
 
-def gamma_correction(color):
+def _gamma_correction(color):
     return [x ** 2.2 for x in color]  # NOTE T74139
 
 
-def loc_3d_to_2d(region, region_3d, loc, ratio_w, ratio_h):
+def _loc_3d_to_2d(region, region_3d, loc, ratio_w, ratio_h):
     x, y = location_3d_to_region_2d(region, region_3d, loc)
     return x * ratio_w, y * ratio_h
 
@@ -66,10 +66,10 @@ def offscreen_refresh(self, context):
             draw_gems(self, context, gamma_corr=True)
 
 
-def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
+def draw_gems(self, context, ratio_w=1.0, ratio_h=1.0, gamma_corr=False):
 
     if gamma_corr:
-        _c = gamma_correction
+        _c = _gamma_correction
     else:
         _c = lambda x: x
 
@@ -79,8 +79,8 @@ def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
         angle_thold = pi / 1.8
         view_loc = self.region_3d.view_matrix.inverted().translation
     else:
-        angle_thold = pi / 2.0
-        center_xy = (self.region.width / 2.0, self.region.height / 2.0)
+        angle_thold = pi / 2
+        center_xy = (self.region.width / 2, self.region.height / 2)
         view_loc = region_2d_to_origin_3d(self.region, self.region_3d, center_xy)
 
     from_scene_scale = unit.Scale(context).from_scene
@@ -134,7 +134,7 @@ def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
         for poly in me.polygons:
             if view_normal.angle(poly.normal) < angle_thold:
                 cos = [
-                    loc_3d_to_2d(self.region, self.region_3d, verts[v].co, ratio_w, ratio_h)
+                    _loc_3d_to_2d(self.region, self.region_3d, verts[v].co, ratio_w, ratio_h)
                     for v in poly.vertices
                 ]
                 batch = batch_for_shader(shader, "TRI_FAN", {"pos": cos})
@@ -145,8 +145,8 @@ def draw_gems(self, context, ratio_w=1, ratio_h=1, gamma_corr=False):
         # Size
         # -----------------------------
 
-        loc_x, loc_y = loc_3d_to_2d(self.region, self.region_3d, mat.translation, ratio_w, ratio_h)
+        loc_x, loc_y = _loc_3d_to_2d(self.region, self.region_3d, mat.translation, ratio_w, ratio_h)
         dim_x, dim_y = blf.dimensions(fontid, size_fmt)
 
-        blf.position(fontid, loc_x - dim_x / 2, loc_y - dim_y / 2, 0.0)
+        blf.position(fontid, round(loc_x - dim_x / 2), round(loc_y - dim_y / 2), 0.0)
         blf.draw(fontid, size_fmt)

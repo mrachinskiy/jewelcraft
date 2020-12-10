@@ -720,10 +720,6 @@ def prefs_ui(self, context):
         col.prop(self, "overlay_linewidth")
         col.prop(self, "view_font_size_distance")
 
-        box.label(text="Viewport Options")
-        col = box.column()
-        col.prop(self, "view_font_size_option")
-
         box.label(text="Gem Map Font Size")
         col = box.column()
         col.prop(self, "view_font_size_report")

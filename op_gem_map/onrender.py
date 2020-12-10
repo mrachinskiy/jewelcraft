@@ -97,7 +97,7 @@ def render_map(self, context):
             # --------------------------------
 
             draw_gems(self, context, ratio_w=ratio_w, ratio_h=ratio_h)
-            onscreen_text.onscreen_gem_table(self, x, y, color=(0.0, 0.0, 0.0, 1.0))
+            onscreen_text.onscreen_gem_table(self, x, y, color=(0.0, 0.0, 0.0))
 
         buffer = bgl.Buffer(bgl.GL_BYTE, width * height * 4)
         bgl.glReadBuffer(bgl.GL_BACK)
