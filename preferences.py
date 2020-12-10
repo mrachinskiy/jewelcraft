@@ -310,20 +310,6 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         subtype="PIXEL",
     )
 
-    # Warnings
-    # ------------------------
-
-    warn_hidden_gems: BoolProperty(
-        name="Hidden Gems",
-        description="Enable or disable given warning",
-        default=True,
-    )
-    warn_gem_overlap: BoolProperty(
-        name="Overlapping Gems",
-        description="Enable or disable given warning",
-        default=True,
-    )
-
     # Overlays
     # ------------------------
 

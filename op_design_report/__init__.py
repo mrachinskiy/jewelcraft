@@ -45,15 +45,10 @@ class WM_OT_design_report(Operator):
             ("ru_RU", "Russian (Русский)", ""),
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
+        options={"SKIP_SAVE"},
     )
-    warn_hidden_gems: BoolProperty(
-        name="Hidden Gems",
-        description="Enable or disable given warning",
-        default=True,
-    )
-    warn_gem_overlap: BoolProperty(
-        name="Overlapping Gems",
-        description="Enable or disable given warning",
+    show_warnings: BoolProperty(
+        name="Warnings",
         default=True,
     )
     filepath: StringProperty(
@@ -67,10 +62,7 @@ class WM_OT_design_report(Operator):
         layout.use_property_decorate = False
 
         layout.prop(self, "lang")
-
-        col = layout.column(heading="Warnings")
-        col.prop(self, "warn_hidden_gems")
-        col.prop(self, "warn_gem_overlap")
+        layout.prop(self, "show_warnings")
 
     def execute(self, context):
         import webbrowser
@@ -96,8 +88,6 @@ class WM_OT_design_report(Operator):
     def invoke(self, context, event):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.lang = prefs.design_report_lang
-        self.warn_hidden_gems = prefs.warn_hidden_gems
-        self.warn_gem_overlap = prefs.warn_gem_overlap
 
         if bpy.data.is_saved:
             self.filename = os.path.splitext(os.path.basename(bpy.data.filepath))[0] + " Report"

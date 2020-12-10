@@ -23,7 +23,8 @@ import collections
 
 from mathutils import Matrix
 
-from ..lib import unit, mesh, asset, gemlib
+from ..lib import unit, mesh, gemlib
+from . import report_warn
 
 
 class _Data:
@@ -43,14 +44,12 @@ class _Data:
 
 
 def data_collect(self, context, gem_map: bool = False) -> _Data:
-    UnitScale = unit.Scale(context)
-    from_scene_scale = UnitScale.from_scene
-    to_scene_scale = UnitScale.to_scene
-
     scene = context.scene
     depsgraph = context.evaluated_depsgraph_get()
     props = scene.jewelcraft
+    from_scene_scale = unit.Scale(context).from_scene
     Report = _Data()
+    Warn = report_warn.Warnings(self.show_warnings)
 
     if not gem_map:
 
@@ -89,9 +88,6 @@ def data_collect(self, context, gem_map: bool = False) -> _Data:
 
     known_stones = gemlib.STONES.keys()
     known_cuts = gemlib.CUTS.keys()
-    ob_data = []
-    df_leftovers = False
-    unknown_id = False
     orig_instance_obs = {dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance}
 
     for dup in depsgraph.object_instances:
@@ -102,7 +98,7 @@ def data_collect(self, context, gem_map: bool = False) -> _Data:
             ob = dup.object.original
 
         if "gem" not in ob or (not dup.is_instance and ob in orig_instance_obs):
-            continue
+            continue  # Skip original instance gem objects
 
         # Gem
         stone = ob["gem"]["stone"]
@@ -120,59 +116,35 @@ def data_collect(self, context, gem_map: bool = False) -> _Data:
             mat = mat_loc @ mat_rot
         loc.freeze()
         mat.freeze()
-        ob_data.append((loc, rad, mat))
+
+        Warn.overlap_data.append((loc, rad, mat))
+        Warn.df_leftovers(ob)
 
         if stone not in known_stones:
             stone = "*" + stone
-            unknown_id = True
+            Warn.is_unknown_id = True
 
         if cut not in known_cuts:
             cut = "*" + cut
-            unknown_id = True
-
-        if (
-            not df_leftovers and
-            ob.parent and
-            ob.parent.type == "MESH" and
-            ob.parent.instance_type == "NONE"
-        ):
-            df_leftovers = True
+            Warn.is_unknown_id = True
 
         Report.gems[(stone, cut, size)] += 1
-
-    # Find overlaps
-    # ---------------------------
-
-    overlaps = False
-
-    if self.warn_gem_overlap:
-        threshold = to_scene_scale(0.1)
-        overlaps = asset.gem_overlap(context, ob_data, threshold, first_match=True)
-
-    # Find hidden gems
-    # ---------------------------
-
-    hidden = False
-
-    if self.warn_hidden_gems:
-        for ob in scene.objects:
-            if "gem" in ob and not ob.visible_get():
-                hidden = True
-                break
 
     # Warnings
     # ---------------------------
 
-    if hidden:
-        Report.warnings.append("Hidden gems")
+    Warn.run_checks()
 
-    if df_leftovers:
+    if Warn.is_collection_visibility:
+        Report.warnings.append("Gems from hidden collections appear in report (don't use Hide in Viewport on collections)")
+
+    if Warn.is_df_leftovers:
         Report.warnings.append("Possible gem instance face leftovers")
 
-    if overlaps:
+    if Warn.is_gem_overlap:
         Report.warnings.append("Overlapping gems")
 
-    if unknown_id:
+    if Warn.is_unknown_id:
         Report.warnings.append("Unknown gem IDs, carats are not calculated for marked gems (*)")
 
     return Report

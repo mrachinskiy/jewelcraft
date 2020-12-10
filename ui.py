@@ -713,11 +713,6 @@ def prefs_ui(self, context):
         col.prop(self, "gem_map_width", text="Resolution X")
         col.prop(self, "gem_map_height", text="Y")
 
-        box.label(text="Warnings")
-        col = box.column()
-        col.prop(self, "warn_hidden_gems")
-        col.prop(self, "warn_gem_overlap")
-
     elif active_tab == "THEMES":
         box.label(text="Spacing Overlay")
         col = box.column()

@@ -160,7 +160,7 @@ def weighting_set(self, context) -> EnumItems4:
     wsets = {}
     list_ = []
 
-    if not prefs.weighting_hide_default_sets and os.path.exists(var.WEIGHTING_SET_DIR):
+    if not prefs.weighting_hide_default_sets:
         description = {
             "Base.json": "Set of base metal alloys, physical properties taken directly from suppliers",
             "Precious RU (ГОСТ 30649-99).json": "Set of precious alloys according to Russian regulations",
