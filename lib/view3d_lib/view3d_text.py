@@ -62,7 +62,9 @@ def options_init(self, values: Tuple[Tuple[str, str, str, int], ...]) -> None:
 
 
 def options_display(self, context, x: int, y: int) -> None:
-    color_white = (0.95, 0.95, 0.95, 1.0)
+    prefs = context.preferences
+
+    color_text = prefs.themes[0].view_3d.space.text_hi
     color_grey = (0.67, 0.67, 0.67, 1.0)
     color_green = (0.3, 1.0, 0.3, 1.0)
     color_red = (1.0, 0.3, 0.3, 1.0)
@@ -70,11 +72,13 @@ def options_display(self, context, x: int, y: int) -> None:
     color_blue = (0.5, 0.6, 1.0, 1.0)
 
     fontid = 1
-    blf.size(fontid, self.prefs.view_font_size_option, 72)
+    fontsize = round(prefs.ui_styles[0].widget_label.points * prefs.view.ui_scale)
+
+    blf.size(fontid, fontsize, 104)
 
     font_w_1, font_h = blf.dimensions(fontid, self.option_col_1_max)
     font_w_2, _ = blf.dimensions(fontid, self.option_col_2_max)
-    font_row_height = font_h * 1.5
+    font_row_height = round(font_h * 1.5)
 
     layout_enabled = True
 
@@ -95,7 +99,7 @@ def options_display(self, context, x: int, y: int) -> None:
         x_ofst = x
 
         blf.position(fontid, x, y, 0.0)
-        blf.color(fontid, *color_white)
+        blf.color(fontid, *color_text, 1.0)
         blf.draw(fontid, option)
 
         if hotkey:
@@ -107,7 +111,7 @@ def options_display(self, context, x: int, y: int) -> None:
         if type_ is TYPE_BOOL:
             x_ofst += font_w_2 + 10
             blf.position(fontid, x_ofst, y, 0.0)
-            blf.color(fontid, *color_white)
+            blf.color(fontid, *color_text, 1.0)
             blf.draw(fontid, ":")
 
             x_ofst += 20
@@ -122,7 +126,7 @@ def options_display(self, context, x: int, y: int) -> None:
         elif type_ is TYPE_NUM:
             x_ofst += font_w_2 + 10
             blf.position(fontid, x_ofst, y, 0.0)
-            blf.color(fontid, *color_white)
+            blf.color(fontid, *color_text, 1.0)
             blf.draw(fontid, ":")
 
             x_ofst += 20
@@ -133,19 +137,19 @@ def options_display(self, context, x: int, y: int) -> None:
         elif type_ is TYPE_ENUM:
             x_ofst += font_w_2 + 10
             blf.position(fontid, x_ofst, y, 0.0)
-            blf.color(fontid, *color_white)
+            blf.color(fontid, *color_text, 1.0)
             blf.draw(fontid, ":")
 
             x_ofst += 20
             blf.position(fontid, x_ofst, y, 0.0)
-            blf.color(fontid, *color_white)
+            blf.color(fontid, *color_text, 1.0)
             blf.draw(fontid, getattr(self, f"{prop}_enum")[getattr(self, prop)])
 
         elif type_ is TYPE_PROC:
             if getattr(self, prop):
                 x_ofst += font_w_2 + 10
                 blf.position(fontid, x_ofst, y, 0.0)
-                blf.color(fontid, *color_white)
+                blf.color(fontid, *color_text, 1.0)
                 blf.draw(fontid, ":")
 
                 x_ofst += 20

@@ -19,31 +19,39 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Tuple, Optional
+
+import bpy
 import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
 
 
-shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+Color = Tuple[float, float, float]
 
 
-def onscreen_gem_table(self, x, y, color=(0.95, 0.95, 0.95, 1.0)):
+def onscreen_gem_table(self, x: int, y: int, color: Optional[Color] = None) -> int:
     fontid = 1
+    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+
+    if color is None:
+        color = bpy.context.preferences.themes[0].view_3d.space.text_hi
+
     blf.size(fontid, self.prefs.view_font_size_report, 72)
-    blf.color(fontid, *color)
+    blf.color(fontid, *color, 1.0)
 
     _, font_h = blf.dimensions(fontid, "Row Height")
-    font_baseline = font_h * 0.4
+    font_baseline = round(font_h * 0.4)
     font_row_height = font_h * 2
-    box_size = font_h * 1.5
+    icon_size = font_h * 1.5
     y += font_baseline
 
-    for row, color in self.table_data:
+    for row, icon_color in self.table_data:
         y -= font_row_height
 
         shader.bind()
-        shader.uniform_float("color", color)
-        batch_font = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(x, y, box_size, box_size)})
+        shader.uniform_float("color", icon_color)
+        batch_font = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(x, y, icon_size, icon_size)})
         batch_font.draw(shader)
 
         blf.position(fontid, x + font_row_height, y + font_baseline, 0.0)
