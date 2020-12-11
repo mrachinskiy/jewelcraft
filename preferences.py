@@ -291,23 +291,15 @@ class Preferences(mod_update.Preferences, AddonPreferences):
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
     )
-
-    # Gem Map
-    # ------------------------
-
-    gem_map_width: IntProperty(
-        name="Width",
-        description="Number of horizontal pixels in the rendered image",
-        default=1200,
-        min=4,
-        subtype="PIXEL",
+    gem_map_fontsize_table: IntProperty(
+        name="Table",
+        default=19,
+        min=1,
     )
-    gem_map_height: IntProperty(
-        name="Height",
-        description="Number of vertical pixels in the rendered image",
-        default=750,
-        min=4,
-        subtype="PIXEL",
+    gem_map_fontsize_gem_size: IntProperty(
+        name="Gem Size",
+        default=18,
+        min=1,
     )
 
     # Overlays
@@ -328,6 +320,11 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         soft_max=5.0,
         subtype="PIXEL",
     )
+    overlay_fontsize_distance: IntProperty(
+        name="Font Size",
+        default=16,
+        min=1,
+    )
 
     # Themes
     # ------------------------
@@ -347,21 +344,6 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         min=0.0,
         soft_max=1.0,
         subtype="COLOR",
-    )
-    view_font_size_report: IntProperty(
-        name="Gem Table",
-        default=19,
-        min=1,
-    )
-    view_font_size_gem_size: IntProperty(
-        name="Gem Size",
-        default=18,
-        min=1,
-    )
-    view_font_size_distance: IntProperty(
-        name="Font Size",
-        default=16,
-        min=1,
     )
 
     def draw(self, context):

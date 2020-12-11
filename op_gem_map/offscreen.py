@@ -19,6 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Tuple
+
 import operator
 from math import pi
 
@@ -32,21 +34,39 @@ from mathutils import Matrix, Vector
 from ..lib import unit
 
 
+class _ViewData:
+    __slots__ = "scale_x", "scale_y", "offset_x", "offset_y"
+
+    def __init__(self) -> None:
+        self.scale_x = 1.0
+        self.scale_y = 1.0
+        self.offset_x = 0.0
+        self.offset_y = 0.0
+
+
 def _gamma_correction(color):
     return [x ** 2.2 for x in color]  # NOTE T74139
 
 
-def _loc_3d_to_2d(region, region_3d, loc, ratio_w, ratio_h):
+def _loc_3d_to_2d(region, region_3d, loc: Vector, view: _ViewData) -> Tuple[float, float]:
     x, y = location_3d_to_region_2d(region, region_3d, loc)
-    return x * ratio_w, y * ratio_h
+    return (x - view.offset_x) * view.scale_x, (y - view.offset_y) * view.scale_y
+
+
+def _get_frame(context, region, region_3d) -> Tuple[float, float, Vector]:
+    cam = context.scene.camera
+    frame = [
+        location_3d_to_region_2d(region, region_3d, cam.matrix_world @ p)
+        for p in cam.data.view_frame(scene=context.scene)
+    ]
+    return frame[1].x - frame[2].x, frame[0].y - frame[1].y, frame[2]
 
 
 def offscreen_refresh(self, context):
     if self.offscreen is not None:
         self.offscreen.free()
 
-    width = self.region.width
-    height = self.region.height
+    width, height = self.get_resolution()
     self.offscreen = gpu.types.GPUOffScreen(width, height)
 
     mat_offscreen = Matrix()
@@ -66,7 +86,7 @@ def offscreen_refresh(self, context):
             draw_gems(self, context, gamma_corr=True)
 
 
-def draw_gems(self, context, ratio_w=1.0, ratio_h=1.0, gamma_corr=False):
+def draw_gems(self, context, gamma_corr=False):
 
     if gamma_corr:
         _c = _gamma_correction
@@ -111,10 +131,23 @@ def draw_gems(self, context, ratio_w=1.0, ratio_h=1.0, gamma_corr=False):
         dist_from_view = (mat.translation - view_loc).length
         app((dist_from_view, ob, mat, size_fmt, color))
 
-    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+    ViewData = _ViewData()
+
+    if self.is_rendering:
+        if self.region_3d.view_perspective == "CAMERA":
+            width, height = self.get_resolution()
+            frame_width, frame_height, frame_offset = _get_frame(context, self.region, self.region_3d)
+
+            ViewData.scale_x = width / frame_width
+            ViewData.scale_y = height / frame_height
+            ViewData.offset_x, ViewData.offset_y = frame_offset.xy
+        else:
+            ViewData.scale_x = ViewData.scale_y = self.render.resolution_percentage / 100
+
     fontid = 0
-    blf.size(fontid, self.prefs.view_font_size_gem_size, 72)
+    blf.size(fontid, self.prefs.gem_map_fontsize_gem_size, 72)
     blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
+    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
     gems.sort(key=operator.itemgetter(0), reverse=True)
 
@@ -134,7 +167,7 @@ def draw_gems(self, context, ratio_w=1.0, ratio_h=1.0, gamma_corr=False):
         for poly in me.polygons:
             if view_normal.angle(poly.normal) < angle_thold:
                 cos = [
-                    _loc_3d_to_2d(self.region, self.region_3d, verts[v].co, ratio_w, ratio_h)
+                    _loc_3d_to_2d(self.region, self.region_3d, verts[v].co, ViewData)
                     for v in poly.vertices
                 ]
                 batch = batch_for_shader(shader, "TRI_FAN", {"pos": cos})
@@ -145,7 +178,7 @@ def draw_gems(self, context, ratio_w=1.0, ratio_h=1.0, gamma_corr=False):
         # Size
         # -----------------------------
 
-        loc_x, loc_y = _loc_3d_to_2d(self.region, self.region_3d, mat.translation, ratio_w, ratio_h)
+        loc_x, loc_y = _loc_3d_to_2d(self.region, self.region_3d, mat.translation, ViewData)
         dim_x, dim_y = blf.dimensions(fontid, size_fmt)
 
         blf.position(fontid, round(loc_x - dim_x / 2), round(loc_y - dim_y / 2), 0.0)
