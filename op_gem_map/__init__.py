@@ -19,6 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Tuple
+
 import bpy
 from bpy.types import Operator
 from bpy.props import EnumProperty, BoolProperty, IntProperty
@@ -45,29 +47,13 @@ class VIEW3D_OT_gem_map(Operator):
             ("ru_RU", "Russian (Русский)", ""),
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
-        options={"SKIP_SAVE"},
     )
     use_save: BoolProperty(
         name="Save To File",
         description="Save to file in project folder",
         default=True,
     )
-    width: IntProperty(
-        name="Width",
-        description="Number of horizontal pixels in the rendered image",
-        default=1200,
-        min=4,
-        subtype="PIXEL",
-        options={"SKIP_SAVE"},
-    )
-    height: IntProperty(
-        name="Height",
-        description="Number of vertical pixels in the rendered image",
-        default=750,
-        min=4,
-        subtype="PIXEL",
-        options={"SKIP_SAVE"},
-    )
+    first_run: BoolProperty(default=True, options={"HIDDEN"})
 
     def draw(self, context):
         layout = self.layout
@@ -76,10 +62,6 @@ class VIEW3D_OT_gem_map(Operator):
 
         layout.prop(self, "use_save")
         layout.prop(self, "lang")
-
-        col = layout.column(align=True)
-        col.prop(self, "width", text="Resolution X")
-        col.prop(self, "height", text="Y")
 
     def modal(self, context, event):
         import time
@@ -151,6 +133,7 @@ class VIEW3D_OT_gem_map(Operator):
         self.region = context.region
         self.region_3d = context.space_data.region_3d
         self.view_state = self.region_3d.perspective_matrix.copy()
+        self.render = context.scene.render
         self.offscreen = None
         self.handler = None
         self.use_navigate = False
@@ -201,9 +184,9 @@ class VIEW3D_OT_gem_map(Operator):
             return {"CANCELLED"}
 
         self.prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.lang = self.prefs.design_report_lang
-        self.width = self.prefs.gem_map_width
-        self.height = self.prefs.gem_map_height
+        if self.first_run:
+            self.first_run = False
+            self.lang = self.prefs.design_report_lang
 
         if event.ctrl:
             wm = context.window_manager
@@ -211,12 +194,23 @@ class VIEW3D_OT_gem_map(Operator):
 
         return self.execute(context)
 
-    def offscreen_refresh(self, context):
+    def offscreen_refresh(self, context) -> None:
         from .import offscreen
         offscreen.offscreen_refresh(self, context)
 
+    def get_resolution(self) -> Tuple[int, int]:
+        if self.is_rendering:
+            resolution_scale = self.render.resolution_percentage / 100
+
+            if self.region_3d.view_perspective == "CAMERA":
+                return round(self.render.resolution_x * resolution_scale), round(self.render.resolution_y * resolution_scale)
+            else:
+                return round(self.region.width * resolution_scale), round(self.region.height * resolution_scale)
+
+        return self.region.width, self.region.height
+
     @staticmethod
-    def rect_coords(x, y, dim_x, dim_y):
+    def rect_coords(x: float, y: float, dim_x: float, dim_y: float) -> Tuple[Tuple[float, float]]:
         return (
             (x,         y),
             (x + dim_x, y),

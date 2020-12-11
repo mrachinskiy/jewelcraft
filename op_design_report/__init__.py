@@ -45,7 +45,6 @@ class WM_OT_design_report(Operator):
             ("ru_RU", "Russian (Русский)", ""),
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),
-        options={"SKIP_SAVE"},
     )
     show_warnings: BoolProperty(
         name="Warnings",
@@ -55,6 +54,7 @@ class WM_OT_design_report(Operator):
         subtype="FILE_PATH",
         options={"SKIP_SAVE", "HIDDEN"},
     )
+    first_run: BoolProperty(default=True, options={"HIDDEN"})
 
     def draw(self, context):
         layout = self.layout
@@ -86,8 +86,10 @@ class WM_OT_design_report(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.lang = prefs.design_report_lang
+        if self.first_run:
+            self.first_run = False
+            prefs = context.preferences.addons[var.ADDON_ID].preferences
+            self.lang = prefs.design_report_lang
 
         if bpy.data.is_saved:
             self.filename = os.path.splitext(os.path.basename(bpy.data.filepath))[0] + " Report"

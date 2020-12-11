@@ -36,10 +36,7 @@ from .offscreen import draw_gems
 
 def render_map(self, context):
     image_name = "Gem Map"
-    width = self.width
-    height = self.height
-    ratio_w = width / self.region.width
-    ratio_h = height / self.region.height
+    width, height = self.get_resolution()
     padding = 30
     x = padding
     y = height - padding
@@ -96,7 +93,7 @@ def render_map(self, context):
             # Gem map
             # --------------------------------
 
-            draw_gems(self, context, ratio_w=ratio_w, ratio_h=ratio_h)
+            draw_gems(self, context)
             onscreen_text.onscreen_gem_table(self, x, y, color=(0.0, 0.0, 0.0))
 
         buffer = bgl.Buffer(bgl.GL_BYTE, width * height * 4)

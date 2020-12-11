@@ -708,22 +708,17 @@ def prefs_ui(self, context):
         col = box.column()
         col.prop(self, "design_report_lang")
 
-        box.label(text="Gem Map")
-        col = box.column(align=True)
-        col.prop(self, "gem_map_width", text="Resolution X")
-        col.prop(self, "gem_map_height", text="Y")
+        box.label(text="Gem Map Font Size")
+        col = box.column()
+        col.prop(self, "gem_map_fontsize_table")
+        col.prop(self, "gem_map_fontsize_gem_size")
 
     elif active_tab == "THEMES":
         box.label(text="Spacing Overlay")
         col = box.column()
         col.prop(self, "overlay_color")
         col.prop(self, "overlay_linewidth")
-        col.prop(self, "view_font_size_distance")
-
-        box.label(text="Gem Map Font Size")
-        col = box.column()
-        col.prop(self, "view_font_size_report")
-        col.prop(self, "view_font_size_gem_size")
+        col.prop(self, "overlay_fontsize_distance")
 
         box.label(text="Materials")
         col = box.column()
