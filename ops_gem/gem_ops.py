@@ -476,7 +476,6 @@ class OBJECT_OT_gem_recover(Operator):
         self.y_var = 1
         self.xy_loc = 0
         self.xy_loc_enum = (_("Median"), _("Bounds"), _("Culet"))
-        self.prefs = context.preferences.addons[var.ADDON_ID].preferences
 
         self.modal_pass(context)
 

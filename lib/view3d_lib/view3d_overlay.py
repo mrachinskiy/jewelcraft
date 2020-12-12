@@ -25,10 +25,7 @@ from gpu_extras.batch import batch_for_shader
 from mathutils import Vector
 
 
-shader = gpu.shader.from_builtin("3D_SMOOTH_COLOR")
-
-
-def restore_gl():
+def restore_gl() -> None:
     bgl.glDisable(bgl.GL_BLEND)
     bgl.glDisable(bgl.GL_LINE_SMOOTH)
     bgl.glDisable(bgl.GL_DEPTH_TEST)
@@ -44,6 +41,7 @@ def draw_axis(self, context):
     if not self.axis_in_front:
         bgl.glEnable(bgl.GL_DEPTH_TEST)
 
+    shader = gpu.shader.from_builtin("3D_SMOOTH_COLOR")
     shader.bind()
 
     for mat in self.mats:
