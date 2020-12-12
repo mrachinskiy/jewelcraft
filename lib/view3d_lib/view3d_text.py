@@ -21,7 +21,6 @@
 
 from typing import Tuple
 
-
 import blf
 
 
@@ -54,8 +53,6 @@ def padding_init(context, x=20, y=10) -> Tuple[int, int]:
 
 
 def options_init(self, values: Tuple[Tuple[str, str, str, int], ...]) -> None:
-    self.font_size_options = 17
-
     self.option_list = values
     self.option_col_1_max = max(self.option_list, key=lambda x: len(x[0]))[0]
     self.option_col_2_max = max(self.option_list, key=lambda x: len(x[1]))[1]

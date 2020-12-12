@@ -23,7 +23,7 @@ from typing import Tuple
 
 import bpy
 from bpy.types import Operator
-from bpy.props import EnumProperty, BoolProperty, IntProperty
+from bpy.props import EnumProperty, BoolProperty
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
@@ -60,8 +60,8 @@ class VIEW3D_OT_gem_map(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.prop(self, "use_save")
         layout.prop(self, "lang")
+        layout.prop(self, "use_save")
 
     def modal(self, context, event):
         import time
