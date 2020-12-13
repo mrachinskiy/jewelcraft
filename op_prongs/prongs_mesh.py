@@ -23,7 +23,7 @@ from typing import List
 from math import pi, tau, sin, cos
 
 import bmesh
-from bmesh.types import BMesh, BMVert
+from bmesh.types import BMesh, BMVert, BMFace
 from mathutils import Matrix
 
 from ..lib import iterutils, mesh
@@ -103,19 +103,21 @@ def create_prongs(self):
     spin_steps = self.number - 1
 
     if self.alignment:
-        bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.alignment, 4, "X"))
+        bm.transform(Matrix.Rotation(-self.alignment, 4, "X"))
 
-    bmesh.ops.translate(bm, verts=bm.verts, vec=(0.0, pos_offset, 0.0))
+    bm.transform(Matrix.Translation((0.0, pos_offset, 0.0)))
 
     if spin_steps:
         spin_angle = tau - tau / self.number
         bmesh.ops.spin(bm, geom=bm.faces, angle=spin_angle, steps=spin_steps, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0), use_duplicate=True)
 
-    bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.position, 4, "Z"))
+    bm.transform(Matrix.Rotation(-self.position, 4, "Z"))
 
     if self.use_symmetry:
-        bmesh.ops.mirror(bm, geom=bm.faces, merge_dist=0, axis="Y")
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-        bmesh.ops.rotate(bm, verts=bm.verts, cent=(0.0, 0.0, 0.0), matrix=Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))
+        mirror_geom = bmesh.ops.mirror(bm, geom=bm.faces, merge_dist=0, axis="Y")
+        for ele in mirror_geom["geom"]:
+            if isinstance(ele, BMFace):
+                ele.normal_flip()
+        bm.transform(Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))
 
     return bm
