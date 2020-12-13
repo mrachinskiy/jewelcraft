@@ -19,10 +19,13 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Tuple, List
 from math import pi, tau, sin, cos
 
 import bmesh
+from bmesh.types import BMesh, BMVert
 
+from ..lib import iterutils
 from ..lib.mesh import (
     make_rect,
     make_tri,
@@ -431,40 +434,7 @@ def create_cutter(self):
     # ---------------------------
 
     else:
-
-        handle_size = self.handle_l_size / 2
-        girdle_size = self.gem_l / 2 + self.girdle_l_ofst
-        hole_size = self.hole_l_size / 2
-
-        v_cos = []
-
-        if self.use_handle:
-            v_cos += [
-                (0.0, handle_size, self.handle_z_top),
-                (0.0, handle_size, self.handle_z_btm),
-            ]
-
-        v_cos += [
-            (0.0, girdle_size, self.girdle_z_top),
-            (0.0, girdle_size, -self.girdle_z_btm),
-        ]
-
-        if self.use_hole:
-            v_cos += [
-                (0.0, hole_size, -self.hole_z_top),
-                (0.0, hole_size, -self.hole_z_btm),
-            ]
-        else:
-            v_cos += [(0.0, 0.0, -self.hole_z_top)]
-
-        v_profile = [bm.verts.new(v) for v in v_cos]
-
-        for vs in zip(v_profile, v_profile[1:]):
-            bm.edges.new(vs)
-
-        bmesh.ops.spin(bm, geom=bm.edges, angle=tau, steps=self.detalization, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0))
-        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
-        bmesh.ops.holes_fill(bm, edges=bm.edges, sides=0)
+        _mesh_round(self, bm)
 
     # Common operations
     # ---------------------------
@@ -474,3 +444,44 @@ def create_cutter(self):
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
 
     return bm
+
+
+def _section(bm: BMesh, radius: float, z1: float, z2: float, detalization: int) -> Tuple[List[BMVert], List[BMVert]]:
+    angle = tau / detalization
+    vs1 = []
+    vs2 = []
+    app1 = vs1.append
+    app2 = vs2.append
+
+    for i in range(detalization):
+        x = sin(i * angle) * radius
+        y = cos(i * angle) * radius
+
+        app1(bm.verts.new((x, y, z1)))
+        app2(bm.verts.new((x, y, z2)))
+
+    return vs1, vs2
+
+
+def _mesh_round(self, bm: BMesh) -> None:
+    parts = []
+
+    if self.use_handle:
+        handle_size = self.handle_l_size / 2
+        parts += _section(bm, handle_size, self.handle_z_top, self.handle_z_btm, self.detalization)
+
+    girdle_size = self.gem_l / 2 + self.girdle_l_ofst
+    parts += _section(bm, girdle_size, self.girdle_z_top, -self.girdle_z_btm, self.detalization)
+    bm.faces.new(parts[0]).normal_flip()
+
+    if self.use_hole:
+        hole_size = self.hole_l_size / 2
+        parts += _section(bm, hole_size, -self.hole_z_top, -self.hole_z_btm, self.detalization)
+        bm.faces.new(parts[-1])
+    else:
+        v3 = bm.verts.new((0.0, 0.0, -self.hole_z_top))
+        for v1, v2 in iterutils.pairwise_cyclic(parts[-1]):
+            bm.faces.new((v1, v2, v3))
+
+    for a, b in iterutils.pairwise(parts):
+        bridge_verts(bm, b, a)
