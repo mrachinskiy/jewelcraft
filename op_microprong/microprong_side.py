@@ -79,10 +79,7 @@ def execute(self, context):
     )
 
     verts_n = [bm.verts.new(co) for co in coords]
-    verts_s = [bm.verts.new(co) for co in coords]
-
-    for v in verts_s:
-        v.co.y = -l
+    verts_s = [bm.verts.new((x, -y, z)) for x, y, z in coords]
 
     bm.faces.new(verts_n)
     bm.faces.new(verts_s).normal_flip()
@@ -115,7 +112,8 @@ def execute(self, context):
             segments=self.bevel_segments, profile=0.5,
         )
 
-    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+    if self.bevel_btm or self.bevel_top:
+        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
 
     ob = microprong_lib.prepare_object(self, bm)
     _distribute(context, ob, self.size_active)
