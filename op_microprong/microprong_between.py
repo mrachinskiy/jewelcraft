@@ -85,10 +85,7 @@ def execute(self, context):
     )
 
     verts_n = [bm.verts.new(co) for co in coords]
-    verts_s = [bm.verts.new(co) for co in coords]
-
-    for v in verts_s:
-        v.co.y = -l
+    verts_s = [bm.verts.new((x, -y, z)) for x, y, z in coords]
 
     bm.faces.new(verts_n)
     bm.faces.new(verts_s).normal_flip()
