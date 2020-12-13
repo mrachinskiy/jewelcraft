@@ -19,10 +19,62 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import List
 from math import pi, tau, sin, cos
 
 import bmesh
+from bmesh.types import BMesh, BMVert
 from mathutils import Matrix
+
+from ..lib import iterutils, mesh
+
+
+def _circle(bm: BMesh, radius: float, height: float, detalization: int) -> List[BMVert]:
+    angle = tau / detalization
+
+    return [
+        bm.verts.new(
+            (
+                sin(i * angle) * radius,
+                cos(i * angle) * radius,
+                height,
+            )
+        )
+        for i in range(detalization)
+    ]
+
+
+def _dome(bm: BMesh, radius: float, height: float, scale: float, detalization: int) -> List[BMVert]:
+    curve_resolution = int(detalization / 4) + 1
+    angle = (pi / 2) / (curve_resolution - 1)
+    zero_loop = True
+    first_loop = True
+
+    for i in range(curve_resolution):
+
+        y = sin(i * angle) * radius
+        z = cos(i * angle) * radius * scale + height
+
+        if zero_loop:
+            zero_loop = False
+            pole_z = z
+            continue
+
+        step = _circle(bm, y, z, detalization)
+
+        if first_loop:
+            first_loop = False
+            pole = step
+        else:
+            mesh.bridge_verts(bm, step, prev_step)
+
+        prev_step = step
+
+    v3 = bm.verts.new((0.0, 0.0, pole_z))
+    for v1, v2 in iterutils.pairwise_cyclic(pole):
+        bm.faces.new((v3, v2, v1))
+
+    return step
 
 
 def create_prongs(self):
@@ -32,42 +84,17 @@ def create_prongs(self):
 
     prong_rad = self.diameter / 2
     taper = self.taper + 1
+    bm = bmesh.new()
 
     if self.bump_scale:
-
-        curve_resolution = int(self.detalization / 4) + 1
-        angle = (pi / 2) / (curve_resolution - 1)
-
-        v_cos = [
-            (
-                0.0,
-                sin(i * angle) * prong_rad,
-                cos(i * angle) * prong_rad * self.bump_scale + self.z_top,
-            )
-            for i in range(curve_resolution)
-        ]
-
-        v_cos.append((0.0, prong_rad * taper, -self.z_btm))
-
+        top = _dome(bm, prong_rad, self.z_top, self.bump_scale, self.detalization)
     else:
+        top = _circle(bm, prong_rad, self.z_top, self.detalization)
+        bm.faces.new(top).normal_flip()
 
-        v_cos = (
-            (0.0, 0.0,                self.z_top),
-            (0.0, prong_rad,          self.z_top),
-            (0.0, prong_rad * taper, -self.z_btm),
-        )
-
-    bm = bmesh.new()
-    v_profile = [bm.verts.new(v) for v in v_cos]
-
-    for vs in zip(v_profile, v_profile[1:]):
-        bm.edges.new(vs)
-
-    bmesh.ops.spin(bm, geom=bm.edges, angle=tau, steps=self.detalization, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0))
-    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
-
-    v_boundary = [x for x in bm.verts if x.is_boundary]
-    bm.faces.new(reversed(v_boundary))
+    bottom = _circle(bm, prong_rad * taper, -self.z_btm, self.detalization)
+    bm.faces.new(bottom)
+    mesh.bridge_verts(bm, bottom, top)
 
     # Transforms
     # ---------------------------
