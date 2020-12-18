@@ -123,6 +123,7 @@ classes = (
     ui.VIEW3D_PT_jewelcraft_weighting,
     ui.VIEW3D_PT_jewelcraft_design_report,
     ui.VIEW3D_PT_jewelcraft_measurement,
+    op_cutter.Dimensions,
     op_cutter.OBJECT_OT_cutter_add,
     op_gem_map.VIEW3D_OT_gem_map,
     op_microprong.OBJECT_OT_microprong_cutter_add,

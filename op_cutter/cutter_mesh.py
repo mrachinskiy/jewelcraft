@@ -19,469 +19,113 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple, List
-from math import pi, tau, sin, cos
-
 import bmesh
-from bmesh.types import BMesh, BMVert
+from mathutils import Matrix
 
-from ..lib import iterutils
-from ..lib.mesh import (
-    make_rect,
-    make_tri,
-    make_edges,
-    bridge_verts,
-    edge_loop_expand,
-    duplicate_verts,
-    edge_loop_walk,
-)
+from ..lib import iterutils, mesh
+from . import profiles
 
 
-def create_cutter(self):
+class _SectionSize:
+    __slots__ = "x", "y", "z1", "z2"
+
+    def __init__(self, x: float, y: float, z1: float, z2: float) -> None:
+        self.x = x
+        self.y = y
+        self.z1 = z1
+        self.z2 = z2
+
+
+def get(self):
     bm = bmesh.new()
 
-    # Square/Rectangle
-    # ---------------------------
+    # Section sizes
+    # ---------------------------------
 
-    if self.shape_sq or self.shape_rect:
+    Handle = _SectionSize(
+        self.handle_dim.x / 2,
+        self.handle_dim.y / 2,
+        self.handle_dim.z1,
+        self.handle_dim.z2,
+    )
+    Girdle = _SectionSize(
+        self.gem_w / 2 + self.girdle_dim.x,
+        self.gem_l / 2 + self.girdle_dim.y,
+        self.girdle_dim.z1,
+        -self.girdle_dim.z2,
+    )
+    Hole = _SectionSize(
+        self.hole_dim.x / 2,
+        self.hole_dim.y / 2,
+        -self.hole_dim.z1,
+        -self.hole_dim.z2,
+    )
 
-        handle_l_size = self.handle_l_size / 2
-        girdle_l_size = self.gem_l / 2 + self.girdle_l_ofst
-        hole_l_size = self.hole_l_size / 2
+    if self.shape_sq:
+        Handle.x = Handle.y
+        Girdle.x = Girdle.y
+        Hole.x = Hole.y
 
+    if self.shape_tri:
+        Handle.y = self.handle_dim.y
+        Girdle.y = self.gem_l + self.girdle_dim.y
+        Hole.y = self.hole_dim.y
+
+    if self.cut in {"OVAL", "MARQUISE", "PEAR"}:
+        Girdle.x = self.gem_w / 2 + self.girdle_dim.y
+
+    # Section produce
+    # ---------------------------------
+
+    parts = []
+    Section = profiles.sections[self.shape](self)
+
+    # Handle
+    if self.use_handle:
+        parts += Section.add(bm, Handle)
+
+        if self.cut in {"PEAR", "HEART"}:
+            bm.transform(Matrix.Translation((0.0, self.handle_shift, 0.0)))
+
+    # Girdle
+    if self.cut == "HEART":
+        parts += Section.add_preserve_z2(bm, Girdle)
+    else:
+        parts += Section.add(bm, Girdle)
+    bm.faces.new(parts[0])
+
+    # Hole/Seat
+    if self.use_curve_seat:
+        z = (Girdle.z2 + Hole.z1) / 2 * 1.4
+        vs = [bm.verts.new((*v.co.xy, z)) for v in parts[-1]]
+        e_seat = mesh.connect_verts(bm, vs)
+        parts.append(vs)
+
+    if self.use_hole:
+        parts += Section.add(bm, Hole)
+        bm.faces.new(parts[-1]).normal_flip()
+
+        if self.cut in {"PEAR", "HEART"}:
+            for verts in parts[-2:]:
+                for v in verts:
+                    v.co.y += self.hole_shift
+    else:
         if self.shape_rect:
-            handle_w_size = self.handle_w_size / 2
-            girdle_w_size = self.gem_w / 2 + self.girdle_l_ofst
-            hole_w_size = self.hole_w_size / 2
+            Section.add_seat_rect(bm, parts[-1], Girdle, Hole)
         else:
-            handle_w_size = handle_l_size
-            girdle_w_size = girdle_l_size
-            hole_w_size = hole_l_size
-
-        # Bevel corners
-
-        if self.shape_rect:
-            bv_off_t = "OFFSET"
-            bv_off = self.bevel_corners_width
-        else:
-            bv_off_t = "PERCENT"
-            bv_off = self.bevel_corners_percent
-
-        if self.use_bevel_corners and bv_off:
-
-            base_coords = (
-                (handle_w_size, handle_l_size, self.handle_z_btm),
-                (girdle_w_size, girdle_l_size, -self.girdle_z_btm),
-                (hole_w_size, hole_l_size, -self.hole_z_top),
-            )
-
-            coords = []
-
-            for x, y, z in base_coords:
-                vs = make_rect(bm, x, y, z)
-                make_edges(bm, vs)
-
-                bv = bmesh.ops.bevel(bm, geom=bm.verts, affect="VERTICES", clamp_overlap=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
-                bv_coords = edge_loop_walk(bv["verts"])
-                coords.append(bv_coords)
-
-                bm.free()
-                bm = bmesh.new()
-
-            if self.use_handle:
-                v_handle_bottom = [bm.verts.new(v) for v in coords[0]]
-
-            v_girdle_btm = [bm.verts.new(v) for v in coords[1]]
-            v_hole_top = [bm.verts.new(v) for v in coords[2]]
-
-        else:
-
-            if self.use_handle:
-                v_handle_bottom = make_rect(bm, handle_w_size, handle_l_size, self.handle_z_btm)
-
-            v_girdle_btm = make_rect(bm, girdle_w_size, girdle_l_size, -self.girdle_z_btm)
-            v_hole_top = make_rect(bm, hole_w_size, hole_l_size, -self.hole_z_top)
-
-        e_hole_top = make_edges(bm, v_hole_top)
-
-        v_girdle_top = duplicate_verts(bm, v_girdle_btm, z=self.girdle_z_top)
-
-        if self.use_handle:
-            v_handle_top = duplicate_verts(bm, v_handle_bottom, z=self.handle_z_top)
-            bridge_verts(bm, v_handle_top, v_handle_bottom)
-            bridge_verts(bm, v_handle_bottom, v_girdle_top)
-            bm.faces.new(v_handle_top)
-        else:
-            bm.faces.new(v_girdle_top)
-
-        bridge_verts(bm, v_girdle_top, v_girdle_btm)
-
-        if self.use_curve_seat:
-            sm_z = (self.girdle_z_btm + self.hole_z_top) / 2 * 1.4
-
-            v_sm = duplicate_verts(bm, v_girdle_btm, z=-sm_z)
-            e_sm = make_edges(bm, v_sm)
-
-            bridge_verts(bm, v_girdle_btm, v_sm)
-
-            v_fallback = v_sm
-        else:
-            v_fallback = v_girdle_btm
-
-        bridge_verts(bm, v_fallback, v_hole_top)
-
-        if self.use_hole:
-            v_hole_bottom = duplicate_verts(bm, v_hole_top, z=-self.hole_z_btm)
-            bridge_verts(bm, v_hole_top, v_hole_bottom)
-            bm.faces.new(reversed(v_hole_bottom))
-
-        else:
-
-            if self.shape_rect:
-                half = int(len(v_hole_top) / 2)
-
-                e_0 = e_hole_top[0]
-                e_h = e_hole_top[half]
-
-                if self.use_bevel_corners:
-                    quarter = int(half / 2)
-
-                    e_side_1 = edge_loop_expand(e_0, limit=quarter)
-                    e_side_2 = edge_loop_expand(e_h, limit=quarter)
-
-                    bmesh.ops.collapse(bm, edges=e_side_1)
-                    bmesh.ops.collapse(bm, edges=e_side_2)
-                else:
-                    bmesh.ops.collapse(bm, edges=(e_0, e_h))
-
-            else:
-                bmesh.ops.collapse(bm, edges=e_hole_top)
-
-    # Triangle
-    # ---------------------------
-
-    elif self.shape_tri:
-
-        handle_l_size = self.handle_l_size
-        handle_w_size = self.handle_w_size / 2
-
-        girdle_l_size = self.gem_l + self.girdle_l_ofst
-        girdle_w_size = self.gem_w / 2 + self.girdle_w_ofst
-
-        hole_l_size = self.hole_l_size
-        hole_w_size = self.hole_w_size / 2
-
-        if self.use_bevel_corners or self.use_curve_profile:
-
-            bv_off_t = "PERCENT"
-            bv_off = self.bevel_corners_percent
-
-            base_coords = (
-                (handle_w_size, handle_l_size),
-                (girdle_w_size, girdle_l_size),
-                (hole_w_size, hole_l_size),
-            )
-
-            coords = []
-
-            for x, y in base_coords:
-                v_profile = make_tri(bm, x, y, 0.0)
-                make_edges(bm, v_profile)
-
-                if self.use_bevel_corners:
-                    bmesh.ops.bevel(bm, geom=v_profile, affect="VERTICES", clamp_overlap=True, offset=bv_off, offset_type=bv_off_t, segments=self.bevel_corners_segments, profile=self.bevel_corners_profile)
-
-                if self.use_curve_profile:
-                    bm.edges.ensure_lookup_table()
-                    e_subd = (bm.edges[-1], bm.edges[-2], bm.edges[-3])
-                    bm.normal_update()
-                    bmesh.ops.subdivide_edges(bm, edges=e_subd, smooth=self.curve_profile_factor, smooth_falloff="LINEAR", cuts=self.curve_profile_segments)
-
-                bm.verts.ensure_lookup_table()
-                profile_coords = edge_loop_walk(bm.verts)
-                coords.append(profile_coords)
-
-                bm.free()
-                bm = bmesh.new()
-
-            if self.use_handle:
-                v_handle_bottom = [bm.verts.new((x, y, self.handle_z_btm)) for x, y, z in coords[0]]
-
-            v_girdle_btm = [bm.verts.new((x, y, -self.girdle_z_btm)) for x, y, z in coords[1]]
-
-            if self.use_hole:
-                v_hole_top = [bm.verts.new((x, y, -self.hole_z_top)) for x, y, z in coords[2]]
-
-        else:
-
-            if self.use_handle:
-                v_handle_bottom = make_tri(bm, handle_w_size, handle_l_size, self.handle_z_btm)
-
-            v_girdle_btm = make_tri(bm, girdle_w_size, girdle_l_size, -self.girdle_z_btm)
-
-            if self.use_hole:
-                v_hole_top = make_tri(bm, hole_w_size, hole_l_size, -self.hole_z_top)
-
-        v_girdle_top = duplicate_verts(bm, v_girdle_btm, z=self.girdle_z_top)
-        bridge_verts(bm, v_girdle_top, v_girdle_btm)
-
-        if self.use_handle:
-            v_handle_top = duplicate_verts(bm, v_handle_bottom, z=self.handle_z_top)
-            bridge_verts(bm, v_handle_top, v_handle_bottom)
-            bridge_verts(bm, v_handle_bottom, v_girdle_top)
-            bm.faces.new(v_handle_top)
-        else:
-            bm.faces.new(v_girdle_top)
-
-        if self.use_curve_seat:
-            sm_z = (self.girdle_z_btm + self.hole_z_top) / 2 * 1.4
-
-            v_sm = duplicate_verts(bm, v_girdle_btm, z=-sm_z)
-            e_sm = make_edges(bm, v_sm)
-
-            bridge_verts(bm, v_girdle_btm, v_sm)
-
-            v_fallback = v_sm
-        else:
-            v_fallback = v_girdle_btm
-            sm_z = 0.0
-
-        if self.use_hole:
-            bridge_verts(bm, v_fallback, v_hole_top)
-            v_hole_bottom = duplicate_verts(bm, v_hole_top, z=-self.hole_z_btm)
-            bridge_verts(bm, v_hole_top, v_hole_bottom)
-            bm.faces.new(reversed(v_hole_bottom))
-        else:
-            f_bottom = bm.faces.new(reversed(v_fallback))
-            bm.normal_update()
-            bmesh.ops.poke(bm, faces=[f_bottom], offset=self.hole_z_top - sm_z)
-
-    # Fantasy
-    # ---------------------------
-
-    elif self.shape_fant:
-
-        if self.cut == "OVAL":
-            size_l = self.gem_l / 2 + self.girdle_l_ofst
-            size_w = self.gem_w / 2 + self.girdle_l_ofst
-
-            curve_resolution = self.detalization
-            angle = -tau / curve_resolution
-
-            profile_coords = [
-                (
-                    sin(i * angle),
-                    cos(i * angle),
-                    0.0,
-                )
-                for i in range(curve_resolution)
-            ]
-
-            v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
-
-        elif self.cut == "MARQUISE":
-            size_l = self.gem_l / 2 + self.girdle_l_ofst
-            size_w = self.gem_w / 2 + self.girdle_l_ofst
-
-            curve_resolution = int(self.detalization / 4) + 1
-            angle = (pi / 2) / (curve_resolution - 1)
-
-            profile_coords = []
-            co_app = profile_coords.append
-
-            m1 = 1.0
-            m2 = 1.0
-
-            for i in range(curve_resolution):
-                x = sin(i * angle)
-                y = cos(i * angle) * m1
-                co_app((-x, y, 0.0))
-
-                m1 *= (self.mul_1 * m2 - 1) / curve_resolution + 1
-                m2 *= self.mul_2 / curve_resolution + 1
-
-            for x, y, z in reversed(profile_coords[:-1]):
-                co_app((x, -y, z))
-
-            for x, y, z in reversed(profile_coords[1:-1]):
-                co_app((-x, y, z))
-
-            v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
-
-        elif self.cut == "PEAR":
-            size_l = self.gem_l / 2 + self.girdle_l_ofst
-            size_w = self.gem_w / 2 + self.girdle_l_ofst
-
-            curve_resolution = self.detalization + 1
-            angle = pi / (curve_resolution - 1)
-
-            profile_coords = []
-            co_app = profile_coords.append
-
-            for i in range(curve_resolution):
-                x = sin(i * angle) * ((curve_resolution - i) / curve_resolution * self.mul_1) ** self.mul_2
-                y = cos(i * angle)
-                co_app((-x, y, 0.0))
-
-            for x, y, z in reversed(profile_coords[1:-1]):
-                co_app((-x, y, z))
-
-            v_cos = [(x * size_w, y * size_l, -self.girdle_z_btm) for x, y, z in profile_coords]
-
-        elif self.cut == "HEART":
-            size_l = self.gem_l / 2 + self.girdle_l_ofst
-            size_w = self.gem_w / 2 + self.girdle_w_ofst
-
-            curve_resolution = self.detalization + 1
-            angle = pi / (curve_resolution - 1)
-
-            profile_coords = []
-            co_app = profile_coords.append
-
-            m1 = -self.mul_1
-            z = -self.gem_h * 0.3
-            basis1 = curve_resolution / 5
-            basis2 = curve_resolution / 12
-
-            for i in range(curve_resolution):
-                x = sin(i * angle)
-                y = cos(i * angle) + m1 + 0.2
-                co_app([-x, y, z])
-
-                if m1 < 0.0:
-                    m1 -= m1 / basis1
-
-                if z < 0.0:
-                    z -= z / basis2
-
-            m2 = -self.mul_2
-            basis = curve_resolution / 4
-
-            for v in reversed(profile_coords):
-                if m2 < 0.0:
-                    v[1] += m2
-                    m2 -= m2 / basis
-
-            for x, y, z in reversed(profile_coords[1:-1]):
-                co_app((-x, y, z))
-
-            v_cos = [(x * size_w, y * size_l, z - self.girdle_z_btm) for x, y, z in profile_coords]
-
-        v_girdle_btm = [bm.verts.new(v) for v in v_cos]
-        v_girdle_top = duplicate_verts(bm, v_girdle_btm, z=self.girdle_z_top)
-        bridge_verts(bm, v_girdle_top, v_girdle_btm)
-
-        if self.use_handle:
-
-            handle_l_size = self.handle_l_size / 2
-            handle_w_size = self.handle_w_size / 2
-
-            v_cos_handle = [(x * handle_w_size, y * handle_l_size, self.handle_z_btm) for x, y, z in profile_coords]
-            v_handle_bottom = [bm.verts.new(v) for v in v_cos_handle]
-            v_handle_top = duplicate_verts(bm, v_handle_bottom, z=self.handle_z_top)
-            bridge_verts(bm, v_handle_top, v_handle_bottom)
-            bridge_verts(bm, v_handle_bottom, v_girdle_top)
-            bm.faces.new(v_handle_top)
-
-            if self.cut in {"PEAR", "HEART"}:
-                bmesh.ops.translate(bm, verts=v_handle_top + v_handle_bottom, vec=(0.0, self.hole_pos_ofst, 0.0))
-
-        else:
-            bm.faces.new(v_girdle_top)
-
-        if self.use_curve_seat:
-            sm_z = (self.girdle_z_btm + self.hole_z_top) / 2 * 1.4
-
-            v_sm = duplicate_verts(bm, v_girdle_btm, z=-sm_z)
-            e_sm = make_edges(bm, v_sm)
-
-            bridge_verts(bm, v_girdle_btm, v_sm)
-
-            v_fallback = v_sm
-        else:
-            v_fallback = v_girdle_btm
-            sm_z = 0.0
-
-        if self.use_hole:
-
-            hole_l_size = self.hole_l_size / 2
-            hole_w_size = self.hole_w_size / 2
-
-            v_cos_hole = [(x * hole_w_size, y * hole_l_size, -self.hole_z_top) for x, y, z in profile_coords]
-
-            v_hole_top = [bm.verts.new(v) for v in v_cos_hole]
-            v_hole_bottom = [bm.verts.new((x, y, -self.hole_z_btm)) for x, y, z in v_cos_hole]
-
-            bridge_verts(bm, v_fallback, v_hole_top)
-            bridge_verts(bm, v_hole_top, v_hole_bottom)
-
-            bm.faces.new(reversed(v_hole_bottom))
-
-            if self.cut in {"PEAR", "HEART"}:
-                bmesh.ops.translate(bm, verts=v_hole_top + v_hole_bottom, vec=(0.0, self.hole_pos_ofst, 0.0))
-
-        else:
-            f_bottom = bm.faces.new(reversed(v_fallback))
-            bm.normal_update()
-            pk = bmesh.ops.poke(bm, faces=[f_bottom], offset=self.hole_z_top - sm_z)
+            v3 = bm.verts.new((0.0, 0.0, Hole.z1))
+            for v1, v2 in iterutils.pairwise_cyclic(parts[-1]):
+                bm.faces.new((v3, v2, v1))
 
             if self.cut == "PEAR":
-                pk["verts"][0].co[1] *= 4.5
-            elif self.cut == "HEART":
-                pk["verts"][0].co[1] = 0.0
+                v3.co.y = self.gem_l / 5.5
 
-    # Round
-    # ---------------------------
-
-    else:
-        _mesh_round(self, bm)
-
-    # Common operations
-    # ---------------------------
+    # Bridge sections
+    for a, b in iterutils.pairwise(parts):
+        mesh.bridge_verts(bm, a, b)
 
     if self.use_curve_seat:
-        bmesh.ops.bevel(bm, geom=e_sm[:] + v_sm[:], affect="EDGES", offset=100.0, offset_type="PERCENT", segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
+        bmesh.ops.bevel(bm, geom=e_seat, affect="EDGES", offset=100.0, offset_type="PERCENT", segments=self.curve_seat_segments, profile=self.curve_seat_profile, loop_slide=True)
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.00001)
 
     return bm
-
-
-def _section(bm: BMesh, radius: float, z1: float, z2: float, detalization: int) -> Tuple[List[BMVert], List[BMVert]]:
-    angle = tau / detalization
-    vs1 = []
-    vs2 = []
-    app1 = vs1.append
-    app2 = vs2.append
-
-    for i in range(detalization):
-        x = sin(i * angle) * radius
-        y = cos(i * angle) * radius
-
-        app1(bm.verts.new((x, y, z1)))
-        app2(bm.verts.new((x, y, z2)))
-
-    return vs1, vs2
-
-
-def _mesh_round(self, bm: BMesh) -> None:
-    parts = []
-
-    if self.use_handle:
-        handle_size = self.handle_l_size / 2
-        parts += _section(bm, handle_size, self.handle_z_top, self.handle_z_btm, self.detalization)
-
-    girdle_size = self.gem_l / 2 + self.girdle_l_ofst
-    parts += _section(bm, girdle_size, self.girdle_z_top, -self.girdle_z_btm, self.detalization)
-    bm.faces.new(parts[0]).normal_flip()
-
-    if self.use_hole:
-        hole_size = self.hole_l_size / 2
-        parts += _section(bm, hole_size, -self.hole_z_top, -self.hole_z_btm, self.detalization)
-        bm.faces.new(parts[-1])
-    else:
-        v3 = bm.verts.new((0.0, 0.0, -self.hole_z_top))
-        for v1, v2 in iterutils.pairwise_cyclic(parts[-1]):
-            bm.faces.new((v1, v2, v3))
-
-    for a, b in iterutils.pairwise(parts):
-        bridge_verts(bm, b, a)

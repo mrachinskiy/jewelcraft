@@ -19,18 +19,26 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from bpy.types import Operator
-from bpy.props import BoolProperty, FloatProperty, IntProperty
+from bpy.types import Operator, PropertyGroup
+from bpy.props import BoolProperty, FloatProperty, IntProperty, PointerProperty
 
 from .. import var
 
 
+class Dimensions(PropertyGroup):
+    x: FloatProperty(name="Width", step=0.1, unit="LENGTH")
+    y: FloatProperty(name="Length", step=0.1, unit="LENGTH")
+    z1: FloatProperty(name="Top", step=0.1, unit="LENGTH")
+    z2: FloatProperty(name="Bottom", step=0.1, unit="LENGTH")
+
+
 def upd_coords_handle(self, context):
-    self.girdle_z_top, self.table_z = self.table_z, self.girdle_z_top
+    self.girdle_dim.z1, self.table_z = self.table_z, self.girdle_dim.z1
 
 
 def upd_coords_hole(self, context):
-    self.hole_z_top, self.culet_z = self.culet_z, self.hole_z_top
+    self.hole_dim.z1, self.culet_z = self.culet_z, self.hole_dim.z1
+    self.hole_dim.y, self.culet_size = self.culet_size, self.hole_dim.y
 
 
 class OBJECT_OT_cutter_add(Operator):
@@ -44,79 +52,34 @@ class OBJECT_OT_cutter_add(Operator):
 
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
-    use_handle: BoolProperty(name="Handle", default=True, update=upd_coords_handle)
-    handle_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")
-    handle_w_size: FloatProperty(name="Width", step=0.1, unit="LENGTH")
-    handle_z_top: FloatProperty(name="Top", default=0.5, step=0.1, unit="LENGTH")
-    handle_z_btm: FloatProperty(name="Bottom", default=0.5, step=0.1, unit="LENGTH")
+    use_handle: BoolProperty(name="Handle", update=upd_coords_handle)
+    handle_dim: PointerProperty(type=Dimensions)
+    handle_shift: FloatProperty(name="Position Offset", step=0.1, unit="LENGTH")
 
-    girdle_l_ofst: FloatProperty(name="Length Offset", step=0.1, unit="LENGTH")
-    girdle_w_ofst: FloatProperty(name="Width Offset", step=0.1, unit="LENGTH")
-    girdle_z_top: FloatProperty(name="Top", default=0.05, step=0.1, unit="LENGTH")
-    girdle_z_btm: FloatProperty(name="Bottom", step=0.1, unit="LENGTH")
+    girdle_dim: PointerProperty(type=Dimensions)
     table_z: FloatProperty(name="Table", options={"HIDDEN"})
 
-    use_hole: BoolProperty(name="Hole", default=True, update=upd_coords_hole)
-    hole_z_top: FloatProperty(name="Top", default=0.25, step=0.1, unit="LENGTH")
-    hole_z_btm: FloatProperty(name="Bottom", default=1.0, step=0.1, unit="LENGTH")
-    hole_l_size: FloatProperty(name="Length", step=0.1, unit="LENGTH")
-    hole_w_size: FloatProperty(name="Width", step=0.1, unit="LENGTH")
-    hole_pos_ofst: FloatProperty(name="Position Offset", step=0.1, unit="LENGTH")
+    use_hole: BoolProperty(name="Hole", update=upd_coords_hole)
+    hole_dim: PointerProperty(type=Dimensions)
+    hole_shift: FloatProperty(name="Position Offset", step=0.1, unit="LENGTH")
     culet_z: FloatProperty(name="Culet", options={"HIDDEN"})
+    culet_size: FloatProperty(name="Length", options={"HIDDEN"})
 
     use_curve_seat: BoolProperty(name="Curve Seat")
-    curve_seat_segments: IntProperty(name="Segments", default=15, min=2, soft_max=30, step=1)
     curve_seat_profile: FloatProperty(name="Profile", default=0.5, min=0.15, max=1.0, subtype="FACTOR")
+    curve_seat_segments: IntProperty(name="Segments", default=15, min=2, soft_max=30, step=1)
 
-    use_curve_profile: BoolProperty(name="Curve Profile")
+    curve_profile_factor: FloatProperty(name="Factor", min=0.0, soft_max=1.0, step=1, subtype="FACTOR")
     curve_profile_segments: IntProperty(name="Segments", default=10, min=1, soft_max=30, step=1)
-    curve_profile_factor: FloatProperty(name="Factor", default=0.1, min=0.0, step=1)
 
-    mul_1: FloatProperty(
-        name="Factor 1",
-        default=1.0,
-        min=0.0,
-        soft_max=2.0,
-        subtype="FACTOR",
-    )
-    mul_2: FloatProperty(
-        name="Factor 2",
-        default=1.0,
-        min=0.0,
-        soft_max=2.0,
-        subtype="FACTOR",
-    )
+    bevel_corners_width: FloatProperty(name="Width", min=0.0, step=0.1, unit="LENGTH")
+    bevel_corners_percent: FloatProperty(name="Width", min=0.0, max=50.0, step=1, subtype="PERCENTAGE")
+    bevel_corners_segments: IntProperty(name="Segments", default=1, min=1, soft_max=30, step=1)
+    bevel_corners_profile: FloatProperty(name="Profile", default=0.5, min=0.15, max=1.0, subtype="FACTOR")
 
-    use_bevel_corners: BoolProperty(name="Bevel Corners")
-    bevel_corners_width: FloatProperty(
-        name="Width",
-        default=0.1,
-        min=0.0,
-        step=0.1,
-        unit="LENGTH",
-    )
-    bevel_corners_percent: FloatProperty(
-        name="Width",
-        default=18.0,
-        min=0.0,
-        max=50.0,
-        step=1,
-        subtype="PERCENTAGE",
-    )
-    bevel_corners_segments: IntProperty(
-        name="Segments",
-        default=1,
-        min=1,
-        soft_max=30,
-        step=1,
-    )
-    bevel_corners_profile: FloatProperty(
-        name="Profile",
-        default=0.5,
-        min=0.15,
-        max=1.0,
-        subtype="FACTOR",
-    )
+    mul_1: FloatProperty(name="Factor 1", default=1.0, min=0.0, soft_max=2.0, subtype="FACTOR")
+    mul_2: FloatProperty(name="Factor 2", default=1.0, min=0.0, soft_max=2.0, subtype="FACTOR")
+    mul_3: FloatProperty(name="Factor 3", default=1.0, min=0.0, soft_max=2.0, subtype="FACTOR")
 
     def draw(self, context):
         from . import cutter_ui
@@ -126,7 +89,7 @@ class OBJECT_OT_cutter_add(Operator):
         from ..lib import asset
         from . import cutter_mesh
 
-        bm = cutter_mesh.create_cutter(self)
+        bm = cutter_mesh.get(self)
         asset.bm_to_scene(bm, name="Cutter", color=self.color)
 
         return {"FINISHED"}
@@ -147,6 +110,9 @@ class OBJECT_OT_cutter_add(Operator):
 
         if not event.ctrl:
             init_presets(self)
+
+        if event.alt:
+            self.use_hole = False
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
