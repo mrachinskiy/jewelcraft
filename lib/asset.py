@@ -52,6 +52,8 @@ def get_cut(self, ob: Object) -> None:
     except KeyError:
         shape = gemlib.SHAPE_ROUND
 
+    self.shape = shape
+
     if shape is gemlib.SHAPE_SQUARE:
         self.shape_sq = True
     elif shape is gemlib.SHAPE_RECTANGLE:
