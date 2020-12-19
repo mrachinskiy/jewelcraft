@@ -102,7 +102,7 @@ def create_prongs(self):
     if self.alignment:
         bm.transform(Matrix.Rotation(-self.alignment, 4, "X"))
 
-    pos_offset = (self.gem_l / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
+    pos_offset = (self.gem_dim.y / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
     bm.transform(Matrix.Translation((0.0, pos_offset, 0.0)))
 
     spin_steps = self.number - 1

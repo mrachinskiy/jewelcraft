@@ -43,7 +43,7 @@ Loc = Dim = BBoxMin = BBoxMax = Tuple[float, float, float]
 
 
 def get_cut(self, ob: Object) -> None:
-    self.gem_w, self.gem_l, self.gem_h = ob.dimensions
+    self.gem_dim = ob.dimensions.copy()
     self.cut = ob["gem"]["cut"] if "gem" in ob else None
     self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
 
@@ -118,10 +118,9 @@ def gem_overlap(context, data: Sequence[ObjectData], threshold: float, first_mat
 
     UnitScale = unit.Scale(context)
     from_scene_scale = UnitScale.from_scene
-    to_scene_scale = UnitScale.to_scene
 
     overlap_indices = set()
-    seek_range = to_scene_scale(4.0)
+    seek_range = UnitScale.to_scene(4.0)
 
     for i1, (loc1, rad1, mat1) in enumerate(data):
 
