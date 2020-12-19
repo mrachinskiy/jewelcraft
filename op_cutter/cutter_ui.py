@@ -94,8 +94,10 @@ def draw(self, context):
 
     sub.prop(self.hole_dim, "z2")
 
-    if self.shape_fant and self.cut in {"PEAR", "HEART"}:
-        sub.prop(self, "hole_shift")
+    if self.cut in {"PEAR", "HEART"}:
+        col = layout.column()
+        col.enabled = self.cut == "PEAR"
+        col.prop(self, "hole_shift")
 
     # Curve seat
     # ------------------------
