@@ -49,8 +49,8 @@ def get(self):
         self.handle_dim.z2,
     )
     Girdle = _SectionSize(
-        self.gem_w / 2 + self.girdle_dim.x,
-        self.gem_l / 2 + self.girdle_dim.y,
+        self.gem_dim.x / 2 + self.girdle_dim.x,
+        self.gem_dim.y / 2 + self.girdle_dim.y,
         self.girdle_dim.z1,
         -self.girdle_dim.z2,
     )
@@ -68,11 +68,11 @@ def get(self):
 
     if self.shape_tri:
         Handle.y = self.handle_dim.y
-        Girdle.y = self.gem_l + self.girdle_dim.y
+        Girdle.y = self.gem_dim.y + self.girdle_dim.y
         Hole.y = self.hole_dim.y
 
     if self.cut in {"OVAL", "MARQUISE", "PEAR"}:
-        Girdle.x = self.gem_w / 2 + self.girdle_dim.y
+        Girdle.x = self.gem_dim.x / 2 + self.girdle_dim.y
 
     # Section produce
     # ---------------------------------
@@ -118,7 +118,7 @@ def get(self):
                 bm.faces.new((v3, v2, v1))
 
             if self.cut == "PEAR":
-                v3.co.y = self.gem_l / 4 - self.hole_shift
+                v3.co.y = self.gem_dim.y / 4 - self.hole_shift
 
     # Bridge sections
     for a, b in iterutils.pairwise(parts):
