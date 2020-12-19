@@ -29,8 +29,8 @@ def init_presets(self):
 
     self.number = 4
     self.diameter = 0.4 * self.gem_l
-    self.z_top = 0.3 * self.gem_l
-    self.z_btm = 0.5 * self.gem_l
+    self.z1 = 0.3 * self.gem_l
+    self.z2 = 0.5 * self.gem_l
     self.position = radians(45.0)
     self.intersection = 30.0
     self.alignment = 0.0
@@ -45,28 +45,28 @@ def init_presets(self):
 
     if self.gem_l >= 2.5:
         self.diameter = 0.8
-        self.z_top = 0.8
-        self.z_btm = 1.2
+        self.z1 = 0.8
+        self.z2 = 1.2
 
     elif self.gem_l >= 1.7:
         self.diameter = 0.7
-        self.z_top = 0.6
-        self.z_btm = 0.9
+        self.z1 = 0.6
+        self.z2 = 0.9
 
     elif self.gem_l >= 1.5:
         self.diameter = 0.6
-        self.z_top = 0.5
-        self.z_btm = 0.7
+        self.z1 = 0.5
+        self.z2 = 0.7
 
     elif self.gem_l >= 1.2:
         self.diameter = 0.5
-        self.z_top = 0.4
-        self.z_btm = 0.6
+        self.z1 = 0.4
+        self.z2 = 0.6
 
     elif self.gem_l >= 1.0:
         self.diameter = 0.4
-        self.z_top = 0.3
-        self.z_btm = 0.5
+        self.z1 = 0.3
+        self.z2 = 0.5
 
     # Shapes
     # ---------------------------

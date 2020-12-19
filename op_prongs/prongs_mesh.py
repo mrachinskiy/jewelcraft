@@ -79,34 +79,33 @@ def _dome(bm: BMesh, radius: float, height: float, scale: float, detalization: i
 
 def create_prongs(self):
 
+    prong_rad = self.diameter / 2
+
     # Prong
     # ---------------------------
 
-    prong_rad = self.diameter / 2
-    taper = self.taper + 1
     bm = bmesh.new()
 
     if self.bump_scale:
-        top = _dome(bm, prong_rad, self.z_top, self.bump_scale, self.detalization)
+        vs1 = _dome(bm, prong_rad, self.z1, self.bump_scale, self.detalization)
     else:
-        top = _circle(bm, prong_rad, self.z_top, self.detalization)
-        bm.faces.new(top).normal_flip()
+        vs1 = _circle(bm, prong_rad, self.z1, self.detalization)
+        bm.faces.new(vs1).normal_flip()
 
-    bottom = _circle(bm, prong_rad * taper, -self.z_btm, self.detalization)
-    bm.faces.new(bottom)
-    mesh.bridge_verts(bm, bottom, top)
+    vs2 = _circle(bm, prong_rad * (self.taper + 1), -self.z2, self.detalization)
+    bm.faces.new(vs2)
+    mesh.bridge_verts(bm, vs2, vs1)
 
     # Transforms
     # ---------------------------
 
-    pos_offset = (self.gem_l / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
-    spin_steps = self.number - 1
-
     if self.alignment:
         bm.transform(Matrix.Rotation(-self.alignment, 4, "X"))
 
+    pos_offset = (self.gem_l / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
     bm.transform(Matrix.Translation((0.0, pos_offset, 0.0)))
 
+    spin_steps = self.number - 1
     if spin_steps:
         spin_angle = tau - tau / self.number
         bmesh.ops.spin(bm, geom=bm.faces, angle=spin_angle, steps=spin_steps, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0), use_duplicate=True)
@@ -114,10 +113,12 @@ def create_prongs(self):
     bm.transform(Matrix.Rotation(-self.position, 4, "Z"))
 
     if self.use_symmetry:
-        mirror_geom = bmesh.ops.mirror(bm, geom=bm.faces, merge_dist=0, axis="Y")
-        for ele in mirror_geom["geom"]:
+        geom_mirror = bmesh.ops.mirror(bm, geom=bm.faces, axis="Y", merge_dist=0)
+
+        for ele in geom_mirror["geom"]:
             if isinstance(ele, BMFace):
                 ele.normal_flip()
+
         bm.transform(Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))
 
     return bm

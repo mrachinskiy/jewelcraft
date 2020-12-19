@@ -37,28 +37,19 @@ class OBJECT_OT_prongs_add(Operator):
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
     number: IntProperty(name="Prong Number", default=4, min=1, soft_max=10)
+    diameter: FloatProperty(name="Diameter", default=0.4, min=0.0, step=0.1, unit="LENGTH")
+    z1: FloatProperty(name="Top", default=0.4, step=0.1, unit="LENGTH")
+    z2: FloatProperty(name="Bottom", default=0.5, step=0.1, unit="LENGTH")
 
-    diameter: FloatProperty(name="Diameter", default=0.4, min=0.0, step=1, unit="LENGTH")
-    z_top: FloatProperty(name="Top", default=0.4, step=1, unit="LENGTH")
-    z_btm: FloatProperty(name="Bottom", default=0.5, step=1, unit="LENGTH")
-
-    position: FloatProperty(name="Position", default=radians(45.0), step=100, precision=0, unit="ROTATION")
-    intersection: FloatProperty(
-        name="Intersection",
-        default=30.0,
-        soft_min=0.0,
-        soft_max=100.0,
-        precision=0,
-        subtype="PERCENTAGE",
-    )
-    alignment: FloatProperty(name="Alignment", step=100, precision=0, unit="ROTATION")
+    position: FloatProperty(name="Position", default=radians(45.0), step=25, precision=0, unit="ROTATION")
+    intersection: FloatProperty(name="Intersection", default=30.0, soft_min=0.0, soft_max=100.0, precision=0, subtype="PERCENTAGE")
+    alignment: FloatProperty(name="Alignment", step=25, precision=0, unit="ROTATION")
 
     use_symmetry: BoolProperty(name="Symmetry")
-    symmetry_pivot: FloatProperty(name="Symmetry Pivot", step=100, precision=0, unit="ROTATION")
+    symmetry_pivot: FloatProperty(name="Symmetry Pivot", step=25, precision=0, unit="ROTATION")
 
     bump_scale: FloatProperty(name="Bump Scale", default=0.5, soft_min=0.0, soft_max=1.0, subtype="FACTOR")
     taper: FloatProperty(name="Taper", default=0.0, min=0.0, soft_max=1.0, subtype="FACTOR")
-
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
     def draw(self, context):
