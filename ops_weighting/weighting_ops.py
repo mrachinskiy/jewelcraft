@@ -94,7 +94,7 @@ class OBJECT_OT_weight_display(Operator):
             return {"CANCELLED"}
 
         materials = context.scene.jewelcraft.weighting_materials
-        vol = unit.Scale(context).from_scene(mesh.est_volume(obs), volume=True)
+        vol = unit.Scale(context).from_scene_vol(mesh.est_volume(obs))
 
         weight_report = []
 
