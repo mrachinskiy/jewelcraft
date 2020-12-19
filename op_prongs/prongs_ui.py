@@ -33,9 +33,9 @@ def draw(self, context):
     layout.label(text="Dimensions")
 
     col = layout.column()
-    col.prop(self, "z_top")
+    col.prop(self, "z1")
     col.prop(self, "diameter")
-    col.prop(self, "z_btm")
+    col.prop(self, "z2")
 
     layout.separator()
 
