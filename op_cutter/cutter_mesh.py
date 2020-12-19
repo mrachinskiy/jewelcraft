@@ -118,7 +118,7 @@ def get(self):
                 bm.faces.new((v3, v2, v1))
 
             if self.cut == "PEAR":
-                v3.co.y = self.gem_l / 5.5
+                v3.co.y = self.gem_l / 4 - self.hole_shift
 
     # Bridge sections
     for a, b in iterutils.pairwise(parts):
