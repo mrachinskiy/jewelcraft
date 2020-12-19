@@ -103,7 +103,7 @@ def draw_gems(self, context, gamma_corr=False):
         center_xy = (self.region.width / 2, self.region.height / 2)
         view_loc = region_2d_to_origin_3d(self.region, self.region_3d, center_xy)
 
-    from_scene_scale = unit.Scale(context).from_scene
+    from_scene_scale_batch = unit.Scale(context).from_scene_batch
     depsgraph = context.evaluated_depsgraph_get()
     gems = []
     app = gems.append
@@ -120,7 +120,7 @@ def draw_gems(self, context, gamma_corr=False):
 
         ob_stone = ob["gem"]["stone"]
         ob_cut = ob["gem"]["cut"]
-        ob_size = tuple(round(x, 2) for x in from_scene_scale(ob.dimensions, batch=True))
+        ob_size = tuple(round(x, 2) for x in from_scene_scale_batch(ob.dimensions))
 
         size_fmt, color = self.view_data.get((ob_stone, ob_cut, ob_size), (None, None))
 

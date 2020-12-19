@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Union, Tuple
+from typing import Union, Tuple, Iterable
 
 
 WARN_SCALE = 1
@@ -57,7 +57,15 @@ def convert_mm_ct(x: float) -> float:
 
 
 class Scale:
-    __slots__ = ("scale", "from_scene", "to_scene")
+    __slots__ = (
+        "scale",
+        "from_scene",
+        "from_scene_batch",
+        "from_scene_vol",
+        "to_scene",
+        "to_scene_batch",
+        "to_scene_vol",
+    )
 
     def __init__(self, context) -> None:
         unit = context.scene.unit_settings
@@ -65,27 +73,39 @@ class Scale:
 
         if unit.system == "METRIC" and self.scale != 0.001:
             self.from_scene = self._from_scene
+            self.from_scene_batch = self._from_scene_batch
+            self.from_scene_vol = self._from_scene_vol
+
             self.to_scene = self._to_scene
+            self.to_scene_batch = self._to_scene_batch
+            self.to_scene_vol = self._to_scene_vol
         else:
             self.from_scene = self._blank
+            self.from_scene_batch = self._blank
+            self.from_scene_vol = self._blank
+
             self.to_scene = self._blank
+            self.to_scene_batch = self._blank
+            self.to_scene_vol = self._blank
 
-    def _from_scene(self, x: float, volume: bool = False, batch: bool = False) -> Union[float, Tuple[float, ...]]:
-        if volume:
-            return x * 1000 ** 3 * self.scale ** 3
-        if batch:
-            return tuple(v * 1000 * self.scale for v in x)
-
+    def _from_scene(self, x: float) -> float:
         return x * 1000 * self.scale
 
-    def _to_scene(self, x: float, volume: bool = False, batch: bool = False) -> Union[float, Tuple[float, ...]]:
-        if volume:
-            return x / 1000 ** 3 / self.scale ** 3
-        if batch:
-            return tuple(v / 1000 / self.scale for v in x)
+    def _from_scene_batch(self, values: Iterable[float]) -> Tuple[float, ...]:
+        return tuple(v * 1000 * self.scale for v in values)
 
+    def _from_scene_vol(self, x: float) -> float:
+        return x * 1000 ** 3 * self.scale ** 3
+
+    def _to_scene(self, x: float) -> float:
         return x / 1000 / self.scale
 
+    def _to_scene_batch(self, values: Iterable[float]) -> Tuple[float, ...]:
+        return tuple(v / 1000 / self.scale for v in values)
+
+    def _to_scene_vol(self, x: float) -> float:
+        return x / 1000 ** 3 / self.scale ** 3
+
     @staticmethod
-    def _blank(x, volume=False, batch=False):
+    def _blank(x):
         return x

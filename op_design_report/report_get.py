@@ -48,7 +48,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
     scene = bpy.context.scene
     depsgraph = bpy.context.evaluated_depsgraph_get()
     props = scene.jewelcraft
-    from_scene_scale = unit.Scale(bpy.context).from_scene
+    Scale = unit.Scale(bpy.context)
     Report = _Data()
     Warn = report_warn.Warnings(show_warnings)
 
@@ -63,7 +63,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
                 if item.object.type == "MESH":
                     name = item.material_name
                     density = unit.convert_cm3_mm3(item.material_density)
-                    vol = from_scene_scale(mesh.est_volume((item.object,)), volume=True)
+                    vol = Scale.from_scene_vol(mesh.est_volume((item.object,)))
                     Report.materials[(name, density)] += vol
 
             elif item.type == "DIMENSIONS":
@@ -75,12 +75,12 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
                 if not axes:
                     continue
 
-                dim = from_scene_scale(item.object.dimensions, batch=True)
+                dim = Scale.from_scene_batch(item.object.dimensions)
                 values = tuple(round(dim[x], 2) for x in axes)
                 Report.notes.append((item.type, item.name, values))
 
             elif item.type == "RING_SIZE":
-                dim = from_scene_scale(item.object.dimensions[int(item.axis)])
+                dim = Scale.from_scene(item.object.dimensions[int(item.axis)])
                 values = (round(dim, 2), item.ring_size)
                 Report.notes.append((item.type, item.name, values))
 
@@ -104,7 +104,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
         # Gem
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in from_scene_scale(ob.dimensions, batch=True))
+        size = tuple(round(x, 2) for x in Scale.from_scene_batch(ob.dimensions))
 
         # Warnings
         loc = dup.matrix_world.to_translation()
