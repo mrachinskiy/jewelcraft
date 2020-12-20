@@ -102,23 +102,37 @@ def create_prongs(self):
     if self.alignment:
         bm.transform(Matrix.Rotation(-self.alignment, 4, "X"))
 
+    # Intersection
     pos_offset = (self.gem_dim.y / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
     bm.transform(Matrix.Translation((0.0, pos_offset, 0.0)))
 
-    spin_steps = self.number - 1
-    if spin_steps:
-        spin_angle = tau - tau / self.number
-        bmesh.ops.spin(bm, geom=bm.faces, angle=spin_angle, steps=spin_steps, axis=(0.0, 0.0, 1.0), cent=(0.0, 0.0, 0.0), use_duplicate=True)
-
+    # Position
     bm.transform(Matrix.Rotation(-self.position, 4, "Z"))
 
+    # Distribution
+    copies = self.number - 1
+    if copies:
+        angle = angle_step = tau - tau / self.number
+        vs_prong = bm.verts[:]
+        fs_prong = bm.faces[:]
+
+        for _ in range(copies):
+            mat = Matrix.Rotation(angle, 4, "Z")
+
+            vs_map = {v: bm.verts.new(mat @ v.co) for v in vs_prong}
+            for f in fs_prong:
+                bm.faces.new(vs_map[v] for v in f.verts)
+
+            angle += angle_step
+
     if self.use_symmetry:
-        geom_mirror = bmesh.ops.mirror(bm, geom=bm.faces, axis="Y", merge_dist=0)
+        mat = Matrix.Scale(-1.0, 4, (0.0, 1.0, 0.0))
 
-        for ele in geom_mirror["geom"]:
-            if isinstance(ele, BMFace):
-                ele.normal_flip()
+        vs_map = {v: bm.verts.new(mat @ v.co) for v in bm.verts[:]}
+        for f in bm.faces[:]:
+            bm.faces.new(vs_map[v] for v in f.verts).normal_flip()
 
-        bm.transform(Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))
+        if self.symmetry_pivot:
+            bm.transform(Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))
 
     return bm

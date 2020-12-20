@@ -76,11 +76,6 @@ def init_presets(self):
         self.position = radians(-30.0)
         self.intersection = 30.0
 
-        if self.cut == "OVAL":
-            self.position = radians(30.0)
-            self.intersection = 40.0
-            self.use_symmetry = True
-
     elif self.shape_tri:
         self.number = 3
         self.position = radians(60.0)
@@ -109,7 +104,12 @@ def init_presets(self):
         self.intersection = 0.0
         self.alignment = radians(10.0)
 
-        if self.cut == "HEART":
+        if self.cut == "OVAL":
+            self.position = radians(30.0)
+            self.intersection = 40.0
+            self.use_symmetry = True
+
+        elif self.cut == "HEART":
             self.number = 3
             self.position = radians(60.0)
             self.intersection = -10.0
