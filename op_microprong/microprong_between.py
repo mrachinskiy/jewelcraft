@@ -84,13 +84,13 @@ def execute(self, context):
         (-w,   l,  self.handle_z),
     )
 
-    verts_n = [bm.verts.new(co) for co in coords]
-    verts_s = [bm.verts.new((x, -y, z)) for x, y, z in coords]
+    vs_north = [bm.verts.new(co) for co in coords]
+    vs_south = [bm.verts.new((x, -y, z)) for x, y, z in coords]
 
-    bm.faces.new(verts_n)
-    bm.faces.new(verts_s).normal_flip()
+    bm.faces.new(vs_north)
+    bm.faces.new(vs_south).normal_flip()
 
-    mesh.bridge_verts(bm, verts_n, verts_s)
+    mesh.bridge_verts(bm, vs_north, vs_south)
 
     ob = microprong_lib.prepare_object(self, bm)
     _distribute(context, self.curve_length, ob)

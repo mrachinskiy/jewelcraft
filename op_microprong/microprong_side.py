@@ -78,16 +78,16 @@ def execute(self, context):
         (-w, l,  w + self.handle_z),
     )
 
-    verts_n = [bm.verts.new(co) for co in coords]
-    verts_s = [bm.verts.new((x, -y, z)) for x, y, z in coords]
+    vs_north = [bm.verts.new(co) for co in coords]
+    vs_south = [bm.verts.new((x, -y, z)) for x, y, z in coords]
 
-    bm.faces.new(verts_n)
-    bm.faces.new(verts_s).normal_flip()
+    bm.faces.new(vs_north)
+    bm.faces.new(vs_south).normal_flip()
 
-    bridge = mesh.bridge_verts(bm, verts_n, verts_s)
+    es, _ = mesh.bridge_verts(bm, vs_north, vs_south)
 
     if self.bevel_btm:
-        edges = (bridge["edges"][1], bridge["edges"][2])
+        edges = (es[1], es[2])
         ofst = self.bevel_btm / 100.0 * self.dim_x
         bmesh.ops.bevel(
             bm,
@@ -100,7 +100,7 @@ def execute(self, context):
         )
 
     if self.bevel_top:
-        edges = (bridge["edges"][0], bridge["edges"][3])
+        edges = (es[0], es[3])
         ofst = self.bevel_top / 100.0 * self.dim_x
         bmesh.ops.bevel(
             bm,

@@ -19,12 +19,12 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import List, Iterable
+from typing import List, Iterable, Tuple
 
 import bpy
 from bpy.types import Object
 import bmesh
-from bmesh.types import BMesh, BMVert, BMEdge
+from bmesh.types import BMesh, BMVert, BMEdge, BMFace
 from mathutils import Matrix
 
 from .iterutils import pairwise_cyclic, quadwise_cyclic
@@ -113,11 +113,11 @@ def connect_verts(bm: BMesh, verts: Iterable[BMVert]) -> List[BMEdge]:
     return [bm.edges.new(x) for x in pairwise_cyclic(verts)]
 
 
-def bridge_verts(bm: BMesh, v1: Iterable[BMVert], v2: Iterable[BMVert]) -> dict:
+def bridge_verts(bm: BMesh, v1: Iterable[BMVert], v2: Iterable[BMVert]) -> Tuple[List[BMEdge], List[BMFace]]:
     faces = [bm.faces.new(x) for x in quadwise_cyclic(v1, v2)]
     edges = [f.edges[1] for f in faces]
 
-    return {"faces": faces, "edges": edges}
+    return edges, faces
 
 
 def face_pos() -> List[Matrix]:
