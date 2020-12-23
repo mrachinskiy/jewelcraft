@@ -19,30 +19,37 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from typing import Tuple
+from math import tau, sin, cos
+from functools import lru_cache
+
 import bpy
 from bpy_extras.view3d_utils import location_3d_to_region_2d
 import bgl
 import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 
 from ... import var
 from .. import unit
-from ..asset import nearest_coords, girdle_coords, calc_gap
+from ..asset import nearest_coords, calc_gap
 from .view3d_overlay import restore_gl
 
 
 _handler = None
 _handler_font = None
 _font_loc = []
+_CC = None
 
 
 def handler_add(self, context):
     global _handler
     global _handler_font
+    global _CC
 
     if _handler is None:
+        _CC = CacheControl()
         _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context), "WINDOW", "POST_VIEW")
         _handler_font = bpy.types.SpaceView3D.draw_handler_add(_draw_font, (self, context), "WINDOW", "POST_PIXEL")
 
@@ -50,12 +57,19 @@ def handler_add(self, context):
 def handler_del():
     global _handler
     global _handler_font
+    global _CC
 
     if _handler is not None:
         bpy.types.SpaceView3D.draw_handler_remove(_handler, "WINDOW")
         bpy.types.SpaceView3D.draw_handler_remove(_handler_font, "WINDOW")
         _handler = None
         _handler_font = None
+        _CC = None
+
+        try:
+            _circle_cos.cache_clear()
+        except AttributeError:
+            pass
 
 
 def handler_toggle(self, context):
@@ -64,6 +78,62 @@ def handler_toggle(self, context):
             handler_add(self, context)
         else:
             handler_del()
+
+
+@lru_cache(maxsize=64)
+def _circle_cos(radius: float, mat: Matrix) -> Tuple[Vector, ...]:
+    angle = tau / 64
+
+    return tuple(
+        (
+            mat @ Vector(
+                (
+                    sin(i * angle) * radius,
+                    cos(i * angle) * radius,
+                    0.0,
+                )
+            )
+        ).freeze()
+        for i in range(64)
+    )
+
+
+class CacheControl:
+    __slots__ = "current_threshold", "set"
+    thresholds = (128, 256, 512)
+
+    def __init__(self) -> None:
+        self.current_threshold = 64
+        self.set = self._set
+
+    def _set(self, num: int) -> None:
+        global _circle_cos
+
+        if num > self.current_threshold:
+
+            for thold in self.thresholds:
+                if num <= thold:
+                    self.current_threshold = thold
+
+                    try:
+                        _circle_cos.cache_clear()
+                        _circle_cos = lru_cache(maxsize=self.current_threshold)(_circle_cos.__wrapped__)
+                    except AttributeError:
+                        _circle_cos = lru_cache(maxsize=self.current_threshold)(_circle_cos)
+
+                    break
+            else:
+                try:
+                    _circle_cos.cache_clear()
+                    _circle_cos = _circle_cos.__wrapped__
+                except AttributeError:
+                    pass
+
+                self.set = self._blank
+
+    @staticmethod
+    def _blank(x):
+        pass
 
 
 def _draw(self, context):
@@ -82,6 +152,7 @@ def _draw(self, context):
     is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
     diplay_thold = default_spacing + 0.5
     depsgraph = context.evaluated_depsgraph_get()
+    gems_count = 0
 
     if is_df:
         df = context.edit_object
@@ -161,6 +232,8 @@ def _draw(self, context):
 
         if "gem" not in ob2:
             continue
+
+        gems_count += 1
 
         rad2 = max(ob2.dimensions[:2]) / 2
         loc2 = dup.matrix_world.translation
@@ -242,10 +315,11 @@ def _draw(self, context):
 
         if show_all or spacing_thold:
             radius = rad2 + _spacing
-            coords = girdle_coords(radius, mat2)
+            coords = _circle_cos(radius, mat2)
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
             batch.draw(shader)
 
+    _CC.set(gems_count)
     restore_gl()
 
 
