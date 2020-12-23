@@ -20,8 +20,6 @@
 
 
 import os
-from math import tau, sin, cos
-from functools import lru_cache
 from typing import Tuple, Set, Sequence, Union, Optional, List, Iterable
 
 import bpy
@@ -87,24 +85,6 @@ def calc_gap(co1: Vector, co2: Vector, loc1: Vector, dist_locs: float, rad1: flo
         return -(co1 - co2).length
 
     return (co1 - co2).length
-
-
-@lru_cache(maxsize=128)
-def girdle_coords(radius: float, mat: Matrix) -> Tuple[Vector, ...]:
-    angle = tau / 64
-
-    return tuple(
-        (
-            mat @ Vector(
-                (
-                    sin(i * angle) * radius,
-                    cos(i * angle) * radius,
-                    0.0,
-                )
-            )
-        ).freeze()
-        for i in range(64)
-    )
 
 
 def gem_overlap(context, data: Sequence[ObjectData], threshold: float, first_match=False) -> Union[Set[int], bool]:
