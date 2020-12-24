@@ -20,7 +20,6 @@
 
 
 from typing import Callable
-
 from math import pi
 
 from ..lib import gemlib, ringsizelib
