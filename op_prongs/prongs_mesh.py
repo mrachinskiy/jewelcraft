@@ -23,7 +23,7 @@ from typing import List
 from math import pi, tau, sin, cos
 
 import bmesh
-from bmesh.types import BMesh, BMVert, BMFace
+from bmesh.types import BMesh, BMVert
 from mathutils import Matrix
 
 from ..lib import iterutils, mesh

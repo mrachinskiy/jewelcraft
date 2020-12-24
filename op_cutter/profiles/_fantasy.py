@@ -28,11 +28,11 @@ from bmesh.types import BMesh, BMVert
 def _get_oval(detalization: int) -> List[Tuple[float, float, float]]:
     angle = -tau / detalization
     return [
-            (
-                sin(i * angle),
-                cos(i * angle),
-                0.0,
-            )
+        (
+            sin(i * angle),
+            cos(i * angle),
+            0.0,
+        )
         for i in range(detalization)
     ]
 
