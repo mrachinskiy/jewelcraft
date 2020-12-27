@@ -50,7 +50,7 @@ class OBJECT_OT_prongs_add(Operator):
 
     bump_scale: FloatProperty(name="Bump Scale", default=0.5, soft_min=0.0, soft_max=1.0, subtype="FACTOR")
     taper: FloatProperty(name="Taper", default=0.0, min=0.0, soft_max=1.0, subtype="FACTOR")
-    detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
+    detalization: IntProperty(name="Detalization", default=32, min=3, soft_max=64, step=1)
 
     def draw(self, context):
         from . import prongs_ui

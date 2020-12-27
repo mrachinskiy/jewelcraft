@@ -45,12 +45,12 @@ def _circle(bm: BMesh, radius: float, height: float, detalization: int) -> List[
 
 
 def _dome(bm: BMesh, radius: float, height: float, scale: float, detalization: int) -> List[BMVert]:
-    curve_resolution = int(detalization / 4) + 1
-    angle = (pi / 2) / (curve_resolution - 1)
+    dome_resolution = max(detalization, 4) // 4 + 1
+    angle = (pi / 2) / (dome_resolution - 1)
     zero_loop = True
     first_loop = True
 
-    for i in range(curve_resolution):
+    for i in range(dome_resolution):
 
         y = sin(i * angle) * radius
         z = cos(i * angle) * radius * scale + height
