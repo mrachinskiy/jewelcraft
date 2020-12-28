@@ -33,7 +33,7 @@ Video:
 How to install
 ==========================
 
-1. Download [JewelCraft 2.8.1][v_latest].<sup>1</sup>
+1. Download [JewelCraft 2.9.0][download_latest].<sup>1</sup>
 2. Make sure you have Blender 2.90 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
@@ -47,7 +47,7 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.8.1][v_latest].<sup>1</sup>
+1. Загрузите [JewelCraft 2.9.0][download_latest].<sup>1</sup>
 2. Убедитесь, что у вас установлен Blender 2.90 или новее.
 3. Откройте `Preferences` → `Add-ons`.
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
@@ -65,12 +65,12 @@ Contributing
 
 * Check [known issues](#known-issues).
 * Ensure the bug can be reproduced in the latest add-on version.
-* [Open new bug report][new_bug_report], be sure to include Blender and add-on versions, and screenshot showing the error message.
+* [Open new bug report][report_bug], be sure to include Blender and add-on versions, and screenshot showing the error message.
 
 ### Known issues
 
 * Design Report/Gem Map/Spacing Overlay
-  * [[T74368](https://developer.blender.org/T74368)] Gems from hidden collections appear in report/Spacing Overlay, this happens when collection is hidden with  `Hide in Viewport` (eye icon), instead use `Disable in Viewports` (display icon) or `Exclude from View Layer` (checkbox left from collection).
+  * [[T74368](https://developer.blender.org/T74368)] Gems from hidden collections appear in report/Spacing Overlay, this happens when collection is hidden with  `Hide in Viewport` (eye icon), instead use `Disable in Viewports` (display icon) or `Exclude from View Layer` (checkbox).
 * Assets
   * [[T69001](https://developer.blender.org/T69001)] Asset previews do not load if render engine set to `Workbench`.
 
@@ -88,11 +88,11 @@ Contributing
   * Notice how original message is using Title Case formatting when translation is not, that is the difference between English and Russian UI conventions, to know formatting convention for your language just see how Blender handles it and follow the rule.
   * Look out for appropriate context, `Base` for example is used in the context of materials as `Base Metal`, which in other words means `Non-Presious Metal` and should not be translated as `Basis` or `Foundation`.
   * Commented out `//` empty entries have not been translated yet, remove double slash after filling in the translation.
-* After translation is done submit it back through [issues][new_translation].
+* After translation is done submit it back through [issues][submit_translation].
 
 
-[v_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.8.1-blender2.90.0/jewelcraft-2_8_1.zip
+[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.9.0-blender2.90.0/jewelcraft-2_9_0.zip
+[report_bug]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
+[submit_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
 [playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
 [playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
-[new_bug_report]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
-[new_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
