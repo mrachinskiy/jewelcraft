@@ -149,10 +149,11 @@ def _draw(self, context):
     default_spacing = props.overlay_spacing
     default_color = prefs.overlay_color
     default_linewidth = prefs.overlay_linewidth
-    is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
     diplay_thold = default_spacing + 0.5
     depsgraph = context.evaluated_depsgraph_get()
     gems_count = 0
+    is_gem = False
+    is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
 
     if is_df:
         df = context.edit_object
@@ -160,14 +161,10 @@ def _draw(self, context):
             if "gem" in ob1:
                 is_gem = True
                 break
-        else:
-            is_gem = False
     else:
         ob1 = context.object
         if ob1:
-            is_gem = "gem" in ob1
-        else:
-            is_gem = False
+            is_gem = "gem" in ob1 and ob1.select_get()
 
     if not (show_all or is_gem):
         return
@@ -187,24 +184,19 @@ def _draw(self, context):
             if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
                 df_eval = df.evaluated_get(depsgraph)
                 polys = df_eval.to_mesh().polygons
-                poly = polys[polys.active]
-
-                loc1 = df.matrix_world @ poly.center
-                mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
-
-                df_eval.to_mesh_clear()
             else:
+                df_eval = df
                 polys = df.data.polygons
-                poly = polys[polys.active]
 
-                loc1 = df.matrix_world @ poly.center
-                mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+            poly = polys[df.data.polygons.active]
+            loc1 = df.matrix_world @ poly.center
+            mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+            df_eval.to_mesh_clear()
         else:
             loc1 = ob1.matrix_world.to_translation()
             mat_rot = ob1.matrix_world.to_quaternion().to_matrix().to_4x4()
 
-        rad1 = max(ob1.dimensions[:2]) / 2
-
+        rad1 = max(ob1.dimensions.xy) / 2
         mat_loc = Matrix.Translation(loc1)
         mat1 = mat_loc @ mat_rot
         mat1.freeze()
@@ -235,7 +227,7 @@ def _draw(self, context):
 
         gems_count += 1
 
-        rad2 = max(ob2.dimensions[:2]) / 2
+        rad2 = max(ob2.dimensions.xy) / 2
         loc2 = dup.matrix_world.translation
         spacing_thold = False
 
@@ -247,15 +239,13 @@ def _draw(self, context):
             if not (show_all or dis_thold):
                 continue
 
+            is_act = False
+
             if is_df:
-                if df_pass:
-                    is_act = False
-                else:
+                if not df_pass:
                     df_pass = is_act = dup.matrix_world.translation == loc1
             else:
-                if dup.is_instance:
-                    is_act = False
-                else:
+                if not dup.is_instance:
                     is_act = ob2 is ob1
 
             use_diplay_dis = not is_act and dis_thold
@@ -314,9 +304,7 @@ def _draw(self, context):
                 batch.draw(shader)
 
         if show_all or spacing_thold:
-            radius = rad2 + _spacing
-            coords = _circle_cos(radius, mat2)
-            batch = batch_for_shader(shader, "LINE_LOOP", {"pos": coords})
+            batch = batch_for_shader(shader, "LINE_LOOP", {"pos": _circle_cos(rad2 + _spacing, mat2)})
             batch.draw(shader)
 
     _CC.set(gems_count)
