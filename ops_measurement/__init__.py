@@ -135,22 +135,14 @@ class WM_OT_ul_measurements_material_select(Operator):
     bl_label = "Select Material"
     bl_description = "Select material"
     bl_idname = "wm.jewelcraft_ul_measurements_material_select"
-    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
+    bl_options = {"UNDO", "INTERNAL"}
+    bl_property = "material"
 
     material: EnumProperty(
         name="Material",
         items=dynamic_list.weighting_materials,
         options={"SKIP_SAVE"},
     )
-
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
-
-        layout.separator()
-        layout.prop(self, "material")
-        layout.separator()
 
     def execute(self, context):
         item = context.scene.jewelcraft.measurements.active_item()
@@ -166,6 +158,5 @@ class WM_OT_ul_measurements_material_select(Operator):
 
     def invoke(self, context, event):
         dynamic_list.weighting_materials_refresh()
-
-        wm = context.window_manager
-        return wm.invoke_props_dialog(self)
+        context.window_manager.invoke_search_popup(self)
+        return {"FINISHED"}
