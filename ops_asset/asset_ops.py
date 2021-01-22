@@ -34,10 +34,10 @@ def asset_menu_lock(context):
 
 
 def upd_asset_name(self, context):
-    if self.type == "SELECTION":
-        self.asset_name = context.object.name if context.object else ""
-    else:
+    if self.type == "COLLECTION":
         self.asset_name = self.collection_name
+    else:
+        self.asset_name = self.object_name
 
 
 class AssetAdd:
@@ -45,12 +45,13 @@ class AssetAdd:
         name="Type",
         description="",
         items=(
-            ("SELECTION", "Selected Objects", ""),
             ("COLLECTION", "Collection", ""),
+            ("OBJECT", "Object", ""),
         ),
         update=upd_asset_name,
     )
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    object_name: StringProperty(name="Object", options={"SKIP_SAVE"})
     asset_name: StringProperty(name="Asset Name", options={"SKIP_SAVE"})
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
@@ -65,31 +66,33 @@ class AssetAdd:
 
         layout.separator()
 
+        if self.is_add:
+            layout.prop(self, "asset_name")
+
         layout.prop(self, "type")
 
         if self.type == "COLLECTION":
             layout.prop_search(self, "collection_name", bpy.data, "collections")
-
-        if self.is_add:
-            layout.prop(self, "asset_name")
+        else:
+            layout.prop_search(self, "object_name", bpy.data, "objects")
 
         layout.separator()
 
     def execute(self, context):
         from ..lib import asset
 
-        if self.type == "SELECTION":
-            if not context.selected_objects:
-                self.report({"ERROR"}, "Missing selected objects")
-                return {"CANCELLED"}
-        else:
-            if not self.collection_name:
-                self.report({"ERROR"}, "Collection must be specified")
-                return {"CANCELLED"}
-
         if not self.asset_name:
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
+
+        if self.type == "COLLECTION":
+            if not self.collection_name:
+                self.report({"ERROR"}, "Collection must be specified")
+                return {"CANCELLED"}
+        else:
+            if not self.object_name:
+                self.report({"ERROR"}, "Object must be specified")
+                return {"CANCELLED"}
 
         if self.is_add:
             wm_props = context.window_manager.jewelcraft
@@ -115,21 +118,24 @@ class AssetAdd:
     def invoke(self, context, event):
         if context.collection and context.collection is not context.scene.collection:
             self.collection_name = context.collection.name
+        if context.object:
+            self.object_name = context.object.name
 
-        if self.filepath:
+        if self.is_add:
+            upd_asset_name(self, context)
+        elif self.filepath:
             self.asset_name = os.path.basename(self.filepath)
-        elif self.is_add and context.object:
-            self.asset_name = context.object.name
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
     def asset_datablocks(self, context):
-        if self.type == "SELECTION":
-            return set(context.selected_objects)
-        else:
+        if self.type == "COLLECTION":
             collection = bpy.data.collections[self.collection_name]
             return {collection}
+        else:
+            ob = bpy.data.objects[self.object_name]
+            return {ob}
 
 
 class WM_OT_asset_add(AssetAdd, Operator):
