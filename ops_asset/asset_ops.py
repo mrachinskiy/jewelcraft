@@ -283,15 +283,13 @@ class WM_OT_asset_import(Operator):
             ob.select_set(False)
 
         imported = asset.asset_import_batch(self.filepath + ".blend")
-        obs = imported.objects
-        colls = imported.collections
 
-        if colls:
-            for coll in colls:
+        if imported.collections:
+            for coll in imported.collections:
                 if not coll.users or coll.users == len(coll.users_dupli_group):
                     context.scene.collection.children.link(coll)
 
-        for ob in obs:
+        for ob in imported.objects:
             if not ob.users:
                 collection.objects.link(ob)
 
@@ -300,15 +298,15 @@ class WM_OT_asset_import(Operator):
             if use_local_view:
                 ob.local_view_set(space_data, True)
 
-        if len(obs) == 1:
+        if len(imported.objects) == 1:
             ob.location = context.scene.cursor.location
 
-            if self.use_parent and selected:
-                collection.objects.unlink(ob)
-                asset.ob_copy_and_parent(ob, selected)
-            elif context.mode == "EDIT_MESH":
+            if context.mode == "EDIT_MESH":
                 asset.ob_copy_to_faces(ob)
                 bpy.ops.object.mode_set(mode="OBJECT")
+            elif self.use_parent and selected:
+                collection.objects.unlink(ob)
+                asset.ob_copy_and_parent(ob, selected)
 
         context.view_layer.objects.active = ob
 
