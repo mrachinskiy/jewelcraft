@@ -67,14 +67,20 @@ class AssetAdd:
         layout.separator()
 
         if self.is_add:
-            layout.prop(self, "asset_name")
+            col = layout.column()
+            col.alert = not self.asset_name
+            col.prop(self, "asset_name")
 
         layout.prop(self, "type")
 
+        col = layout.column()
+
         if self.type == "COLLECTION":
-            layout.prop_search(self, "collection_name", bpy.data, "collections")
+            col.alert = not self.collection_name
+            col.prop_search(self, "collection_name", bpy.data, "collections")
         else:
-            layout.prop_search(self, "object_name", bpy.data, "objects")
+            col.alert = not self.object_name
+            col.prop_search(self, "object_name", bpy.data, "objects")
 
         layout.separator()
 
@@ -197,6 +203,7 @@ class WM_OT_asset_rename(Operator):
         layout.use_property_decorate = False
 
         layout.separator()
+        layout.alert = not self.asset_name
         layout.prop(self, "asset_name")
         layout.separator()
 

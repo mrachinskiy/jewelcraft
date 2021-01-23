@@ -191,10 +191,14 @@ class OBJECT_OT_radial_instance(Operator):
 
         layout.separator()
 
+        col = layout.column()
+        col.alert = not self.collection_name
+
         if self.use_new:
-            layout.prop(self, "collection_name", text="Collection Name")
+            col.prop(self, "collection_name", text="Collection Name")
         else:
-            layout.prop_search(self, "collection_name", bpy.data, "collections")
+            col.prop_search(self, "collection_name", bpy.data, "collections")
+
         layout.prop(self, "number")
         layout.prop(self, "angle")
         layout.row().prop(self, "axis", expand=True)
@@ -647,6 +651,7 @@ class OBJECT_OT_resize(Operator):
         else:
             row = col.row()
             row.alignment = "RIGHT"
+            row.alert = True
             row.label(text="Zero dimensions", icon="ERROR")
 
         layout.separator()
