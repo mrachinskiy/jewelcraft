@@ -50,6 +50,7 @@ class WM_OT_weighting_set_add(Operator):
         layout.use_property_decorate = False
 
         layout.separator()
+        layout.alert = not self.set_name
         layout.prop(self, "set_name")
         layout.separator()
 
@@ -137,6 +138,7 @@ class WM_OT_weighting_set_rename(EditCheck, Operator):
         layout.use_property_decorate = False
 
         layout.separator()
+        layout.alert = not self.set_name
         layout.prop(self, "set_name")
         layout.separator()
 

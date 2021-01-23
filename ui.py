@@ -93,7 +93,7 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
     }
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        layout.active = item.object is not None
+        layout.alert = item.object is None
         layout.prop(item, "name", text="", emboss=False, icon=self.icons.get(item.type, "BLANK1"))
 
 
@@ -627,7 +627,9 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
         if measures_list.coll:
             item = measures_list.coll[measures_list.index]
 
-            layout.prop(item, "object")
+            col = layout.column()
+            col.alert = item.object is None
+            col.prop(item, "object")
 
             if item.type == "DIMENSIONS":
                 col = layout.column(heading="Dimensions", align=True)

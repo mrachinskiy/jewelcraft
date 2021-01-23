@@ -41,6 +41,7 @@ class WM_OT_asset_folder_create(Operator):
         layout.use_property_decorate = False
 
         layout.separator()
+        layout.alert = not self.folder_name
         layout.prop(self, "folder_name")
         layout.separator()
 
@@ -78,6 +79,7 @@ class WM_OT_asset_folder_rename(Operator):
         layout.use_property_decorate = False
 
         layout.separator()
+        layout.alert = not self.folder_name
         layout.prop(self, "folder_name")
         layout.separator()
 
@@ -104,6 +106,7 @@ class WM_OT_asset_folder_rename(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        self.folder_name = context.window_manager.jewelcraft.asset_folder
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
