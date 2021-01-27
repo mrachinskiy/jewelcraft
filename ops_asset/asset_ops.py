@@ -275,6 +275,7 @@ class WM_OT_asset_import(Operator):
     use_parent: BoolProperty(
         name="Parent to selected",
         description="Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)",
+        options={"SKIP_SAVE"},
     )
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 

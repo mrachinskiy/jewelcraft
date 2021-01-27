@@ -130,6 +130,7 @@ class VIEW3D_UL_jewelcraft_sizes(UIList):
         sub.label(text="Size")
         row.prop(item, "size", text="", emboss=False)
 
+
 # Menus
 # ---------------------------
 

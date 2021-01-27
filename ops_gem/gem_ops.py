@@ -78,7 +78,7 @@ class OBJECT_OT_gem_add(Operator):
         split = layout.split(factor=0.4)
         row = split.row()
         row.alignment = "RIGHT"
-        row.label(text="Cut")
+        row.label(text="Cut", text_ctxt="Jewelry")
         split.template_icon_view(self, "cut", show_labels=True)
 
     def execute(self, context):
@@ -153,7 +153,7 @@ class OBJECT_OT_gem_edit(Operator):
         split = layout.split(factor=0.4)
         row = split.row()
         row.alignment = "RIGHT"
-        row.label(text="Cut")
+        row.label(text="Cut", text_ctxt="Jewelry")
         split.template_icon_view(self, "cut", show_labels=True)
 
         layout.separator()
