@@ -30,34 +30,33 @@ class Distribute:
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        if self.is_distribute:
-            layout.separator()
+        sizes = context.window_manager.jewelcraft.sizes
 
-            wm_props = context.window_manager.jewelcraft
+        layout.separator()
 
-            row = layout.row()
-            row.template_list(
-                "VIEW3D_UL_jewelcraft_sizes",
-                "",
-                wm_props.sizes,
-                "coll",
-                wm_props.sizes,
-                "index",
-                rows=4,
-            )
+        row = layout.row()
+        row.template_list(
+            "VIEW3D_UL_jewelcraft_sizes",
+            "",
+            sizes,
+            "coll",
+            sizes,
+            "index",
+            rows=4,
+        )
 
-            col = row.column(align=True)
-            col.operator("wm.jewelcraft_ul_add", text="", icon="ADD").prop = "sizes"
-            col.operator("wm.jewelcraft_ul_del", text="", icon="REMOVE").prop = "sizes"
-            col.separator()
-            col.operator("wm.jewelcraft_ul_clear", text="", icon="X").prop = "sizes"
-            col.separator()
-            op = col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_UP")
-            op.prop = "sizes"
-            op.move_up = True
-            col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "sizes"
+        col = row.column(align=True)
+        col.operator("wm.jewelcraft_ul_add", text="", icon="ADD").prop = "sizes"
+        col.operator("wm.jewelcraft_ul_del", text="", icon="REMOVE").prop = "sizes"
+        col.separator()
+        col.operator("wm.jewelcraft_ul_clear", text="", icon="X").prop = "sizes"
+        col.separator()
+        op = col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_UP")
+        op.prop = "sizes"
+        op.move_up = True
+        col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "sizes"
 
-            layout.separator()
+        layout.separator()
 
         layout.label(text="Transforms")
         col = layout.column(align=True)
@@ -126,4 +125,4 @@ class OBJECT_OT_curve_redistribute(Distribute, Operator):
     end: FloatProperty(name="End", default=100.0, step=5, options={"SKIP_SAVE"})
 
     use_absolute_offset: BoolProperty(name="Absolute Offset", options={"SKIP_SAVE"})
-    spacing: FloatProperty(name="Spacing", default=0.2, step=1, unit="LENGTH")
+    spacing: FloatProperty(name="Spacing", default=0.2, step=1, unit="LENGTH", options={"SKIP_SAVE"})
