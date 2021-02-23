@@ -241,7 +241,7 @@ def invoke(self, context, event):
             return {"CANCELLED"}
 
         self.cyclic = curve.data.splines[0].use_cyclic_u
-        self.curve_length = mesh.est_curve_length(curve)
+        self.base_unit = 100.0 / mesh.est_curve_length(curve)
 
         if not sizes.length():
             item = sizes.add()
@@ -289,9 +289,8 @@ def invoke(self, context, event):
     self.start = values_dstr[0][0]
     self.end = values_dstr[-1][0]
     self.cyclic = curve.data.splines[0].use_cyclic_u
-    self.curve_length = mesh.est_curve_length(curve)
+    self.base_unit = 100.0 / mesh.est_curve_length(curve)
     self.hash_sizes = _hash(sizes.values())
-    self.base_unit = 100.0 / self.curve_length
 
     if self.use_absolute_offset:
         ofst1, size1 = values_dstr[0]
