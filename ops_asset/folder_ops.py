@@ -88,12 +88,12 @@ class WM_OT_asset_folder_rename(Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        if self.folder_name == self.props.asset_folder:
+        props = context.window_manager.jewelcraft
+
+        if self.folder_name == props.asset_folder:
             return {"CANCELLED"}
 
-        props = context.window_manager.jewelcraft
         lib_path = pathutils.get_asset_lib_path()
-
         folder_current = os.path.join(lib_path, props.asset_folder)
         folder_new = os.path.join(lib_path, self.folder_name)
 
