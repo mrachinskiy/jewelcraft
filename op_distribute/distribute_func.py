@@ -20,7 +20,7 @@
 
 
 import operator
-from typing import List, Tuple
+from typing import List, Tuple, Iterator
 
 import bpy
 from bpy.types import Constraint, Object
@@ -29,7 +29,15 @@ from mathutils import Matrix, Vector
 from ..lib import mesh, asset, iterutils
 
 
-def _flatten(iterable: list) -> float:
+def _get_cons() -> Iterator[Constraint]:
+    for ob in bpy.context.selected_objects:
+        for con in ob.constraints:
+            if con.type == "FOLLOW_PATH":
+                yield con
+                break
+
+
+def _flatten(iterable: list) -> Iterator[float]:
     for item in iterable:
         for _ in range(item.qty):
             yield item.size
@@ -55,7 +63,7 @@ def _deform_redstr(ob: Object, rot_x: float, rot_z: float, loc_z: float) -> None
         ob.matrix_basis.translation = mat_rot @ Vector((0.0, 0.0, dist + loc_z))
 
 
-def _create_dstr(ob: Object, curve: Object, sizes: list, add_con=True) -> List[Tuple[Constraint, float, float]]:
+def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> List[Tuple[Constraint, float, float]]:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
     collection = bpy.context.collection
@@ -81,7 +89,7 @@ def _create_dstr(ob: Object, curve: Object, sizes: list, add_con=True) -> List[T
                 child_copy.parent = ob_copy
                 child_copy.matrix_parent_inverse = child.matrix_parent_inverse
 
-        if add_con:
+        if con_add:
             con = ob_copy.constraints.new("FOLLOW_PATH")
             con.target = curve
             con.use_curve_follow = True
@@ -135,16 +143,7 @@ def execute(self, context):
 
     elif self.hash_sizes != _hash(sizes_list):
 
-        obs_dstr = []
-        app = obs_dstr.append
-
-        for ob in bpy.context.selected_objects:
-            for con in ob.constraints:
-                if con.type == "FOLLOW_PATH":
-                    app(con)
-                    break
-
-        for is_last, con in iterutils.spot_last(obs_dstr):
+        for is_last, con in iterutils.spot_last(list(_get_cons())):
             ob = con.id_data
 
             if not is_last:
@@ -158,19 +157,17 @@ def execute(self, context):
         curve = con.target
 
         _deform_redstr(ob, self.rot_x, self.rot_z, self.loc_z)
-        obs = _create_dstr(ob, curve, sizes_list, add_con=False)
+        obs = _create_dstr(ob, curve, sizes_list, con_add=False)
 
     else:
 
         obs = []
         app = obs.append
 
-        for ob in context.selected_objects:
-            for con in ob.constraints:
-                if con.type == "FOLLOW_PATH":
-                    _deform_redstr(ob, self.rot_x, self.rot_z, self.loc_z)
-                    app((con, con.offset, ob.dimensions.y))
-                    break
+        for con in _get_cons():
+            ob = con.id_data
+            _deform_redstr(ob, self.rot_x, self.rot_z, self.loc_z)
+            app((con, con.offset, ob.dimensions.y))
 
         obs.sort(key=operator.itemgetter(1), reverse=True)
 
@@ -259,12 +256,10 @@ def invoke(self, context, event):
     app = values_dstr.append
     curve = None
 
-    for ob in context.selected_objects:
-        for con in ob.constraints:
-            if con.type == "FOLLOW_PATH":
-                app((-con.offset, round(ob.dimensions.y, 2)))
-                curve = con.target
-                break
+    for con in _get_cons():
+        ob = con.id_data
+        curve = con.target
+        app((-con.offset, round(ob.dimensions.y, 2)))
 
     if not curve:
         self.report({"ERROR"}, "Selected objects do not have Follow Path constraint")
