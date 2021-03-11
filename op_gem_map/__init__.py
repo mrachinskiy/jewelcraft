@@ -195,7 +195,7 @@ class VIEW3D_OT_gem_map(Operator):
         return self.execute(context)
 
     def offscreen_refresh(self, context) -> None:
-        from .import offscreen
+        from . import offscreen
         offscreen.offscreen_refresh(self, context)
 
     def get_resolution(self) -> Tuple[int, int]:

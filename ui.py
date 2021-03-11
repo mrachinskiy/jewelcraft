@@ -533,11 +533,13 @@ class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
         material_list = context.scene.jewelcraft.weighting_materials
         wm_props = context.window_manager.jewelcraft
 
-        layout = self.layout
+        layout: bpy.types.UILayout = self.layout
 
         if self.is_popover:
             layout.label(text="Weighting")
             layout.separator()
+
+        # Weighting Set
 
         row = layout.row(align=True)
         row.prop(wm_props, "weighting_set", text="")
@@ -547,7 +549,9 @@ class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
         row.operator("wm.jewelcraft_weighting_set_load")
         row.operator("wm.jewelcraft_weighting_set_load_append")
 
-        layout.separator()
+        layout.column()  # Separator
+
+        # Materials List
 
         row = layout.row()
 
