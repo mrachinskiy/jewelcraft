@@ -533,7 +533,7 @@ class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
         material_list = context.scene.jewelcraft.weighting_materials
         wm_props = context.window_manager.jewelcraft
 
-        layout: bpy.types.UILayout = self.layout
+        layout = self.layout
 
         if self.is_popover:
             layout.label(text="Weighting")
