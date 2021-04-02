@@ -205,6 +205,7 @@ def _draw(self, context):
 
     if var.USE_POLYLINE:
         shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
+        view_size = (context.area.width, context.area.height)
     else:
         shader = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
         bgl.glEnable(bgl.GL_LINE_SMOOTH)
@@ -266,6 +267,7 @@ def _draw(self, context):
 
             if var.USE_POLYLINE:
                 shader.uniform_float("lineWidth", _linewidth)
+                shader.uniform_float("viewportSize", view_size)
             else:
                 bgl.glLineWidth(_linewidth)
 
