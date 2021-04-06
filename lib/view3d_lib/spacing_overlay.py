@@ -40,16 +40,13 @@ from .view3d_overlay import restore_gl
 _handler = None
 _handler_font = None
 _font_loc = []
-_CC = None
 
 
 def handler_add(self, context):
     global _handler
     global _handler_font
-    global _CC
 
     if _handler is None:
-        _CC = CacheControl()
         _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context), "WINDOW", "POST_VIEW")
         _handler_font = bpy.types.SpaceView3D.draw_handler_add(_draw_font, (self, context), "WINDOW", "POST_PIXEL")
 
@@ -57,15 +54,13 @@ def handler_add(self, context):
 def handler_del():
     global _handler
     global _handler_font
-    global _CC
 
     if _handler is not None:
         bpy.types.SpaceView3D.draw_handler_remove(_handler, "WINDOW")
         bpy.types.SpaceView3D.draw_handler_remove(_handler_font, "WINDOW")
         _handler = None
         _handler_font = None
-        _CC.wrap(64)
-        _CC = None
+        _circle_cos.cache_clear()
 
 
 def handler_toggle(self, context):
@@ -74,6 +69,41 @@ def handler_toggle(self, context):
             handler_add(self, context)
         else:
             handler_del()
+
+
+# Cache control
+# -------------------------------------
+
+
+class CacheControl:
+    __slots__ = "cache_size"
+
+    def __init__(self) -> None:
+        self.cache_size = 64
+
+    def set(self, show_all: bool, num: int) -> None:
+        if not show_all:
+            if self.cache_size != 64:
+                self.cache_size = 64
+                self.wrap(64)
+            return
+
+        if num > self.cache_size:
+            self.cache_size = num + 50
+            self.wrap(self.cache_size)
+
+    @staticmethod
+    def wrap(size):
+        global _circle_cos
+
+        _circle_cos.cache_clear()
+        _circle_cos = lru_cache(maxsize=size)(_circle_cos.__wrapped__)
+
+
+_CC = CacheControl()
+
+
+# -------------------------------------
 
 
 @lru_cache(maxsize=64)
@@ -110,31 +140,6 @@ def get_df_transform(df, context, depsgraph) -> Tuple[Vector, Matrix]:
     df_eval.to_mesh_clear()
 
     return loc1, mat_rot
-
-
-class CacheControl:
-    __slots__ = "current_threshold"
-
-    def __init__(self) -> None:
-        self.current_threshold = 64
-
-    def set(self, show_all: bool, num: int) -> None:
-        if not show_all:
-            if self.current_threshold != 64:
-                self.current_threshold = 64
-                self.wrap(64)
-            return
-
-        if num > self.current_threshold:
-            self.current_threshold = num + 50
-            self.wrap(self.current_threshold)
-
-    @staticmethod
-    def wrap(size):
-        global _circle_cos
-
-        _circle_cos.cache_clear()
-        _circle_cos = lru_cache(maxsize=size)(_circle_cos.__wrapped__)
 
 
 def _draw(self, context):
