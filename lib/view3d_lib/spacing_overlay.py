@@ -64,12 +64,8 @@ def handler_del():
         bpy.types.SpaceView3D.draw_handler_remove(_handler_font, "WINDOW")
         _handler = None
         _handler_font = None
+        _CC.wrap(64)
         _CC = None
-
-        try:
-            _circle_cos.cache_clear()
-        except AttributeError:
-            pass
 
 
 def handler_toggle(self, context):
@@ -117,41 +113,28 @@ def get_df_transform(df, context, depsgraph) -> Tuple[Vector, Matrix]:
 
 
 class CacheControl:
-    __slots__ = "current_threshold", "set"
-    thresholds = (128, 256, 512, 1024)
+    __slots__ = "current_threshold"
 
     def __init__(self) -> None:
         self.current_threshold = 64
-        self.set = self._set
 
-    def _set(self, num: int) -> None:
-        global _circle_cos
+    def set(self, show_all: bool, num: int) -> None:
+        if not show_all:
+            if self.current_threshold != 64:
+                self.current_threshold = 64
+                self.wrap(64)
+            return
 
         if num > self.current_threshold:
-
-            for thold in self.thresholds:
-                if num <= thold:
-                    self.current_threshold = thold
-
-                    try:
-                        _circle_cos.cache_clear()
-                        _circle_cos = lru_cache(maxsize=self.current_threshold)(_circle_cos.__wrapped__)
-                    except AttributeError:
-                        _circle_cos = lru_cache(maxsize=self.current_threshold)(_circle_cos)
-
-                    break
-            else:
-                try:
-                    _circle_cos.cache_clear()
-                    _circle_cos = _circle_cos.__wrapped__
-                except AttributeError:
-                    pass
-
-                self.set = self._blank
+            self.current_threshold = num + 50
+            self.wrap(self.current_threshold)
 
     @staticmethod
-    def _blank(x):
-        pass
+    def wrap(size):
+        global _circle_cos
+
+        _circle_cos.cache_clear()
+        _circle_cos = lru_cache(maxsize=size)(_circle_cos.__wrapped__)
 
 
 def _draw(self, context):
@@ -347,7 +330,7 @@ def _draw(self, context):
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": _circle_cos(rad2 + _spacing, mat2)})
             batch.draw(shader)
 
-    _CC.set(gems_count)
+    _CC.set(show_all, gems_count)
     restore_gl()
 
 
