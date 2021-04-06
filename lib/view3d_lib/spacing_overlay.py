@@ -98,9 +98,27 @@ def _circle_cos(radius: float, mat: Matrix) -> Tuple[Vector, ...]:
     )
 
 
+def get_df_transform(df, context, depsgraph) -> Tuple[Vector, Matrix]:
+    df.update_from_editmode()
+
+    if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
+        df_eval = df.evaluated_get(depsgraph)
+        polys = df_eval.to_mesh().polygons
+    else:
+        df_eval = df
+        polys = df.data.polygons
+
+    poly = polys[df.data.polygons.active]
+    loc1 = df.matrix_world @ poly.center
+    mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+    df_eval.to_mesh_clear()
+
+    return loc1, mat_rot
+
+
 class CacheControl:
     __slots__ = "current_threshold", "set"
-    thresholds = (128, 256, 512)
+    thresholds = (128, 256, 512, 1024)
 
     def __init__(self) -> None:
         self.current_threshold = 64
@@ -140,18 +158,11 @@ def _draw(self, context):
     if not context.space_data.overlay.show_overlays:
         return
 
-    global _font_loc
-
-    prefs = context.preferences.addons[var.ADDON_ID].preferences
     props = context.scene.jewelcraft
     show_all = props.overlay_show_all
     use_ovrd = props.overlay_use_overrides
     default_spacing = props.overlay_spacing
-    default_color = prefs.overlay_color
-    default_linewidth = prefs.overlay_linewidth
-    diplay_thold = default_spacing + 0.5
-    depsgraph = context.evaluated_depsgraph_get()
-    gems_count = 0
+
     is_gem = False
     is_df = context.mode == "EDIT_MESH" and context.edit_object.is_instancer
 
@@ -169,7 +180,21 @@ def _draw(self, context):
     if not (show_all or is_gem):
         return
 
+    global _font_loc
+
+    prefs = context.preferences.addons[var.ADDON_ID].preferences
+    default_color = prefs.overlay_color
+    default_linewidth = prefs.overlay_linewidth
+
+    diplay_thold = default_spacing + 0.5
+    gems_count = 0
+    depsgraph = context.evaluated_depsgraph_get()
+
+    # Gem 1 transform
+    # -----------------------------------
+
     if is_gem:
+
         if use_ovrd and "gem_overlay" in ob1:
             ob1_spacing = ob1["gem_overlay"].get("spacing", default_spacing)
         else:
@@ -179,19 +204,7 @@ def _draw(self, context):
 
         if is_df:
             df_pass = False
-            df.update_from_editmode()
-
-            if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
-                df_eval = df.evaluated_get(depsgraph)
-                polys = df_eval.to_mesh().polygons
-            else:
-                df_eval = df
-                polys = df.data.polygons
-
-            poly = polys[df.data.polygons.active]
-            loc1 = df.matrix_world @ poly.center
-            mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
-            df_eval.to_mesh_clear()
+            loc1, mat_rot = get_df_transform(df, context, depsgraph)
         else:
             loc1 = ob1.matrix_world.to_translation()
             mat_rot = ob1.matrix_world.to_quaternion().to_matrix().to_4x4()
@@ -201,11 +214,13 @@ def _draw(self, context):
         mat1 = mat_loc @ mat_rot
         mat1.freeze()
 
+    # Shader
+    # -----------------------------------
+
     bgl.glEnable(bgl.GL_BLEND)
 
     if var.USE_POLYLINE:
         shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
-        view_size = (context.area.width, context.area.height)
     else:
         shader = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
         bgl.glEnable(bgl.GL_LINE_SMOOTH)
@@ -215,6 +230,12 @@ def _draw(self, context):
         bgl.glEnable(bgl.GL_DEPTH_TEST)
 
     shader.bind()
+
+    if var.USE_POLYLINE:
+        shader.uniform_float("viewportSize", (context.area.width, context.area.height))
+
+    # Main loop
+    # -----------------------------------
 
     for dup in depsgraph.object_instances:
 
@@ -230,14 +251,18 @@ def _draw(self, context):
 
         rad2 = max(ob2.dimensions.xy) / 2
         loc2 = dup.matrix_world.translation
-        spacing_thold = False
+
+        # Filter out by distance
+        # -----------------------------------
+
+        use_diplay_dis = False
 
         if is_gem:
             dis_obs = (loc1 - loc2).length
-            dis_gap = from_scene_scale(dis_obs - (rad1 + rad2))
-            dis_thold = dis_gap < diplay_thold
+            proximity_dis = from_scene_scale(dis_obs - (rad1 + rad2))
+            proximity_thold = proximity_dis < diplay_thold
 
-            if not (show_all or dis_thold):
+            if not (show_all or proximity_thold):
                 continue
 
             is_act = False
@@ -249,11 +274,13 @@ def _draw(self, context):
                 if not dup.is_instance:
                     is_act = ob2 is ob1
 
-            use_diplay_dis = not is_act and dis_thold
-        else:
-            use_diplay_dis = False
+            use_diplay_dis = not is_act and proximity_thold
+
+        # Gem 2 transform
+        # -----------------------------------
 
         if show_all or use_diplay_dis:
+
             if use_ovrd and "gem_overlay" in ob2:
                 _color = ob2["gem_overlay"].get("color", default_color)
                 _linewidth = ob2["gem_overlay"].get("linewidth", default_linewidth)
@@ -267,7 +294,6 @@ def _draw(self, context):
 
             if var.USE_POLYLINE:
                 shader.uniform_float("lineWidth", _linewidth)
-                shader.uniform_float("viewportSize", view_size)
             else:
                 bgl.glLineWidth(_linewidth)
 
@@ -280,21 +306,30 @@ def _draw(self, context):
 
             mat2.freeze()
 
+        # Show distance
+        # -----------------------------------
+
+        spacing_thold = False
+
         if use_diplay_dis:
+
             if dis_obs:
                 co1, co2 = nearest_coords(rad1, rad2, mat1, mat2)
                 dis_gap = from_scene_scale(calc_gap(co1, co2, loc1, dis_obs, rad1))
-                dis_thold = dis_gap < diplay_thold
-                spacing_thold = dis_gap < (_spacing + 0.3)
+                gap_thold = dis_gap < diplay_thold
 
-                if not (show_all or dis_thold):
+                if not (show_all or gap_thold):
                     continue
 
+                spacing_thold = dis_gap < (_spacing + 0.3)
                 mid = co1.lerp(co2, 0.5)
             else:
                 co1 = co2 = mid = loc2.copy()
+                dis_gap = proximity_dis
+                gap_thold = spacing_thold = True
 
-            if dis_thold:
+            if gap_thold:
+
                 if dis_gap < 0.1:
                     shader.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
                 elif dis_gap < _spacing:
@@ -304,6 +339,9 @@ def _draw(self, context):
 
                 batch = batch_for_shader(shader, "LINES", {"pos": (co1, co2)})
                 batch.draw(shader)
+
+        # Show spacing
+        # -----------------------------------
 
         if show_all or spacing_thold:
             batch = batch_for_shader(shader, "LINE_LOOP", {"pos": _circle_cos(rad2 + _spacing, mat2)})
