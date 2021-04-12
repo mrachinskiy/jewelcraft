@@ -288,20 +288,23 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
     def poll(cls, context):
         return unit.check(context) is not False
 
+    def draw_header(self, context):
+        self.layout.label(icon="ERROR")
+
     def draw(self, context):
         layout = self.layout
 
         warning = unit.check(context)
 
         if warning is unit.WARN_SCALE:
-            layout.label(text="Scene scale is not optimal", icon="ERROR")
+            layout.label(text="Scene scale is not optimal")
         elif warning is unit.WARN_SYSTEM:
-            layout.label(text="Unsupported unit system", icon="ERROR")
+            layout.label(text="Unsupported unit system")
 
-        col = layout.row()
-        col.alignment = "CENTER"
-        col.scale_y = 1.5
-        col.operator("scene.jewelcraft_scene_units_set")
+        row = layout.row()
+        row.alignment = "CENTER"
+        row.scale_y = 1.5
+        row.operator("scene.jewelcraft_scene_units_set")
 
 
 class VIEW3D_PT_jewelcraft_gems(SidebarSetup, Panel):
