@@ -29,6 +29,25 @@ from mathutils import Matrix, Vector
 from ..lib import mesh, asset, iterutils
 
 
+def _get_obs() -> Tuple[Object, Object]:
+    ob1, ob2 = bpy.context.selected_objects
+    is_curve1 = ob1.type == "CURVE"
+    is_curve2 = ob2.type == "CURVE"
+
+    if is_curve1 and is_curve2:
+        if ob1 is bpy.context.object:
+            return ob1, ob2
+        else:
+            return ob2, ob1
+
+    if is_curve1:
+        return ob1, ob2
+    elif is_curve2:
+        return ob2, ob1
+
+    return None, None
+
+
 def _get_cons() -> Iterator[Constraint]:
     for ob in bpy.context.selected_objects:
         for con in ob.constraints:
@@ -118,10 +137,9 @@ def execute(self, context):
         if not sizes_list:
             return {"FINISHED"}
 
-        curve = context.object
-        curve.select_set(False)
+        curve, ob = _get_obs()
 
-        ob = context.selected_objects[0]
+        curve.select_set(False)
         context.view_layer.objects.active = ob
 
         mat_sca = Matrix.Diagonal(ob.scale).to_4x4()
@@ -227,13 +245,13 @@ def invoke(self, context, event):
 
     if self.is_distribute:
 
-        if len(context.selected_objects) < 2:
+        if len(context.selected_objects) != 2:
             self.report({"ERROR"}, "At least two objects must be selected")
             return {"CANCELLED"}
 
-        curve = context.object
+        curve, ob = _get_obs()
 
-        if curve.type != "CURVE":
+        if curve is None:
             self.report({"ERROR"}, "Active object must be a curve")
             return {"CANCELLED"}
 
@@ -243,11 +261,7 @@ def invoke(self, context, event):
         if not sizes.length():
             item = sizes.add()
             item.qty = 10
-
-            for ob in context.selected_objects:
-                if ob is not curve:
-                    item.size = ob.dimensions.y
-                    break
+            item.size = ob.dimensions.y
 
         wm.invoke_props_popup(self, event)
         return self.execute(context)
