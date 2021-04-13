@@ -20,7 +20,7 @@
 
 
 import operator
-from typing import List, Tuple, Iterator
+from typing import List, Tuple, Iterator, Optional
 
 import bpy
 from bpy.types import Constraint, Object
@@ -29,7 +29,7 @@ from mathutils import Matrix, Vector
 from ..lib import mesh, asset, iterutils
 
 
-def _get_obs() -> Tuple[Object, Object]:
+def _get_obs() -> Tuple[Optional[Object], Optional[Object]]:
     ob1, ob2 = bpy.context.selected_objects
     is_curve1 = ob1.type == "CURVE"
     is_curve2 = ob2.type == "CURVE"
@@ -37,12 +37,11 @@ def _get_obs() -> Tuple[Object, Object]:
     if is_curve1 and is_curve2:
         if ob1 is bpy.context.object:
             return ob1, ob2
-        else:
-            return ob2, ob1
+        return ob2, ob1
 
     if is_curve1:
         return ob1, ob2
-    elif is_curve2:
+    if is_curve2:
         return ob2, ob1
 
     return None, None
