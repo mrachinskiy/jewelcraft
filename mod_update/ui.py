@@ -30,6 +30,9 @@ class SidebarPanel:
     def poll(cls, context):
         return state.update_available
 
+    def draw_header(self, context):
+        self.layout.label(icon="INFO")
+
     def draw(self, context):
         sidebar_ui(self.layout)
 
