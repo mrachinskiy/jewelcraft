@@ -294,12 +294,15 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
     def draw(self, context):
         layout = self.layout
 
+        row = layout.row()
+        row.alignment = "CENTER"
+
         warning = unit.check(context)
 
         if warning is unit.WARN_SCALE:
-            layout.label(text="Scene scale is not optimal")
+            row.label(text="Scene scale is not optimal")
         elif warning is unit.WARN_SYSTEM:
-            layout.label(text="Unsupported unit system")
+            row.label(text="Unsupported unit system")
 
         row = layout.row()
         row.alignment = "CENTER"
