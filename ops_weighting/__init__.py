@@ -19,5 +19,5 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from .weighting_lib_ops import *
 from .weighting_ops import *
-from .weighting_set_ops import *

@@ -33,9 +33,8 @@ def get_asset_lib_path() -> str:
 
 def get_weighting_lib_path() -> str:
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-    return bpy.path.abspath(prefs.weighting_set_lib_path)
+    return bpy.path.abspath(prefs.weighting_lib_path)
 
 
-def get_weighting_set_path() -> str:
-    props = bpy.context.window_manager.jewelcraft
-    return os.path.join(get_weighting_lib_path(), props.weighting_set)
+def get_weighting_list_filepath(name) -> str:
+    return os.path.join(get_weighting_lib_path(), name + ".json")

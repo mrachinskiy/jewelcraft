@@ -23,6 +23,7 @@ import os
 from functools import lru_cache
 from typing import Mapping, Optional, Tuple, FrozenSet, Union
 
+import bpy
 from bpy.app.translations import pgettext_iface as _
 from bpy.types import ImagePreview
 
@@ -151,59 +152,48 @@ def stones(self, context) -> EnumItems4:
 # ---------------------------
 
 
-def weighting_set(self, context) -> EnumItems4:
-    if "weighting_set__RESULT" in _cache:
-        return _cache["weighting_set__RESULT"]
+_wlib_cache = False
 
-    prefs = context.preferences.addons[var.ADDON_ID].preferences
-    lib_path = pathutils.get_weighting_lib_path()
-    wsets = {}
-    list_ = []
 
-    if not prefs.weighting_hide_default_sets:
-        description = {
-            "Base.json": "Set of base metal alloys, physical properties taken directly from suppliers",
-            "Precious RU (ГОСТ 30649-99).json": "Set of precious alloys according to Russian regulations",
-            "Precious.json": "Commonly used precious alloys, physical properties taken directly from suppliers",
-        }
-        for entry in os.scandir(var.WEIGHTING_SET_DIR):
+def weighting_lib() -> None:
+    global _wlib_cache
+    if _wlib_cache:
+        return
+    _wlib_cache = True
+
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+    lib = bpy.context.window_manager.jewelcraft.weighting_lists
+    lib.clear()
+
+    if not prefs.weighting_hide_builtin_lists:
+        for entry in os.scandir(var.WEIGHTING_LIB_BUILTIN_DIR):
             if entry.is_file() and entry.name.endswith(".json"):
-                name = _(os.path.splitext(entry.name)[0], "Jewelry")
-                wsets[f"__ASSET__{entry.name}"] = (name, description.get(entry.name, ""))
+                item = lib.add()
+                item["name"] = os.path.splitext(entry.name)[0]
+                item.builtin = True
+
+    lib_path = pathutils.get_weighting_lib_path()
 
     if os.path.exists(lib_path):
         for entry in os.scandir(lib_path):
             if entry.is_file() and entry.name.endswith(".json"):
-                name = os.path.splitext(entry.name)[0] + " "  # Add trailing space to deny UI translation
-                wsets[entry.name] = (name, "")
+                item = lib.add()
+                item["name"] = item.name_orig = os.path.splitext(entry.name)[0]
 
-    if wsets:
-
-        if prefs.weighting_set_autoload not in wsets:
-            prefs.weighting_set_autoload = next(iter(wsets))
-            context.preferences.is_dirty = True
-
-        i = 1
-
-        for k, v in wsets.items():
-            if k == prefs.weighting_set_autoload:
-                list_.append((k, *v, "DOT", 0))
-            else:
-                list_.append((k, *v, "BLANK1", i))
-                i += 1
-
-    list_ = tuple(list_)
-    _cache["weighting_set__RESULT"] = list_
-
-    return list_
+    if lib:
+        for item in lib:
+            if prefs.weighting_default_list == item.load_id:
+                item.default = True
+                return
+        else:
+            prefs.weighting_default_list = lib[0].load_id
+            lib[0].default = True
+            bpy.context.preferences.is_dirty = True
 
 
-def weighting_set_refresh(self=None, context=None) -> None:
-    if "weighting_set__RESULT" in _cache:
-        del _cache["weighting_set__RESULT"]
-
-    if context is not None:
-        context.window_manager.jewelcraft.property_unset("weighting_set")
+def weighting_lib_refresh(self=None, context=None) -> None:
+    global _wlib_cache
+    _wlib_cache = False
 
 
 def weighting_materials(self, context) -> EnumItems3:

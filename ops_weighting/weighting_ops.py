@@ -24,10 +24,10 @@ from bpy.props import StringProperty, FloatProperty
 from bpy.app.translations import pgettext_iface as _
 
 
-class WM_OT_ul_materials_add(Operator):
+class WM_OT_ul_material_add(Operator):
     bl_label = "Add New Material"
     bl_description = "Add new material to the list"
-    bl_idname = "wm.jewelcraft_ul_materials_add"
+    bl_idname = "wm.jewelcraft_ul_material_add"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     name: StringProperty(

@@ -60,7 +60,7 @@ def _icon_menu(name: str) -> int:
 # ---------------------------
 
 
-class VIEW3D_UL_jewelcraft_weighting_set(UIList):
+class VIEW3D_UL_jewelcraft_material_list(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         props = context.scene.jewelcraft
@@ -205,23 +205,6 @@ class VIEW3D_MT_jewelcraft_asset_folder(Menu):
         layout.operator("wm.jewelcraft_asset_folder_rename", text="Rename")
 
 
-class VIEW3D_MT_jewelcraft_weighting_set(Menu):
-    bl_label = ""
-
-    def draw(self, context):
-        library_folder = pathutils.get_weighting_lib_path()
-        layout = self.layout
-        layout.operator("wm.jewelcraft_weighting_set_add", icon="ADD")
-        layout.operator("wm.jewelcraft_weighting_set_del", text="Remove", text_ctxt="*", icon="REMOVE")
-        layout.operator("wm.jewelcraft_weighting_set_rename", text="Rename")
-        layout.operator("wm.jewelcraft_weighting_set_replace")
-        layout.operator("wm.jewelcraft_weighting_set_autoload_mark", icon="DOT")
-        layout.separator()
-        layout.operator("wm.path_open", text="Open Library Folder", icon="FILE_FOLDER").filepath = library_folder
-        layout.separator()
-        layout.operator("wm.jewelcraft_weighting_set_refresh", icon="FILE_REFRESH")
-
-
 class VIEW3D_MT_jewelcraft_weighting_mats(Menu):
     bl_label = ""
 
@@ -265,6 +248,61 @@ class VIEW3D_PT_jewelcraft_asset_libs(Panel):
             "index",
             rows=wm_props.asset_libs.length() + 1,
         )
+
+
+class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
+    bl_label = "Library"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "WINDOW"
+    bl_ui_units_x = 15
+
+    def draw(self, context):
+        wm_props = context.window_manager.jewelcraft
+        lib_path = pathutils.get_weighting_lib_path()
+        dynamic_list.weighting_lib()
+
+        layout = self.layout
+
+        row = layout.row()
+        row.label(text="Library")
+
+        sub = row.row(align=True)
+        sub.alignment = "RIGHT"
+        sub.scale_x = 1.1
+        sub.operator("wm.jewelcraft_weighting_ui_refresh", text="", icon="FILE_REFRESH", emboss=False)
+        sub.operator("wm.path_open", text="", icon="FILE_FOLDER", emboss=False).filepath = lib_path
+
+        layout.separator()
+
+        for item in wm_props.weighting_lists:
+            row = layout.row(align=True)
+
+            if item.default:
+                sub = row.row()
+                sub.emboss = "NONE"
+                sub.label(icon="RADIOBUT_ON")
+            else:
+                row.operator("wm.jewelcraft_weighting_list_set_default", text="", icon="RADIOBUT_OFF", emboss=False).load_id = item.load_id
+
+            sub = row.row()
+            sub.emboss = "UI_EMBOSS_NONE_OR_STATUS"
+            if item.builtin:
+                sub.label(text=item.name, text_ctxt="Jewelry")
+            else:
+                sub.prop(item, "name", text="")
+
+            sub = row.row(align=True)
+            sub.scale_x = 1.1
+            sub.operator("wm.jewelcraft_weighting_list_import", text="", icon="IMPORT", emboss=False).load_id = item.load_id
+            editrow = sub.row(align=True)
+            editrow.enabled = not item.builtin
+            editrow.operator("wm.jewelcraft_weighting_list_save_as", text="", icon="FILE_TICK", emboss=False).list_name = item.name
+            editrow.operator("wm.jewelcraft_weighting_list_del", text="", icon="TRASH", emboss=False).list_name = item.name
+
+        row = layout.row()
+        row.alignment = "RIGHT"
+        row.scale_x = 1.1
+        row.operator("wm.jewelcraft_weighting_list_save", text="", icon="ADD", emboss=False)
 
 
 # Panels
@@ -537,7 +575,6 @@ class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
 
     def draw(self, context):
         material_list = context.scene.jewelcraft.weighting_materials
-        wm_props = context.window_manager.jewelcraft
 
         layout = self.layout
 
@@ -545,25 +582,13 @@ class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
             layout.label(text="Weighting")
             layout.separator()
 
-        # Weighting Set
-
-        row = layout.row(align=True)
-        row.prop(wm_props, "weighting_set", text="")
-        row.menu("VIEW3D_MT_jewelcraft_weighting_set", icon="THREE_DOTS")
-
-        row = layout.row(align=True)
-        row.operator("wm.jewelcraft_weighting_set_load")
-        row.operator("wm.jewelcraft_weighting_set_load_append")
-
-        layout.column()  # Separator
-
-        # Materials List
+        layout.popover(panel="VIEW3D_PT_jewelcraft_weighting_lib", icon="ASSET_MANAGER")
 
         row = layout.row()
 
         col = row.column()
         col.template_list(
-            "VIEW3D_UL_jewelcraft_weighting_set",
+            "VIEW3D_UL_jewelcraft_material_list",
             "",
             material_list,
             "coll",
@@ -573,7 +598,7 @@ class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
         )
 
         col = row.column(align=True)
-        col.operator("wm.jewelcraft_ul_materials_add", text="", icon="ADD")
+        col.operator("wm.jewelcraft_ul_material_add", text="", icon="ADD")
         col.operator("scene.jewelcraft_ul_del", text="", icon="REMOVE").prop = "weighting_materials"
         col.separator()
         col.menu("VIEW3D_MT_jewelcraft_weighting_mats", icon="DOWNARROW_HLT")
@@ -649,7 +674,7 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
                 col.prop(item, "z")
             elif item.type == "WEIGHT":
                 box = layout.box()
-                row = box.row(align=True)
+                row = box.row()
                 row.label(text=item.material_name, translate=False)
                 row.operator("wm.jewelcraft_ul_measurements_material_select", text="", icon="DOWNARROW_HLT", emboss=False)
             elif item.type == "RING_SIZE":
@@ -714,8 +739,8 @@ def prefs_ui(self, context):
 
     elif active_tab == "WEIGHTING":
         col = box.column()
-        col.prop(self, "weighting_hide_default_sets")
-        col.prop(self, "weighting_set_lib_path")
+        col.prop(self, "weighting_hide_builtin_lists")
+        col.prop(self, "weighting_lib_path")
 
     elif active_tab == "DESIGN_REPORT":
         col = box.column()

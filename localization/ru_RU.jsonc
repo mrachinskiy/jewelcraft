@@ -7,16 +7,12 @@
     "Show Asset Name": "Показывать название ассета",
     "Design Report": "Отчёт изделия",
     "Report Language": "Язык отчёта",
-    "Save To File": "Сохранить в файл",
     "Gems": "Камни",
     "Assets": "Ассеты",
     "Select by Trait": "Выделить по характеристике",
     "Jeweling": "Вставки",
     "Weighting": "Оценка веса",
-    "Weighting Set": "Набор материалов",
-    "Hide Default Sets": "Спрятать стандартные наборы",
-    "Precious": "Драгоценные",
-    "Precious RU (ГОСТ 30649-99)": "Драгоценные RU (ГОСТ 30649-99)",
+    "Hide Built-in Material Lists": "Скрыть встроенные списки материалов",
     "Prongs": "Крапана",
     "Cutter": "Выборка",
     "Library Folder": "Каталог библиотеки",
@@ -47,7 +43,6 @@
     //
     "Asset Name": "Название ассета",
     "Category Name": "Название категории",
-    "Set Name": "Название набора",
     "Curvature Scale": "Масштаб кривизны",
     "Prong Number": "Количество корнеров",
     "Detalization": "Детализация",
@@ -94,11 +89,6 @@
       "Принудительно редактировать выделенные мэш объекты, можно использовать для создания камней из других объектов",
     "Only edit gem identifiers, not affecting object data and materials":
       "Редактировать только идентификаторы камня, не затрагивая объектную информация и материалы.",
-    "Commonly used precious alloys, physical properties taken directly from suppliers":
-      "Распространённые драгоценные сплавы, физические свойства взяты напрямую у поставщиков",
-    "Set of precious alloys according to Russian regulations": "Драгоценные сплавы согласно ГОСТ 30649-99",
-    "Set of base metal alloys, physical properties taken directly from suppliers":
-      "Сплавы из недрагоценных металлов, физические свойства взяты напрямую у поставщиков",
     "Save to file in project folder": "Сохранить в файл в каталоге проекта",
     "Use user preferences language setting": "Использовать язык заданный в настройках пользователя",
     "Select gems by trait": "Выделить камни по характеристике",
@@ -125,7 +115,6 @@
       "Создать выборку для выделенных камней\n(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)",
     "Make curve start at the top": "Расположить начало кривой сверху",
     "Density g/cm³": "Плотность г/см³",
-    "Set of materials for weighting": "Набор материалов для оценки веса",
     "Create category": "Создать категорию",
     "Rename category": "Переименовать категорию",
     "Refresh asset UI": "Обновить интерфейс ассетов",
@@ -146,17 +135,6 @@
     "Add new material to the list": "Добавить новый материал в список",
     "Display material density in the list": "Отображать в списке плотность материала",
     "Display material composition in the list": "Отображать в списке состав материала",
-    "Create weighting set from materials list": "Создать набор материалов из списка материалов",
-    "Remove weighting set": "Удалить набор материалов",
-    "Rename weighting set": "Переименовать набор материалов",
-    "Load weighting set to the materials list by replacing existing materials":
-      "Загрузить набор материалов в список материалов, заменив текущие материалы",
-    "Append weighting set at the end of the current materials list":
-      "Присоеденить набор материалов в конец текущего списока материалов",
-    "Hide default weighting sets from menu":
-      "Скрыть стандартные наборы материалов из меню",
-    "Replace selected weighting set with current materials list":
-      "Заменить активный набор материалов текущим списком материалов",
     "Material name": "Название материала",
     "Material composition": "Состав материала",
     "Use one-dimensional lattice for even deformation":
@@ -173,7 +151,6 @@
     "Show spacing guide for all visible gems": "Показывать ориентир расстояния для всех видимых камней",
     "Set optimal unit settings for jewelry modelling":
       "Задать оптимальные настройки единиц измерения для моделирования ювелирных изделий",
-    "Enable or disable given warning": "Включить или отключить данное предупреждение",
     "Compose gem table and map it to gems in the scene":
       "Составить таблицу камней и сопоставить её с камнями в сцене",
     "Present summary information about the design, including gems, sizes and weight":
@@ -188,8 +165,6 @@
     "Select material": "Выбрать материал",
     "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)":
       "Создать экземпляры коллекции в радиальном порядке\n(Горячая клавиша: удерживайте клавишу Alt при использовании инструмента для использования существующей коллекции)",
-    "Autoload marked weighting set on File > Open/New if materials list for given blend file is empty":
-      "Автозагрузка отмеченного набора материалов при File > Open/New если список материалов для данного blend файла пуст",
     "Asset preview image size when creating new assets":
       "Размер изображения превью ассета при создании новых ассетов",
     "Asset preview scale in sidebar": "Масштаб превью ассетов в боковой панели",
@@ -200,6 +175,12 @@
       "Разделить несвязанные части, центрировать origin и исправить ориентацию (может восстанавливать камни из STL файла).\nПРИМЕЧАНИЕ: идентификатор камня можно добавить инструментом Edit Gem",
     "Ring size format": "Формат размера кольца",
     "Create microprong cutter between selected gems": "Создать выборку микрокрапана между выделенными камнями",
+    "Save material list to file": "Сохранить список материалов в файл",
+    "Save material list as existing file": "Сохранить список материалов в существующий файл",
+    "Remove file": "Удалить файл",
+    "Import materials from file": "Импортировать материалы из файла",
+    "Import materials from default list when new scene is created":
+      "Список материалов по умолчанию импортируется при создании новой сцены",
     //
     // Reports
     //
@@ -210,7 +191,6 @@
     "Unknown gem IDs, carats are not calculated for marked gems (*)":
       "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)",
     "Curve Length": "Длина кривой",
-    "Missing selected objects": "Отсутствуют выделенные объекты",
     "At least two objects must be selected": "Как минимум два объекта должны быть выделены",
     "At least one gem object must be selected": "Как минимум один объект камня должен быть выделен",
     "At least one mesh object must be selected": "Как минимум один mesh объект должен быть выделен",
@@ -325,7 +305,9 @@
     "Round": "Кр-57",
     "Spacing": "Расстояние",
     "Cutter": "Выборка",
-    "Base": "Недрагоценные"
+    "Base": "Недрагоценные",
+    "Precious": "Драгоценные",
+    "Precious ГОСТ 30649-99": "Драгоценные ГОСТ 30649-99"
   },
   "Operator": {
     "Add Gem": "Добавить камень",
@@ -338,7 +320,6 @@
     "Stretch": "Растянуть",
     "Curve Length": "Длина кривой",
     "Design Report": "Отчёт изделия",
-    "Open Library Folder": "Открыть каталог библиотеки",
     "Import Asset": "Импортировать ассет",
     "Rename": "Переименовать",
     "Replace Asset": "Заменить ассет",
@@ -348,21 +329,17 @@
     "Override": "Переопределить",
     "Clear List": "Очистить список",
     "Add New Material": "Добавить новый материал",
-    "Create Set": "Создать набор",
-    "Replace Set": "Заменить набор",
-    "Remove Set": "Удалить набор",
-    "Rename Set": "Переименовать набор",
     "Overlapping": "Пересекающиеся",
     "Set Units": "Задать единицы измерения",
     "Gem Map": "Карта Камней",
-    "Append": "Добавить",
     "Add New Measurement": "Добавить новый замер",
-    "Mark Autoload": "Отметить для автозагрузки",
     "Add To Library": "Добавить в библиотеку",
     "All": "Все",
     "Calculate": "Вычислить",
-    "Load": "Загрузить",
     "Microprong Cutter": "Выборка микрокрапана",
-    "Similar": "Аналогичные"
+    "Similar": "Аналогичные",
+    "Save To File": "Сохранить в файл",
+    "Import": "Импортировать",
+    "Set Default": "Использовать по умолчанию"
   }
 }

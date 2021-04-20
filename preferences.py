@@ -35,7 +35,7 @@ from bpy.props import (
 )
 
 from . import ui, var, mod_update
-from .lib import data, dynamic_list
+from .lib import data, dynamic_list, pathutils
 
 
 # Update callbacks
@@ -88,6 +88,25 @@ def upd_spacing_overlay(self, context):
     spacing_overlay.handler_toggle(self, context)
 
 
+def upd_material_list_rename(self, context):
+    if not self.name:
+        self["name"] = self.name_orig
+        return
+
+    if self.name == self.name_orig:
+        return
+
+    filepath_current = pathutils.get_weighting_list_filepath(self.name_orig)
+    filepath_new = pathutils.get_weighting_list_filepath(self.name)
+
+    if not os.path.exists(filepath_current):
+        dynamic_list.weighting_lib_refresh()
+        return
+
+    os.rename(filepath_current, filepath_new)
+    self.name_orig = self.name
+
+
 # Custom properties
 # ------------------------------------------
 
@@ -134,11 +153,27 @@ class ListProperty:
         return len(self.coll)
 
 
+# Collection properties
+
+
 class MaterialCollection(PropertyGroup):
     enabled: BoolProperty(description="Enable material for weighting display", default=True)
     name: StringProperty(default="Untitled")
     composition: StringProperty(default="Unknown")
     density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
+
+
+class MaterialListCollection(PropertyGroup):
+    name: StringProperty(name="Click to rename", update=upd_material_list_rename)
+    name_orig: StringProperty()
+    default: BoolProperty()
+    builtin: BoolProperty()
+
+    @property
+    def load_id(self):
+        if self.builtin:
+            return "BUILTIN/" + self.name
+        return self.name
 
 
 class MeasurementCollection(PropertyGroup):
@@ -179,7 +214,7 @@ class MeasurementCollection(PropertyGroup):
     material_density: FloatProperty()
 
 
-class AssetLibsCollection(PropertyGroup):
+class AssetLibCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
 
@@ -189,17 +224,20 @@ class SizeCollection(PropertyGroup):
     qty: IntProperty(name="Qty", default=1, min=1)
 
 
-class MaterialsList(ListProperty, PropertyGroup):
+# List properties
+
+
+class MaterialList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=MaterialCollection)
 
 
-class MeasurementsList(ListProperty, PropertyGroup):
+class MeasurementList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=MeasurementCollection)
 
 
-class AssetLibsList(ListProperty, PropertyGroup):
+class AssetLibList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_folder_list)
-    coll: CollectionProperty(type=AssetLibsCollection)
+    coll: CollectionProperty(type=AssetLibCollection)
 
 
 class SizeList(ListProperty, PropertyGroup):
@@ -262,19 +300,20 @@ class Preferences(mod_update.Preferences, AddonPreferences):
     # Weighting
     # ------------------------
 
-    weighting_hide_default_sets: BoolProperty(
-        name="Hide Default Sets",
-        description="Hide default weighting sets from menu",
-        update=dynamic_list.weighting_set_refresh,
+    weighting_hide_builtin_lists: BoolProperty(
+        name="Hide Built-in Material Lists",
+        description="Hide built-in material lists from library",
+        update=dynamic_list.weighting_lib_refresh,
     )
-    weighting_set_lib_path: StringProperty(
+    weighting_set_lib_path: StringProperty(default=var.WEIGHTING_LIB_USER_DIR_LEGACY)  # TODO remove
+    weighting_lib_path: StringProperty(
         name="Library Folder",
         description="Custom library folder path",
-        default=var.DEFAULT_WEIGHTING_SET_DIR,
+        default=var.WEIGHTING_LIB_USER_DIR,
         subtype="DIR_PATH",
-        update=dynamic_list.weighting_set_refresh,
+        update=dynamic_list.weighting_lib_refresh,
     )
-    weighting_set_autoload: StringProperty(default="__ASSET__Precious.json")
+    weighting_default_list: StringProperty(default="BUILTIN/Precious")
 
     # Design Report
     # ------------------------
@@ -292,7 +331,7 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         ),
     )
     gem_map_fontsize_table: IntProperty(
-        name="Table",
+        name="Gem Table",
         default=19,
         min=1,
     )
@@ -379,14 +418,10 @@ class WmProperties(PropertyGroup):
         name="Filter",
         description="Filter by name",
     )
-    weighting_set: EnumProperty(
-        name="Weighting Set",
-        description="Set of materials for weighting",
-        items=dynamic_list.weighting_set,
-    )
+    weighting_lists: CollectionProperty(type=MaterialListCollection)
     asset_menu_ui_lock: BoolProperty()
     asset_show_favs: BoolProperty(name="Favorites")
-    asset_libs: PointerProperty(type=AssetLibsList)
+    asset_libs: PointerProperty(type=AssetLibList)
     sizes: PointerProperty(type=SizeList)
 
 
@@ -395,7 +430,7 @@ class WmProperties(PropertyGroup):
 
 
 class SceneProperties(PropertyGroup):
-    weighting_materials: PointerProperty(type=MaterialsList)
+    weighting_materials: PointerProperty(type=MaterialList)
     weighting_show_composition: BoolProperty(
         name="Show Composition",
         description="Display material composition in the list",
@@ -404,7 +439,7 @@ class SceneProperties(PropertyGroup):
         name="Show Density",
         description="Display material density in the list",
     )
-    measurements: PointerProperty(type=MeasurementsList)
+    measurements: PointerProperty(type=MeasurementList)
     overlay_show_all: BoolProperty(
         name="Show All",
         description="Show spacing guide for all visible gems",
