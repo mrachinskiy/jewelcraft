@@ -49,9 +49,10 @@ ICONS_DIR = os.path.join(ADDON_DIR, "assets", "icons")
 GEM_ASSET_DIR = os.path.join(ADDON_DIR, "assets", "gems")
 GEM_ASSET_FILEPATH = os.path.join(GEM_ASSET_DIR, "gems.blend")
 HTML_DESIGN_REPORT_DIR = os.path.join(ADDON_DIR, "assets", "templates", "design_report")
-WEIGHTING_SET_DIR = os.path.join(ADDON_DIR, "assets", "weighting")
+WEIGHTING_LIB_BUILTIN_DIR = os.path.join(ADDON_DIR, "assets", "weighting")
 
-DEFAULT_WEIGHTING_SET_DIR = os.path.join(CONFIG_DIR, "Weighting Sets")
+WEIGHTING_LIB_USER_DIR = os.path.join(CONFIG_DIR, "Weighting Library")
+WEIGHTING_LIB_USER_DIR_LEGACY = os.path.join(CONFIG_DIR, "Weighting Sets")  # TODO remove
 ASSET_LIBS_FILEPATH = os.path.join(CONFIG_DIR, "libraries.json")
 ASSET_FAVS_FILEPATH = os.path.join(CONFIG_DIR, "favorites.json")
 

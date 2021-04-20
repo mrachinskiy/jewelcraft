@@ -49,8 +49,8 @@ def _load_weighting_mats():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
 
     try:
-        data.weighting_set_deserialize(prefs.weighting_set_autoload)
+        data.weighting_list_deserialize(prefs.weighting_default_list)
     except FileNotFoundError:
-        prefs.property_unset("weighting_set_autoload")
+        prefs.property_unset("weighting_default_list")
         bpy.context.preferences.is_dirty = True
-        data.weighting_set_deserialize(prefs.weighting_set_autoload)
+        data.weighting_list_deserialize(prefs.weighting_default_list)

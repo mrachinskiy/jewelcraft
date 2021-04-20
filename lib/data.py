@@ -76,7 +76,7 @@ def asset_libs_deserialize() -> None:
         ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
 
 
-def weighting_set_serialize(filepath: str) -> None:
+def weighting_list_serialize(filepath: str) -> None:
     ul_serialize(
         bpy.context.scene.jewelcraft.weighting_materials,
         filepath,
@@ -85,12 +85,12 @@ def weighting_set_serialize(filepath: str) -> None:
     )
 
 
-def weighting_set_deserialize(filename: str) -> None:
+def weighting_list_deserialize(name: str) -> None:
     mats = bpy.context.scene.jewelcraft.weighting_materials
 
-    if filename.startswith("__ASSET__"):
-        filepath = os.path.join(var.WEIGHTING_SET_DIR, filename[len("__ASSET__"):])
+    if name.startswith("BUILTIN/"):
+        filepath = os.path.join(var.WEIGHTING_LIB_BUILTIN_DIR, name[len("BUILTIN/"):] + ".json")
         ul_deserialize(mats, filepath, fmt=_translate_item_name)
     else:
-        filepath = os.path.join(pathutils.get_weighting_lib_path(), filename)
+        filepath = pathutils.get_weighting_list_filepath(name)
         ul_deserialize(mats, filepath)

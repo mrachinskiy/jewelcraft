@@ -90,16 +90,17 @@ else:
 classes = (
     preferences.MeasurementCollection,
     preferences.MaterialCollection,
-    preferences.AssetLibsCollection,
+    preferences.MaterialListCollection,
+    preferences.AssetLibCollection,
     preferences.SizeCollection,
-    preferences.MeasurementsList,
-    preferences.MaterialsList,
-    preferences.AssetLibsList,
+    preferences.MeasurementList,
+    preferences.MaterialList,
+    preferences.AssetLibList,
     preferences.SizeList,
     preferences.Preferences,
     preferences.WmProperties,
     preferences.SceneProperties,
-    ui.VIEW3D_UL_jewelcraft_weighting_set,
+    ui.VIEW3D_UL_jewelcraft_material_list,
     ui.VIEW3D_UL_jewelcraft_measurements,
     ui.VIEW3D_UL_jewelcraft_asset_libs,
     ui.VIEW3D_UL_jewelcraft_asset_libs_select,
@@ -107,9 +108,9 @@ classes = (
     ui.VIEW3D_MT_jewelcraft,
     ui.VIEW3D_MT_jewelcraft_select_gem_by,
     ui.VIEW3D_MT_jewelcraft_asset_folder,
-    ui.VIEW3D_MT_jewelcraft_weighting_set,
     ui.VIEW3D_MT_jewelcraft_weighting_mats,
     ui.VIEW3D_PT_jewelcraft_asset_libs,
+    ui.VIEW3D_PT_jewelcraft_weighting_lib,
     ui.VIEW3D_PT_jewelcraft_update,
     ui.VIEW3D_PT_jewelcraft_warning,
     ui.VIEW3D_PT_jewelcraft_gems,
@@ -171,16 +172,14 @@ classes = (
     ops_utils.WM_OT_goto_prefs,
     ops_utils.OBJECT_OT_overlay_override_add,
     ops_utils.OBJECT_OT_overlay_override_del,
-    ops_weighting.WM_OT_ul_materials_add,
+    ops_weighting.WM_OT_ul_material_add,
     ops_weighting.OBJECT_OT_weight_display,
-    ops_weighting.WM_OT_weighting_set_add,
-    ops_weighting.WM_OT_weighting_set_replace,
-    ops_weighting.WM_OT_weighting_set_del,
-    ops_weighting.WM_OT_weighting_set_rename,
-    ops_weighting.WM_OT_weighting_set_refresh,
-    ops_weighting.WM_OT_weighting_set_autoload_mark,
-    ops_weighting.WM_OT_weighting_set_load,
-    ops_weighting.WM_OT_weighting_set_load_append,
+    ops_weighting.WM_OT_weighting_list_save,
+    ops_weighting.WM_OT_weighting_list_save_as,
+    ops_weighting.WM_OT_weighting_list_del,
+    ops_weighting.WM_OT_weighting_ui_refresh,
+    ops_weighting.WM_OT_weighting_list_set_default,
+    ops_weighting.WM_OT_weighting_list_import,
     *mod_update.ops,
 )
 
@@ -206,6 +205,21 @@ def register():
 
     prefs = bpy.context.preferences.addons[__package__].preferences
     preferences.upd_asset_popover_width(prefs, None)
+
+    # Versioning TODO remove
+    # ---------------------------
+
+    if prefs.weighting_set_lib_path:
+        if (
+            prefs.weighting_lib_path == var.WEIGHTING_LIB_USER_DIR and
+            os.path.exists(prefs.weighting_set_lib_path) and
+            os.listdir(prefs.weighting_set_lib_path)
+        ):
+            prefs.weighting_lib_path = prefs.weighting_set_lib_path
+        prefs.weighting_set_lib_path = ""
+        bpy.context.preferences.is_dirty = True
+
+    # Versioning ---------------------------
 
     on_load.handler_add()
 
