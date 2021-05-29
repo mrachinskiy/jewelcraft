@@ -382,8 +382,8 @@ class OBJECT_OT_lattice_project(Operator):
 
         obs = context.selected_objects
 
-        bpy.ops.object.add(radius=1, type="LATTICE")
-        lat = context.object
+        lat_data = bpy.data.lattices.new("Lattice Project")
+        lat = bpy.data.objects.new("Lattice Project", lat_data)
 
         md = lat.modifiers.new("Shrinkwrap", "SHRINKWRAP")
         md.target = surf
@@ -391,10 +391,18 @@ class OBJECT_OT_lattice_project(Operator):
         md.use_project_z = True
         md.use_negative_direction = True
 
+        colls = set()
+
         for ob in obs:
-            ob.select_set(True)
             md = ob.modifiers.new("Lattice", "LATTICE")
             md.object = lat
+            colls.update(ob.users_collection)
+
+        for coll in colls:
+            coll.objects.link(lat)
+
+        lat.select_set(True)
+        context.view_layer.objects.active = lat
 
         if "X" in direction:
             ratio = get_ratio(self.BBox.dim.z, self.BBox.dim.y)
@@ -441,12 +449,12 @@ class OBJECT_OT_lattice_project(Operator):
             pt_u = 10
             pt_v = round(10 / ratio)
 
-        lat.data.points_u = pt_u
-        lat.data.points_v = pt_v
-        lat.data.points_w = 1
+        lat_data.points_u = pt_u
+        lat_data.points_v = pt_v
+        lat_data.points_w = 1
 
-        lat.scale[0] = sca_x or 1.0
-        lat.scale[1] = sca_y or 1.0
+        lat.scale.x = sca_x or 1.0
+        lat.scale.y = sca_y or 1.0
 
         return {"FINISHED"}
 
@@ -513,6 +521,8 @@ class OBJECT_OT_lattice_profile(Operator):
 
         if ob.select_get():
             obs.remove(ob)
+        else:
+            ob.select_set(True)
 
         if self.axis == "X":
             rot_z = 0.0
@@ -524,8 +534,15 @@ class OBJECT_OT_lattice_profile(Operator):
         if is_editmesh:
             bpy.ops.object.mode_set(mode="OBJECT")
 
-        bpy.ops.object.add(radius=1, type="LATTICE", rotation=(0.0, 0.0, rot_z))
-        lat = context.object
+        lat_data = bpy.data.lattices.new("Lattice Profile")
+        lat = bpy.data.objects.new("Lattice Profile", lat_data)
+        lat.rotation_euler.z = rot_z
+
+        for coll in ob.users_collection:
+            coll.objects.link(lat)
+
+        lat.select_set(True)
+        context.view_layer.objects.active = lat
 
         md = ob.modifiers.new("Lattice", "LATTICE")
         md.object = lat
@@ -535,11 +552,11 @@ class OBJECT_OT_lattice_profile(Operator):
             lat.location = self.BBox.loc
             lat.scale = (1.0, dim_xy * 1.5, self.BBox.dim.z)
 
-            lat.data.interpolation_type_w = "KEY_LINEAR"
+            lat_data.interpolation_type_w = "KEY_LINEAR"
 
-            lat.data.points_u = 1
-            lat.data.points_v = 7
-            lat.data.points_w = 2
+            lat_data.points_u = 1
+            lat_data.points_v = 7
+            lat_data.points_w = 2
 
             pt_co_ids = (
                 (0.42, (9, 11)),
@@ -554,9 +571,9 @@ class OBJECT_OT_lattice_profile(Operator):
             lat.location = (*self.BBox.loc.xy, self.BBox.max.z)
             lat.scale[1] = dim_xy * 1.5
 
-            lat.data.points_u = 1
-            lat.data.points_v = 7
-            lat.data.points_w = 1
+            lat_data.points_u = 1
+            lat_data.points_v = 7
+            lat_data.points_w = 1
 
             pt_co_ids = (
                 (-0.075, (2, 4)),
@@ -579,7 +596,7 @@ class OBJECT_OT_lattice_profile(Operator):
                 if is_editmesh:
                     v_ids = [v.index for v in ob.data.vertices if v.select]
                 else:
-                    v_ids = [v.index for v in ob.data.vertices if v.co[2] > 0.1]
+                    v_ids = [v.index for v in ob.data.vertices if v.co.z > 0.1]
 
                 v_gr.add(v_ids, 1.0, "ADD")
                 md.vertex_group = v_gr.name
@@ -589,7 +606,7 @@ class OBJECT_OT_lattice_profile(Operator):
 
         for co, index in pt_co_ids:
             for i in index:
-                lat.data.points[i].co_deform[2] = (co - pivot) * self.scale + pivot
+                lat_data.points[i].co_deform.z = (co - pivot) * self.scale + pivot
 
         # Add modifier to selected objects
         # ---------------------------
