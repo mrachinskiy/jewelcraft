@@ -84,7 +84,8 @@ def _deform_redstr(ob: Object, rot_x: float, rot_z: float, loc_z: float) -> None
 def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> List[Tuple[Constraint, float, float]]:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
-    collection = bpy.context.collection
+    ob_colls = ob.users_collection
+    child_colls = [(child, child.users_collection) for child in ob.children]
 
     obs = []
     app = obs.append
@@ -96,14 +97,16 @@ def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> List[T
         else:
             ob_copy = ob.copy()
 
-            collection.objects.link(ob_copy)
+            for coll in ob_colls:
+                coll.objects.link(ob_copy)
 
             if use_local_view:
                 ob_copy.local_view_set(space_data, True)
 
-            for child in ob.children:
+            for child, colls in child_colls:
                 child_copy = child.copy()
-                collection.objects.link(child_copy)
+                for coll in colls:
+                    coll.objects.link(child_copy)
                 child_copy.parent = ob_copy
                 child_copy.matrix_parent_inverse = child.matrix_parent_inverse
 
