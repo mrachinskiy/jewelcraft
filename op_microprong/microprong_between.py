@@ -35,19 +35,19 @@ def _get_obs(context):
         for con in ob.constraints:
             if con.type == "FOLLOW_PATH":
                 app((ob.dimensions.y, con.offset))
+                fp = con
                 break
 
     obs.sort(key=operator.itemgetter(1), reverse=True)
 
-    return obs, con.target
+    return obs, fp.target, fp.id_data.users_collection
 
 
 def _distribute(context, curve_length, ob):
-    obs, curve = _get_obs(context)
+    obs, curve, colls = _get_obs(context)
 
     space_data = context.space_data
     use_local_view = bool(space_data.local_view)
-    collection = context.collection
 
     base_unit = 100.0 / curve_length
     first_cycle = True
@@ -60,7 +60,8 @@ def _distribute(context, curve_length, ob):
         else:
             ob_copy = ob.copy()
 
-        collection.objects.link(ob_copy)
+        for coll in colls:
+            coll.objects.link(ob_copy)
 
         if use_local_view:
             ob_copy.local_view_set(space_data, True)
