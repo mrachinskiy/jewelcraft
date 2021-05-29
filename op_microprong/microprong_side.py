@@ -35,15 +35,14 @@ def _get_obs(context):
                 app((ob, con))
                 break
 
-    return obs
+    return obs, obs[0][0].users_collection
 
 
 def _distribute(context, ob, size):
-    obs = _get_obs(context)
+    obs, colls = _get_obs(context)
 
     space_data = context.space_data
     use_local_view = bool(space_data.local_view)
-    collection = context.collection
 
     for is_last, (parent, pcon) in iterutils.spot_last(obs):
 
@@ -52,7 +51,8 @@ def _distribute(context, ob, size):
         else:
             ob_copy = ob.copy()
 
-        collection.objects.link(ob_copy)
+        for coll in colls:
+            coll.objects.link(ob_copy)
 
         if use_local_view:
             ob_copy.local_view_set(space_data, True)
