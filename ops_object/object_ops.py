@@ -164,11 +164,13 @@ class OBJECT_OT_mirror(Operator):
 class OBJECT_OT_radial_instance(Operator):
     bl_label = "Radial Instance"
     bl_description = (
-        "Make collection instances in radial order\n"
-        "(Shortcut: hold Alt when using the tool to use existing collection)"
+        "Create collection instances of selected objects in radial order.\n"
+        "Use on existing collection instances to redo"
     )
     bl_idname = "object.jewelcraft_radial_instance"
     bl_options = {"REGISTER", "UNDO"}
+
+    new_instance = True
 
     axis: EnumProperty(
         name="Axis",
@@ -194,7 +196,7 @@ class OBJECT_OT_radial_instance(Operator):
         col = layout.column()
         col.alert = not self.collection_name
 
-        if self.use_new:
+        if self.new_instance:
             col.prop(self, "collection_name", text="Collection Name")
         else:
             col.prop_search(self, "collection_name", bpy.data, "collections")
@@ -214,52 +216,80 @@ class OBJECT_OT_radial_instance(Operator):
         if self.number == 1 or not self.collection_name:
             return {"FINISHED"}
 
-        if self.use_new:
-            coll = bpy.data.collections.new(self.collection_name)
-            context.scene.collection.children.link(coll)
+        if self.new_instance:
+            coll_rad = bpy.data.collections.new(self.collection_name)
+            context.scene.collection.children.link(coll_rad)
+            colls_inst = context.selected_objects[0].users_collection
 
             for ob in context.selected_objects:
-                for coll_orig in ob.users_collection:
-                    coll_orig.objects.unlink(ob)
-                coll.objects.link(ob)
+                for coll in ob.users_collection:
+                    coll.objects.unlink(ob)
+                coll_rad.objects.link(ob)
                 ob.select_set(False)
         else:
-            coll = bpy.data.collections[self.collection_name]
+            coll_rad = bpy.data.collections[self.collection_name]
+            colls_inst = None
 
-        cursor_loc = context.scene.cursor.location
+            for ob in context.selected_objects:
+                if ob.type == "EMPTY" and ob.instance_collection is not None:
+                    if colls_inst is None:
+                        colls_inst = ob.users_collection
+                    bpy.data.objects.remove(ob)
 
         if self.use_cursor:
-            coll.instance_offset = cursor_loc
+            coll_rad.instance_offset = context.scene.cursor.location
 
         dup_number = self.number - 1
         is_cyclic = round(self.angle, 2) == round(tau, 2)
         angle_offset = self.angle / (self.number if is_cyclic else dup_number)
-        i = int(self.axis)
         angle = angle_offset
+        i = int(self.axis)
 
         for _ in range(dup_number):
-            ob = bpy.data.objects.new(coll.name, None)
-            context.collection.objects.link(ob)
+            ob = bpy.data.objects.new(coll_rad.name, None)
+
+            for coll in colls_inst:
+                coll.objects.link(ob)
 
             ob.instance_type = "COLLECTION"
-            ob.instance_collection = coll
+            ob.instance_collection = coll_rad
             ob.rotation_euler[i] = angle
             ob.select_set(True)
 
-            if self.use_cursor:
-                ob.location = cursor_loc
+            ob.location = coll_rad.instance_offset
 
             angle += angle_offset
+
+        context.view_layer.objects.active = ob
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.use_new = not event.alt
+        if not context.selected_objects:
+            return {"CANCELLED"}
 
-        if self.use_new:
-            if not context.selected_objects:
-                return {"CANCELLED"}
-            self.collection_name = context.object.name
+        obs = [
+            ob for ob in context.selected_objects
+            if ob.type == "EMPTY" and ob.instance_collection is not None
+        ]
+
+        if obs:
+            self.new_instance = False
+            self.use_cursor = False
+            self.number = len(obs) + 1
+            self.collection_name = obs[0].instance_collection.name
+
+            if self.number > 2:
+                ob1, ob2 = obs[:2]
+                mat1 = ob1.matrix_local.to_quaternion().to_matrix()
+                mat2 = ob2.matrix_local.to_quaternion().to_matrix()
+
+                for i in range(3):
+                    if mat1.col[i] == mat2.col[i]:
+                        self.axis = str(i)
+                        break
+        else:
+            self.collection_name = context.selected_objects[0].name
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)

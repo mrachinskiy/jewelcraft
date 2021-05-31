@@ -137,7 +137,7 @@
     "Measured object": "Objet mesuré",
     "Measurement type": "Type de mesure",
     "Select material": "Sélectionner la matière",
-    "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)": "Trier les intance de la collection dans l'ordre radial\n (Raccourci: presser la touche Atl en utilisant cet outil pour utiliser une collection existante)",
+    // "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo": "",
     // "Asset preview image size when creating new assets": "",
     // "Asset preview scale in sidebar": "",
     // "Filter by name": "",

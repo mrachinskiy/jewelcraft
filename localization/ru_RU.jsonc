@@ -163,8 +163,8 @@
     "Measured object": "Измеряемый объект",
     "Measurement type": "Тип замера",
     "Select material": "Выбрать материал",
-    "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)":
-      "Создать экземпляры коллекции в радиальном порядке\n(Горячая клавиша: удерживайте клавишу Alt при использовании инструмента для использования существующей коллекции)",
+    "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo":
+      "Создать экземпляры коллекции выделенных объектов в радиальном порядке\nИспользуйте на существующих экземплярах коллекции, чтобы переделать",
     "Asset preview image size when creating new assets":
       "Размер изображения превью ассета при создании новых ассетов",
     "Asset preview scale in sidebar": "Масштаб превью ассетов в боковой панели",
