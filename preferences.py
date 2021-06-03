@@ -323,9 +323,11 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         description="Report language",
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
+            ("ar_EG", "Arabic (ﺔﻴﺑﺮﻌﻟﺍ)", ""),
             ("en_US", "English (English)", ""),
             ("es", "Spanish (Español)", ""),
             ("fr_FR", "French (Français)", ""),
+            ("it_IT", "Italian (Italiano)", ""),
             ("ru_RU", "Russian (Русский)", ""),
             ("zh_CN", "Simplified Chinese (简体中文)", ""),
         ),

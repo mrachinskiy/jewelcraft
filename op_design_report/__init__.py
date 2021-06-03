@@ -38,6 +38,7 @@ class WM_OT_design_report(Operator):
         description="Report language",
         items=(
             ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
+            ("ar_EG", "Arabic (ﺔﻴﺑﺮﻌﻟﺍ)", ""),
             ("en_US", "English (English)", ""),
             ("es", "Spanish (Español)", ""),
             ("fr_FR", "French (Français)", ""),
