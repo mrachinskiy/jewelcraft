@@ -137,7 +137,7 @@
     "Measured object": "عنصر مقاس",
     "Measurement type": "نوع القياس",
     "Select material": "اختر المادة",
-    "Make collection instances in radial order\n(Shortcut: hold Alt when using the tool to use existing collection)": "قم بعمل نسخ من العنصر في توزيع دائري\n(الاختصار: اضغط علي ألت عند استخدام الأداة لاستخدام التجميعة الموجودة)",
+    // "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo": "",
     "Asset preview image size when creating new assets": "حجم صورة رؤية العنصر عند تكوين عناصر جديدة",
     "Asset preview scale in sidebar": "مقياس رؤية العنصر في الشريط الجانبي",
     "Filter by name": "فرز باستخدام الاسم",
