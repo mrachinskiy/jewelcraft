@@ -61,4 +61,4 @@ ASSET_FAVS_FILEPATH = os.path.join(CONFIG_DIR, "favorites.json")
 # --------------------------------
 
 
-USE_POLYLINE = bpy.app.version >= (2, 92, 0)
+USE_POLYLINE = USE_EMBOSS_STATUS = bpy.app.version >= (2, 92, 0)
