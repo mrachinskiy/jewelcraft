@@ -21,8 +21,6 @@
 
 from pathlib import Path
 
-import bpy
-
 
 preview_collections = {}
 
