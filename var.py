@@ -52,7 +52,6 @@ HTML_DESIGN_REPORT_DIR = os.path.join(ADDON_DIR, "assets", "templates", "design_
 WEIGHTING_LIB_BUILTIN_DIR = os.path.join(ADDON_DIR, "assets", "weighting")
 
 WEIGHTING_LIB_USER_DIR = os.path.join(CONFIG_DIR, "Weighting Library")
-WEIGHTING_LIB_USER_DIR_LEGACY = os.path.join(CONFIG_DIR, "Weighting Sets")  # TODO remove
 ASSET_LIBS_FILEPATH = os.path.join(CONFIG_DIR, "libraries.json")
 ASSET_FAVS_FILEPATH = os.path.join(CONFIG_DIR, "favorites.json")
 
