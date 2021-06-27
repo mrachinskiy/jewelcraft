@@ -206,21 +206,6 @@ def register():
     prefs = bpy.context.preferences.addons[__package__].preferences
     preferences.upd_asset_popover_width(prefs, None)
 
-    # Versioning TODO remove
-    # ---------------------------
-
-    if prefs.weighting_set_lib_path:
-        if (
-            prefs.weighting_lib_path == var.WEIGHTING_LIB_USER_DIR and
-            os.path.exists(prefs.weighting_set_lib_path) and
-            os.listdir(prefs.weighting_set_lib_path)
-        ):
-            prefs.weighting_lib_path = prefs.weighting_set_lib_path
-        prefs.weighting_set_lib_path = ""
-        bpy.context.preferences.is_dirty = True
-
-    # Versioning ---------------------------
-
     on_load.handler_add()
 
     # mod_update

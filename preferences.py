@@ -305,7 +305,6 @@ class Preferences(mod_update.Preferences, AddonPreferences):
         description="Hide built-in material lists from library",
         update=dynamic_list.weighting_lib_refresh,
     )
-    weighting_set_lib_path: StringProperty(default=var.WEIGHTING_LIB_USER_DIR_LEGACY)  # TODO remove
     weighting_lib_path: StringProperty(
         name="Library Folder",
         description="Custom library folder path",
