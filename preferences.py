@@ -308,7 +308,7 @@ class Preferences(mod_update.Preferences, AddonPreferences):
     weighting_lib_path: StringProperty(
         name="Library Folder",
         description="Custom library folder path",
-        default=var.WEIGHTING_LIB_USER_DIR,
+        default=str(var.WEIGHTING_LIB_USER_DIR),
         subtype="DIR_PATH",
         update=dynamic_list.weighting_lib_refresh,
     )
