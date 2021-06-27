@@ -285,8 +285,7 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
                 row.operator("wm.jewelcraft_weighting_list_set_default", text="", icon="RADIOBUT_OFF", emboss=False).load_id = item.load_id
 
             sub = row.row()
-            if var.USE_EMBOSS_STATUS:
-                sub.emboss = "UI_EMBOSS_NONE_OR_STATUS"
+            sub.emboss = "UI_EMBOSS_NONE_OR_STATUS"
 
             if item.builtin:
                 sub.label(text=item.name, text_ctxt="Jewelry")

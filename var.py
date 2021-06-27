@@ -54,10 +54,3 @@ WEIGHTING_LIB_BUILTIN_DIR = ADDON_DIR / "assets" / "weighting"
 WEIGHTING_LIB_USER_DIR = CONFIG_DIR / "Weighting Library"
 ASSET_LIBS_FILEPATH = CONFIG_DIR / "libraries.json"
 ASSET_FAVS_FILEPATH = CONFIG_DIR / "favorites.json"
-
-
-# Versioning
-# --------------------------------
-
-
-USE_POLYLINE = USE_EMBOSS_STATUS = bpy.app.version >= (2, 92, 0)

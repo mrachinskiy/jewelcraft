@@ -206,21 +206,12 @@ def _draw(self, context):
     # -----------------------------------
 
     bgl.glEnable(bgl.GL_BLEND)
-
-    if var.USE_POLYLINE:
-        shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
-    else:
-        shader = gpu.shader.from_builtin("3D_UNIFORM_COLOR")
-        bgl.glEnable(bgl.GL_LINE_SMOOTH)
-        bgl.glDepthMask(bgl.GL_FALSE)
-
     if not props.overlay_show_in_front:
         bgl.glEnable(bgl.GL_DEPTH_TEST)
 
+    shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
     shader.bind()
-
-    if var.USE_POLYLINE:
-        shader.uniform_float("viewportSize", (context.area.width, context.area.height))
+    shader.uniform_float("viewportSize", (context.area.width, context.area.height))
 
     # Main loop
     # -----------------------------------
@@ -279,11 +270,7 @@ def _draw(self, context):
                 _spacing = default_spacing
 
             shader.uniform_float("color", _color)
-
-            if var.USE_POLYLINE:
-                shader.uniform_float("lineWidth", _linewidth)
-            else:
-                bgl.glLineWidth(_linewidth)
+            shader.uniform_float("lineWidth", _linewidth)
 
             if dup.is_instance:
                 mat2 = dup.matrix_world.copy()
