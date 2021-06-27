@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
+from pathlib import Path
 
 import bpy
 
@@ -32,28 +32,28 @@ preview_collections = {}
 
 
 ADDON_ID = __package__
-ADDON_DIR = os.path.dirname(__file__)
-CONFIG_DIR = os.path.join(ADDON_DIR, ".config")
+ADDON_DIR = Path(__file__).parent
+CONFIG_DIR = ADDON_DIR / ".config"
 
-if not os.path.exists(CONFIG_DIR):
+if not CONFIG_DIR.exists():
     import sys
 
     if sys.platform == "win32":
-        CONFIG_DIR = os.path.join(os.getenv("APPDATA"), "Blender Foundation", "Blender", "JewelCraft")
+        CONFIG_DIR = Path.home() / "AppData" / "Roaming" / "Blender Foundation" / "Blender" / "JewelCraft"
     elif sys.platform == "darwin":
-        CONFIG_DIR = os.path.join(os.path.expanduser("~/Library/Application Support"), "Blender", "JewelCraft")
+        CONFIG_DIR = Path.home() / "Library" / "Application Support" / "Blender" / "JewelCraft"
     else:
-        CONFIG_DIR = os.path.join(os.path.expanduser("~/.config"), "blender", "JewelCraft")
+        CONFIG_DIR = Path.home() / ".config" / "blender" / "JewelCraft"
 
-ICONS_DIR = os.path.join(ADDON_DIR, "assets", "icons")
-GEM_ASSET_DIR = os.path.join(ADDON_DIR, "assets", "gems")
-GEM_ASSET_FILEPATH = os.path.join(GEM_ASSET_DIR, "gems.blend")
-HTML_DESIGN_REPORT_DIR = os.path.join(ADDON_DIR, "assets", "templates", "design_report")
-WEIGHTING_LIB_BUILTIN_DIR = os.path.join(ADDON_DIR, "assets", "weighting")
+GEM_ASSET_DIR = ADDON_DIR / "assets" / "gems"
+GEM_ASSET_FILEPATH = GEM_ASSET_DIR / "gems.blend"
+ICONS_DIR = ADDON_DIR / "assets" / "icons"
+HTML_DESIGN_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "design_report"
+WEIGHTING_LIB_BUILTIN_DIR = ADDON_DIR / "assets" / "weighting"
 
-WEIGHTING_LIB_USER_DIR = os.path.join(CONFIG_DIR, "Weighting Library")
-ASSET_LIBS_FILEPATH = os.path.join(CONFIG_DIR, "libraries.json")
-ASSET_FAVS_FILEPATH = os.path.join(CONFIG_DIR, "favorites.json")
+WEIGHTING_LIB_USER_DIR = CONFIG_DIR / "Weighting Library"
+ASSET_LIBS_FILEPATH = CONFIG_DIR / "libraries.json"
+ASSET_FAVS_FILEPATH = CONFIG_DIR / "favorites.json"
 
 
 # Versioning
