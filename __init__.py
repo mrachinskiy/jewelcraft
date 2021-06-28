@@ -185,6 +185,9 @@ def register():
         raise integrity_check
 
     for cls in classes:
+        if cls is ui.VIEW3D_PT_jewelcraft_assets:
+            prefs = bpy.context.preferences.addons[__package__].preferences
+            cls.bl_ui_units_x = prefs.asset_popover_width
         bpy.utils.register_class(cls)
 
     bpy.types.WindowManager.jewelcraft = PointerProperty(type=preferences.WmProperties)
@@ -198,8 +201,6 @@ def register():
     # On load
     # ---------------------------
 
-    prefs = bpy.context.preferences.addons[__package__].preferences
-    preferences.upd_asset_popover_width(prefs, None)
 
     on_load.handler_add()
 
