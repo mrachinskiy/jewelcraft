@@ -32,7 +32,10 @@ from .lib import dynamic_list, pathutils, unit
 # ---------------------------
 
 
-def _get_icon(name: str, override: Optional[float] = None) -> int:
+def _icon(name: str, override: Optional[float] = None) -> int:
+    if "icons" not in var.preview_collections:
+        dynamic_list.scan_icons()
+
     if override is not None:
         value = override
     else:
@@ -40,16 +43,6 @@ def _get_icon(name: str, override: Optional[float] = None) -> int:
 
     theme = "DARK" if value < 0.5 else "LIGHT"
     return var.preview_collections["icons"][theme + name].icon_id
-
-
-def _icon(name: str, override: Optional[float] = None) -> int:
-    global _icon
-    _icon = _get_icon
-
-    if "icons" not in var.preview_collections:
-        dynamic_list.scan_icons()
-
-    return _get_icon(name, override)
 
 
 def _icon_menu(name: str) -> int:
