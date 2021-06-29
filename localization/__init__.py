@@ -19,28 +19,44 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
-import re
-import json
-from typing import Dict, Tuple, Iterator
+import pickle
+from pathlib import Path
+from collections.abc import Iterator
 
 
-Translation = Dict[Tuple[str, str], str]
+def _po_parse(text: str) -> dict[tuple[str, str], str]:
+    import re
 
-
-def _convert(d: Dict[str, Dict[str, str]]) -> Translation:
     return {
-        (ctxt, msg_key): msg_translation
-        for ctxt, msgs in d.items()
-        for msg_key, msg_translation in msgs.items()
+        (ctxt or "*", key): msg
+        for ctxt, key, msg in re.findall(r'(?:msgctxt\s*"(.+)")?\s*msgid\s*"(.+)"\s*msgstr\s*"(.*)"', text)
+        if msg
     }
 
 
-def _walk() -> Iterator[Tuple[str, Translation]]:
-    for entry in os.scandir(os.path.dirname(__file__)):
-        if entry.is_file() and entry.name.endswith(".jsonc"):
-            with open(entry, "r", encoding="utf-8") as file:
-                yield os.path.splitext(entry.name)[0], _convert(json.loads(re.sub("//.*", "", file.read())))
+def _walk() -> Iterator[tuple[str, dict[tuple[str, str], str]]]:
+    for child in Path(__file__).parent.iterdir():
+        if child.is_file() and child.suffix == ".po":
+            with open(child, "r", encoding="utf-8") as file:
+                yield child.stem, _po_parse(file.read())
 
 
-DICTIONARY = {k: v for k, v in _walk()}
+def _init() -> dict[str, dict[tuple[str, str], str]]:
+    path = Path(__file__).parent / "__cache__.pickle"
+
+    if path.exists():
+        with open(path, "rb") as file:
+            return pickle.load(file)
+
+    dictionary = {locale: dictionary for locale, dictionary in _walk()}
+
+    from ..mod_update import localization
+    localization.extend(dictionary)
+
+    with open(path, "wb") as file:
+        pickle.dump(dictionary, file, pickle.HIGHEST_PROTOCOL)
+
+    return dictionary
+
+
+DICTIONARY = _init()

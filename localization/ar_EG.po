@@ -1,0 +1,929 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: JewelCraft 2.11\n"
+"POT-Creation-Date: 2021-06-04\n"
+"PO-Revision-Date: 2021-06-04\n"
+"Last-Translator: Ahmed Hamad\n"
+"Language-Team: Mikhail Rachinskiy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar_EG\n"
+
+msgid "Asset Manager"
+msgstr "مدير العناصر"
+
+msgid "Show Asset Name"
+msgstr "أظهر اسم العنصر"
+
+msgid "Design Report"
+msgstr "التقرير التصميمي"
+
+msgid "Report Language"
+msgstr "لغة التقرير"
+
+msgid "Gems"
+msgstr "الاحجار الكريمة"
+
+msgid "Assets"
+msgstr "العناصر"
+
+msgid "Select by Trait"
+msgstr "اختر من الخصائص"
+
+msgid "Jeweling"
+msgstr "التزيين"
+
+msgid "Weighting"
+msgstr "الأوزان"
+
+msgid "Hide Built-in Material Lists"
+msgstr "قم باخفاء قائمة المواد الافتراضية"
+
+msgid "Prongs"
+msgstr "الدعامات"
+
+msgid "Cutter"
+msgstr "أداة القطع"
+
+msgid "Library Folder"
+msgstr "مجلد المكتبة"
+
+msgid "Overrides"
+msgstr "بدائل"
+
+msgid "Line Width"
+msgstr "سمك الخط"
+
+msgid "Show Composition"
+msgstr "أظهر نسب المكونات"
+
+msgid "Show Density"
+msgstr "أظهر الكثافة"
+
+msgid "Composition"
+msgstr "مكون"
+
+msgid "Warnings"
+msgstr "تحذيرات"
+
+msgid "Show All"
+msgstr "أظهر الكل"
+
+msgid "Scene scale is not optimal"
+msgstr "مقياس المشهد غير مفضل"
+
+msgid "Unsupported unit system"
+msgstr "نظام وحدة غير مدعم"
+
+msgid "Overlapping Gems"
+msgstr "الاحجار المتداخلة"
+
+msgid "Limit By Selection"
+msgstr "حدد بالاختيار"
+
+msgid "Save To Image"
+msgstr "احفظها في صورة"
+
+msgid "Gem Map"
+msgstr "خريطة الأحجار"
+
+msgid "Gem Table"
+msgstr "جدول الأحجار"
+
+msgid "Gem Size"
+msgstr "قطر الحجر"
+
+msgid "Weight"
+msgstr "الوزن"
+
+msgid "Preview Resolution"
+msgstr "مدي الرؤية"
+
+msgid "Preview Scale"
+msgstr "مقياس الرؤية"
+
+msgid "Category is empty"
+msgstr "الفئة فارغة"
+
+msgid "Popover Width"
+msgstr ""
+
+msgid "Snap to Edges"
+msgstr "الاقتناص نحو الحواف"
+
+msgid "Spacing Overlay"
+msgstr "توقيع المسافات"
+
+msgid "Asset Name"
+msgstr "اسم العنصر"
+
+msgid "Category Name"
+msgstr "اسم الفئة"
+
+msgid "Curvature Scale"
+msgstr "مقياس الانحناء"
+
+msgid "Prong Number"
+msgstr "رقم الدعامة"
+
+msgid "Detalization"
+msgstr "التكثيف"
+
+msgid "Intersection"
+msgstr "تقاطع"
+
+msgid "Bump Scale"
+msgstr "مقياس البامب"
+
+msgid "Diameter"
+msgstr "القطر"
+
+msgid "Size Offset"
+msgstr "معامل الحجم"
+
+msgid "Girdle"
+msgstr "منطقة الحزام"
+
+msgid "Hole"
+msgstr "الفتحة السفلية"
+
+msgid "Culet"
+msgstr "كوليت"
+
+msgid "Handle"
+msgstr "الفتحة العلوية"
+
+msgid "Curve Seat"
+msgstr "الجزء السفلي المنحني"
+
+msgid "Curve Profile"
+msgstr "شكل المنحني"
+
+msgid "Bevel Corners"
+msgstr "زوايا مشطوفة"
+
+msgid "Length Offset"
+msgstr "معامل الطول"
+
+msgid "Width Offset"
+msgstr "معامل العرض"
+
+msgid "Position Offset"
+msgstr "معامل التمركز"
+
+msgid "Start Up"
+msgstr "ابدأ"
+
+msgid "Mirror Axis"
+msgstr "محور الانعكاس"
+
+msgid "Select Children"
+msgstr "اختر الأطفال"
+
+msgid "Parent to selected"
+msgstr "أنسب الأبوية للعنصر المختار"
+
+msgid "Use 3D Cursor"
+msgstr "استخدم المؤشر ثلاثي الابعاد"
+
+msgid "Collection Name"
+msgstr "اسم التجميعة"
+
+msgid "Ring Size"
+msgstr "مقاس الخاتم"
+
+msgid "USA"
+msgstr "الولايات المتحدة الأمريكية"
+
+msgid "Britain"
+msgstr "بريطانيا"
+
+msgid "Swiss"
+msgstr "سويسرا"
+
+msgid "Japan"
+msgstr "اليابان"
+
+msgid "Circumference"
+msgstr "المحيط الخارجي"
+
+msgid "Distribution (%)"
+msgstr "التوزيع (%)"
+
+msgid "Only ID"
+msgstr ""
+
+msgid "Force Edit"
+msgstr ""
+
+msgid "Zero dimensions"
+msgstr ""
+
+msgid "Action completed"
+msgstr ""
+
+msgid "No corresponding size"
+msgstr ""
+
+msgid "Wedge"
+msgstr ""
+
+msgid "Add gemstone to the scene"
+msgstr "أضف حجر كريم الي المشهد"
+
+msgid "Edit selected gems"
+msgstr "عدل الأحجار المختارة"
+
+msgid "Round diamonds only"
+msgstr "أحجار كريمة مدورة فقط"
+
+msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
+msgstr ""
+
+msgid "Only edit gem identifiers, not affecting object data and materials"
+msgstr "فقط أدوات تعديل الأحجار لا تؤثر علي بيانات العنصر والمواد"
+
+msgid "Save to file in project folder"
+msgstr "احفظه في ملف في مجلد المشروع"
+
+msgid "Use user preferences language setting"
+msgstr "استخدم اعدادات المستخدم للغة"
+
+msgid "Select gems by trait"
+msgstr "اختار الاحجار الكريمة من الخصائص"
+
+msgid "Distribute selected object along active curve"
+msgstr "وزع العنصر المختار علي طول المحني المحدد"
+
+msgid "Redistribute selected objects along curve"
+msgstr "أعد توزيع العناصر المختارة علي طول المنحني"
+
+msgid "Display weight and volume for selected mesh objects"
+msgstr "أظهر الوزن والحجم للعناصر الشبكية المختارة"
+
+msgid "Create instance face for selected objects"
+msgstr "قم بعمل نسخة من العناصر المختارة"
+
+msgid "Create size curve"
+msgstr "أنشا منحني"
+
+msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
+msgstr "مد العناصر المشكلة علي طول المنحني علي محور س ، وأيضا العمل في نظام التعديل مع النقط الشبكية المختارة"
+
+msgid "Display curve length"
+msgstr "أظهر طول المنحني"
+
+msgid "Move deformed object over or under the curve"
+msgstr "ضع العنصر المشكل أعلي أو أسفل المنحني"
+
+msgid "Mirror selected objects around one or more axes, keeping object data linked"
+msgstr "أعكس العناصر المختارة حول محور أو أكثر محافظا علي اتصال بيانات العنصر"
+
+msgid "Project selected objects onto active object using Lattice"
+msgstr "أسقط عناصر مختارة علي عنصر نشط باستخدام عنصر شبكي"
+
+msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
+msgstr "قم بتشكيل منحني العنصر النشط مع العنصر الشبكي وأيضا يعمل في نظاام التعديل مع نقاط الشبكة المختارة"
+
+msgid ""
+"Create prongs for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"قم بتكوين دعامات للأحجار الكريمة المختارة\n"
+"(اختصار: اضغط علي كنترول عند استخدام الأداة لتجنب اعادة انشاء الخصائص)"
+
+msgid ""
+"Create cutter for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"قم بانشاء ألة القطع للأحجار الكريمة المختارة\n"
+"(اختصار: اضغط علي كنترول عند استخدام الأداة لتجنب اعادة انشاء الخصائص)"
+
+msgid "Make curve start at the top"
+msgstr "قم بعمل منحني ابتدائي عند القمة"
+
+msgid "Density g/cm³"
+msgstr "الكثافة جم/ سم3"
+
+msgid "Create category"
+msgstr "كون فئة"
+
+msgid "Rename category"
+msgstr "أعد تسمية الفئة"
+
+msgid "Refresh asset UI"
+msgstr "انعاش واجهة المستخدم للعناصر"
+
+msgid "Add selected objects to asset library"
+msgstr "أضف العناصر المختارة الي مكتبة العناصر"
+
+msgid "Rename asset"
+msgstr "أعد تسمية العنصر"
+
+msgid "Remove asset from library"
+msgstr "قم بمسح العنصر من المكتبة"
+
+msgid "Replace current asset with selected objects"
+msgstr "استبدل العنصر الحالي بعناصر مختارة"
+
+msgid "Replace asset preview image"
+msgstr "استبدل صورة العنصر الملتقطة"
+
+msgid "Import selected asset"
+msgstr "قم باستيراد العنصر المختار"
+
+msgid "Asset category"
+msgstr "فئة العناصر"
+
+msgid "Custom library folder path"
+msgstr "مسار مجلد المكتبة"
+
+msgid "Show asset name in sidebar"
+msgstr "أظهر اسم العنصر في الشريط الجانبي"
+
+msgid "Show distance to nearby gems"
+msgstr "أظهر المسافة بين الأحجار الكريمة المتقاربة"
+
+msgid "Use object defined overlay settings"
+msgstr "استخدم العنصر المحدد في اعدادات التوقيع"
+
+msgid "Draw overlay in front of objects"
+msgstr "قم برسم مخطط علي العناصر"
+
+msgid "Override overlay settings for selected objects"
+msgstr "اعدادات بديلة للعناصر المحددة"
+
+msgid "Remove overrides from selected objects"
+msgstr "ازالة الاعدادات البديلة للعناصر المختارة"
+
+msgid "Add new material to the list"
+msgstr "أضف مادة جديدة الي القائمة"
+
+msgid "Display material density in the list"
+msgstr "قم باظهار كثافة المادة في القائمة"
+
+msgid "Display material composition in the list"
+msgstr "أظهر مكونات المادة في القائمة"
+
+msgid "Material name"
+msgstr "اسم المادة"
+
+msgid "Material composition"
+msgstr "مكونات المادة"
+
+msgid "Use one-dimensional lattice for even deformation"
+msgstr "استخدم عنصر شبكي أحادي البعد للتشكل"
+
+msgid "Use two-dimensional lattice for proportional deformation"
+msgstr "استخدم عنصر شبكي ثنائي الأبعاد في التشكل النسبي"
+
+msgid "Scale selected objects to given size"
+msgstr "قم باستخدام المقاس المعطي للعناصر المختارة"
+
+msgid "Move each object individually"
+msgstr "حرك كل عنصر منفردا"
+
+msgid "Enable material for weighting display"
+msgstr "قم بتفعيل المادة من أجل اظهار الوزن"
+
+msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
+msgstr "قم بتنسيب الأبوية للعنصر المستورد علي العناصر المختارة (الاختصار : اضغط ألت عندما تستخدم الأداة)"
+
+msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
+msgstr "اختر الأحجار التي لديها مسافة تداخل أقل من 0.1 مم"
+
+msgid "Show spacing guide for all visible gems"
+msgstr "قم باظهار استرشادي للمسافات لكل الأحجار المرئية"
+
+msgid "Set optimal unit settings for jewelry modelling"
+msgstr "أضبط اعدادات الوحدة المفضلة لنمذجة المجوهرات"
+
+msgid "Compose gem table and map it to gems in the scene"
+msgstr "قم بتكوين جدول للأحجار ووقعه علي الأحجار في المشهد"
+
+msgid "Present summary information about the design, including gems, sizes and weight"
+msgstr "قم بتقديم معلومات ملخصة عن التصميم تشمل الأحجار الكريمة والأحجام والأوزان"
+
+msgid "Add a new measurement"
+msgstr "أضف قياس جديد"
+
+msgid "Add new item to the list"
+msgstr "أضف عنصر جديد الي القائمة"
+
+msgid "Remove selected item"
+msgstr "قم بمسح العنصر المختار"
+
+msgid "Remove all list items"
+msgstr "قم بمسح كل عناصر القائمة"
+
+msgid "Move selected item up/down in the list"
+msgstr "قم بتحريك العنصر المختار أعلي أو لأسفل في القائمة"
+
+msgid "Measured object"
+msgstr "عنصر مقاس"
+
+msgid "Measurement type"
+msgstr "نوع القياس"
+
+msgid "Select material"
+msgstr "اختر المادة"
+
+msgid ""
+"Create collection instances of selected objects in radial order.\n"
+"Use on existing collection instances to redo"
+msgstr ""
+
+msgid "Asset preview image size when creating new assets"
+msgstr "حجم صورة رؤية العنصر عند تكوين عناصر جديدة"
+
+msgid "Asset preview scale in sidebar"
+msgstr "مقياس رؤية العنصر في الشريط الجانبي"
+
+msgid "Filter by name"
+msgstr "فرز باستخدام الاسم"
+
+msgid "Add to favorites"
+msgstr "أضف الي قائمة المفضلات"
+
+msgid "Remove from favorites"
+msgstr "قم بالازالة من قائمة المفضلات"
+
+msgid ""
+"Separate loose, center origin and fix orientation (can recover gems from STL file).\n"
+"NOTE: gem ID can be added with Edit Gem tool"
+msgstr ""
+
+msgid "Ring size format"
+msgstr "تنسيق حجم الحلقة"
+
+msgid "Create microprong cutter between selected gems"
+msgstr "أضف أداة قطع الدعامة الدقيقة بين الأحجار الكريمة المختارة"
+
+msgid "Save material list to file"
+msgstr "قم بحفظ قائمة المواد في ملف"
+
+msgid "Save material list as existing file"
+msgstr "قم بحفظ قائمة المواد للملف الموجود"
+
+msgid "Remove file"
+msgstr "قم بازالة الملف"
+
+msgid "Import materials from file"
+msgstr "قم باستيراد المواد من ملف"
+
+msgid "Import materials from default list when new scene is created"
+msgstr "قم باستيراد المواد من القائمة الافتراضية عند تكوين مشهد جديد"
+
+msgid "WARNING"
+msgstr "تحذير"
+
+msgid "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)"
+msgstr "الأحجار الكريمة من التجميعات المخفية تظهر في تقرير ( لا تستخدم الاخفاء في مساحة العرض علي التجميعات )"
+
+msgid "Possible gem instance face leftovers"
+msgstr "احتمالية وجود نسخة من حجر كريم باقية"
+
+msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
+msgstr "رموز مجهولة للاحجار ، لا يتم حساب الأوزان للأحجار المحددة(*)"
+
+msgid "Curve Length"
+msgstr "طول المنحني"
+
+msgid "At least two objects must be selected"
+msgstr "علي الأقل عنصريين يلزم اختيارهم"
+
+msgid "At least one gem object must be selected"
+msgstr "علي الأقل حجر كريم واحد يلزم اختياره"
+
+msgid "At least one mesh object must be selected"
+msgstr "علي الأقل عنصر تشابكي واحد يجب اختياره"
+
+msgid "Active object must be a curve"
+msgstr "العنصر النشط لا بد أن يكون منحني"
+
+msgid "Selected objects do not have Follow Path constraint"
+msgstr "العناصر المختارة ليس لها قيد لمسار الحركة"
+
+msgid "File not found"
+msgstr "الملف غير موجود"
+
+msgid "Name must be specified"
+msgstr "يلزم تحديد الاسم"
+
+msgid "Collection must be specified"
+msgstr "التجميعة يجب تحديدها"
+
+msgid "Overlapping gems"
+msgstr "أحجار كريمة متداخلة"
+
+msgid "{} overlaps found"
+msgstr "{} تداخلات موجودة"
+
+msgid "Optimal unit settings are in use"
+msgstr "اعدادات الوحدة المفضلة قيد الاستخدام"
+
+msgid "Volume"
+msgstr "حجم"
+
+msgid "Settings"
+msgstr "الاعدادات"
+
+msgid "Size (mm)"
+msgstr "القطر بالمم"
+
+msgid "Gem"
+msgstr "حجر كريم"
+
+msgid "Cut"
+msgstr "قطع"
+
+msgid "Qty"
+msgstr "الكمية"
+
+msgid "Sum (ct)"
+msgstr "مجموع ( قيراط )"
+
+msgid "Total"
+msgstr "كلي"
+
+msgid "Carats"
+msgstr "قيراط"
+
+msgid "Materials"
+msgstr "المواد"
+
+msgid "Notes"
+msgstr "ملاحظات"
+
+msgid "Round"
+msgstr "مدور"
+
+msgid "Oval"
+msgstr "بيضاوي"
+
+msgid "Cushion"
+msgstr "علي شكل وسادة"
+
+msgid "Pear"
+msgstr "علي شكل كمثري"
+
+msgid "Marquise"
+msgstr "ماركيز"
+
+msgid "Princess"
+msgstr "أميرة"
+
+msgid "Baguette"
+msgstr "باجيت"
+
+msgid "Square"
+msgstr "مربع"
+
+msgid "Asscher"
+msgstr "الزمرد الكولومبي"
+
+msgid "Radiant"
+msgstr "مشع"
+
+msgid "Flanders"
+msgstr "فلاندرز"
+
+msgid "Octagon"
+msgstr "مثمن"
+
+msgid "Heart"
+msgstr "قلب"
+
+msgid "Trillion"
+msgstr "تريليون"
+
+msgid "Trilliant"
+msgstr "الراين"
+
+msgid "Triangle"
+msgstr "مثلت"
+
+msgid "Alexandrite"
+msgstr "ألكسندريت"
+
+msgid "Amethyst"
+msgstr "الأماثيست"
+
+msgid "Aquamarine"
+msgstr "الأكوامارين"
+
+msgid "Citrine"
+msgstr "سيترين"
+
+msgid "Cubic Zirconia"
+msgstr "زركونيا مكعب"
+
+msgid "Diamond"
+msgstr "الماس"
+
+msgid "Emerald"
+msgstr "زمرد"
+
+msgid "Garnet"
+msgstr "العقيق"
+
+msgid "Morganite"
+msgstr "مورجانيت"
+
+msgid "Peridot"
+msgstr "الزبرجد"
+
+msgid "Quartz"
+msgstr "المرو"
+
+msgid "Ruby"
+msgstr "الياقوت"
+
+msgid "Sapphire"
+msgstr "الزفير"
+
+msgid "Spinel"
+msgstr "الإسبنيل"
+
+msgid "Tanzanite"
+msgstr "تنزانيت"
+
+msgid "Topaz"
+msgstr "توباز"
+
+msgid "Tourmaline"
+msgstr "تورمالين"
+
+msgid "Zircon"
+msgstr "الزركون"
+
+msgid "Yellow Gold 24K"
+msgstr "ذهب أصفر عيار 24"
+
+msgid "Yellow Gold 22K"
+msgstr "ذهب أصفر عيار 22"
+
+msgid "Yellow Gold 18K"
+msgstr "ذهب أصفر عيار 18"
+
+msgid "Yellow Gold 14K"
+msgstr "ذهب أصفر عيار 14"
+
+msgid "Yellow Gold 10K"
+msgstr "ذهب أصفر عيار 10"
+
+msgid "White Gold 18K Pd"
+msgstr "ذهب أبيض عيار 18 بالاديوم"
+
+msgid "White Gold 18K Ni"
+msgstr "ذهب أبيض عيار 18 نيكل"
+
+msgid "White Gold 14K Pd"
+msgstr "ذهب أبيض عيار 14 بالاديوم"
+
+msgid "White Gold 14K Ni"
+msgstr "ذهب أبيض عيار 14 نيكل"
+
+msgid "White Gold 10K"
+msgstr "ذهب أبيض عيار 10"
+
+msgid "Rose Gold 18K"
+msgstr "ذهب وردي عيار 18"
+
+msgid "Rose Gold 14K"
+msgstr "ذهب وردي عيار 14"
+
+msgid "Rose Gold 10K"
+msgstr "ذهب وردي عيار 10"
+
+msgid "Yellow Gold 999"
+msgstr "ذهب أصفر 999"
+
+msgid "Yellow Gold 958"
+msgstr "ذهب أصفر 958"
+
+msgid "Yellow Gold 750"
+msgstr "ذهب أصفر 750"
+
+msgid "Yellow Gold 585"
+msgstr "ذهب أصفر 585"
+
+msgid "Yellow Gold 375"
+msgstr "ذهب أصفر 375"
+
+msgid "White Gold 750 Pd"
+msgstr "ذهب أبيض 750 بالاديوم"
+
+msgid "White Gold 750 Ni"
+msgstr "ذهب أبيض 750 نيكل"
+
+msgid "White Gold 585 Pd"
+msgstr "ذهب أبيض 585 بالاديوم"
+
+msgid "White Gold 585 Ni"
+msgstr "ذهب أبيض 585 نيكل"
+
+msgid "Red Gold 585"
+msgstr "ذهب أحمر 585"
+
+msgid "Red Gold 375"
+msgstr "ذهب أحمر 375"
+
+msgid "Platinum 950"
+msgstr "بلاتونيوم 950"
+
+msgid "Platinum 900"
+msgstr "بلاتونيوم 900"
+
+msgid "Palladium 950"
+msgstr "بالاديوم 950"
+
+msgid "Silver 925"
+msgstr "فضة 925"
+
+msgid "Silver Sterling"
+msgstr "فضة إسترلينية"
+
+msgid "Brass"
+msgstr "النحاس"
+
+msgid "Bronze"
+msgstr "البرونز"
+
+msgid "Steel Stainless"
+msgstr "الصلب المقاوم للصدأ"
+
+msgid "Titanium"
+msgstr "التيتانيوم"
+
+msgid "mm"
+msgstr "مم"
+
+msgid "mm³"
+msgstr "مم 3"
+
+msgid "g"
+msgstr "جم"
+
+msgid "ct"
+msgstr "قيراط"
+
+msgid "pcs"
+msgstr ""
+
+msgctxt "Jewelry"
+msgid "Cut"
+msgstr "قطع"
+
+msgctxt "Jewelry"
+msgid "Diamond"
+msgstr "الماس"
+
+msgctxt "Jewelry"
+msgid "Round"
+msgstr "دائري"
+
+msgctxt "Jewelry"
+msgid "Spacing"
+msgstr "المسافة"
+
+msgctxt "Jewelry"
+msgid "Cutter"
+msgstr "أداة القطع"
+
+msgctxt "Jewelry"
+msgid "Base"
+msgstr "سبائك معدنية غير ثمينة"
+
+msgctxt "Jewelry"
+msgid "Precious"
+msgstr "سبائك ثمينة شائعة"
+
+msgctxt "Jewelry"
+msgid "Precious ГОСТ 30649-99"
+msgstr "سبائك ثمينة طبقا للمواصفات الروسية"
+
+msgctxt "Operator"
+msgid "Add Gem"
+msgstr "أضف حجر كريم"
+
+msgctxt "Operator"
+msgid "Recover Gem"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Distribute on Curve"
+msgstr "وزع علي المنحني"
+
+msgctxt "Operator"
+msgid "Prongs"
+msgstr "الدعامات"
+
+msgctxt "Operator"
+msgid "Lattice Project"
+msgstr "اسقاط الشبكية"
+
+msgctxt "Operator"
+msgid "Lattice Profile"
+msgstr "منحني الشبكية"
+
+msgctxt "Operator"
+msgid "Size Curve"
+msgstr "قطر المنحني"
+
+msgctxt "Operator"
+msgid "Stretch"
+msgstr "مد"
+
+msgctxt "Operator"
+msgid "Curve Length"
+msgstr "طول المحني"
+
+msgctxt "Operator"
+msgid "Design Report"
+msgstr "التقرير التصميمي"
+
+msgctxt "Operator"
+msgid "Import Asset"
+msgstr "استورد العنصر"
+
+msgctxt "Operator"
+msgid "Rename"
+msgstr "أعد تسمية"
+
+msgctxt "Operator"
+msgid "Replace Asset"
+msgstr "استبدل العنصر"
+
+msgctxt "Operator"
+msgid "Replace Preview"
+msgstr "استبدل المنظور"
+
+msgctxt "Operator"
+msgid "Create Category"
+msgstr "كون فئة"
+
+msgctxt "Operator"
+msgid "Rename Category"
+msgstr "أعد تسمية الفئة"
+
+msgctxt "Operator"
+msgid "Override"
+msgstr "بديل"
+
+msgctxt "Operator"
+msgid "Clear List"
+msgstr "مسح القائمة"
+
+msgctxt "Operator"
+msgid "Add New Material"
+msgstr "اضافة مادة جديدة"
+
+msgctxt "Operator"
+msgid "Overlapping"
+msgstr "التداخل"
+
+msgctxt "Operator"
+msgid "Set Units"
+msgstr "عرف الوحدات"
+
+msgctxt "Operator"
+msgid "Gem Map"
+msgstr "خريطة الأحجار"
+
+msgctxt "Operator"
+msgid "Add New Measurement"
+msgstr "اضافة قياس جديد"
+
+msgctxt "Operator"
+msgid "Add To Library"
+msgstr "أضف الي المكتبة"
+
+msgctxt "Operator"
+msgid "All"
+msgstr "كل"
+
+msgctxt "Operator"
+msgid "Calculate"
+msgstr "احسب"
+
+msgctxt "Operator"
+msgid "Microprong Cutter"
+msgstr "أداة قطع الدعامة الدقيقة"
+
+msgctxt "Operator"
+msgid "Similar"
+msgstr "مماثل"
+
+msgctxt "Operator"
+msgid "Save To File"
+msgstr "احفظه في ملف"
+
+msgctxt "Operator"
+msgid "Import"
+msgstr "قم باستيراد"
+
+msgctxt "Operator"
+msgid "Set Default"
+msgstr "ضع في الوضع الافتراضي"
