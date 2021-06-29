@@ -1,0 +1,933 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: JewelCraft 2.11\n"
+"POT-Creation-Date: 2021-06-04\n"
+"PO-Revision-Date: 2021-06-04\n"
+"Last-Translator: Mikhail Rachinskiy\n"
+"Language-Team: Mikhail Rachinskiy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru_RU\n"
+
+msgid "Asset Manager"
+msgstr "Менеджер ассетов"
+
+msgid "Show Asset Name"
+msgstr "Показывать название ассета"
+
+msgid "Design Report"
+msgstr "Отчёт изделия"
+
+msgid "Report Language"
+msgstr "Язык отчёта"
+
+msgid "Gems"
+msgstr "Камни"
+
+msgid "Assets"
+msgstr "Ассеты"
+
+msgid "Select by Trait"
+msgstr "Выделить по характеристике"
+
+msgid "Jeweling"
+msgstr "Вставки"
+
+msgid "Weighting"
+msgstr "Оценка веса"
+
+msgid "Hide Built-in Material Lists"
+msgstr "Скрыть встроенные списки материалов"
+
+msgid "Prongs"
+msgstr "Крапана"
+
+msgid "Cutter"
+msgstr "Выборка"
+
+msgid "Library Folder"
+msgstr "Каталог библиотеки"
+
+msgid "Overrides"
+msgstr "Переопределения"
+
+msgid "Line Width"
+msgstr "Ширина линии"
+
+msgid "Show Composition"
+msgstr "Показать состав"
+
+msgid "Show Density"
+msgstr "Показать плотность"
+
+msgid "Composition"
+msgstr "Состав"
+
+msgid "Warnings"
+msgstr "Предупреждения"
+
+msgid "Show All"
+msgstr "Показать все"
+
+msgid "Scene scale is not optimal"
+msgstr "Масштаб сцены не оптимален"
+
+msgid "Unsupported unit system"
+msgstr "Неподдерживаемая система единиц измерения"
+
+msgid "Overlapping Gems"
+msgstr "Пересекающиеся камни"
+
+msgid "Limit By Selection"
+msgstr "Ограничить выделением"
+
+msgid "Save To Image"
+msgstr "Сохранить в изображение"
+
+msgid "Gem Map"
+msgstr "Карта камней"
+
+msgid "Gem Table"
+msgstr "Таблица камней"
+
+msgid "Gem Size"
+msgstr "Размер камня"
+
+msgid "Weight"
+msgstr "Вес"
+
+msgid "Preview Resolution"
+msgstr "Разрешение превью"
+
+msgid "Preview Scale"
+msgstr "Масштаб превью"
+
+msgid "Category is empty"
+msgstr "Категория пуста"
+
+msgid "Popover Width"
+msgstr "Ширина всплывающей панели"
+
+msgid "Snap to Edges"
+msgstr "Привязка к рёбрам"
+
+msgid "Spacing Overlay"
+msgstr "Наложение расстояния"
+
+msgid "Asset Name"
+msgstr "Название ассета"
+
+msgid "Category Name"
+msgstr "Название категории"
+
+msgid "Curvature Scale"
+msgstr "Масштаб кривизны"
+
+msgid "Prong Number"
+msgstr "Количество корнеров"
+
+msgid "Detalization"
+msgstr "Детализация"
+
+msgid "Intersection"
+msgstr "Пересечение"
+
+msgid "Bump Scale"
+msgstr "Масштаб выпуклости"
+
+msgid "Diameter"
+msgstr "Диаметр"
+
+msgid "Size Offset"
+msgstr "Отступ размера"
+
+msgid "Girdle"
+msgstr "Рундист"
+
+msgid "Hole"
+msgstr "Отверстие"
+
+msgid "Culet"
+msgstr "Калетта"
+
+msgid "Handle"
+msgstr "Рукоять"
+
+msgid "Curve Seat"
+msgstr "Изгиб посадочного места"
+
+msgid "Curve Profile"
+msgstr "Изгиб контура"
+
+msgid "Bevel Corners"
+msgstr "Фаска углов"
+
+msgid "Length Offset"
+msgstr "Отступ длины"
+
+msgid "Width Offset"
+msgstr "Отступ ширины"
+
+msgid "Position Offset"
+msgstr "Отступ позиции"
+
+msgid "Start Up"
+msgstr "Начало сверху"
+
+msgid "Mirror Axis"
+msgstr "Оси отражения"
+
+msgid "Select Children"
+msgstr "Выделить потомков"
+
+msgid "Parent to selected"
+msgstr "Привязать к выделению"
+
+msgid "Use 3D Cursor"
+msgstr "Использовать 3D курсор"
+
+msgid "Collection Name"
+msgstr "Имя коллекции"
+
+msgid "Ring Size"
+msgstr "Размер кольца"
+
+msgid "USA"
+msgstr "США"
+
+msgid "Britain"
+msgstr "Британия"
+
+msgid "Swiss"
+msgstr "Швейцария"
+
+msgid "Japan"
+msgstr "Япония"
+
+msgid "Circumference"
+msgstr "Окружность"
+
+msgid "Distribution (%)"
+msgstr "Распределение (%)"
+
+msgid "Only ID"
+msgstr "Только идентификаторы"
+
+msgid "Force Edit"
+msgstr "Принудительное редактирование"
+
+msgid "Zero dimensions"
+msgstr "Нулевые габариты"
+
+msgid "Action completed"
+msgstr "Действие выполнено"
+
+msgid "No corresponding size"
+msgstr "Нет соответствующего размера"
+
+msgid "Wedge"
+msgstr "Клин"
+
+msgid "Add gemstone to the scene"
+msgstr "Добавить камень в сцену"
+
+msgid "Edit selected gems"
+msgstr "Редактировать выделенные камни"
+
+msgid "Round diamonds only"
+msgstr "Только бриллианты Кр-57"
+
+msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
+msgstr "Принудительно редактировать выделенные мэш объекты, можно использовать для создания камней из других объектов"
+
+msgid "Only edit gem identifiers, not affecting object data and materials"
+msgstr "Редактировать только идентификаторы камня, не затрагивая объектную информация и материалы"
+
+msgid "Save to file in project folder"
+msgstr "Сохранить в файл в каталоге проекта"
+
+msgid "Use user preferences language setting"
+msgstr "Использовать язык заданный в настройках пользователя"
+
+msgid "Select gems by trait"
+msgstr "Выделить камни по характеристике"
+
+msgid "Distribute selected object along active curve"
+msgstr "Распределить выделенный объект по активной кривой"
+
+msgid "Redistribute selected objects along curve"
+msgstr "Перераспределить выделенные объекты по кривой"
+
+msgid "Display weight and volume for selected mesh objects"
+msgstr "Показать вес и объём выделенных mesh объектов"
+
+msgid "Create instance face for selected objects"
+msgstr "Создать instance face для выделенных объектов"
+
+msgid "Create size curve"
+msgstr "Создать размерную кривую"
+
+msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
+msgstr "Растянуть деформированный объект вдоль кривой по оси X, также работает в режиме редактирования с выделенными вершинами"
+
+msgid "Display curve length"
+msgstr "Показать длину кривой"
+
+msgid "Move deformed object over or under the curve"
+msgstr "Переместить деформированные объекты под или над кривой"
+
+msgid "Mirror selected objects around one or more axes, keeping object data linked"
+msgstr "Отразить выделенные объекты относительно одной или нескольких осей, сохраняя связь данных объекта"
+
+msgid "Project selected objects onto active object using Lattice"
+msgstr "Проецировать выделенные объекты на активный объект с помощью Lattice"
+
+msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
+msgstr "Деформировать профиль активного объекта с помощью Lattice, также работает в режиме редактирования с выделенными вершинами"
+
+msgid ""
+"Create prongs for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"Создать корнера для выделенных камней\n"
+"(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)"
+
+msgid ""
+"Create cutter for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"Создать выборку для выделенных камней\n"
+"(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)"
+
+msgid "Make curve start at the top"
+msgstr "Расположить начало кривой сверху"
+
+msgid "Density g/cm³"
+msgstr "Плотность г/см³"
+
+msgid "Create category"
+msgstr "Создать категорию"
+
+msgid "Rename category"
+msgstr "Переименовать категорию"
+
+msgid "Refresh asset UI"
+msgstr "Обновить интерфейс ассетов"
+
+msgid "Add selected objects to asset library"
+msgstr "Добавить выделенные объекты в библиотеку ассетов"
+
+msgid "Rename asset"
+msgstr "Переименовать ассет"
+
+msgid "Remove asset from library"
+msgstr "Удалить ассет из библиотеки"
+
+msgid "Replace current asset with selected objects"
+msgstr "Заменить текущий ассет выделенными объектами"
+
+msgid "Replace asset preview image"
+msgstr "Заменить превью ассета"
+
+msgid "Import selected asset"
+msgstr "Импортировать выбранный ассет"
+
+msgid "Asset category"
+msgstr "Категория ассетов"
+
+msgid "Custom library folder path"
+msgstr "Путь к пользовательскому каталогу библиотеки"
+
+msgid "Show asset name in sidebar"
+msgstr "Показывать название ассета в боковой панели"
+
+msgid "Show distance to nearby gems"
+msgstr "Показывать расстояние до ближайших камней"
+
+msgid "Use object defined overlay settings"
+msgstr "Использовать настройки наложения определенные объектами"
+
+msgid "Draw overlay in front of objects"
+msgstr "Отображать наложение поверх объектов"
+
+msgid "Override overlay settings for selected objects"
+msgstr "Переопределить настройки наложения для выделенных объектов"
+
+msgid "Remove overrides from selected objects"
+msgstr "Удалить переопределения с выделенных объектов"
+
+msgid "Add new material to the list"
+msgstr "Добавить новый материал в список"
+
+msgid "Display material density in the list"
+msgstr "Отображать в списке плотность материала"
+
+msgid "Display material composition in the list"
+msgstr "Отображать в списке состав материала"
+
+msgid "Material name"
+msgstr "Название материала"
+
+msgid "Material composition"
+msgstr "Состав материала"
+
+msgid "Use one-dimensional lattice for even deformation"
+msgstr "Использовать одномерный Lattice для равномерной деформации"
+
+msgid "Use two-dimensional lattice for proportional deformation"
+msgstr "Использовать двумерный Lattice для пропорциональной деформации"
+
+msgid "Scale selected objects to given size"
+msgstr "Масштабировать выделенные объекты в заданный размер"
+
+msgid "Move each object individually"
+msgstr "Переместить каждый объект по отдельности"
+
+msgid "Enable material for weighting display"
+msgstr "Использовать материал для оценки веса"
+
+msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
+msgstr "Привязать импортированный ассет к выделенным объектам (Горячая клавиша: удерживайте Alt при использовании инструмента)"
+
+msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
+msgstr "Выделить перекрывающиеся камни или расположенные на расстоянии менее 0.1 мм друг от друга"
+
+msgid "Show spacing guide for all visible gems"
+msgstr "Показывать ориентир расстояния для всех видимых камней"
+
+msgid "Set optimal unit settings for jewelry modelling"
+msgstr "Задать оптимальные настройки единиц измерения для моделирования ювелирных изделий"
+
+msgid "Compose gem table and map it to gems in the scene"
+msgstr "Составить таблицу камней и сопоставить её с камнями в сцене"
+
+msgid "Present summary information about the design, including gems, sizes and weight"
+msgstr "Предоставить суммарную информацию об изделии, включая камни, размеры и вес"
+
+msgid "Add a new measurement"
+msgstr "Добавить новый замер"
+
+msgid "Add new item to the list"
+msgstr "Добавить новый элемент в список"
+
+msgid "Remove selected item"
+msgstr "Удалить выбранный элемент"
+
+msgid "Remove all list items"
+msgstr "Удалить все элементы списка"
+
+msgid "Move selected item up/down in the list"
+msgstr "Переместить выбранный элемент вверх/вниз по списку"
+
+msgid "Measured object"
+msgstr "Измеряемый объект"
+
+msgid "Measurement type"
+msgstr "Тип замера"
+
+msgid "Select material"
+msgstr "Выбрать материал"
+
+msgid ""
+"Create collection instances of selected objects in radial order.\n"
+"Use on existing collection instances to redo"
+msgstr ""
+"Создать экземпляры коллекции выделенных объектов в радиальном порядке\n"
+"Используйте на существующих экземплярах коллекции, чтобы переделать"
+
+msgid "Asset preview image size when creating new assets"
+msgstr "Размер изображения превью ассета при создании новых ассетов"
+
+msgid "Asset preview scale in sidebar"
+msgstr "Масштаб превью ассетов в боковой панели"
+
+msgid "Filter by name"
+msgstr "Фильтр по имени"
+
+msgid "Add to favorites"
+msgstr "Добавить в избранное"
+
+msgid "Remove from favorites"
+msgstr "Удалить из избранного"
+
+msgid ""
+"Separate loose, center origin and fix orientation (can recover gems from STL file).\n"
+"NOTE: gem ID can be added with Edit Gem tool"
+msgstr ""
+"Разделить несвязанные части, центрировать origin и исправить ориентацию (может восстанавливать камни из STL файла).\n"
+"ПРИМЕЧАНИЕ: идентификатор камня можно добавить инструментом Edit Gem"
+
+msgid "Ring size format"
+msgstr "Формат размера кольца"
+
+msgid "Create microprong cutter between selected gems"
+msgstr "Создать выборку микрокрапана между выделенными камнями"
+
+msgid "Save material list to file"
+msgstr "Сохранить список материалов в файл"
+
+msgid "Save material list as existing file"
+msgstr "Сохранить список материалов в существующий файл"
+
+msgid "Remove file"
+msgstr "Удалить файл"
+
+msgid "Import materials from file"
+msgstr "Импортировать материалы из файла"
+
+msgid "Import materials from default list when new scene is created"
+msgstr "Список материалов по умолчанию импортируется при создании новой сцены"
+
+msgid "WARNING"
+msgstr "ПРЕДУПРЕЖДЕНИЕ"
+
+msgid "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)"
+msgstr "Камни из скрытых коллекций отображаются в отчете (не используйте Hide in Viewport на коллекциях)"
+
+msgid "Possible gem instance face leftovers"
+msgstr "Возможные остатки instance face камней"
+
+msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
+msgstr "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)"
+
+msgid "Curve Length"
+msgstr "Длина кривой"
+
+msgid "At least two objects must be selected"
+msgstr "Как минимум два объекта должны быть выделены"
+
+msgid "At least one gem object must be selected"
+msgstr "Как минимум один объект камня должен быть выделен"
+
+msgid "At least one mesh object must be selected"
+msgstr "Как минимум один mesh объект должен быть выделен"
+
+msgid "Active object must be a curve"
+msgstr "Активный объект должен быть кривой"
+
+msgid "Selected objects do not have Follow Path constraint"
+msgstr "Выделенные объекты не имеют ограничение Follow Path"
+
+msgid "File not found"
+msgstr "Файл не найден"
+
+msgid "Name must be specified"
+msgstr "Имя должно быть указано"
+
+msgid "Collection must be specified"
+msgstr "Коллекция должна быть указана"
+
+msgid "Overlapping gems"
+msgstr "Пересекающиеся камни"
+
+msgid "{} overlaps found"
+msgstr "{} пересечений обнаружено"
+
+msgid "Optimal unit settings are in use"
+msgstr "Используются оптимальные настройки единиц измерения"
+
+msgid "Volume"
+msgstr "Объём"
+
+msgid "Settings"
+msgstr "Вставки"
+
+msgid "Size (mm)"
+msgstr "Размер (мм)"
+
+msgid "Gem"
+msgstr "Камень"
+
+msgid "Cut"
+msgstr "Огранка"
+
+msgid "Qty"
+msgstr "Кол."
+
+msgid "Sum (ct)"
+msgstr "В сумме (кар)"
+
+msgid "Total"
+msgstr "Всего"
+
+msgid "Carats"
+msgstr "Караты"
+
+msgid "Materials"
+msgstr "Материалы"
+
+msgid "Notes"
+msgstr "Примечания"
+
+msgid "Round"
+msgstr "Кр-57"
+
+msgid "Oval"
+msgstr "Овал"
+
+msgid "Cushion"
+msgstr "Кушон"
+
+msgid "Pear"
+msgstr "Груша"
+
+msgid "Marquise"
+msgstr "Маркиз"
+
+msgid "Princess"
+msgstr "Принцесса"
+
+msgid "Baguette"
+msgstr "Багет"
+
+msgid "Square"
+msgstr "Квадрат"
+
+msgid "Asscher"
+msgstr "Ашер"
+
+msgid "Radiant"
+msgstr "Радиант"
+
+msgid "Flanders"
+msgstr "Фландерс"
+
+msgid "Octagon"
+msgstr "Октагон"
+
+msgid "Heart"
+msgstr "Сердце"
+
+msgid "Trillion"
+msgstr "Триллион"
+
+msgid "Trilliant"
+msgstr "Триллиант"
+
+msgid "Triangle"
+msgstr "Треугольник"
+
+msgid "Alexandrite"
+msgstr "Александрит"
+
+msgid "Amethyst"
+msgstr "Аметист"
+
+msgid "Aquamarine"
+msgstr "Аквамарин"
+
+msgid "Citrine"
+msgstr "Цитрин"
+
+msgid "Cubic Zirconia"
+msgstr "Фианит"
+
+msgid "Diamond"
+msgstr "Бриллиант"
+
+msgid "Emerald"
+msgstr "Изумруд"
+
+msgid "Garnet"
+msgstr "Гранат"
+
+msgid "Morganite"
+msgstr "Морганит"
+
+msgid "Peridot"
+msgstr "Хризолит"
+
+msgid "Quartz"
+msgstr "Кварц"
+
+msgid "Ruby"
+msgstr "Рубин"
+
+msgid "Sapphire"
+msgstr "Сапфир"
+
+msgid "Spinel"
+msgstr "Шпинель"
+
+msgid "Tanzanite"
+msgstr "Танзанит"
+
+msgid "Topaz"
+msgstr "Топаз"
+
+msgid "Tourmaline"
+msgstr "Турмалин"
+
+msgid "Zircon"
+msgstr "Циркон"
+
+msgid "Yellow Gold 24K"
+msgstr "Жёлтое золото 24 кар"
+
+msgid "Yellow Gold 22K"
+msgstr "Жёлтое золото 22 кар"
+
+msgid "Yellow Gold 18K"
+msgstr "Жёлтое золото 18 кар"
+
+msgid "Yellow Gold 14K"
+msgstr "Жёлтое золото 14 кар"
+
+msgid "Yellow Gold 10K"
+msgstr "Жёлтое золото 10 кар"
+
+msgid "White Gold 18K Pd"
+msgstr "Белое золото 18 кар Pd"
+
+msgid "White Gold 18K Ni"
+msgstr "Белое золото 18 кар Ni"
+
+msgid "White Gold 14K Pd"
+msgstr "Белое золото 14 кар Pd"
+
+msgid "White Gold 14K Ni"
+msgstr "Белое золото 14 кар Ni"
+
+msgid "White Gold 10K"
+msgstr "Белое золото 10 кар"
+
+msgid "Rose Gold 18K"
+msgstr "Красное золото 18 кар"
+
+msgid "Rose Gold 14K"
+msgstr "Красное золото 14 кар"
+
+msgid "Rose Gold 10K"
+msgstr "Красное золото 10 кар"
+
+msgid "Yellow Gold 999"
+msgstr "Жёлтое золото 999"
+
+msgid "Yellow Gold 958"
+msgstr "Жёлтое золото 958"
+
+msgid "Yellow Gold 750"
+msgstr "Жёлтое золото 750"
+
+msgid "Yellow Gold 585"
+msgstr "Жёлтое золото 585"
+
+msgid "Yellow Gold 375"
+msgstr "Жёлтое золото 375"
+
+msgid "White Gold 750 Pd"
+msgstr "Белое золото 750 Pd"
+
+msgid "White Gold 750 Ni"
+msgstr "Белое золото 750 Ni"
+
+msgid "White Gold 585 Pd"
+msgstr "Белое золото 585 Pd"
+
+msgid "White Gold 585 Ni"
+msgstr "Белое золото 585 Ni"
+
+msgid "Red Gold 585"
+msgstr "Красное золото 585"
+
+msgid "Red Gold 375"
+msgstr "Красное золото 375"
+
+msgid "Platinum 950"
+msgstr "Платина 950"
+
+msgid "Platinum 900"
+msgstr "Платина 900"
+
+msgid "Palladium 950"
+msgstr "Палладий 950"
+
+msgid "Silver 925"
+msgstr "Серебро 925"
+
+msgid "Silver Sterling"
+msgstr "Серебро стерлинг"
+
+msgid "Brass"
+msgstr "Латунь"
+
+msgid "Bronze"
+msgstr "Бронза"
+
+msgid "Steel Stainless"
+msgstr "Сталь нержавеющая"
+
+msgid "Titanium"
+msgstr "Титан"
+
+msgid "mm"
+msgstr "мм"
+
+msgid "mm³"
+msgstr "мм³"
+
+msgid "g"
+msgstr "г"
+
+msgid "ct"
+msgstr "кар"
+
+msgid "pcs"
+msgstr "шт."
+
+msgctxt "Jewelry"
+msgid "Cut"
+msgstr "Огранка"
+
+msgctxt "Jewelry"
+msgid "Diamond"
+msgstr "Бриллиант"
+
+msgctxt "Jewelry"
+msgid "Round"
+msgstr "Кр-57"
+
+msgctxt "Jewelry"
+msgid "Spacing"
+msgstr "Расстояние"
+
+msgctxt "Jewelry"
+msgid "Cutter"
+msgstr "Выборка"
+
+msgctxt "Jewelry"
+msgid "Base"
+msgstr "Недрагоценные"
+
+msgctxt "Jewelry"
+msgid "Precious"
+msgstr "Драгоценные"
+
+msgctxt "Jewelry"
+msgid "Precious ГОСТ 30649-99"
+msgstr "Драгоценные ГОСТ 30649-99"
+
+msgctxt "Operator"
+msgid "Add Gem"
+msgstr "Добавить камень"
+
+msgctxt "Operator"
+msgid "Recover Gem"
+msgstr "Восстановить камень"
+
+msgctxt "Operator"
+msgid "Distribute on Curve"
+msgstr "Распределить по кривой"
+
+msgctxt "Operator"
+msgid "Prongs"
+msgstr "Крапана"
+
+msgctxt "Operator"
+msgid "Lattice Project"
+msgstr "Lattice проекция"
+
+msgctxt "Operator"
+msgid "Lattice Profile"
+msgstr "Lattice профиль"
+
+msgctxt "Operator"
+msgid "Size Curve"
+msgstr "Размерная кривая"
+
+msgctxt "Operator"
+msgid "Stretch"
+msgstr "Растянуть"
+
+msgctxt "Operator"
+msgid "Curve Length"
+msgstr "Длина кривой"
+
+msgctxt "Operator"
+msgid "Design Report"
+msgstr "Отчёт изделия"
+
+msgctxt "Operator"
+msgid "Import Asset"
+msgstr "Импортировать ассет"
+
+msgctxt "Operator"
+msgid "Rename"
+msgstr "Переименовать"
+
+msgctxt "Operator"
+msgid "Replace Asset"
+msgstr "Заменить ассет"
+
+msgctxt "Operator"
+msgid "Replace Preview"
+msgstr "Заменить превью"
+
+msgctxt "Operator"
+msgid "Create Category"
+msgstr "Создать категорию"
+
+msgctxt "Operator"
+msgid "Rename Category"
+msgstr "Переименовать категорию"
+
+msgctxt "Operator"
+msgid "Override"
+msgstr "Переопределить"
+
+msgctxt "Operator"
+msgid "Clear List"
+msgstr "Очистить список"
+
+msgctxt "Operator"
+msgid "Add New Material"
+msgstr "Добавить новый материал"
+
+msgctxt "Operator"
+msgid "Overlapping"
+msgstr "Пересекающиеся"
+
+msgctxt "Operator"
+msgid "Set Units"
+msgstr "Задать единицы измерения"
+
+msgctxt "Operator"
+msgid "Gem Map"
+msgstr "Карта Камней"
+
+msgctxt "Operator"
+msgid "Add New Measurement"
+msgstr "Добавить новый замер"
+
+msgctxt "Operator"
+msgid "Add To Library"
+msgstr "Добавить в библиотеку"
+
+msgctxt "Operator"
+msgid "All"
+msgstr "Все"
+
+msgctxt "Operator"
+msgid "Calculate"
+msgstr "Вычислить"
+
+msgctxt "Operator"
+msgid "Microprong Cutter"
+msgstr "Выборка микрокрапана"
+
+msgctxt "Operator"
+msgid "Similar"
+msgstr "Аналогичные"
+
+msgctxt "Operator"
+msgid "Save To File"
+msgstr "Сохранить в файл"
+
+msgctxt "Operator"
+msgid "Import"
+msgstr "Импортировать"
+
+msgctxt "Operator"
+msgid "Set Default"
+msgstr "Использовать по умолчанию"

@@ -1,0 +1,929 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: JewelCraft 2.11\n"
+"POT-Creation-Date: 2021-06-04\n"
+"PO-Revision-Date: 22-11-2019\n"
+"Last-Translator: émilien\n"
+"Language-Team: Mikhail Rachinskiy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
+
+msgid "Asset Manager"
+msgstr "Navigateur de ressources"
+
+msgid "Show Asset Name"
+msgstr "Affiche le nom de la Ressource"
+
+msgid "Design Report"
+msgstr ""
+
+msgid "Report Language"
+msgstr "Langue du rapport"
+
+msgid "Gems"
+msgstr "Pierres précieuses"
+
+msgid "Assets"
+msgstr "Ressources"
+
+msgid "Select by Trait"
+msgstr "Sélectionnez par trait"
+
+msgid "Jeweling"
+msgstr "Bijouterie"
+
+msgid "Weighting"
+msgstr "Poids"
+
+msgid "Hide Built-in Material Lists"
+msgstr ""
+
+msgid "Prongs"
+msgstr "Grains"
+
+msgid "Cutter"
+msgstr "Alésage"
+
+msgid "Library Folder"
+msgstr "Chemin du dossier de librairie"
+
+msgid "Overrides"
+msgstr "Utiliser les substitutions"
+
+msgid "Line Width"
+msgstr "Epaisseur de ligne"
+
+msgid "Show Composition"
+msgstr "Afficher la composition"
+
+msgid "Show Density"
+msgstr "Afficher la densité"
+
+msgid "Composition"
+msgstr ""
+
+msgid "Warnings"
+msgstr "Avertissements"
+
+msgid "Show All"
+msgstr "Tout montrer"
+
+msgid "Scene scale is not optimal"
+msgstr "L'échelle de la scène n'est pas optimal"
+
+msgid "Unsupported unit system"
+msgstr "Système d'unités non supporté"
+
+msgid "Overlapping Gems"
+msgstr "Superposition de pierres"
+
+msgid "Limit By Selection"
+msgstr "Limiter à la sélection"
+
+msgid "Save To Image"
+msgstr "Enregistrer au format image"
+
+msgid "Gem Map"
+msgstr "Plan d'empierrage"
+
+msgid "Gem Table"
+msgstr "Tableau des pierres"
+
+msgid "Gem Size"
+msgstr "Dimension des pierres"
+
+msgid "Weight"
+msgstr "Poids"
+
+msgid "Preview Resolution"
+msgstr ""
+
+msgid "Preview Scale"
+msgstr ""
+
+msgid "Category is empty"
+msgstr ""
+
+msgid "Popover Width"
+msgstr ""
+
+msgid "Snap to Edges"
+msgstr ""
+
+msgid "Spacing Overlay"
+msgstr ""
+
+msgid "Asset Name"
+msgstr "Nom de la ressources"
+
+msgid "Category Name"
+msgstr "Nom des catégories"
+
+msgid "Curvature Scale"
+msgstr "Echelle de la courbe"
+
+msgid "Prong Number"
+msgstr "Nombre de grains"
+
+msgid "Detalization"
+msgstr "Niveau de détail"
+
+msgid "Intersection"
+msgstr ""
+
+msgid "Bump Scale"
+msgstr "Niveau de boulé"
+
+msgid "Diameter"
+msgstr "Diamètre"
+
+msgid "Size Offset"
+msgstr "Décalage de taille"
+
+msgid "Girdle"
+msgstr "Feuilletis"
+
+msgid "Hole"
+msgstr "Percage"
+
+msgid "Culet"
+msgstr "Cullase"
+
+msgid "Handle"
+msgstr "Poignée"
+
+msgid "Curve Seat"
+msgstr "Siège de la courbe"
+
+msgid "Curve Profile"
+msgstr "Profil de la courbe"
+
+msgid "Bevel Corners"
+msgstr "Coins biseautés"
+
+msgid "Length Offset"
+msgstr "Décalage de longueur"
+
+msgid "Width Offset"
+msgstr "Décalage de largueur"
+
+msgid "Position Offset"
+msgstr "Décalage de la position"
+
+msgid "Start Up"
+msgstr "Démarrage"
+
+msgid "Mirror Axis"
+msgstr "Axe de symétrie"
+
+msgid "Select Children"
+msgstr "Sélectionner l'enfant"
+
+msgid "Parent to selected"
+msgstr "Parent de la sélection"
+
+msgid "Use 3D Cursor"
+msgstr "Utiliser le curseur 3D"
+
+msgid "Collection Name"
+msgstr "Nom de la collection"
+
+msgid "Ring Size"
+msgstr "Taille de doigt"
+
+msgid "USA"
+msgstr ""
+
+msgid "Britain"
+msgstr "Grande Bretagne"
+
+msgid "Swiss"
+msgstr "Suisse"
+
+msgid "Japan"
+msgstr "Japon"
+
+msgid "Circumference"
+msgstr "Périmètre"
+
+msgid "Distribution (%)"
+msgstr ""
+
+msgid "Only ID"
+msgstr ""
+
+msgid "Force Edit"
+msgstr ""
+
+msgid "Zero dimensions"
+msgstr ""
+
+msgid "Action completed"
+msgstr ""
+
+msgid "No corresponding size"
+msgstr ""
+
+msgid "Wedge"
+msgstr ""
+
+msgid "Add gemstone to the scene"
+msgstr "Ajouter une pierre précieuse à la scène"
+
+msgid "Edit selected gems"
+msgstr "Editer les pierres sélectionnées"
+
+msgid "Round diamonds only"
+msgstr ""
+
+msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
+msgstr ""
+
+msgid "Only edit gem identifiers, not affecting object data and materials"
+msgstr ""
+
+msgid "Save to file in project folder"
+msgstr ""
+
+msgid "Use user preferences language setting"
+msgstr "Utiliser les paramètres de langue des préférences utilisateur"
+
+msgid "Select gems by trait"
+msgstr "Sélectionnez des pierres par trait"
+
+msgid "Distribute selected object along active curve"
+msgstr "Distribuer l'objet sélectionné le long de la courbe active"
+
+msgid "Redistribute selected objects along curve"
+msgstr "Redistribuer les objets sélectionnés le long de la courbe"
+
+msgid "Display weight and volume for selected mesh objects"
+msgstr "Afficher le poids et le volume pour les maillages sélectionnés"
+
+msgid "Create instance face for selected objects"
+msgstr "Créer une instance de face pour les objets sélectionnés"
+
+msgid "Create size curve"
+msgstr "Créer une courbe de taille"
+
+msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
+msgstr "Étirer les objets déformés le long de la courbe sur l’axe X, fonctionne également en mode édition avec les sommets sélectionnés"
+
+msgid "Display curve length"
+msgstr "Afficher la longueur de la courbe"
+
+msgid "Move deformed object over or under the curve"
+msgstr "Déplacer l'objet déformé au dessus ou au dessous de la courbe"
+
+msgid "Mirror selected objects around one or more axes, keeping object data linked"
+msgstr "Symétriser les objets sélectionnés autour d'un ou plusieurs axes, en maintenant les données d'objets liées"
+
+msgid "Project selected objects onto active object using Lattice"
+msgstr "Projeter des objets sélectionnés sur un objet actif à l'aide de Lattice"
+
+msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
+msgstr "Déformer le profil d'objet actif avec Lattice, fonctionne également en mode édition avec les sommets sélectionnés"
+
+msgid ""
+"Create prongs for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"Créer des grains pour les pierres sélectionnées\n"
+"(Shortcut: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
+
+msgid ""
+"Create cutter for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"Créer une coupe pour les pierres sélectionnées\n"
+"(Shortcut: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
+
+msgid "Make curve start at the top"
+msgstr "Faire que la courbe commence en haut"
+
+msgid "Density g/cm³"
+msgstr "Densité g/cm³"
+
+msgid "Create category"
+msgstr "Créer une catégorie"
+
+msgid "Rename category"
+msgstr "Renommer une catégorie"
+
+msgid "Refresh asset UI"
+msgstr "Rafraichir le menu des ressources"
+
+msgid "Add selected objects to asset library"
+msgstr "Ajouter les objets sélectionnés à la bibliothèque de ressources"
+
+msgid "Rename asset"
+msgstr "Renommer la ressource"
+
+msgid "Remove asset from library"
+msgstr "Retirer la ressource de la librairie"
+
+msgid "Replace current asset with selected objects"
+msgstr "Remplacer la ressource actuelle avec les objets sélectionnés"
+
+msgid "Replace asset preview image"
+msgstr "Remplacer la vignette de la ressource"
+
+msgid "Import selected asset"
+msgstr "Importer la ressource sélectionnée"
+
+msgid "Asset category"
+msgstr "Catégorie de la ressource"
+
+msgid "Custom library folder path"
+msgstr "Chemin du dossier de la bibliothèque personnalisée"
+
+msgid "Show asset name in sidebar"
+msgstr ""
+
+msgid "Show distance to nearby gems"
+msgstr ""
+
+msgid "Use object defined overlay settings"
+msgstr "Utiliser les substitutions de widget définis pour l'objet"
+
+msgid "Draw overlay in front of objects"
+msgstr "Dessiner des widgets devant des objets"
+
+msgid "Override overlay settings for selected objects"
+msgstr "Substituer les propriétés d'affichage du widget pour les objets sélectionnés"
+
+msgid "Remove overrides from selected objects"
+msgstr "Supprimer les propriétés de substitution de widget des objets sélectionnés"
+
+msgid "Add new material to the list"
+msgstr "Ajouter un nouveau matériau à la liste"
+
+msgid "Display material density in the list"
+msgstr "Afficher la densité du matériau dans la liste"
+
+msgid "Display material composition in the list"
+msgstr "Afficher la composition du matériau dans la liste"
+
+msgid "Material name"
+msgstr "Nom du matériau"
+
+msgid "Material composition"
+msgstr "Composition du matériau"
+
+msgid "Use one-dimensional lattice for even deformation"
+msgstr "Utilisez un treillis unidimensionnel pour une déformation uniforme"
+
+msgid "Use two-dimensional lattice for proportional deformation"
+msgstr "Utiliser un treillis bidimensionnel pour une déformation proportionnelle"
+
+msgid "Scale selected objects to given size"
+msgstr "Mettre à l'échelle les objets sélectionnés à une taille donnée"
+
+msgid "Move each object individually"
+msgstr "Déplacer chaque objet individuellement"
+
+msgid "Enable material for weighting display"
+msgstr ""
+
+msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
+msgstr "Aparenter la ressource importée pour les objets sélectionnés (Raccourci: presser la touche Alt en utilisant l'outil)"
+
+msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
+msgstr "Sélectionner les pierres qui ont moins de 0,1mm de distance entre elles ou qui se superposent"
+
+msgid "Show spacing guide for all visible gems"
+msgstr "Afficher les zones d'espacement pour toutes les pierres visibles"
+
+msgid "Set optimal unit settings for jewelry modelling"
+msgstr "Définir les unités optimales pour la modélisation en Joaillerie"
+
+msgid "Compose gem table and map it to gems in the scene"
+msgstr "Composer un tableau de pierres et l'appliquer sur les pierres dans la scène"
+
+msgid "Present summary information about the design, including gems, sizes and weight"
+msgstr ""
+
+msgid "Add a new measurement"
+msgstr "Ajouter une nouvelle mesure"
+
+msgid "Add new item to the list"
+msgstr ""
+
+msgid "Remove selected item"
+msgstr "Retirer l'objet sélectionné"
+
+msgid "Remove all list items"
+msgstr "Retirer tous les objets dans la liste"
+
+msgid "Move selected item up/down in the list"
+msgstr "Déplacer les objets sélectionnés dans la liste vers le haut ou vers le bas"
+
+msgid "Measured object"
+msgstr "Objet mesuré"
+
+msgid "Measurement type"
+msgstr "Type de mesure"
+
+msgid "Select material"
+msgstr "Sélectionner la matière"
+
+msgid ""
+"Create collection instances of selected objects in radial order.\n"
+"Use on existing collection instances to redo"
+msgstr ""
+
+msgid "Asset preview image size when creating new assets"
+msgstr ""
+
+msgid "Asset preview scale in sidebar"
+msgstr ""
+
+msgid "Filter by name"
+msgstr ""
+
+msgid "Add to favorites"
+msgstr ""
+
+msgid "Remove from favorites"
+msgstr ""
+
+msgid ""
+"Separate loose, center origin and fix orientation (can recover gems from STL file).\n"
+"NOTE: gem ID can be added with Edit Gem tool"
+msgstr ""
+
+msgid "Ring size format"
+msgstr ""
+
+msgid "Create microprong cutter between selected gems"
+msgstr ""
+
+msgid "Save material list to file"
+msgstr ""
+
+msgid "Save material list as existing file"
+msgstr ""
+
+msgid "Remove file"
+msgstr ""
+
+msgid "Import materials from file"
+msgstr ""
+
+msgid "Import materials from default list when new scene is created"
+msgstr ""
+
+msgid "WARNING"
+msgstr "AVERTISSEMENT"
+
+msgid "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)"
+msgstr ""
+
+msgid "Possible gem instance face leftovers"
+msgstr "Restes d'instance de face de pierres possibles"
+
+msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
+msgstr "IDs de pierre inconnus, les carats ne sont pas calculés pour des pierres marquées (*)"
+
+msgid "Curve Length"
+msgstr "Longueur de la courbe"
+
+msgid "At least two objects must be selected"
+msgstr "Au moins deux objets doivent être sélectionnés"
+
+msgid "At least one gem object must be selected"
+msgstr "Au moins une pierre doit être sélectionnée"
+
+msgid "At least one mesh object must be selected"
+msgstr "Au moins un maillage doit être sélectionné"
+
+msgid "Active object must be a curve"
+msgstr "L'objet actif doit être une courbe"
+
+msgid "Selected objects do not have Follow Path constraint"
+msgstr "Les objets sélectionnés n'ont pas de contrainte de suivi de chemin"
+
+msgid "File not found"
+msgstr "Fichier non trouvé"
+
+msgid "Name must be specified"
+msgstr "Le nom doit être spécifié"
+
+msgid "Collection must be specified"
+msgstr "La Collection doit être spécifiée"
+
+msgid "Overlapping gems"
+msgstr "Pierres en superposition"
+
+msgid "{} overlaps found"
+msgstr "{} superpositions trouvées"
+
+msgid "Optimal unit settings are in use"
+msgstr "Les unités optimales sont définies"
+
+msgid "Volume"
+msgstr ""
+
+msgid "Settings"
+msgstr "Réglages"
+
+msgid "Size (mm)"
+msgstr "Dimension (mm)"
+
+msgid "Gem"
+msgstr "Pierre"
+
+msgid "Cut"
+msgstr "Taille"
+
+msgid "Qty"
+msgstr "Qté"
+
+msgid "Sum (ct)"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "Carats"
+msgstr ""
+
+msgid "Materials"
+msgstr "Matière"
+
+msgid "Notes"
+msgstr ""
+
+msgid "Round"
+msgstr "Rond"
+
+msgid "Oval"
+msgstr "Ovale"
+
+msgid "Cushion"
+msgstr "Coussin"
+
+msgid "Pear"
+msgstr "Poire"
+
+msgid "Marquise"
+msgstr ""
+
+msgid "Princess"
+msgstr "Princesse"
+
+msgid "Baguette"
+msgstr ""
+
+msgid "Square"
+msgstr "Carré"
+
+msgid "Asscher"
+msgstr ""
+
+msgid "Radiant"
+msgstr ""
+
+msgid "Flanders"
+msgstr ""
+
+msgid "Octagon"
+msgstr "Octaèdre"
+
+msgid "Heart"
+msgstr "Coeur"
+
+msgid "Trillion"
+msgstr "Billion"
+
+msgid "Trilliant"
+msgstr ""
+
+msgid "Triangle"
+msgstr ""
+
+msgid "Alexandrite"
+msgstr ""
+
+msgid "Amethyst"
+msgstr "Amethyste"
+
+msgid "Aquamarine"
+msgstr "Aigue-Marine"
+
+msgid "Citrine"
+msgstr ""
+
+msgid "Cubic Zirconia"
+msgstr "Zircon cubique"
+
+msgid "Diamond"
+msgstr "Diamant"
+
+msgid "Emerald"
+msgstr "Emeraude"
+
+msgid "Garnet"
+msgstr "Grenat"
+
+msgid "Morganite"
+msgstr ""
+
+msgid "Peridot"
+msgstr "Péridot"
+
+msgid "Quartz"
+msgstr ""
+
+msgid "Ruby"
+msgstr "Rubis"
+
+msgid "Sapphire"
+msgstr "Saphir"
+
+msgid "Spinel"
+msgstr "Spinelle"
+
+msgid "Tanzanite"
+msgstr ""
+
+msgid "Topaz"
+msgstr "Topaze"
+
+msgid "Tourmaline"
+msgstr ""
+
+msgid "Zircon"
+msgstr ""
+
+msgid "Yellow Gold 24K"
+msgstr "Or Jaune 24K"
+
+msgid "Yellow Gold 22K"
+msgstr "Or Jaune 22K"
+
+msgid "Yellow Gold 18K"
+msgstr "Or Jaune 18K"
+
+msgid "Yellow Gold 14K"
+msgstr "Or Jaune 14K"
+
+msgid "Yellow Gold 10K"
+msgstr "Or Jaune 10K"
+
+msgid "White Gold 18K Pd"
+msgstr "Or Blanc 18K Pd"
+
+msgid "White Gold 18K Ni"
+msgstr "Or Blanc 18K Ni"
+
+msgid "White Gold 14K Pd"
+msgstr "Or Blanc 14K Pd"
+
+msgid "White Gold 14K Ni"
+msgstr "Or Blanc 14K Ni"
+
+msgid "White Gold 10K"
+msgstr "Or Blanc 10K"
+
+msgid "Rose Gold 18K"
+msgstr "Or Rose 18K"
+
+msgid "Rose Gold 14K"
+msgstr "Or Rose 14K"
+
+msgid "Rose Gold 10K"
+msgstr "Or Rose 10K"
+
+msgid "Yellow Gold 999"
+msgstr "Or Jaune 999"
+
+msgid "Yellow Gold 958"
+msgstr "Or Jaune 958"
+
+msgid "Yellow Gold 750"
+msgstr "Or Jaune 750"
+
+msgid "Yellow Gold 585"
+msgstr "Or Jaune 585"
+
+msgid "Yellow Gold 375"
+msgstr "Or Jaune 375"
+
+msgid "White Gold 750 Pd"
+msgstr "Or Blanc 750 Pd"
+
+msgid "White Gold 750 Ni"
+msgstr "Or Blanc 750 Ni"
+
+msgid "White Gold 585 Pd"
+msgstr "Or Blanc 585 Pd"
+
+msgid "White Gold 585 Ni"
+msgstr "Or Blanc 585 Ni"
+
+msgid "Red Gold 585"
+msgstr "Or Rouge 585"
+
+msgid "Red Gold 375"
+msgstr "Or Rouge 375"
+
+msgid "Platinum 950"
+msgstr "Platine 950"
+
+msgid "Platinum 900"
+msgstr "Platine 900"
+
+msgid "Palladium 950"
+msgstr ""
+
+msgid "Silver 925"
+msgstr "Argent 925"
+
+msgid "Silver Sterling"
+msgstr "Argent Sterling"
+
+msgid "Brass"
+msgstr "Laiton"
+
+msgid "Bronze"
+msgstr ""
+
+msgid "Steel Stainless"
+msgstr "Acier Inoxydable"
+
+msgid "Titanium"
+msgstr "Titane"
+
+msgid "mm"
+msgstr ""
+
+msgid "mm³"
+msgstr ""
+
+msgid "g"
+msgstr ""
+
+msgid "ct"
+msgstr ""
+
+msgid "pcs"
+msgstr ""
+
+msgctxt "Jewelry"
+msgid "Cut"
+msgstr "Taille"
+
+msgctxt "Jewelry"
+msgid "Diamond"
+msgstr "Diamant"
+
+msgctxt "Jewelry"
+msgid "Round"
+msgstr "Rond"
+
+msgctxt "Jewelry"
+msgid "Spacing"
+msgstr "Espace"
+
+msgctxt "Jewelry"
+msgid "Cutter"
+msgstr "Alésage"
+
+msgctxt "Jewelry"
+msgid "Base"
+msgstr ""
+
+msgctxt "Jewelry"
+msgid "Precious"
+msgstr "Précieux"
+
+msgctxt "Jewelry"
+msgid "Precious ГОСТ 30649-99"
+msgstr "Précieux ГОСТ 30649-99"
+
+msgctxt "Operator"
+msgid "Add Gem"
+msgstr "Ajouter une pierre"
+
+msgctxt "Operator"
+msgid "Recover Gem"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Distribute on Curve"
+msgstr "Distribution de la courbe"
+
+msgctxt "Operator"
+msgid "Prongs"
+msgstr "Grains"
+
+msgctxt "Operator"
+msgid "Lattice Project"
+msgstr "Projection de treillis"
+
+msgctxt "Operator"
+msgid "Lattice Profile"
+msgstr "Profil du treillis"
+
+msgctxt "Operator"
+msgid "Size Curve"
+msgstr "Dimension de la courbe"
+
+msgctxt "Operator"
+msgid "Stretch"
+msgstr "Étirer"
+
+msgctxt "Operator"
+msgid "Curve Length"
+msgstr "Longueur de la courbe"
+
+msgctxt "Operator"
+msgid "Design Report"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Import Asset"
+msgstr "Importer la ressource"
+
+msgctxt "Operator"
+msgid "Rename"
+msgstr "Renommer"
+
+msgctxt "Operator"
+msgid "Replace Asset"
+msgstr "Remplacer la ressource"
+
+msgctxt "Operator"
+msgid "Replace Preview"
+msgstr "Remplacer la prévisualisation"
+
+msgctxt "Operator"
+msgid "Create Category"
+msgstr "Créer une catégorie"
+
+msgctxt "Operator"
+msgid "Rename Category"
+msgstr "Créer une catégorie"
+
+msgctxt "Operator"
+msgid "Override"
+msgstr "Substituer"
+
+msgctxt "Operator"
+msgid "Clear List"
+msgstr "Effacer la liste"
+
+msgctxt "Operator"
+msgid "Add New Material"
+msgstr "Ajouter un nouveau matériau"
+
+msgctxt "Operator"
+msgid "Overlapping"
+msgstr "Superposition"
+
+msgctxt "Operator"
+msgid "Set Units"
+msgstr "Définir les unités"
+
+msgctxt "Operator"
+msgid "Gem Map"
+msgstr "Plan d'empierrage"
+
+msgctxt "Operator"
+msgid "Add New Measurement"
+msgstr "Ajouter une nouvelle mesure"
+
+msgctxt "Operator"
+msgid "Add To Library"
+msgstr ""
+
+msgctxt "Operator"
+msgid "All"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Calculate"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Microprong Cutter"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Similar"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Save To File"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Import"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Set Default"
+msgstr ""
