@@ -75,18 +75,16 @@ Contributing
 
 ### Translations
 
-* Take `.jsonc` translation dictionary from `localization` folder, and use it as an example template for your translation.
-* Example:
-  ```jsonc
-  "Save To File": "Сохранить в файл",
-  "{} duplicates found": "{} дубликатов обнаружено",
-  "Base": "Недрагоценные",
-  // "Add To Library": "",
-  ```
-  * On the left is the original English message, with translation on the right, in this case in Russian language.
-  * Notice how original message is using Title Case formatting when translation is not, that is the difference between English and Russian UI conventions, to know formatting convention for your language just see how Blender handles it and follow the rule.
+* It is advised that you use a dedicated `.po` editor like [Poedit](https://poedit.net).
+* To create new transltation in Poedit use `File` → `New from POT/PO file`, then pick `.po` file from add-on `localization` folder (doesn't matter which one).
+* Translating tips:
+  * The UI convention for English language is to use Title Case formatting for property names and button titles, to know formatting convention for your language just see how Blender handles it and follow the rule.
+  * Preserve empty braces `{}` in translation, they used as placeholders for additional information and will not appear in UI.
   * Look out for appropriate context, `Base` for example is used in the context of materials as `Base Metal`, which in other words means `Non-Presious Metal` and should not be translated as `Basis` or `Foundation`.
-  * Commented out `//` empty entries have not been translated yet, remove double slash after filling in the translation.
+  * If you have limited amount of time to work on translation, then make sure to prioritize in the following order:
+    * Essentials: add-on sidebar UI, gem names and cuts.
+    * Good to have: tool popups and modal UI, add-on preferences, precious alloys, error messages.
+    * The rest: tooltips and other UI messages.
 * After translation is done submit it back through [issues][submit_translation].
 
 
