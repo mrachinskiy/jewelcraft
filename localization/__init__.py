@@ -26,10 +26,12 @@ from collections.abc import Iterator
 
 def _po_parse(text: str) -> dict[tuple[str, str], str]:
     import re
+    concat_multiline = text.replace('"\n"', "")
+    entries = re.findall(r'(?:msgctxt\s*"(.+)")?\s*msgid\s*"(.+)"\s*msgstr\s*"(.*)"', concat_multiline)
 
     return {
-        (ctxt or "*", key): msg
-        for ctxt, key, msg in re.findall(r'(?:msgctxt\s*"(.+)")?\s*msgid\s*"(.+)"\s*msgstr\s*"(.*)"', text)
+        (ctxt or "*", key.replace("\\n", "\n")): msg.replace("\\n", "\n")
+        for ctxt, key, msg in entries
         if msg
     }
 
@@ -48,7 +50,7 @@ def _init() -> dict[str, dict[tuple[str, str], str]]:
         with open(path, "rb") as file:
             return pickle.load(file)
 
-    dictionary = {locale: dictionary for locale, dictionary in _walk()}
+    dictionary = {locale: trnsl for locale, trnsl in _walk()}
 
     from ..mod_update import localization
     localization.extend(dictionary)
