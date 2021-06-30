@@ -19,8 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
-
 from bpy.types import Operator
 from bpy.props import StringProperty
 
@@ -52,12 +50,12 @@ class WM_OT_weighting_list_save(Operator):
             return {"CANCELLED"}
 
         lib_path = pathutils.get_weighting_lib_path()
-        filepath = pathutils.get_weighting_list_filepath(self.list_name)
+        list_path = pathutils.get_weighting_list_filepath(self.list_name)
 
-        if not os.path.exists(lib_path):
-            os.makedirs(lib_path)
+        if not lib_path.exists():
+            lib_path.mkdir(parents=True)
 
-        data.weighting_list_serialize(filepath)
+        data.weighting_list_serialize(list_path)
         dynamic_list.weighting_lib_refresh()
 
         return {"FINISHED"}
@@ -76,9 +74,9 @@ class WM_OT_weighting_list_save_as(Operator):
     list_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        filepath = pathutils.get_weighting_list_filepath(self.list_name)
-        if os.path.exists(filepath):
-            data.weighting_list_serialize(filepath)
+        list_path = pathutils.get_weighting_list_filepath(self.list_name)
+        if list_path.exists():
+            data.weighting_list_serialize(list_path)
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -95,9 +93,8 @@ class WM_OT_weighting_list_del(Operator):
     list_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        filepath = pathutils.get_weighting_list_filepath(self.list_name)
-        if os.path.exists(filepath):
-            os.remove(filepath)
+        list_path = pathutils.get_weighting_list_filepath(self.list_name)
+        list_path.unlink(missing_ok=True)
         dynamic_list.weighting_lib_refresh()
         return {"FINISHED"}
 
