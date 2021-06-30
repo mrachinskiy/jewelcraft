@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
+from pathlib import Path
 
 import bpy
 from bpy.types import PropertyGroup, AddonPreferences, Object
@@ -73,7 +73,7 @@ def upd_folder_list_serialize(self, context):
 
 
 def upd_lib_name(self, context):
-    self["name"] = os.path.basename(os.path.normpath(self.path)) or self.name
+    self["name"] = Path(self.path).name or self.name
     upd_folder_list_serialize(self, context)
 
 
@@ -96,14 +96,14 @@ def upd_material_list_rename(self, context):
     if self.name == self.name_orig:
         return
 
-    filepath_current = pathutils.get_weighting_list_filepath(self.name_orig)
-    filepath_new = pathutils.get_weighting_list_filepath(self.name)
+    path = pathutils.get_weighting_list_filepath(self.name_orig)
+    path_new = pathutils.get_weighting_list_filepath(self.name)
 
-    if not os.path.exists(filepath_current):
+    if not path.exists():
         dynamic_list.weighting_lib_refresh()
         return
 
-    os.rename(filepath_current, filepath_new)
+    path.rename(path_new)
     self.name_orig = self.name
 
 
