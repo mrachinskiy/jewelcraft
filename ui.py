@@ -309,7 +309,7 @@ class SidebarSetup:
     bl_region_type = "UI"
 
 
-class VIEW3D_PT_jewelcraft_update(mod_update.SidebarPanel, SidebarSetup, Panel):
+class VIEW3D_PT_jewelcraft_update(mod_update.Sidebar, SidebarSetup, Panel):
     bl_label = "Update"
 
 

@@ -48,8 +48,8 @@ if "bpy" in locals():
             elif child.is_dir() and not child.name.startswith((".", "__")):
 
                 if child.name in mods:
-                    importlib.reload(mods[child.name])
                     reload_recursive(child, mods[child.name].__dict__)
+                    importlib.reload(mods[child.name])
                     continue
 
                 reload_recursive(child, mods)
@@ -201,7 +201,6 @@ def register():
     # On load
     # ---------------------------
 
-
     on_load.handler_add()
 
     # mod_update
@@ -210,7 +209,6 @@ def register():
     mod_update.init(
         addon_version=bl_info["version"],
         repo_url="mrachinskiy/jewelcraft",
-        translation_dict=localization.DICTIONARY,
     )
 
     # Translations
