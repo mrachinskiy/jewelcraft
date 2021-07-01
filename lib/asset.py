@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
+from pathlib import Path
 from typing import Tuple, Set, Sequence, Union, Optional, List, Iterable
 
 import bpy
@@ -180,9 +180,9 @@ def add_material(ob: Object, name="New Material", color: Optional[Color] = None,
 # ------------------------------------
 
 
-def asset_import(filepath: str, ob_name=False, me_name=False) -> BlendData:
+def asset_import(filepath: Path, ob_name=False, me_name=False) -> BlendData:
 
-    with bpy.data.libraries.load(filepath) as (data_from, data_to):
+    with bpy.data.libraries.load(str(filepath)) as (data_from, data_to):
 
         if ob_name:
             data_to.objects = [ob_name]
@@ -203,15 +203,15 @@ def asset_import_batch(filepath: str) -> BlendData:
 
 
 def asset_export(data_blocks: Set[ID], filepath: str) -> None:
-    folder = os.path.dirname(filepath)
+    folder = Path(filepath).parent
 
-    if not os.path.exists(folder):
-        os.makedirs(folder)
+    if not folder.exists():
+        folder.mkdir(parents=True)
 
     bpy.data.libraries.write(filepath, data_blocks, compress=True)
 
 
-def render_preview(width: int, height: int, filepath: str, compression=100, gamma: Optional[float] = None) -> None:
+def render_preview(width: int, height: int, filepath: Path, compression=100, gamma: Optional[float] = None) -> None:
     scene = bpy.context.scene
     render_props = scene.render
     image_props = render_props.image_settings
@@ -219,7 +219,7 @@ def render_preview(width: int, height: int, filepath: str, compression=100, gamm
     shading_type = bpy.context.space_data.shading.type
 
     render_config = {
-        "filepath": filepath,
+        "filepath": str(filepath),
         "resolution_x": width,
         "resolution_y": height,
         "resolution_percentage": 100,

@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
+from pathlib import Path
 from functools import lru_cache
 from typing import Mapping, Optional, Tuple, FrozenSet, Union
 
@@ -53,15 +53,14 @@ def scan_icons() -> None:
 
     pcoll = bpy.utils.previews.new()
 
-    for entry in os.scandir(var.ICONS_DIR):
-        if entry.is_file() and entry.name.endswith(".png"):
-            filename = os.path.splitext(entry.name)[0]
-            pcoll.load(filename.upper(), entry.path, "IMAGE")
-        elif entry.is_dir():
-            for subentry in os.scandir(entry.path):
-                if subentry.is_file() and subentry.name.endswith(".png"):
-                    filename = entry.name + os.path.splitext(subentry.name)[0]
-                    pcoll.load(filename.upper(), subentry.path, "IMAGE")
+    for child in var.ICONS_DIR.iterdir():
+        if child.is_file() and child.suffix == ".png":
+            pcoll.load(child.stem.upper(), str(child), "IMAGE")
+        elif child.is_dir():
+            for subchild in child.iterdir():
+                if subchild.is_file() and subchild.suffix == ".png":
+                    filename = child.name + subchild.stem
+                    pcoll.load(filename.upper(), str(subchild), "IMAGE")
 
     var.preview_collections["icons"] = pcoll
 
@@ -74,7 +73,7 @@ def _get_icon(name: str) -> int:
 
 
 def _preview_get(filepath: str, pcoll: Mapping[str, ImagePreview], default: int) -> int:
-    if os.path.exists(filepath + ".png"):
+    if Path(filepath + ".png").exists():
         preview_id = str(hash(filepath))
         if preview_id not in pcoll:
             pcoll.load(preview_id, filepath + ".png", "IMAGE")
@@ -104,12 +103,12 @@ def cuts(self, context) -> EnumItems5:
 
         pcoll = bpy.utils.previews.new()
 
-        for entry in os.scandir(var.GEM_ASSET_DIR):
-            if entry.is_dir():
-                for subentry in os.scandir(entry.path):
-                    if subentry.is_file() and subentry.name.endswith(".png"):
-                        preview_id = entry.name + os.path.splitext(subentry.name)[0]
-                        pcoll.load(preview_id.upper(), subentry.path, "IMAGE")
+        for child in var.GEM_ASSET_DIR.iterdir():
+            if child.is_dir():
+                for subchild in child.iterdir():
+                    if subchild.is_file() and subchild.suffix == ".png":
+                        preview_id = child.name + subchild.stem
+                        pcoll.load(preview_id.upper(), str(subchild), "IMAGE")
 
         var.preview_collections["cuts"] = pcoll
 
@@ -166,19 +165,19 @@ def weighting_lib() -> None:
     lib.clear()
 
     if not prefs.weighting_hide_builtin_lists:
-        for entry in os.scandir(var.WEIGHTING_LIB_BUILTIN_DIR):
-            if entry.is_file() and entry.name.endswith(".json"):
+        for child in var.WEIGHTING_LIB_BUILTIN_DIR.iterdir():
+            if child.is_file() and child.suffix == ".json":
                 item = lib.add()
-                item["name"] = os.path.splitext(entry.name)[0]
+                item["name"] = child.stem
                 item.builtin = True
 
     lib_path = pathutils.get_weighting_lib_path()
 
-    if os.path.exists(lib_path):
-        for entry in os.scandir(lib_path):
-            if entry.is_file() and entry.name.endswith(".json"):
+    if lib_path.exists():
+        for child in lib_path.iterdir():
+            if child.is_file() and child.suffix == ".json":
                 item = lib.add()
-                item["name"] = item.name_orig = os.path.splitext(entry.name)[0]
+                item["name"] = item.name_orig = child.stem
 
     if lib:
         for item in lib:
@@ -227,14 +226,14 @@ def asset_folders(self, context) -> EnumItems3:
 
     folder = pathutils.get_asset_lib_path()
 
-    if not os.path.exists(folder):
+    if not folder.exists():
         _cache["asset_folders__RESULT"] = ()
         return ()
 
     list_ = tuple(
-        (entry.name, entry.name + " ", "")  # Add trailing space to deny UI translation
-        for entry in os.scandir(folder)
-        if entry.is_dir() and not entry.name.startswith(".")
+        (child.name, child.name + " ", "")  # Add trailing space to deny UI translation
+        for child in folder.iterdir()
+        if child.is_dir() and not child.name.startswith(".")
     )
 
     _cache["asset_folders__RESULT"] = list_
@@ -248,10 +247,10 @@ def asset_folders_refresh() -> None:
 
 
 @lru_cache(maxsize=32)
-def assets(lib_path: str, category: str) -> AssetItems:
-    folder = os.path.join(lib_path, category)
+def assets(lib_path: Path, category: str) -> AssetItems:
+    folder = lib_path / category
 
-    if not os.path.exists(folder):
+    if not folder.exists():
         return ()
 
     pcoll = var.preview_collections.get("assets")
@@ -265,11 +264,10 @@ def assets(lib_path: str, category: str) -> AssetItems:
     no_preview = _get_icon("NO_PREVIEW")
     favs = _favs_deserialize()
 
-    for entry in os.scandir(folder):
-        if entry.is_file() and entry.name.endswith(".blend"):
-            filename = os.path.splitext(entry.name)[0]
-            filepath = os.path.splitext(entry.path)[0]
-            app((filepath, filename, _preview_get(filepath, pcoll, no_preview), filepath in favs))
+    for child in folder.iterdir():
+        if child.is_file() and child.suffix == ".blend":
+            filepath = str(child.with_suffix(""))
+            app((filepath, child.stem, _preview_get(filepath, pcoll, no_preview), filepath in favs))
 
     var.preview_collections["assets"] = pcoll
 
@@ -282,7 +280,7 @@ def assets(lib_path: str, category: str) -> AssetItems:
 
 @lru_cache(maxsize=1)
 def favorites() -> AssetItems:
-    if not os.path.exists(var.ASSET_FAVS_FILEPATH):
+    if not var.ASSET_FAVS_FILEPATH.exists():
         return ()
 
     import json
@@ -299,8 +297,7 @@ def favorites() -> AssetItems:
 
     with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
         for filepath in json.load(file):
-            filename = os.path.basename(filepath)
-            app((filepath, filename, _preview_get(filepath, pcoll, no_preview), True))
+            app((filepath, Path(filepath).name, _preview_get(filepath, pcoll, no_preview), True))
 
     var.preview_collections["assets"] = pcoll
 
@@ -313,7 +310,7 @@ def favorites() -> AssetItems:
 
 @lru_cache(maxsize=1)
 def _favs_deserialize() -> FrozenSet[str]:
-    if not os.path.exists(var.ASSET_FAVS_FILEPATH):
+    if not var.ASSET_FAVS_FILEPATH.exists():
         return ()
 
     import json

@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
+from pathlib import Path
 from typing import Any, Iterable
 
 
@@ -34,16 +34,15 @@ def tag_row(values: Iterable, tag_name: str = "td") -> str:
 class Document:
     __slots__ = ("template", "sections", "contents")
 
-    def __init__(self, template_path: str) -> None:
+    def __init__(self, template_path: Path) -> None:
         self.template = {}
         self.sections = []
         self.contents = []
 
-        for entry in os.scandir(template_path):
-            if entry.is_file() and entry.name.endswith((".html", ".css")):
-                with open(entry, "r", encoding="utf-8") as file:
-                    name = os.path.splitext(entry.name)[0]
-                    self.template[name] = file.read()
+        for child in template_path.iterdir():
+            if child.is_file() and child.suffix in {".html", ".css"}:
+                with open(child, "r", encoding="utf-8") as file:
+                    self.template[child.stem] = file.read()
 
     def write_warning(self, title: str, warns: Iterable) -> None:
         self.contents.append(
