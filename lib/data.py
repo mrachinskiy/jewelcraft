@@ -19,8 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
 import json
+from pathlib import Path
 from typing import Callable, Iterable
 
 import bpy
@@ -36,7 +36,7 @@ def _translate_item_name(k, v):
     return v
 
 
-def ul_serialize(ul, filepath: str, keys: Iterable[str], fmt: Callable = lambda k, v: v) -> None:
+def ul_serialize(ul, filepath: Path, keys: Iterable[str], fmt: Callable = lambda k, v: v) -> None:
     data = [
         {k: fmt(k, getattr(item, k)) for k in keys}
         for item in ul.values()
@@ -46,7 +46,7 @@ def ul_serialize(ul, filepath: str, keys: Iterable[str], fmt: Callable = lambda 
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def ul_deserialize(ul, filepath: str, fmt: Callable = lambda k, v: v) -> None:
+def ul_deserialize(ul, filepath: Path, fmt: Callable = lambda k, v: v) -> None:
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
 
@@ -59,8 +59,8 @@ def ul_deserialize(ul, filepath: str, fmt: Callable = lambda k, v: v) -> None:
 
 
 def asset_libs_serialize() -> None:
-    if not os.path.exists(var.CONFIG_DIR):
-        os.makedirs(var.CONFIG_DIR)
+    if not var.CONFIG_DIR.exists():
+        var.CONFIG_DIR.mkdir(parents=True)
 
     ul_serialize(
         bpy.context.window_manager.jewelcraft.asset_libs,
@@ -70,13 +70,13 @@ def asset_libs_serialize() -> None:
 
 
 def asset_libs_deserialize() -> None:
-    if os.path.exists(var.ASSET_LIBS_FILEPATH):
+    if var.ASSET_LIBS_FILEPATH.exists():
         libs = bpy.context.window_manager.jewelcraft.asset_libs
         libs.clear()
         ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
 
 
-def weighting_list_serialize(filepath: str) -> None:
+def weighting_list_serialize(filepath: Path) -> None:
     ul_serialize(
         bpy.context.scene.jewelcraft.weighting_materials,
         filepath,
@@ -89,7 +89,7 @@ def weighting_list_deserialize(name: str) -> None:
     mats = bpy.context.scene.jewelcraft.weighting_materials
 
     if name.startswith("BUILTIN/"):
-        filepath = os.path.join(var.WEIGHTING_LIB_BUILTIN_DIR, name[len("BUILTIN/"):] + ".json")
+        filepath = var.WEIGHTING_LIB_BUILTIN_DIR / (name[len("BUILTIN/"):] + ".json")
         ul_deserialize(mats, filepath, fmt=_translate_item_name)
     else:
         filepath = pathutils.get_weighting_list_filepath(name)
