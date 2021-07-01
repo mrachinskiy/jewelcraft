@@ -19,8 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
 import tempfile
+from pathlib import Path
 
 import bpy
 from bpy_extras.image_utils import load_image
@@ -40,10 +40,10 @@ def render_map(self, context):
     padding = 30
     x = padding
     y = height - padding
-    temp_filepath = os.path.join(tempfile.gettempdir(), "gem_map_temp.png")
+    temp_filepath = Path(tempfile.gettempdir()) / "gem_map_temp.png"
 
     asset.render_preview(width, height, temp_filepath, compression=15, gamma=2.2)
-    render_image = load_image(temp_filepath)
+    render_image = load_image(str(temp_filepath))
     render_image.gl_load()
 
     mat_offscreen = Matrix()
@@ -110,19 +110,13 @@ def render_map(self, context):
     image.pixels = [v / 255 for v in buffer]
 
     if self.use_save and bpy.data.is_saved:
-        filepath = bpy.data.filepath
-        filename = os.path.splitext(os.path.basename(filepath))[0]
-        save_path = os.path.join(os.path.dirname(filepath), filename + " Gem Map.png")
-
-        image.filepath_raw = save_path
+        image.filepath_raw = str(Path(bpy.data.filepath).with_suffix("")) + " Gem Map.png"
         image.file_format = "PNG"
         image.save()
 
     render_image.gl_free()
     bpy.data.images.remove(render_image)
-
-    if os.path.exists(temp_filepath):
-        os.remove(temp_filepath)
+    temp_filepath.unlink(missing_ok=True)
 
     # Restore OpenGL defaults
     # ----------------------------
