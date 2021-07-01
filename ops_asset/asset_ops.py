@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
+from pathlib import Path
 
 import bpy
 from bpy.types import Operator
@@ -102,9 +102,9 @@ class AssetAdd:
 
         if self.is_add:
             wm_props = context.window_manager.jewelcraft
-            filepath = os.path.join(pathutils.get_asset_lib_path(), wm_props.asset_folder, self.asset_name)
+            filepath = pathutils.get_asset_lib_path() / wm_props.asset_folder / self.asset_name
         else:
-            filepath = self.filepath
+            filepath = Path(self.filepath)
 
         data_blocks = self.asset_datablocks(context)
         asset.asset_export(data_blocks, filepath + ".blend")
@@ -113,7 +113,7 @@ class AssetAdd:
             prefs = context.preferences.addons[var.ADDON_ID].preferences
             resolution = prefs.asset_preview_resolution
 
-            asset.render_preview(resolution, resolution, filepath + ".png")
+            asset.render_preview(resolution, resolution, filepath.with_suffix(".png"))
             dynamic_list.assets_refresh()
             context.area.tag_redraw()
         else:
@@ -130,7 +130,7 @@ class AssetAdd:
         if self.is_add:
             upd_asset_name(self, context)
         elif self.filepath:
-            self.asset_name = os.path.basename(self.filepath)
+            self.asset_name = Path(self.filepath).name
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
@@ -171,11 +171,8 @@ class WM_OT_asset_remove(Operator):
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        if os.path.exists(self.filepath + ".blend"):
-            os.remove(self.filepath + ".blend")
-
-        if os.path.exists(self.filepath + ".png"):
-            os.remove(self.filepath + ".png")
+        Path(self.filepath + ".blend").unlink(missing_ok=True)
+        Path(self.filepath + ".png").unlink(missing_ok=True)
 
         dynamic_list.assets_refresh(preview_id=self.filepath, favs=True)
         asset_menu_lock(context)
@@ -215,17 +212,20 @@ class WM_OT_asset_rename(Operator):
         if self.asset_name == self.name_current:
             return {"CANCELLED"}
 
-        path_current = self.filepath
-        path_new = os.path.join(os.path.dirname(self.filepath), self.asset_name)
+        path = Path(self.filepath).with_suffix(".blend")
+        path_new = path.with_stem(self.asset_name)
 
-        if not os.path.exists(path_current + ".blend"):
+        if not path.exists():
             self.report({"ERROR"}, "File not found")
             return {"CANCELLED"}
 
-        os.rename(path_current + ".blend", path_new + ".blend")
+        path.rename(path_new)
 
-        if os.path.exists(path_current + ".png"):
-            os.rename(path_current + ".png", path_new + ".png")
+        preview = path.with_suffix(".png")
+        preview_new = path_new.with_suffix(".png")
+
+        if preview.exists():
+            preview.rename(preview_new)
 
         dynamic_list.assets_refresh(favs=True)
         asset_menu_lock(context)
@@ -234,7 +234,7 @@ class WM_OT_asset_rename(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.name_current = self.asset_name = os.path.basename(self.filepath)
+        self.name_current = self.asset_name = Path(self.filepath).name
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
@@ -253,7 +253,7 @@ class WM_OT_asset_preview_replace(Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         resolution = prefs.asset_preview_resolution
 
-        asset.render_preview(resolution, resolution, self.filepath + ".png")
+        asset.render_preview(resolution, resolution, Path(self.filepath).with_suffix(".png"))
 
         dynamic_list.assets_refresh(preview_id=self.filepath)
         asset_menu_lock(context)
@@ -364,7 +364,7 @@ class Favorite:
 
         # Deserialize
 
-        if os.path.exists(var.ASSET_FAVS_FILEPATH):
+        if var.ASSET_FAVS_FILEPATH.exists():
             with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
                 data = json.load(file)
         else:
@@ -380,8 +380,8 @@ class Favorite:
 
         # Serialize
 
-        if not os.path.exists(var.CONFIG_DIR):
-            os.makedirs(var.CONFIG_DIR)
+        if not var.CONFIG_DIR.exists():
+            var.CONFIG_DIR.mkdir(parents=True)
 
         with open(var.ASSET_FAVS_FILEPATH, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
