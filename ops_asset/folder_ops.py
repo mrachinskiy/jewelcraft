@@ -19,8 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
-
 from bpy.types import Operator
 from bpy.props import StringProperty
 
@@ -50,10 +48,10 @@ class WM_OT_asset_folder_create(Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        folder = os.path.join(pathutils.get_asset_lib_path(), self.folder_name)
+        folder = pathutils.get_asset_lib_path() / self.folder_name
 
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+        if not folder.exists():
+            folder.mkdir(parents=True)
             dynamic_list.asset_folders_refresh()
             context.window_manager.jewelcraft.asset_folder = self.folder_name
             context.area.tag_redraw()
@@ -94,11 +92,11 @@ class WM_OT_asset_folder_rename(Operator):
             return {"CANCELLED"}
 
         lib_path = pathutils.get_asset_lib_path()
-        folder_current = os.path.join(lib_path, props.asset_folder)
-        folder_new = os.path.join(lib_path, self.folder_name)
+        folder = lib_path / props.asset_folder
+        folder_new = lib_path / self.folder_name
 
-        if os.path.exists(folder_current):
-            os.rename(folder_current, folder_new)
+        if folder.exists():
+            folder.rename(folder_new)
             dynamic_list.asset_folders_refresh()
             props.asset_folder = self.folder_name
             context.area.tag_redraw()
