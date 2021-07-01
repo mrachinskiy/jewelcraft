@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import os
+from pathlib import Path
 
 import bpy
 from bpy.types import Operator
@@ -93,11 +93,12 @@ class WM_OT_design_report(Operator):
             self.lang = prefs.design_report_lang
 
         if bpy.data.is_saved:
-            self.filename = os.path.splitext(os.path.basename(bpy.data.filepath))[0] + " Report"
-            self.filepath = os.path.join(os.path.dirname(bpy.data.filepath), self.filename + ".html")
+            blend_path = Path(bpy.data.filepath)
+            self.filename = blend_path.stem + " Report"
+            self.filepath = str(blend_path.parent / (self.filename + ".html"))
         else:
             self.filename = "Design Report"
-            self.filepath = os.path.join(os.path.expanduser("~"), "Design Report.html")
+            self.filepath = str(Path.home() / "Design Report.html")
 
         if event.ctrl or not bpy.data.is_saved:
             wm = context.window_manager
