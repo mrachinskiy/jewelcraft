@@ -251,7 +251,7 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
 
     def draw(self, context):
         wm_props = context.window_manager.jewelcraft
-        lib_path = pathutils.get_weighting_lib_path()
+        lib_path = str(pathutils.get_weighting_lib_path())
         dynamic_list.weighting_lib()
 
         layout = self.layout
