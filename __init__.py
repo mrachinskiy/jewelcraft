@@ -33,16 +33,15 @@ bl_info = {
 
 
 if "bpy" in locals():
-    mod_essentials.reload_recursive(var.ADDON_DIR, locals())
+    _essential.reload_recursive(var.ADDON_DIR, locals())
 else:
     import bpy
     from bpy.props import PointerProperty
 
     from . import var
-    from .lib import mod_essentials, on_load
+    from .lib import _essential, on_load
 
-    mod_essentials.check_path(var.ICONS_DIR)
-    mod_essentials.check_ver(bl_info)
+    _essential.check(var.ICONS_DIR, bl_info["blender"])
 
     from . import (
         ui,
