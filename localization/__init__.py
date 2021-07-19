@@ -52,8 +52,8 @@ def _init() -> dict[str, dict[tuple[str, str], str]]:
 
     dictionary = {locale: trnsl for locale, trnsl in _walk()}
 
-    from ..mod_update import localization
-    localization.extend(dictionary)
+    from .. import mod_update
+    mod_update.localization_extend(dictionary)
 
     with open(path, "wb") as file:
         pickle.dump(dictionary, file, pickle.HIGHEST_PROTOCOL)

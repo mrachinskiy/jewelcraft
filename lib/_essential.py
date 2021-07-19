@@ -1,6 +1,6 @@
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
-#  Common add-on utility functions.
+#  Essential utility functions.
 #  Copyright (C) 2021  Mikhail Rachinskiy
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-# v1.0.0
+# v1.1.0
 
 
 from pathlib import Path
@@ -46,22 +46,15 @@ def reload_recursive(path: Path, mods: dict[str, Any]) -> None:
             reload_recursive(child, mods)
 
 
-def check_path(path: Path) -> None:
-    if not path.exists():
-        msg = " !!! ".join(["READ INSTALLATION GUIDE"] * 3)
-        integrity_check = FileNotFoundError(f"\n\n!!! {msg} !!!\n")
-        raise integrity_check
+def check(*args: Any) -> None:
+    for arg in args:
 
+        if isinstance(arg, Path) and not arg.exists():
+            msg = "READ INSTALLATION GUIDE"
+            error = FileNotFoundError(f"\n\n!!! {msg} !!! {msg} !!! {msg} !!!\n")
+            raise error
 
-def check_ver(info: dict[str, Any]) -> None:
-    if info["blender"] > bpy.app.version:
-
-        name = info["name"].upper()
-        ver = ".".join(str(x) for x in info["version"][:2])
-        ver_req = ".".join(str(x) for x in info["blender"][:2])
-
-        requirements_check = RuntimeError(
-            f"\n\n!!! BLENDER {ver_req} IS REQUIRED FOR {name} {ver} !!!\n"
-        )
-
-        raise requirements_check
+        if isinstance(arg, tuple) and arg > bpy.app.version:
+            ver = "{}.{}".format(*arg)
+            error = RuntimeError(f"\n\n!!! BLENDER {ver} IS REQUIRED !!!\n")
+            raise error
