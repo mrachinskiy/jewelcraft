@@ -19,9 +19,10 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-# v1.1.0
+# v1.1.1
 
 
+from __future__ import annotations
 from pathlib import Path
 from typing import Any
 

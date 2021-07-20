@@ -39,7 +39,7 @@ else:
     from bpy.props import PointerProperty
 
     from . import var
-    from .lib import _essential, on_load
+    from .lib import _essential
 
     _essential.check(var.ICONS_DIR, bl_info["blender"])
 
@@ -61,6 +61,7 @@ else:
         ops_utils,
         ops_weighting,
     )
+    from .lib import on_load
 
 
 classes = (
