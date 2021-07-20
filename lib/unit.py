@@ -93,7 +93,7 @@ class Scale:
     def _from_scene(self, x: float) -> float:
         return x * 1000 * self.scale
 
-    def _from_scene_batch(self, values: Vector[float]) -> tuple[float, float, float]:
+    def _from_scene_batch(self, values: Vector) -> tuple[float, float, float]:
         return tuple(v * 1000 * self.scale for v in values)
 
     def _from_scene_vol(self, x: float) -> float:
@@ -102,7 +102,7 @@ class Scale:
     def _to_scene(self, x: float) -> float:
         return x / 1000 / self.scale
 
-    def _to_scene_batch(self, values: Vector[float]) -> tuple[float, float, float]:
+    def _to_scene_batch(self, values: Vector) -> tuple[float, float, float]:
         return tuple(v / 1000 / self.scale for v in values)
 
     def _to_scene_vol(self, x: float) -> float:
