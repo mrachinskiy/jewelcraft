@@ -21,7 +21,7 @@
 
 import json
 from pathlib import Path
-from typing import Callable, Iterable
+from collections.abc import Callable
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
@@ -36,7 +36,7 @@ def _translate_item_name(k, v):
     return v
 
 
-def ul_serialize(ul, filepath: Path, keys: Iterable[str], fmt: Callable = lambda k, v: v) -> None:
+def ul_serialize(ul, filepath: Path, keys: tuple[str], fmt: Callable = lambda k, v: v) -> None:
     data = [
         {k: fmt(k, getattr(item, k)) for k in keys}
         for item in ul.values()

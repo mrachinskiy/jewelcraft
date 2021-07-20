@@ -19,8 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import List, Iterable, Tuple
-
 import bpy
 from bpy.types import Object
 import bmesh
@@ -30,7 +28,7 @@ from mathutils import Matrix
 from .iterutils import pairwise_cyclic, quadwise_cyclic
 
 
-def est_volume(obs: Iterable[Object]) -> float:
+def est_volume(obs: list[Object]) -> float:
     depsgraph = bpy.context.evaluated_depsgraph_get()
     bm = bmesh.new()
 
@@ -109,18 +107,18 @@ def est_curve_length(ob: Object) -> float:
     return length
 
 
-def connect_verts(bm: BMesh, verts: Iterable[BMVert]) -> List[BMEdge]:
+def connect_verts(bm: BMesh, verts: list[BMVert]) -> list[BMEdge]:
     return [bm.edges.new(x) for x in pairwise_cyclic(verts)]
 
 
-def bridge_verts(bm: BMesh, v1: Iterable[BMVert], v2: Iterable[BMVert]) -> Tuple[List[BMEdge], List[BMFace]]:
+def bridge_verts(bm: BMesh, v1: list[BMVert], v2: list[BMVert]) -> tuple[list[BMEdge], list[BMFace]]:
     faces = [bm.faces.new(x) for x in quadwise_cyclic(v1, v2)]
     edges = [f.edges[1] for f in faces]
 
     return edges, faces
 
 
-def face_pos() -> List[Matrix]:
+def face_pos() -> list[Matrix]:
     depsgraph = bpy.context.evaluated_depsgraph_get()
     mats = []
 

@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Iterator, Tuple, List
+from collections.abc import Iterator
 
 import bpy
 from bpy.types import LayerCollection, Object
@@ -28,7 +28,7 @@ from mathutils import Vector, Matrix
 from ..lib import unit, asset
 
 
-ObjectData = Tuple[Vector, float, Matrix]
+ObjectData = tuple[Vector, float, Matrix]
 
 
 def _collection_walk(coll: LayerCollection) -> Iterator[LayerCollection]:
@@ -50,7 +50,7 @@ class Warnings:
     )
 
     def __init__(self, show_warnings: bool) -> None:
-        self.overlap_data: List[ObjectData] = []
+        self.overlap_data: list[ObjectData] = []
         self.is_unknown_id = False
         self.is_df_leftovers = False
         self.is_gem_overlap = False
@@ -85,7 +85,7 @@ class Warnings:
             self.df_leftovers = self._blank
 
     @staticmethod
-    def _gem_overlap(ob_data: List[ObjectData]) -> bool:
+    def _gem_overlap(ob_data: list[ObjectData]) -> bool:
         threshold = unit.Scale(bpy.context).to_scene(0.1)
         return asset.gem_overlap(bpy.context, ob_data, threshold, first_match=True)
 

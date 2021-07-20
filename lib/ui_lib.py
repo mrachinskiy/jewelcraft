@@ -19,10 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from __future__ import annotations
-from typing import List
-
-
 def popup_report(self, context, msg: str = "", title: str = "", icon: str = "INFO") -> None:
 
     def draw(self, context):
@@ -32,7 +28,7 @@ def popup_report(self, context, msg: str = "", title: str = "", icon: str = "INF
     context.window_manager.popup_menu(draw, title=title, icon=icon)
 
 
-def popup_report_batch(self, context, msgs: List[str] = None, title: str = "", icon: str = "INFO") -> None:
+def popup_report_batch(self, context, msgs: list[str] = None, title: str = "", icon: str = "INFO") -> None:
 
     def draw(self, context):
         layout = self.layout

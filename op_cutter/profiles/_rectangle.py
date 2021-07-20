@@ -19,15 +19,13 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple, List
-
 import bmesh
 from bmesh.types import BMesh, BMVert
 
 from ...lib import mesh
 
 
-def _add_rect(bm: BMesh, x: float, y: float, z: float) -> List[BMVert]:
+def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     return [
         bm.verts.new(co)
         for co in (
@@ -48,7 +46,7 @@ def _add_rect_bevel(
     bv_type: str,
     bv_segments: int,
     bv_profile: float,
-) -> List[BMVert]:
+) -> list[BMVert]:
     bm_temp = bmesh.new()
     vs = _add_rect(bm_temp, x, y, z)
     bm_temp.faces.new(vs)
@@ -95,12 +93,12 @@ class Section:
             self.add = self._add
 
     @staticmethod
-    def _add(bm: BMesh, size) -> Tuple[List[BMVert], List[BMVert]]:
+    def _add(bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_rect(bm, size.x, size.y, size.z1)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2
 
-    def _add_bevel(self, bm: BMesh, size) -> Tuple[List[BMVert], List[BMVert]]:
+    def _add_bevel(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_rect_bevel(
             bm,
             size.x,

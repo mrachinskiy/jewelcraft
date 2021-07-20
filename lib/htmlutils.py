@@ -20,14 +20,18 @@
 
 
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Union
 
 
-def tag(value: Any, tag_name: str) -> str:
+Value = Union[str, int, float]
+Row = tuple[Value]
+
+
+def tag(value: Value, tag_name: str) -> str:
     return f"<{tag_name}>{value}</{tag_name}>"
 
 
-def tag_row(values: Iterable, tag_name: str = "td") -> str:
+def tag_row(values: Row, tag_name: str = "td") -> str:
     return tag("".join(tag(v, tag_name) for v in values), "tr")
 
 
@@ -44,18 +48,18 @@ class Document:
                 with open(child, "r", encoding="utf-8") as file:
                     self.template[child.stem] = file.read()
 
-    def write_warning(self, title: str, warns: Iterable) -> None:
+    def write_warning(self, title: str, warns: list[str]) -> None:
         self.contents.append(
             self.template["warning"].format(title, "".join(tag(x, "li") for x in warns))
         )
 
-    def write_table(self, header: Iterable, body: Iterable[tuple], footer: Iterable) -> None:
+    def write_table(self, header: Row, body: list[Row], footer: Row) -> None:
         header = tag_row(header, "th")
         body = "".join(tag_row(x) for x in body)
 
         self.contents.append(self.template["table"].format(header, body, *footer))
 
-    def write_list(self, values: Iterable[tuple]) -> None:
+    def write_list(self, values: list[Row]) -> None:
         self.contents.append(self.template["list"].format("".join(tag_row(x) for x in values)))
 
     def write_section(self, title: str) -> None:

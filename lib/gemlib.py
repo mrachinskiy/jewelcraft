@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import NamedTuple, Tuple, Optional
+from typing import NamedTuple, Optional
 from math import pi
 
 from . import unit
@@ -28,7 +28,7 @@ from . import unit
 class Stone(NamedTuple):
     name: str
     density: float
-    color: Optional[Tuple[float, float, float, float]] = None
+    color: Optional[tuple[float, float, float, float]] = None
 
 
 class Cut(NamedTuple):
@@ -100,7 +100,7 @@ CUTS = {
 }
 
 
-def ct_calc(stone: str, cut: str, size: Tuple[float, float, float]) -> float:
+def ct_calc(stone: str, cut: str, size: tuple[float, float, float]) -> float:
     try:
         dens = unit.convert_cm3_mm3(STONES[stone].density)
         _cut = CUTS[cut]

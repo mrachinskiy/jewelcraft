@@ -20,7 +20,7 @@
 
 
 from pathlib import Path
-from typing import Tuple, Set, Sequence, Union, Optional, List, Iterable
+from typing import Union, Optional
 
 import bpy
 from bpy.types import Object, BlendData, ID, Space
@@ -30,9 +30,9 @@ from mathutils import Matrix, Vector, kdtree
 from . import mesh, unit, gemlib
 
 
-ObjectData = Tuple[Vector, float, Matrix]
-Color = Tuple[float, float, float, float]
-BoundBox = List[Vector]
+ObjectData = tuple[Vector, float, Matrix]
+Color = tuple[float, float, float, float]
+BoundBox = list[Vector]
 
 
 # Gem
@@ -63,7 +63,7 @@ def get_cut(self, ob: Object) -> None:
         self.shape_rnd = True
 
 
-def nearest_coords(rad1: float, rad2: float, mat1: Matrix, mat2: Matrix) -> Tuple[Vector, Vector]:
+def nearest_coords(rad1: float, rad2: float, mat1: Matrix, mat2: Matrix) -> tuple[Vector, Vector]:
     vec1 = mat1.inverted() @ mat2.translation
     vec1.z = 0.0
 
@@ -87,7 +87,7 @@ def calc_gap(co1: Vector, co2: Vector, loc1: Vector, dist_locs: float, rad1: flo
     return (co1 - co2).length
 
 
-def gem_overlap(context, data: Sequence[ObjectData], threshold: float, first_match=False) -> Union[Set[int], bool]:
+def gem_overlap(context, data: list[ObjectData], threshold: float, first_match=False) -> Union[set[int], bool]:
     kd = kdtree.KDTree(len(data))
 
     for i, (loc, _, _) in enumerate(data):
@@ -354,7 +354,7 @@ def bm_to_scene(bm, name="New object", color: Optional[Color] = None) -> None:
         add_material(ob, name=name, color=color)
 
 
-def ob_copy_and_parent(ob: Object, parents: Iterable[Object]) -> None:
+def ob_copy_and_parent(ob: Object, parents: list[Object]) -> None:
     is_orig = True
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
@@ -404,7 +404,7 @@ def apply_scale(ob: Object) -> None:
     ob.scale = (1.0, 1.0, 1.0)
 
 
-def mod_curve_off(ob: Object, mat: Matrix) -> Tuple[BoundBox, Optional[Object]]:
+def mod_curve_off(ob: Object, mat: Matrix) -> tuple[BoundBox, Optional[Object]]:
     curve = None
 
     for mod in ob.modifiers:
@@ -424,7 +424,7 @@ def mod_curve_off(ob: Object, mat: Matrix) -> Tuple[BoundBox, Optional[Object]]:
 class GetBoundBox:
     __slots__ = "loc", "dim", "min", "max"
 
-    def __init__(self, obs: Iterable[Object]) -> None:
+    def __init__(self, obs: list[Object]) -> None:
         bbox = []
 
         for ob in obs:

@@ -20,7 +20,8 @@
 
 
 import operator
-from typing import List, Tuple, Iterator, Optional
+from typing import Optional
+from collections.abc import Iterator
 
 import bpy
 from bpy.types import Constraint, Object
@@ -29,7 +30,7 @@ from mathutils import Matrix, Vector
 from ..lib import mesh, asset, iterutils
 
 
-def _get_obs() -> Tuple[Optional[Object], Optional[Object]]:
+def _get_obs() -> tuple[Optional[Object], Optional[Object]]:
     ob1, ob2 = bpy.context.selected_objects
     is_curve1 = ob1.type == "CURVE"
     is_curve2 = ob2.type == "CURVE"
@@ -81,7 +82,7 @@ def _deform_redstr(ob: Object, rot_x: float, rot_z: float, loc_z: float) -> None
         ob.matrix_basis.translation = mat_rot @ Vector((0.0, 0.0, dist + loc_z))
 
 
-def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> List[Tuple[Constraint, float, float]]:
+def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> list[tuple[Constraint, float, float]]:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
     ob_colls = ob.users_collection

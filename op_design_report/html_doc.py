@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Callable
+from collections.abc import Callable
 
 from .. import var
 from ..lib import htmlutils

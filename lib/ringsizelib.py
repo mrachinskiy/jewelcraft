@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Dict, Union
+from typing import Union
 from math import modf
 
 
@@ -33,7 +33,7 @@ CIR_STEP_US = 2.5535
 CIR_BASE_UK = 37.5
 CIR_STEP_UK = 1.25
 
-MAP_SIZE_JP_TO_US: Dict[SizeJP, SizeUS] = {
+MAP_SIZE_JP_TO_US: dict[SizeJP, SizeUS] = {
     1: 1,
     2: 2,
     3: 2.5,

@@ -21,7 +21,8 @@
 
 from pathlib import Path
 from functools import lru_cache
-from typing import Mapping, Optional, Tuple, FrozenSet, Union
+from typing import Optional, Union
+from collections.abc import Mapping
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
@@ -31,10 +32,10 @@ from .. import var
 from . import pathutils
 
 
-EnumItems3 = Tuple[Tuple[str, str, str], ...]
-EnumItems4 = Tuple[Tuple[str, str, str, int], ...]
-EnumItems5 = Tuple[Tuple[str, str, str, Union[str, int], int], ...]
-AssetItems = Tuple[Tuple[str, str, int, bool], ...]
+EnumItems3 = tuple[tuple[str, str, str], ...]
+EnumItems4 = tuple[tuple[str, str, str, int], ...]
+EnumItems5 = tuple[tuple[str, str, str, Union[str, int], int], ...]
+AssetItems = tuple[tuple[str, str, int, bool], ...]
 
 _cache = {}
 
@@ -309,7 +310,7 @@ def favorites() -> AssetItems:
 
 
 @lru_cache(maxsize=1)
-def _favs_deserialize() -> FrozenSet[str]:
+def _favs_deserialize() -> frozenset[str]:
     if not var.ASSET_FAVS_FILEPATH.exists():
         return ()
 

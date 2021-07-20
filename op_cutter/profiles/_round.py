@@ -19,7 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple, List
 from math import tau, sin, cos
 
 from bmesh.types import BMesh, BMVert
@@ -33,7 +32,7 @@ class Section:
     def __init__(self, operator) -> None:
         self.detalization = operator.detalization
 
-    def add(self, bm: BMesh, size) -> Tuple[List[BMVert], List[BMVert]]:
+    def add(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
         angle = tau / self.detalization
         vs1 = []
         vs2 = []
