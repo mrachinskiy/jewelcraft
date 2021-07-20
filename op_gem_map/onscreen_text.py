@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple, Optional
+from typing import Optional
 
 import bpy
 import blf
@@ -27,7 +27,7 @@ import gpu
 from gpu_extras.batch import batch_for_shader
 
 
-Color = Tuple[float, float, float]
+Color = tuple[float, float, float]
 
 
 def onscreen_gem_table(self, x: int, y: int, color: Optional[Color] = None) -> int:

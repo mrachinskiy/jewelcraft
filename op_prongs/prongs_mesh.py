@@ -19,7 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import List
 from math import pi, tau, sin, cos
 
 import bmesh
@@ -29,7 +28,7 @@ from mathutils import Matrix
 from ..lib import iterutils, mesh
 
 
-def _circle(bm: BMesh, radius: float, height: float, detalization: int) -> List[BMVert]:
+def _circle(bm: BMesh, radius: float, height: float, detalization: int) -> list[BMVert]:
     angle = tau / detalization
 
     return [
@@ -44,7 +43,7 @@ def _circle(bm: BMesh, radius: float, height: float, detalization: int) -> List[
     ]
 
 
-def _dome(bm: BMesh, radius: float, height: float, scale: float, detalization: int) -> List[BMVert]:
+def _dome(bm: BMesh, radius: float, height: float, scale: float, detalization: int) -> list[BMVert]:
     dome_resolution = max(detalization, 4) // 4 + 1
     angle = (pi / 2) / (dome_resolution - 1)
     zero_loop = True

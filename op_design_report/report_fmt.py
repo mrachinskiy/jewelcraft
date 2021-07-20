@@ -19,8 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Callable
 from math import pi
+from collections.abc import Callable
 
 from ..lib import gemlib, ringsizelib
 

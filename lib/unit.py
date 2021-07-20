@@ -19,7 +19,9 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Union, Tuple, Iterable
+from typing import Union
+
+from mathutils import Vector
 
 
 WARN_SCALE = 1
@@ -91,7 +93,7 @@ class Scale:
     def _from_scene(self, x: float) -> float:
         return x * 1000 * self.scale
 
-    def _from_scene_batch(self, values: Iterable[float]) -> Tuple[float, ...]:
+    def _from_scene_batch(self, values: Vector[float]) -> tuple[float, float, float]:
         return tuple(v * 1000 * self.scale for v in values)
 
     def _from_scene_vol(self, x: float) -> float:
@@ -100,7 +102,7 @@ class Scale:
     def _to_scene(self, x: float) -> float:
         return x / 1000 / self.scale
 
-    def _to_scene_batch(self, values: Iterable[float]) -> Tuple[float, ...]:
+    def _to_scene_batch(self, values: Vector[float]) -> tuple[float, float, float]:
         return tuple(v / 1000 / self.scale for v in values)
 
     def _to_scene_vol(self, x: float) -> float:

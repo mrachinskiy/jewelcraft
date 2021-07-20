@@ -19,7 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple
 from math import tau, sin, cos
 from functools import lru_cache
 
@@ -107,7 +106,7 @@ _CC = CacheControl()
 
 
 @lru_cache(maxsize=64)
-def _circle_cos(radius: float, mat: Matrix) -> Tuple[Vector, ...]:
+def _circle_cos(radius: float, mat: Matrix) -> tuple[Vector, ...]:
     angle = tau / 64
 
     return tuple(
@@ -124,7 +123,7 @@ def _circle_cos(radius: float, mat: Matrix) -> Tuple[Vector, ...]:
     )
 
 
-def get_df_transform(df, context, depsgraph) -> Tuple[Vector, Matrix]:
+def get_df_transform(df, context, depsgraph) -> tuple[Vector, Matrix]:
     df.update_from_editmode()
 
     if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):

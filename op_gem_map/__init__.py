@@ -19,8 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple
-
 import bpy
 from bpy.types import Operator
 from bpy.props import EnumProperty, BoolProperty
@@ -199,7 +197,7 @@ class VIEW3D_OT_gem_map(Operator):
         from . import offscreen
         offscreen.offscreen_refresh(self, context)
 
-    def get_resolution(self) -> Tuple[int, int]:
+    def get_resolution(self) -> tuple[int, int]:
         if self.is_rendering:
             resolution_scale = self.render.resolution_percentage / 100
 
@@ -211,7 +209,7 @@ class VIEW3D_OT_gem_map(Operator):
         return self.region.width, self.region.height
 
     @staticmethod
-    def rect_coords(x: float, y: float, dim_x: float, dim_y: float) -> Tuple[Tuple[float, float]]:
+    def rect_coords(x: float, y: float, dim_x: float, dim_y: float) -> tuple[tuple[float, float]]:
         return (
             (x,         y),
             (x + dim_x, y),

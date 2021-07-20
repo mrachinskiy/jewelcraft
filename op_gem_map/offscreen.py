@@ -19,8 +19,6 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple
-
 import operator
 from math import pi
 
@@ -48,12 +46,12 @@ def _gamma_correction(color):
     return [x ** 2.2 for x in color]  # NOTE T74139
 
 
-def _loc_3d_to_2d(region, region_3d, loc: Vector, view: _ViewData) -> Tuple[float, float]:
+def _loc_3d_to_2d(region, region_3d, loc: Vector, view: _ViewData) -> tuple[float, float]:
     x, y = location_3d_to_region_2d(region, region_3d, loc)
     return (x - view.offset_x) * view.scale_x, (y - view.offset_y) * view.scale_y
 
 
-def _get_frame(context, region, region_3d) -> Tuple[float, float, Vector]:
+def _get_frame(context, region, region_3d) -> tuple[float, float, Vector]:
     cam = context.scene.camera
     frame = [
         location_3d_to_region_2d(region, region_3d, cam.matrix_world @ p)

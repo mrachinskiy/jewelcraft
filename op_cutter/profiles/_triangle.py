@@ -19,7 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple, List, Iterator, Iterable
+from collections.abc import Iterator
 
 import bmesh
 from bmesh.types import BMesh, BMVert
@@ -27,7 +27,7 @@ from bmesh.types import BMesh, BMVert
 from ...lib import mesh
 
 
-def _add_tri(bm: BMesh, x: float, y: float, z: float) -> List[BMVert]:
+def _add_tri(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     return [
         bm.verts.new(co)
         for co in (
@@ -49,7 +49,7 @@ def _add_tri_bevel(
     bv_profile: float,
     curve_factor: float,
     curve_segments: int,
-) -> List[BMVert]:
+) -> list[BMVert]:
     bm_temp = bmesh.new()
     vs = _add_tri(bm_temp, x, y, 0.0)
     es = mesh.connect_verts(bm_temp, vs)
@@ -87,7 +87,7 @@ def _add_tri_bevel(
     return verts
 
 
-def _edge_loop_walk(verts: Iterable[BMVert]) -> Iterator[BMVert]:
+def _edge_loop_walk(verts: list[BMVert]) -> Iterator[BMVert]:
     v0 = v = next(iter(verts))
     e = v.link_edges[1]
     ov = e.other_vert(v)
@@ -132,12 +132,12 @@ class Section:
             self.add = self._add
 
     @staticmethod
-    def _add(bm: BMesh, size) -> Tuple[List[BMVert], List[BMVert]]:
+    def _add(bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_tri(bm, size.x, size.y, size.z1)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2
 
-    def _add_bevel(self, bm: BMesh, size) -> Tuple[List[BMVert], List[BMVert]]:
+    def _add_bevel(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_tri_bevel(
             bm,
             size.x,

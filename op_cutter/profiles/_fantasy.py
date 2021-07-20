@@ -19,13 +19,12 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Tuple, List
 from math import pi, tau, sin, cos
 
 from bmesh.types import BMesh, BMVert
 
 
-def _get_oval(detalization: int) -> List[Tuple[float, float, float]]:
+def _get_oval(detalization: int) -> list[tuple[float, float, float]]:
     angle = -tau / detalization
     return [
         (
@@ -37,7 +36,7 @@ def _get_oval(detalization: int) -> List[Tuple[float, float, float]]:
     ]
 
 
-def _get_marquise(detalization: int, mul_1: float, mul_2: float) -> List[Tuple[float, float, float]]:
+def _get_marquise(detalization: int, mul_1: float, mul_2: float) -> list[tuple[float, float, float]]:
     res = detalization // 4 + 1
     angle = (pi / 2) / (res - 1)
     m1 = 1.0
@@ -63,7 +62,7 @@ def _get_marquise(detalization: int, mul_1: float, mul_2: float) -> List[Tuple[f
     return vs
 
 
-def _get_pear(detalization: int, mul_1: float, mul_2: float) -> List[Tuple[float, float, float]]:
+def _get_pear(detalization: int, mul_1: float, mul_2: float) -> list[tuple[float, float, float]]:
     res = detalization + 1
     angle = pi / (res - 1)
     vs = []
@@ -80,7 +79,7 @@ def _get_pear(detalization: int, mul_1: float, mul_2: float) -> List[Tuple[float
     return vs
 
 
-def _get_heart(detalization: int, mul_1: float, mul_2: float, mul_3: float) -> List[Tuple[float, float, float]]:
+def _get_heart(detalization: int, mul_1: float, mul_2: float, mul_3: float) -> list[tuple[float, float, float]]:
     curve_resolution = detalization + 1
     angle = pi / (curve_resolution - 1)
     vs = []
@@ -136,7 +135,7 @@ class Section:
         else:
             self.coords = _get_oval(detalization)
 
-    def add(self, bm: BMesh, size, co_fmt=lambda a, b: b) -> Tuple[List[BMVert], List[BMVert]]:
+    def add(self, bm: BMesh, size, co_fmt=lambda a, b: b) -> tuple[list[BMVert], list[BMVert]]:
         vs1 = []
         vs2 = []
         app1 = vs1.append
@@ -148,5 +147,5 @@ class Section:
 
         return vs1, vs2
 
-    def add_preserve_z2(self, bm: BMesh, size) -> Tuple[List[BMVert], List[BMVert]]:
+    def add_preserve_z2(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
         return self.add(bm, size, co_fmt=lambda a, b: a - b)
