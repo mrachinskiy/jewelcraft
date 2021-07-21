@@ -106,8 +106,8 @@ class AssetAdd:
         else:
             filepath = Path(self.filepath)
 
-        data_blocks = self.asset_datablocks(context)
-        asset.asset_export(data_blocks, filepath + ".blend")
+        data_blocks = self.asset_dbs_get()
+        asset.asset_export(data_blocks, filepath.with_suffix(".blend"))
 
         if self.is_add:
             prefs = context.preferences.addons[var.ADDON_ID].preferences
@@ -135,7 +135,7 @@ class AssetAdd:
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
-    def asset_datablocks(self, context):
+    def asset_dbs_get(self) -> set:
         if self.type == "COLLECTION":
             collection = bpy.data.collections[self.collection_name]
             return {collection}

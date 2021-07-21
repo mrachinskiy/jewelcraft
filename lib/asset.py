@@ -202,13 +202,11 @@ def asset_import_batch(filepath: str) -> BlendData:
     return data_to
 
 
-def asset_export(data_blocks: Set[ID], filepath: str) -> None:
-    folder = Path(filepath).parent
+def asset_export(data_blocks: set[ID], filepath: Path) -> None:
+    if not filepath.parent.exists():
+        filepath.parent.mkdir(parents=True)
 
-    if not folder.exists():
-        folder.mkdir(parents=True)
-
-    bpy.data.libraries.write(filepath, data_blocks, compress=True)
+    bpy.data.libraries.write(str(filepath), data_blocks, compress=True)
 
 
 def render_preview(width: int, height: int, filepath: Path, compression=100, gamma: Optional[float] = None) -> None:
