@@ -24,7 +24,6 @@ from pathlib import Path
 
 import bpy
 from bpy_extras.image_utils import load_image
-import bgl
 import gpu
 from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix
@@ -44,7 +43,6 @@ def render_map(self, context):
 
     asset.render_preview(width, height, temp_filepath, compression=15, gamma=2.2)
     render_image = load_image(str(temp_filepath))
-    render_image.gl_load()
 
     mat_offscreen = Matrix()
     mat_offscreen[0][0] = 2 / width
@@ -52,12 +50,15 @@ def render_map(self, context):
     mat_offscreen[1][1] = 2 / height
     mat_offscreen[1][3] = -1
 
+    gpu.state.blend_set("ALPHA")
+
     shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
     shader_img = gpu.shader.from_builtin("2D_IMAGE")
     offscreen = gpu.types.GPUOffScreen(width, height)
 
     with offscreen.bind():
-        bgl.glClear(bgl.GL_COLOR_BUFFER_BIT)
+        fb = gpu.state.active_framebuffer_get()
+        fb.clear(color=(0.0, 0.0, 0.0, 0.0))
 
         with gpu.matrix.push_pop():
             gpu.matrix.load_matrix(mat_offscreen)
@@ -74,13 +75,10 @@ def render_map(self, context):
             # Render result
             # --------------------------------
 
-            bgl.glEnable(bgl.GL_BLEND)
-
-            bgl.glActiveTexture(bgl.GL_TEXTURE0)
-            bgl.glBindTexture(bgl.GL_TEXTURE_2D, render_image.bindcode)
+            tex = gpu.texture.from_image(render_image)
 
             shader_img.bind()
-            shader_img.uniform_int("image", 0)
+            shader_img.uniform_sampler("image", tex)
 
             args = {
                 "pos": self.rect_coords(0, 0, width, height),
@@ -96,9 +94,8 @@ def render_map(self, context):
             draw_gems(self, context)
             onscreen_text.onscreen_gem_table(self, x, y, color=(0.0, 0.0, 0.0))
 
-        buffer = bgl.Buffer(bgl.GL_BYTE, width * height * 4)
-        bgl.glReadBuffer(bgl.GL_BACK)
-        bgl.glReadPixels(0, 0, width, height, bgl.GL_RGBA, bgl.GL_UNSIGNED_BYTE, buffer)
+        buffer = fb.read_color(0, 0, width, height, 4, 0, "UBYTE")
+        buffer.dimensions = width * height * 4
 
     offscreen.free()
 
@@ -114,14 +111,13 @@ def render_map(self, context):
         image.file_format = "PNG"
         image.save()
 
-    render_image.gl_free()
+    # Cleanup
+    # ----------------------------
+
     bpy.data.images.remove(render_image)
     temp_filepath.unlink(missing_ok=True)
 
-    # Restore OpenGL defaults
-    # ----------------------------
-
-    bgl.glDisable(bgl.GL_BLEND)
+    gpu.state.blend_set("NONE")
 
     # Show in a new window
     # ----------------------------
