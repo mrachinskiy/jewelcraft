@@ -24,7 +24,6 @@ from functools import lru_cache
 
 import bpy
 from bpy_extras.view3d_utils import location_3d_to_region_2d
-import bgl
 import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
@@ -33,7 +32,6 @@ from mathutils import Matrix, Vector
 from ... import var
 from .. import unit
 from ..asset import nearest_coords, calc_gap
-from .view3d_overlay import restore_gl
 
 
 _handler = None
@@ -204,9 +202,10 @@ def _draw(self, context):
     # Shader
     # -----------------------------------
 
-    bgl.glEnable(bgl.GL_BLEND)
+    gpu.state.blend_set("ALPHA")
     if not props.overlay_show_in_front:
-        bgl.glEnable(bgl.GL_DEPTH_TEST)
+        gpu.state.depth_test_set("LESS_EQUAL")
+    gpu.state.depth_mask_set(True)
 
     shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
     shader.bind()
@@ -322,7 +321,10 @@ def _draw(self, context):
             batch.draw(shader)
 
     _CC.set(show_all, gems_count)
-    restore_gl()
+
+    gpu.state.blend_set("NONE")
+    gpu.state.depth_test_set("NONE")
+    gpu.state.depth_mask_set(False)
 
 
 def _draw_font(self, context):
@@ -341,7 +343,7 @@ def _draw_font(self, context):
     shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
     for dist, loc, spacing in _font_loc:
-        bgl.glEnable(bgl.GL_BLEND)
+        gpu.state.blend_set("ALPHA")
 
         if dist < 0.1:
             color = (0.9, 0.0, 0.0, 1.0)
@@ -370,8 +372,4 @@ def _draw_font(self, context):
         blf.draw(fontid, dis_str)
 
     _font_loc.clear()
-
-    # Restore OpenGL defaults
-    # ----------------------------
-
-    bgl.glDisable(bgl.GL_BLEND)
+    gpu.state.blend_set("NONE")
