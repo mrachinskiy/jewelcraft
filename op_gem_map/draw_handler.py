@@ -19,15 +19,11 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import bgl
 import gpu
-from gpu_extras.batch import batch_for_shader
+from gpu_extras.presets import draw_texture_2d
 
 from ..lib import view3d_lib
 from . import onscreen_text
-
-
-shader_img = gpu.shader.from_builtin("2D_IMAGE")
 
 
 def draw(self, context):
@@ -40,21 +36,8 @@ def draw(self, context):
     # -----------------------------
 
     if not self.use_navigate:
-        bgl.glEnable(bgl.GL_BLEND)
-
-        bgl.glActiveTexture(bgl.GL_TEXTURE0)
-        bgl.glBindTexture(bgl.GL_TEXTURE_2D, self.offscreen.color_texture)
-
-        shader_img.bind()
-        shader_img.uniform_int("image", 0)
-
-        args = {
-            "pos": self.rect_coords(0, 0, width, height),
-            "texCoord": self.rect_coords(0, 0, 1, 1),
-        }
-
-        batch = batch_for_shader(shader_img, "TRI_FAN", args)
-        batch.draw(shader_img)
+        gpu.state.blend_set("ALPHA")
+        draw_texture_2d(self.offscreen.texture_color, (0, 0), width, height)
 
     # Onscreen text
     # -----------------------------
@@ -68,7 +51,7 @@ def draw(self, context):
 
     view3d_lib.options_display(self, context, x, y)
 
-    # Restore OpenGL defaults
+    # Reset state
     # ----------------------------
 
-    bgl.glDisable(bgl.GL_BLEND)
+    gpu.state.blend_set("NONE")

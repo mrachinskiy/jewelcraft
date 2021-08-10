@@ -23,7 +23,6 @@ import operator
 from math import pi
 
 from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
-import bgl
 import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
@@ -74,8 +73,8 @@ def offscreen_refresh(self, context):
     mat_offscreen[1][3] = -1
 
     with self.offscreen.bind():
-        bgl.glClearColor(0.0, 0.0, 0.0, 0.0)
-        bgl.glClear(bgl.GL_COLOR_BUFFER_BIT)
+        fb = gpu.state.active_framebuffer_get()
+        fb.clear(color=(0.0, 0.0, 0.0, 0.0))
 
         with gpu.matrix.push_pop():
             gpu.matrix.load_matrix(mat_offscreen)
