@@ -26,20 +26,34 @@ import bpy
 from bpy_extras.image_utils import load_image
 import gpu
 from gpu_extras.batch import batch_for_shader
-from mathutils import Matrix
+from mathutils import Matrix, Color
 
 from ..lib import asset
 from . import onscreen_text
 from .offscreen import draw_gems
 
 
+def srgb_to_linear(color) -> Color:
+    return Color(x ** (1.0 / 2.2) for x in color)  # NOTE T74139
+
+
 def render_map(self, context):
     image_name = "Gem Map"
+    temp_filepath = Path(tempfile.gettempdir()) / "gem_map_temp.png"
+
     width, height = self.get_resolution()
     padding = 30
     x = padding
     y = height - padding
-    temp_filepath = Path(tempfile.gettempdir()) / "gem_map_temp.png"
+
+    shading = context.space_data.shading
+
+    if shading.background_type == "VIEWPORT":
+        bgc = srgb_to_linear(shading.background_color)
+    else:
+        bgc = Color((1.0, 1.0, 1.0))
+
+    text_color = (1.0, 1.0, 1.0) if bgc.v < 0.5 else (0.0, 0.0, 0.0)
 
     asset.render_preview(width, height, temp_filepath, compression=15, gamma=2.2)
     render_image = load_image(str(temp_filepath))
@@ -68,7 +82,7 @@ def render_map(self, context):
             # --------------------------------
 
             shader.bind()
-            shader.uniform_float("color", (1.0, 1.0, 1.0, 1.0))
+            shader.uniform_float("color", (*bgc, 1.0))
             batch = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(0, 0, width, height)})
             batch.draw(shader)
 
@@ -92,7 +106,7 @@ def render_map(self, context):
             # --------------------------------
 
             draw_gems(self, context)
-            onscreen_text.onscreen_gem_table(self, x, y, color=(0.0, 0.0, 0.0))
+            onscreen_text.onscreen_gem_table(self, x, y, color=text_color)
 
         buffer = fb.read_color(0, 0, width, height, 4, 0, "UBYTE")
         buffer.dimensions = width * height * 4

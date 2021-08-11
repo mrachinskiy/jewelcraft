@@ -41,7 +41,7 @@ class _ViewData:
         self.offset_y = 0.0
 
 
-def _gamma_correction(color):
+def linear_to_srgb(color) -> list:
     return [x ** 2.2 for x in color]  # NOTE T74139
 
 
@@ -84,9 +84,8 @@ def offscreen_refresh(self, context):
 
 
 def draw_gems(self, context, gamma_corr=False):
-
     if gamma_corr:
-        _c = _gamma_correction
+        _c = linear_to_srgb
     else:
         _c = lambda x: x
 
