@@ -203,9 +203,9 @@ def _draw(self, context):
     # -----------------------------------
 
     gpu.state.blend_set("ALPHA")
+    gpu.state.depth_mask_set(True)
     if not props.overlay_show_in_front:
         gpu.state.depth_test_set("LESS_EQUAL")
-    gpu.state.depth_mask_set(True)
 
     shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
     shader.bind()

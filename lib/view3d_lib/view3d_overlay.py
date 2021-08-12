@@ -19,30 +19,21 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import bgl
 import gpu
 from gpu_extras.batch import batch_for_shader
 from mathutils import Vector
 
 
-def restore_gl() -> None:
-    bgl.glDisable(bgl.GL_BLEND)
-    bgl.glDisable(bgl.GL_LINE_SMOOTH)
-    bgl.glDisable(bgl.GL_DEPTH_TEST)
-    bgl.glDepthMask(bgl.GL_TRUE)
-    bgl.glLineWidth(1.0)
-
-
 def draw_axis(self, context):
-    bgl.glEnable(bgl.GL_BLEND)
-    bgl.glEnable(bgl.GL_LINE_SMOOTH)
-    bgl.glLineWidth(self.axis_width)
-
+    gpu.state.blend_set("ALPHA")
+    gpu.state.depth_mask_set(True)
     if not self.axis_in_front:
-        bgl.glEnable(bgl.GL_DEPTH_TEST)
+        gpu.state.depth_test_set("LESS_EQUAL")
 
-    shader = gpu.shader.from_builtin("3D_SMOOTH_COLOR")
+    shader = gpu.shader.from_builtin("3D_POLYLINE_SMOOTH_COLOR")
     shader.bind()
+    shader.uniform_float("viewportSize", (context.area.width, context.area.height))
+    shader.uniform_float("lineWidth", self.axis_width)
 
     for mat in self.mats:
         axis_start = mat.translation
@@ -65,4 +56,6 @@ def draw_axis(self, context):
         batch = batch_for_shader(shader, "LINES", {"pos": coords, "color": colors}, indices=indxs)
         batch.draw(shader)
 
-    restore_gl()
+    gpu.state.blend_set("NONE")
+    gpu.state.depth_test_set("NONE")
+    gpu.state.depth_mask_set(False)
