@@ -20,7 +20,6 @@
 
 
 import operator
-from math import pi
 
 from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
 import blf
@@ -31,32 +30,40 @@ from mathutils import Matrix, Vector
 from ..lib import unit
 
 
-class _ViewData:
-    __slots__ = "scale_x", "scale_y", "offset_x", "offset_y"
+class _LocAdapt:
+    __slots__ = "region", "region_3d", "scale", "offset"
 
-    def __init__(self) -> None:
-        self.scale_x = 1.0
-        self.scale_y = 1.0
-        self.offset_x = 0.0
-        self.offset_y = 0.0
+    def __init__(self, op, context) -> None:
+        self.region = context.region
+        self.region_3d = context.space_data.region_3d
+        self.scale = Vector((1.0, 1.0))
+        self.offset = Vector((0.0, 0.0))
+
+        if op.is_rendering:
+            if self.region_3d.view_perspective == "CAMERA":
+                width, height = op.get_resolution()
+                frame_width, frame_height, frame_offset = self._get_frame(context)
+
+                self.scale.xy = width / frame_width, height / frame_height
+                self.offset = frame_offset.xy
+            else:
+                self.scale.xy = op.render.resolution_percentage / 100
+
+    def to_2d(self, loc: Vector) -> Vector:
+        v = location_3d_to_region_2d(self.region, self.region_3d, loc)
+        return (v - self.offset) * self.scale
+
+    def _get_frame(self, context) -> tuple[float, float, Vector]:
+        cam = context.scene.camera
+        frame = [
+            location_3d_to_region_2d(self.region, self.region_3d, cam.matrix_world @ p)
+            for p in cam.data.view_frame(scene=context.scene)
+        ]
+        return frame[1].x - frame[2].x, frame[0].y - frame[1].y, frame[2]
 
 
 def linear_to_srgb(color) -> list:
     return [x ** 2.2 for x in color]  # NOTE T74139
-
-
-def _loc_3d_to_2d(region, region_3d, loc: Vector, view: _ViewData) -> tuple[float, float]:
-    x, y = location_3d_to_region_2d(region, region_3d, loc)
-    return (x - view.offset_x) * view.scale_x, (y - view.offset_y) * view.scale_y
-
-
-def _get_frame(context, region, region_3d) -> tuple[float, float, Vector]:
-    cam = context.scene.camera
-    frame = [
-        location_3d_to_region_2d(region, region_3d, cam.matrix_world @ p)
-        for p in cam.data.view_frame(scene=context.scene)
-    ]
-    return frame[1].x - frame[2].x, frame[0].y - frame[1].y, frame[2]
 
 
 def offscreen_refresh(self, context):
@@ -89,20 +96,16 @@ def draw_gems(self, context, gamma_corr=False):
     else:
         _c = lambda x: x
 
-    view_normal = self.region_3d.view_rotation @ Vector((0.0, 0.0, 1.0))
-
     if self.region_3d.is_perspective:
-        angle_thold = pi / 1.8
         view_loc = self.region_3d.view_matrix.inverted().translation
     else:
-        angle_thold = pi / 2
-        center_xy = (self.region.width / 2, self.region.height / 2)
-        view_loc = region_2d_to_origin_3d(self.region, self.region_3d, center_xy)
+        _center_xy = (self.region.width / 2, self.region.height / 2)
+        view_loc = region_2d_to_origin_3d(self.region, self.region_3d, _center_xy)
 
     from_scene_scale_batch = unit.Scale(context).from_scene_batch
     depsgraph = context.evaluated_depsgraph_get()
     gems = []
-    app = gems.append
+    _app = gems.append
 
     for dup in depsgraph.object_instances:
 
@@ -125,25 +128,15 @@ def draw_gems(self, context, gamma_corr=False):
 
         mat = dup.matrix_world.copy()
         dist_from_view = (mat.translation - view_loc).length
-        app((dist_from_view, ob, mat, size_fmt, color))
-
-    ViewData = _ViewData()
-
-    if self.is_rendering:
-        if self.region_3d.view_perspective == "CAMERA":
-            width, height = self.get_resolution()
-            frame_width, frame_height, frame_offset = _get_frame(context, self.region, self.region_3d)
-
-            ViewData.scale_x = width / frame_width
-            ViewData.scale_y = height / frame_height
-            ViewData.offset_x, ViewData.offset_y = frame_offset.xy
-        else:
-            ViewData.scale_x = ViewData.scale_y = self.render.resolution_percentage / 100
+        _app((dist_from_view, ob, mat, size_fmt, color))
 
     fontid = 0
     blf.size(fontid, self.prefs.gem_map_fontsize_gem_size, 72)
     blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
     shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+
+    LocAdapt = _LocAdapt(self, context)
+    _loc2d = LocAdapt.to_2d
 
     gems.sort(key=operator.itemgetter(0), reverse=True)
 
@@ -155,27 +148,21 @@ def draw_gems(self, context, gamma_corr=False):
         ob_eval = ob.evaluated_get(depsgraph)
         me = ob_eval.to_mesh()
         me.transform(mat)
-        verts = me.vertices
+        me.calc_loop_triangles()
+
+        points = [_loc2d(v.co) for v in me.vertices]
+        indices = (tri.vertices for tri in me.loop_triangles)
 
         shader.bind()
         shader.uniform_float("color", _c(color))
-
-        for poly in me.polygons:
-            if view_normal.angle(poly.normal) < angle_thold:
-                cos = [
-                    _loc_3d_to_2d(self.region, self.region_3d, verts[v].co, ViewData)
-                    for v in poly.vertices
-                ]
-                batch = batch_for_shader(shader, "TRI_FAN", {"pos": cos})
-                batch.draw(shader)
+        batch = batch_for_shader(shader, "TRIS", {"pos": points}, indices=indices)
+        batch.draw(shader)
 
         ob_eval.to_mesh_clear()
 
         # Size
         # -----------------------------
 
-        loc_x, loc_y = _loc_3d_to_2d(self.region, self.region_3d, mat.translation, ViewData)
-        dim_x, dim_y = blf.dimensions(fontid, size_fmt)
-
-        blf.position(fontid, round(loc_x - dim_x / 2), round(loc_y - dim_y / 2), 0.0)
+        pos = _loc2d(mat.translation) - Vector(blf.dimensions(fontid, size_fmt)) / 2
+        blf.position(fontid, round(pos.x), round(pos.y), 0.0)
         blf.draw(fontid, size_fmt)
