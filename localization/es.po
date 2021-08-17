@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.11\n"
-"POT-Creation-Date: 2021-06-04\n"
-"PO-Revision-Date: 18-03-2019\n"
+"POT-Creation-Date: 2021-08-17\n"
+"PO-Revision-Date: 2021-08-17 19:20+0400\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 
 msgid "Asset Manager"
 msgstr "Gestor de Activos"
@@ -80,6 +80,9 @@ msgid "Overlapping Gems"
 msgstr ""
 
 msgid "Limit By Selection"
+msgstr ""
+
+msgid "Viewport Background"
 msgstr ""
 
 msgid "Save To Image"
@@ -269,7 +272,9 @@ msgid "Create size curve"
 msgstr "Crear curva de tamaño"
 
 msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
-msgstr "Estirar objetos deformados a lo largo de la curva en el eje X, también funciona en el modo de edición con los vértices seleccionados"
+msgstr ""
+"Estirar objetos deformados a lo largo de la curva en el eje X, también funciona en el modo de edición con los "
+"vértices seleccionados"
 
 msgid "Display curve length"
 msgstr "Mostrar longitud de la curva"
@@ -278,13 +283,15 @@ msgid "Move deformed object over or under the curve"
 msgstr "Mover el objeto deformado sobre o por debajo de la curva"
 
 msgid "Mirror selected objects around one or more axes, keeping object data linked"
-msgstr "Simetría de los objetos seleccionados alrededor de uno o más ejes, manteniendo los datos de los objetos vinculados"
+msgstr ""
+"Simetría de los objetos seleccionados alrededor de uno o más ejes, manteniendo los datos de los objetos vinculados"
 
 msgid "Project selected objects onto active object using Lattice"
 msgstr "Proyectar objetos seleccionados en objetos activos usando Jaula"
 
 msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
-msgstr "Deformar perfil de objeto activo con Jaula, también funciona en el modo de edición con los vértices seleccionados"
+msgstr ""
+"Deformar perfil de objeto activo con Jaula, también funciona en el modo de edición con los vértices seleccionados"
 
 msgid ""
 "Create prongs for selected gems\n"
@@ -388,7 +395,8 @@ msgid "Enable material for weighting display"
 msgstr ""
 
 msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
-msgstr "Activo padre importado a los objetos seleccionados (Atajo: mantener presionada la tecla Alt al usar la herramienta)"
+msgstr ""
+"Activo padre importado a los objetos seleccionados (Atajo: mantener presionada la tecla Alt al usar la herramienta)"
 
 msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
 msgstr ""

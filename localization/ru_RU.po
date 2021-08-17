@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.11\n"
-"POT-Creation-Date: 2021-06-04\n"
-"PO-Revision-Date: 2021-06-04\n"
+"POT-Creation-Date: 2021-08-17\n"
+"PO-Revision-Date: 2021-08-17\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
+"Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru_RU\n"
 
 msgid "Asset Manager"
 msgstr "Менеджер ассетов"
@@ -81,6 +81,9 @@ msgstr "Пересекающиеся камни"
 
 msgid "Limit By Selection"
 msgstr "Ограничить выделением"
+
+msgid "Viewport Background"
+msgstr "Фон вьюпорта"
 
 msgid "Save To Image"
 msgstr "Сохранить в изображение"

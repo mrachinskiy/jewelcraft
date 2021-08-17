@@ -1,14 +1,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.11\n"
-"POT-Creation-Date: 2021-06-04\n"
-"PO-Revision-Date: 21-08-2019\n"
+"POT-Creation-Date: 2021-08-17\n"
+"PO-Revision-Date: 2021-08-17 19:24+0400\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 
 msgid "Asset Manager"
 msgstr "资产管理器"
@@ -81,6 +81,9 @@ msgstr "重叠宝石"
 
 msgid "Limit By Selection"
 msgstr "按选择限制"
+
+msgid "Viewport Background"
+msgstr ""
 
 msgid "Save To Image"
 msgstr "保存到图像"
