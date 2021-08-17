@@ -46,10 +46,16 @@ def render_map(self, context):
     x = padding
     y = height - padding
 
-    shading = context.space_data.shading
+    if self.use_viewport_bgc:
+        shading = context.space_data.shading
 
-    if shading.background_type == "VIEWPORT":
-        bgc = srgb_to_linear(shading.background_color)
+        if shading.background_type == "THEME":
+            bgc = context.preferences.themes[0].view_3d.space.gradients.high_gradient
+        elif shading.background_type == "WORLD":
+            bgc = srgb_to_linear(context.scene.world.color)
+        elif shading.background_type == "VIEWPORT":
+            bgc = srgb_to_linear(shading.background_color)
+
     else:
         bgc = Color((1.0, 1.0, 1.0))
 
