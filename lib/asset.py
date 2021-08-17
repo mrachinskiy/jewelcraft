@@ -209,19 +209,21 @@ def asset_export(data_blocks: set[ID], filepath: Path) -> None:
     bpy.data.libraries.write(str(filepath), data_blocks, compress=True)
 
 
-def render_preview(width: int, height: int, filepath: Path, compression=100, gamma: Optional[float] = None) -> None:
+def render_preview(width: int, height: int, filepath: Path, compression=100, gamma: Optional[float] = None, use_transparent=True) -> None:
     scene = bpy.context.scene
     render_props = scene.render
     image_props = render_props.image_settings
     view_props = scene.view_settings
-    shading_type = bpy.context.space_data.shading.type
+    overlay_props = bpy.context.space_data.overlay
+    shading_props = bpy.context.space_data.shading
 
     render_config = {
         "filepath": str(filepath),
         "resolution_x": width,
         "resolution_y": height,
         "resolution_percentage": 100,
-        "film_transparent": True,
+        "film_transparent": use_transparent,
+        "dither_intensity": 0.0,
     }
 
     image_config = {
@@ -232,17 +234,27 @@ def render_preview(width: int, height: int, filepath: Path, compression=100, gam
 
     view_config = {}
 
-    if shading_type in {"WIREFRAME", "SOLID"}:
+    if shading_props.type in {"WIREFRAME", "SOLID"}:
         view_config["view_transform"] = "Standard"
         view_config["look"] = "None"
 
     if gamma is not None:
         view_config["gamma"] = gamma
 
+    overlay_config = {
+        "show_overlays": False,
+    }
+
+    shading_config = {
+        "show_object_outline": False,
+    }
+
     configs = [
         [render_props, render_config],
         [image_props, image_config],
         [view_props, view_config],
+        [overlay_props, overlay_config],
+        [shading_props, shading_config],
     ]
 
     # Apply settings

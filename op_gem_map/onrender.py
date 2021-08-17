@@ -37,6 +37,29 @@ def srgb_to_linear(color) -> Color:
     return Color(x ** (1.0 / 2.2) for x in color)  # NOTE T74139
 
 
+def _text_color(context, use_background: bool) -> tuple[float, float, float]:
+    if use_background:
+        shading = context.space_data.shading
+
+        if shading.background_type == "THEME":
+            gradients = context.preferences.themes[0].view_3d.space.gradients
+
+            if gradients.background_type == "RADIAL":
+                bgc = gradients.gradient
+            else:
+                bgc = gradients.high_gradient
+
+        elif shading.background_type == "WORLD":
+            bgc = srgb_to_linear(context.scene.world.color)
+        elif shading.background_type == "VIEWPORT":
+            bgc = srgb_to_linear(shading.background_color)
+
+        if bgc.v < 0.5:
+            return (1.0, 1.0, 1.0)
+
+    return (0.0, 0.0, 0.0)
+
+
 def render_map(self, context):
     image_name = "Gem Map"
     temp_filepath = Path(tempfile.gettempdir()) / "gem_map_temp.png"
@@ -46,22 +69,7 @@ def render_map(self, context):
     x = padding
     y = height - padding
 
-    if self.use_viewport_bgc:
-        shading = context.space_data.shading
-
-        if shading.background_type == "THEME":
-            bgc = context.preferences.themes[0].view_3d.space.gradients.high_gradient
-        elif shading.background_type == "WORLD":
-            bgc = srgb_to_linear(context.scene.world.color)
-        elif shading.background_type == "VIEWPORT":
-            bgc = srgb_to_linear(shading.background_color)
-
-    else:
-        bgc = Color((1.0, 1.0, 1.0))
-
-    text_color = (1.0, 1.0, 1.0) if bgc.v < 0.5 else (0.0, 0.0, 0.0)
-
-    asset.render_preview(width, height, temp_filepath, compression=15, gamma=2.2)
+    asset.render_preview(width, height, temp_filepath, compression=15, gamma=2.2, use_transparent=not self.use_background)
     render_image = load_image(str(temp_filepath))
 
     mat_offscreen = Matrix()
@@ -87,10 +95,11 @@ def render_map(self, context):
             # Background
             # --------------------------------
 
-            shader.bind()
-            shader.uniform_float("color", (*bgc, 1.0))
-            batch = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(0, 0, width, height)})
-            batch.draw(shader)
+            if not self.use_background:
+                shader.bind()
+                shader.uniform_float("color", (1.0, 1.0, 1.0, 1.0))
+                batch = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(0, 0, width, height)})
+                batch.draw(shader)
 
             # Render result
             # --------------------------------
@@ -112,7 +121,7 @@ def render_map(self, context):
             # --------------------------------
 
             draw_gems(self, context)
-            onscreen_text.onscreen_gem_table(self, x, y, color=text_color)
+            onscreen_text.onscreen_gem_table(self, x, y, color=_text_color(context, self.use_background))
 
         buffer = fb.read_color(0, 0, width, height, 4, 0, "UBYTE")
         buffer.dimensions = width * height * 4

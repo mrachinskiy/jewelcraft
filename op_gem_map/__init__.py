@@ -33,7 +33,7 @@ class VIEW3D_OT_gem_map(Operator):
     bl_idname = "view3d.jewelcraft_gem_map"
 
     use_select: BoolProperty()
-    use_viewport_bgc: BoolProperty()
+    use_background: BoolProperty()
     lang: EnumProperty(
         name="Report Language",
         description="Report language",
@@ -96,7 +96,7 @@ class VIEW3D_OT_gem_map(Operator):
             return {"RUNNING_MODAL"}
 
         elif event.type == "B" and event.value == "PRESS":
-            self.use_viewport_bgc = not self.use_viewport_bgc
+            self.use_background = not self.use_background
             return {"RUNNING_MODAL"}
 
         elif event.type == "F12" and event.value == "PRESS":
@@ -154,7 +154,7 @@ class VIEW3D_OT_gem_map(Operator):
             self,
             (
                 (_("Limit By Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
-                (_("Viewport Background"), "(B)", "use_viewport_bgc", view3d_lib.TYPE_BOOL),
+                (_("Viewport Background"), "(B)", "use_background", view3d_lib.TYPE_BOOL),
                 (_("Save To Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
             ),
         )
