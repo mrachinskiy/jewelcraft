@@ -341,10 +341,7 @@ def _draw_font(self, context):
     blf.size(fontid, font_size, 72)
     blf.color(fontid, 1.0, 1.0, 1.0, 1.0)
     shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
-    indices = (
-        (0, 1, 2),
-        (0, 2, 3),
-    )
+    indices = ((0, 1, 2), (0, 2, 3))
 
     for dist, loc, spacing in _font_loc:
         gpu.state.blend_set("ALPHA")
