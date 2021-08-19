@@ -341,6 +341,10 @@ def _draw_font(self, context):
     blf.size(fontid, font_size, 72)
     blf.color(fontid, 1.0, 1.0, 1.0, 1.0)
     shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+    indices = (
+        (0, 1, 2),
+        (0, 2, 3),
+    )
 
     for dist, loc, spacing in _font_loc:
         gpu.state.blend_set("ALPHA")
@@ -354,21 +358,20 @@ def _draw_font(self, context):
 
         dis_str = f"{dist:.2f}"
         dim_x, dim_y = blf.dimensions(fontid, dis_str)
-        loc_x, loc_y = location_3d_to_region_2d(region, region_3d, loc)
-
-        verts = (
-            (loc_x - 3,         loc_y - 4),
-            (loc_x + 3 + dim_x, loc_y - 4),
-            (loc_x + 3 + dim_x, loc_y + 4 + dim_y),
-            (loc_x - 3,         loc_y + 4 + dim_y),
+        pos_x, pos_y = location_3d_to_region_2d(region, region_3d, loc).to_tuple(0)
+        points = (
+            (pos_x - 3,         pos_y - 4),
+            (pos_x + 3 + dim_x, pos_y - 4),
+            (pos_x + 3 + dim_x, pos_y + 4 + dim_y),
+            (pos_x - 3,         pos_y + 4 + dim_y),
         )
 
         shader.bind()
         shader.uniform_float("color", color)
-        batch_font = batch_for_shader(shader, "TRI_FAN", {"pos": verts})
+        batch_font = batch_for_shader(shader, "TRIS", {"pos": points}, indices=indices)
         batch_font.draw(shader)
 
-        blf.position(fontid, loc_x, loc_y, 0.0)
+        blf.position(fontid, pos_x, pos_y, 0.0)
         blf.draw(fontid, dis_str)
 
     _font_loc.clear()
