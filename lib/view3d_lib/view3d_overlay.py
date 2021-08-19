@@ -35,25 +35,25 @@ def draw_axis(self, context):
     shader.uniform_float("viewportSize", (context.area.width, context.area.height))
     shader.uniform_float("lineWidth", self.axis_width)
 
+    colors = (
+        (1.0, 0.25, 0.25, 1.0), (1.0, 0.5, 0.25, 1.0),
+        (0.25, 1.0, 0.25, 1.0), (0.25, 0.85, 0.6, 1.0),
+        (0.25, 0.25, 1.0, 1.0), (0.0, 0.7, 1.0, 1.0),
+    )
+    indxs = ((0, 1), (2, 3), (4, 5))
+
     for mat in self.mats:
-        axis_start = mat.translation
-        axis_x_end = mat @ Vector((self.axis_size, 0.0, 0.0))
-        axis_y_end = mat @ Vector((0.0, self.axis_size, 0.0))
-        axis_z_end = mat @ Vector((0.0, 0.0, self.axis_size))
-
-        colors = (
-            (1.0, 0.25, 0.25, 1.0), (1.0, 0.5, 0.25, 1.0),
-            (0.25, 1.0, 0.25, 1.0), (0.25, 0.85, 0.6, 1.0),
-            (0.25, 0.25, 1.0, 1.0), (0.0, 0.7, 1.0, 1.0),
+        start = mat.translation
+        x_end = mat @ Vector((self.axis_size, 0.0, 0.0))
+        y_end = mat @ Vector((0.0, self.axis_size, 0.0))
+        z_end = mat @ Vector((0.0, 0.0, self.axis_size))
+        points = (
+            start, x_end,
+            start, y_end,
+            start, z_end,
         )
-        coords = (
-            axis_start, axis_x_end,
-            axis_start, axis_y_end,
-            axis_start, axis_z_end,
-        )
-        indxs = ((0, 1), (2, 3), (4, 5))
 
-        batch = batch_for_shader(shader, "LINES", {"pos": coords, "color": colors}, indices=indxs)
+        batch = batch_for_shader(shader, "LINES", {"pos": points, "color": colors}, indices=indxs)
         batch.draw(shader)
 
     gpu.state.blend_set("NONE")
