@@ -45,13 +45,21 @@ def onscreen_gem_table(self, x: int, y: int, color: Optional[Color] = None) -> i
     font_row_height = font_h * 2
     icon_size = font_h * 1.5
     y += font_baseline
+    indices = ((0, 1, 2), (0, 2, 3))
 
     for row, icon_color in self.table_data:
         y -= font_row_height
 
+        points = (
+            (x,             y),
+            (x + icon_size, y),
+            (x + icon_size, y + icon_size),
+            (x,             y + icon_size),
+        )
+
         shader.bind()
         shader.uniform_float("color", icon_color)
-        batch_font = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(x, y, icon_size, icon_size)})
+        batch_font = batch_for_shader(shader, "TRIS", {"pos": points}, indices=indices)
         batch_font.draw(shader)
 
         blf.position(fontid, x + font_row_height, y + font_baseline, 0.0)
