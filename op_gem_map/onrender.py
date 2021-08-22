@@ -80,42 +80,33 @@ def render_map(self, context):
 
     gpu.state.blend_set("ALPHA")
 
-    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
-    shader_img = gpu.shader.from_builtin("2D_IMAGE")
+    shader = gpu.shader.from_builtin("2D_IMAGE")
     offscreen = gpu.types.GPUOffScreen(width, height)
 
     with offscreen.bind():
         fb = gpu.state.active_framebuffer_get()
-        fb.clear(color=(0.0, 0.0, 0.0, 0.0))
+        fb.clear(color=(1.0, 1.0, 1.0, 1.0))
 
         with gpu.matrix.push_pop():
             gpu.matrix.load_matrix(mat_offscreen)
             gpu.matrix.load_projection_matrix(Matrix())
-
-            # Background
-            # --------------------------------
-
-            if not self.use_background:
-                shader.bind()
-                shader.uniform_float("color", (1.0, 1.0, 1.0, 1.0))
-                batch = batch_for_shader(shader, "TRI_FAN", {"pos": self.rect_coords(0, 0, width, height)})
-                batch.draw(shader)
 
             # Render result
             # --------------------------------
 
             tex = gpu.texture.from_image(render_image)
 
-            shader_img.bind()
-            shader_img.uniform_sampler("image", tex)
+            shader.bind()
+            shader.uniform_sampler("image", tex)
 
             args = {
-                "pos": self.rect_coords(0, 0, width, height),
-                "texCoord": self.rect_coords(0, 0, 1, 1),
+                "pos": ((0, 0), (width, 0), (width, height), (0, height)),
+                "texCoord": ((0, 0), (1, 0), (1, 1), (0, 1)),
             }
+            indices = ((0, 1, 2), (0, 2, 3))
 
-            batch = batch_for_shader(shader_img, "TRI_FAN", args)
-            batch.draw(shader_img)
+            batch = batch_for_shader(shader, "TRIS", args, indices=indices)
+            batch.draw(shader)
 
             # Gem map
             # --------------------------------

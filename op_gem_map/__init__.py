@@ -213,12 +213,3 @@ class VIEW3D_OT_gem_map(Operator):
                 return round(self.region.width * resolution_scale), round(self.region.height * resolution_scale)
 
         return self.region.width, self.region.height
-
-    @staticmethod
-    def rect_coords(x: float, y: float, dim_x: float, dim_y: float) -> tuple[tuple[float, float]]:
-        return (
-            (x,         y),
-            (x + dim_x, y),
-            (x + dim_x, y + dim_y),
-            (x,         y + dim_y),
-        )
