@@ -37,8 +37,6 @@ EnumItems4 = tuple[tuple[str, str, str, int], ...]
 EnumItems5 = tuple[tuple[str, str, str, Union[str, int], int], ...]
 AssetItems = tuple[tuple[str, str, int, bool], ...]
 
-_cache = {}
-
 
 def _iface_lang(context) -> str:
     view = context.preferences.view
@@ -91,9 +89,17 @@ def cuts(self, context) -> EnumItems5:
     lang = _iface_lang(context)
     color = context.preferences.themes[0].user_interface.wcol_menu_item.text.v
 
-    if lang == _cache.get("cuts__LANG") and color == _cache.get("cuts__COLOR"):
-        return _cache["cuts__RESULT"]
+    return _cuts(lang, color)
 
+
+def stones(self, context) -> EnumItems4:
+    lang = _iface_lang(context)
+
+    return _stones(lang)
+
+
+@lru_cache(maxsize=1)
+def _cuts(lang: str, color: float) -> EnumItems5:
     from . import gemlib
 
     theme = "DARK" if color < 0.5 else "LIGHT"
@@ -113,24 +119,14 @@ def cuts(self, context) -> EnumItems5:
 
         var.preview_collections["cuts"] = pcoll
 
-    list_ = tuple(
+    return tuple(
         (k, _(_(v.name, "Jewelry")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround
         for i, (k, v) in enumerate(gemlib.CUTS.items())
     )
 
-    _cache["cuts__RESULT"] = list_
-    _cache["cuts__LANG"] = lang
-    _cache["cuts__COLOR"] = color
 
-    return list_
-
-
-def stones(self, context) -> EnumItems4:
-    lang = _iface_lang(context)
-
-    if lang == _cache.get("stones__LANG"):
-        return _cache["stones__RESULT"]
-
+@lru_cache(maxsize=1)
+def _stones(lang: str) -> EnumItems4:
     import operator
     from . import gemlib
 
@@ -140,12 +136,8 @@ def stones(self, context) -> EnumItems4:
     ]
 
     list_.sort(key=operator.itemgetter(1))
-    list_ = tuple(list_)
 
-    _cache["stones__RESULT"] = list_
-    _cache["stones__LANG"] = lang
-
-    return list_
+    return tuple(list_)
 
 
 # Weighting
@@ -155,12 +147,18 @@ def stones(self, context) -> EnumItems4:
 _wlib_cache = False
 
 
+def weighting_lib_refresh(self=None, context=None) -> None:
+    global _wlib_cache
+    _wlib_cache = False
+
+
 def weighting_lib() -> None:
     global _wlib_cache
+
     if _wlib_cache:
         return
-    _wlib_cache = True
 
+    _wlib_cache = True
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     lib = bpy.context.window_manager.jewelcraft.weighting_lists
     lib.clear()
@@ -191,30 +189,22 @@ def weighting_lib() -> None:
             bpy.context.preferences.is_dirty = True
 
 
-def weighting_lib_refresh(self=None, context=None) -> None:
-    global _wlib_cache
-    _wlib_cache = False
-
-
 def weighting_materials(self, context) -> EnumItems3:
-    if "weighting_materials__RESULT" in _cache:
-        return _cache["weighting_materials__RESULT"]
-
-    props = context.scene.jewelcraft
-
-    list_ = tuple(
-        (str(i), mat.name + " ", "")  # Add trailing space to deny UI translation
-        for i, mat in enumerate(props.weighting_materials.values())
-    )
-
-    _cache["weighting_materials__RESULT"] = list_
-
-    return list_
+    return _weighting_materials()
 
 
 def weighting_materials_refresh(self=None, context=None) -> None:
-    if "weighting_materials__RESULT" in _cache:
-        del _cache["weighting_materials__RESULT"]
+    _weighting_materials.cache_clear()
+
+
+@lru_cache(maxsize=1)
+def _weighting_materials() -> EnumItems3:
+    props = bpy.context.scene.jewelcraft
+
+    return tuple(
+        (str(i), mat.name + " ", "")  # Add trailing space to deny UI translation
+        for i, mat in enumerate(props.weighting_materials.values())
+    )
 
 
 # Assets
@@ -222,29 +212,25 @@ def weighting_materials_refresh(self=None, context=None) -> None:
 
 
 def asset_folders(self, context) -> EnumItems3:
-    if "asset_folders__RESULT" in _cache:
-        return _cache["asset_folders__RESULT"]
+    _asset_folders()
 
+
+def asset_folders_refresh() -> None:
+    _asset_folders.cache_clear()
+
+
+@lru_cache(maxsize=1)
+def _asset_folders() -> EnumItems3:
     folder = pathutils.get_asset_lib_path()
 
     if not folder.exists():
-        _cache["asset_folders__RESULT"] = ()
         return ()
 
-    list_ = tuple(
+    return tuple(
         (child.name, child.name + " ", "")  # Add trailing space to deny UI translation
         for child in folder.iterdir()
         if child.is_dir() and not child.name.startswith(".")
     )
-
-    _cache["asset_folders__RESULT"] = list_
-
-    return list_
-
-
-def asset_folders_refresh() -> None:
-    if "asset_folders__RESULT" in _cache:
-        del _cache["asset_folders__RESULT"]
 
 
 @lru_cache(maxsize=32)
@@ -352,12 +338,10 @@ def assets_refresh(preview_id: Optional[str] = None, hard: bool = False, favs: b
 
 
 def abc(self, context) -> EnumItems3:
-    if "abc__RESULT" in _cache:
-        return _cache["abc__RESULT"]
+    return _abc()
 
+
+@lru_cache(maxsize=1)
+def _abc() -> EnumItems3:
     import string
-
-    list_ = tuple((str(i), char, "") for i, char in enumerate(string.ascii_uppercase))
-    _cache["abc__RESULT"] = list_
-
-    return list_
+    return tuple((str(i), char, "") for i, char in enumerate(string.ascii_uppercase))
