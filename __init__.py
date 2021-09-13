@@ -229,7 +229,6 @@ def unregister():
         bpy.utils.previews.remove(pcoll)
 
     var.preview_collections.clear()
-    dynamic_list._cache.clear()
     preferences._folder_cache.clear()
 
 
