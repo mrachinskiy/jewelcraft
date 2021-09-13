@@ -46,12 +46,12 @@ def set_diameter(self, context):
 def set_ring_size(self, context):
     from ..lib import ringsizelib
 
-    size = ringsizelib.cir_to_size(
-        unit.Scale(context).from_scene(self.circumference),
-        self.size_format,
-    )
-
-    if size == "[NO CORRESPONDING SIZE]":
+    try:
+        size = ringsizelib.cir_to_size(
+            unit.Scale(context).from_scene(self.circumference),
+            self.size_format,
+        )
+    except ValueError:
         self.warn_no_size = True
         return
 
@@ -180,6 +180,7 @@ class CURVE_OT_size_curve_add(Operator):
 
         if self.warn_no_size:
             row = col.row()
+            row.alert = True
             row.alignment = "RIGHT"
             row.label(text="No corresponding size", icon="ERROR")
         else:
