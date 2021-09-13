@@ -70,7 +70,7 @@ def _to_int(x: float) -> Union[int, float]:
     return x
 
 
-def cir_to_size(cir: float, size_format: str) -> Union[float, int, str]:
+def cir_to_size(cir: float, size_format: str) -> Union[int, float]:
 
     if size_format in {"US", "JP"}:
         size = round((cir - CIR_BASE_US) / CIR_STEP_US, 2)
@@ -106,10 +106,10 @@ def cir_to_size(cir: float, size_format: str) -> Union[float, int, str]:
         if size >= 0.0:
             return _to_int(size)
 
-    return "[NO CORRESPONDING SIZE]"
+    raise ValueError
 
 
-def size_to_cir(size: Union[float, int], size_format: str) -> float:
+def size_to_cir(size: Union[int, float], size_format: str) -> float:
     if size_format == "CH":
         cir = size + 40.0
 

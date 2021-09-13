@@ -91,7 +91,10 @@ def data_format(Report, _: Callable[[str], str]) -> None:
                 elif size_format == "CIR":
                     valuef = f"{round(cir, 2)} {_mm}"
                 else:
-                    valuef = ringsizelib.cir_to_size(cir, size_format)
+                    try:
+                        valuef = ringsizelib.cir_to_size(cir, size_format)
+                    except ValueError:
+                        valuef = "[NO CORRESPONDING SIZE]"
 
             notes_fmt.append((name, valuef))
 
