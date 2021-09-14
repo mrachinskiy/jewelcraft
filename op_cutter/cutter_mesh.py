@@ -22,7 +22,7 @@
 import bmesh
 from mathutils import Matrix
 
-from ..lib import iterutils, mesh
+from ..lib import iterutils, mesh, gemlib
 from . import profiles
 
 
@@ -61,12 +61,12 @@ def get(self):
         -self.hole_dim.z2,
     )
 
-    if self.shape_sq:
+    if self.shape is gemlib.SHAPE_SQUARE:
         Handle.x = Handle.y
         Girdle.x = Girdle.y
         Hole.x = Hole.y
 
-    if self.shape_tri:
+    if self.shape is gemlib.SHAPE_TRIANGLE:
         Handle.y = self.handle_dim.y
         Girdle.y = self.gem_dim.y + self.girdle_dim.y
         Hole.y = self.hole_dim.y
@@ -110,7 +110,7 @@ def get(self):
                 for v in verts:
                     v.co.y += self.hole_shift
     else:
-        if self.shape_rect:
+        if self.shape is gemlib.SHAPE_RECTANGLE:
             Section.add_seat_rect(bm, parts[-1], Girdle, Hole)
         else:
             v3 = bm.verts.new((0.0, 0.0, Hole.z1))
