@@ -66,7 +66,7 @@ class OBJECT_OT_prongs_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        from ..lib import asset
+        from ..lib import gemlib
         from . import prongs_presets
 
         ob = context.object
@@ -75,7 +75,13 @@ class OBJECT_OT_prongs_add(Operator):
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        asset.get_cut(self, ob)
+        self.gem_dim = ob.dimensions.copy()
+        self.cut = ob["gem"]["cut"] if "gem" in ob else None
+        try:
+            self.shape = gemlib.CUTS[self.cut].shape
+        except KeyError:
+            self.shape = gemlib.SHAPE_ROUND
+
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_prongs
 

@@ -27,7 +27,7 @@ from bpy.types import Object, BlendData, ID, Space
 from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix, Vector, kdtree
 
-from . import mesh, unit, gemlib
+from . import mesh, unit
 
 
 ObjectData = tuple[Vector, float, Matrix]
@@ -37,30 +37,6 @@ BoundBox = list[Vector]
 
 # Gem
 # ------------------------------------
-
-
-def get_cut(self, ob: Object) -> None:
-    self.gem_dim = ob.dimensions.copy()
-    self.cut = ob["gem"]["cut"] if "gem" in ob else None
-    self.shape_rnd = self.shape_sq = self.shape_rect = self.shape_tri = self.shape_fant = False
-
-    try:
-        shape = gemlib.CUTS[self.cut].shape
-    except KeyError:
-        shape = gemlib.SHAPE_ROUND
-
-    self.shape = shape
-
-    if shape is gemlib.SHAPE_SQUARE:
-        self.shape_sq = True
-    elif shape is gemlib.SHAPE_RECTANGLE:
-        self.shape_rect = True
-    elif shape is gemlib.SHAPE_TRIANGLE:
-        self.shape_tri = True
-    elif shape is gemlib.SHAPE_FANTASY:
-        self.shape_fant = True
-    else:
-        self.shape_rnd = True
 
 
 def nearest_coords(rad1: float, rad2: float, mat1: Matrix, mat2: Matrix) -> tuple[Vector, Vector]:

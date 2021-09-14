@@ -21,6 +21,8 @@
 
 from math import radians
 
+from ..lib import gemlib
+
 
 def init_presets(self):
 
@@ -71,24 +73,24 @@ def init_presets(self):
     # Shapes
     # ---------------------------
 
-    if self.shape_rnd:
+    if self.shape is gemlib.SHAPE_ROUND:
         self.number = 2
         self.position = radians(-30.0)
         self.intersection = 30.0
 
-    elif self.shape_tri:
+    elif self.shape is gemlib.SHAPE_TRIANGLE:
         self.number = 3
         self.position = radians(60.0)
         self.intersection = 0.0
         self.alignment = radians(10.0)
 
-    elif self.shape_sq:
+    elif self.shape is gemlib.SHAPE_SQUARE:
         self.intersection = -20.0
 
         if self.cut == "OCTAGON":
             self.intersection = 0.0
 
-    elif self.shape_rect:
+    elif self.shape is gemlib.SHAPE_RECTANGLE:
         self.number = 2
         self.position = radians(36.0)
         self.intersection = -20.0
@@ -98,7 +100,7 @@ def init_presets(self):
             self.position = radians(29.0)
             self.intersection = -10.0
 
-    elif self.shape_fant:
+    elif self.shape is gemlib.SHAPE_FANTASY:
         self.number = 2
         self.position = radians(0.0)
         self.intersection = 0.0

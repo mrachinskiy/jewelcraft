@@ -22,7 +22,7 @@
 import bmesh
 from bmesh.types import BMesh, BMVert
 
-from ...lib import mesh
+from ...lib import mesh, gemlib
 
 
 def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
@@ -78,7 +78,7 @@ class Section:
     )
 
     def __init__(self, operator) -> None:
-        if operator.shape_rect:
+        if operator.shape is gemlib.SHAPE_RECTANGLE:
             self.bv_type = "OFFSET"
             self.bv_width = operator.bevel_corners_width
         else:

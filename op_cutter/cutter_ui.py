@@ -19,6 +19,9 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from ..lib import gemlib
+
+
 def draw(self, context):
     layout = self.layout
     layout.use_property_split = True
@@ -37,7 +40,7 @@ def draw(self, context):
     col.enabled = self.use_handle
     col.prop(self.handle_dim, "z1")
 
-    if self.shape_rnd or self.shape_sq:
+    if self.shape is gemlib.SHAPE_ROUND or self.shape is gemlib.SHAPE_SQUARE:
         col.prop(self.handle_dim, "y", text="Size")
     else:
         col.prop(self.handle_dim, "y")
@@ -45,7 +48,7 @@ def draw(self, context):
 
     col.prop(self.handle_dim, "z2")
 
-    if self.shape_fant and self.cut in {"PEAR", "HEART"}:
+    if self.shape is gemlib.SHAPE_FANTASY and self.cut in {"PEAR", "HEART"}:
         col.prop(self, "handle_shift")
 
     # Girdle
@@ -58,7 +61,7 @@ def draw(self, context):
     col = layout.column()
     col.prop(self.girdle_dim, "z1", text="Top" if self.use_handle else "Table")
 
-    if self.shape_tri or self.cut == "HEART":
+    if self.shape is gemlib.SHAPE_TRIANGLE or self.cut == "HEART":
         col.prop(self.girdle_dim, "y", text="Length Offset")
         col.prop(self.girdle_dim, "x", text="Width Offset")
     else:
@@ -75,7 +78,7 @@ def draw(self, context):
     row.use_property_split = False
     row.prop(self, "use_hole")
 
-    show_culet_size = not self.use_hole and self.shape_rect
+    show_culet_size = not self.use_hole and self.shape is gemlib.SHAPE_RECTANGLE
 
     col = layout.column()
     col.prop(self.hole_dim, "z1", text="Top" if self.use_hole else "Culet")
@@ -85,7 +88,7 @@ def draw(self, context):
     sub = col.column()
     sub.enabled = self.use_hole
 
-    if self.shape_rnd or self.shape_sq:
+    if self.shape is gemlib.SHAPE_ROUND or self.shape is gemlib.SHAPE_SQUARE:
         sub.prop(self.hole_dim, "y", text="Size")
     else:
         if not show_culet_size:
@@ -113,9 +116,9 @@ def draw(self, context):
     col.prop(self, "curve_seat_profile")
     col.prop(self, "curve_seat_segments")
 
-    if not self.shape_rnd:
+    if self.shape is not gemlib.SHAPE_ROUND:
 
-        if self.shape_tri:
+        if self.shape is gemlib.SHAPE_TRIANGLE:
 
             # Curve profile
             # ------------------------
@@ -145,12 +148,12 @@ def draw(self, context):
             if self.cut == "HEART":
                 col.prop(self, "mul_3")
 
-        if not self.shape_fant:
+        if self.shape is not gemlib.SHAPE_FANTASY:
 
             # Bevel corners
             # ------------------------
 
-            if self.shape_rect:
+            if self.shape is gemlib.SHAPE_RECTANGLE:
                 bevel_width = "bevel_corners_width"
             else:
                 bevel_width = "bevel_corners_percent"
@@ -166,7 +169,7 @@ def draw(self, context):
             sub.prop(self, "bevel_corners_segments")
             sub.prop(self, "bevel_corners_profile")
 
-    if self.shape_rnd or self.shape_fant:
+    if self.shape is gemlib.SHAPE_ROUND or self.shape is gemlib.SHAPE_FANTASY:
 
         layout.separator()
         layout.prop(self, "detalization")
