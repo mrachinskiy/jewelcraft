@@ -37,30 +37,12 @@ def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     ]
 
 
-def _add_rect_bevel(
-    bm: BMesh,
-    x: float,
-    y: float,
-    z: float,
-    bv_width: float,
-    bv_type: str,
-    bv_segments: int,
-    bv_profile: float,
-) -> list[BMVert]:
+def _add_rect_bevel(self, bm: BMesh, size) -> list[BMVert]:
     bm_temp = bmesh.new()
-    vs = _add_rect(bm_temp, x, y, z)
+    vs = _add_rect(bm_temp, *size.xyz)
     bm_temp.faces.new(vs)
 
-    bmesh.ops.bevel(
-        bm_temp,
-        geom=vs,
-        affect="VERTICES",
-        clamp_overlap=True,
-        offset=bv_width,
-        offset_type=bv_type,
-        segments=bv_segments,
-        profile=bv_profile,
-    )
+    bmesh.ops.bevel(bm_temp, geom=vs, affect="VERTICES", clamp_overlap=True, offset=self.bv_width, offset_type=self.bv_type, segments=self.bv_segments, profile=self.bv_profile)
 
     f = next(iter(bm_temp.faces))
     verts = [bm.verts.new(v.co) for v in f.verts]
@@ -69,13 +51,7 @@ def _add_rect_bevel(
 
 
 class Section:
-    __slots__ = (
-        "bv_width",
-        "bv_type",
-        "bv_segments",
-        "bv_profile",
-        "add",
-    )
+    __slots__ = "add", "bv_width", "bv_type", "bv_segments", "bv_profile"
 
     def __init__(self, operator) -> None:
         if operator.shape is gemlib.SHAPE_RECTANGLE:
@@ -94,21 +70,12 @@ class Section:
 
     @staticmethod
     def _add(bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_rect(bm, size.x, size.y, size.z1)
+        s1 = _add_rect(bm, *size.xyz)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2
 
     def _add_bevel(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_rect_bevel(
-            bm,
-            size.x,
-            size.y,
-            size.z1,
-            self.bv_width,
-            self.bv_type,
-            self.bv_segments,
-            self.bv_profile,
-        )
+        s1 = _add_rect_bevel(self, bm, size)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2
 

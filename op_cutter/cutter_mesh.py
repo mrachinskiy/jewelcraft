@@ -35,6 +35,10 @@ class _SectionSize:
         self.z1 = z1
         self.z2 = z2
 
+    @property
+    def xyz(self):
+        return self.x, self.y, self.z1
+
 
 def get(self):
     bm = bmesh.new()
