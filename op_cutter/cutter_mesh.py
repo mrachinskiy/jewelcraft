@@ -65,13 +65,11 @@ def get(self):
         Handle.x = Handle.y
         Girdle.x = Girdle.y
         Hole.x = Hole.y
-
-    if self.shape is gemlib.SHAPE_TRIANGLE:
+    elif self.shape is gemlib.SHAPE_TRIANGLE:
         Handle.y = self.handle_dim.y
         Girdle.y = self.gem_dim.y + self.girdle_dim.y
         Hole.y = self.hole_dim.y
-
-    if self.cut in {"OVAL", "MARQUISE", "PEAR"}:
+    elif self.cut in {"OVAL", "MARQUISE", "PEAR"}:
         Girdle.x = self.gem_dim.x / 2 + self.girdle_dim.y
 
     # Section produce
