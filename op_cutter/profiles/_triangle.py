@@ -38,51 +38,25 @@ def _add_tri(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     ]
 
 
-def _add_tri_bevel(
-    bm: BMesh,
-    x: float,
-    y: float,
-    z: float,
-    bv_width: float,
-    bv_type: str,
-    bv_segments: int,
-    bv_profile: float,
-    curve_factor: float,
-    curve_segments: int,
-) -> list[BMVert]:
+def _add_tri_bevel(self, bm: BMesh, size) -> list[BMVert]:
     bm_temp = bmesh.new()
-    vs = _add_tri(bm_temp, x, y, 0.0)
+    vs = _add_tri(bm_temp, size.x, size.y, 0.0)
     es = mesh.connect_verts(bm_temp, vs)
 
-    if bv_width:
-        bv = bmesh.ops.bevel(
-            bm_temp,
-            geom=vs,
-            affect="VERTICES",
-            clamp_overlap=True,
-            offset=bv_width,
-            offset_type=bv_type,
-            segments=bv_segments,
-            profile=bv_profile,
-        )
+    if self.bv_width:
+        bv = bmesh.ops.bevel(bm_temp, geom=vs, affect="VERTICES", clamp_overlap=True, offset=self.bv_width, offset_type=self.bv_type, segments=self.bv_segments, profile=self.bv_profile)
         es = tuple(set(bm_temp.edges) - set(bv["edges"]))
 
-    if curve_factor:
+    if self.curve_factor:
         bm_temp.normal_update()
-        bmesh.ops.subdivide_edges(
-            bm_temp,
-            edges=es,
-            smooth=curve_factor,
-            smooth_falloff="LINEAR",
-            cuts=curve_segments,
-        )
+        bmesh.ops.subdivide_edges(bm_temp, edges=es, smooth=self.curve_factor, smooth_falloff="LINEAR", cuts=self.curve_segments)
 
     f = bm_temp.faces.new(_edge_loop_walk(bm_temp.verts))
     f.normal_update()
     if f.normal.z < 0.0:
         f.normal_flip()
 
-    verts = [bm.verts.new((*v.co.xy, z)) for v in f.verts]
+    verts = [bm.verts.new((*v.co.xy, size.z1)) for v in f.verts]
     bm_temp.free()
     return verts
 
@@ -109,11 +83,11 @@ def _edge_loop_walk(verts: list[BMVert]) -> Iterator[BMVert]:
 
 class Section:
     __slots__ = (
+        "add",
         "bv_width",
         "bv_type",
         "bv_segments",
         "bv_profile",
-        "add",
         "curve_factor",
         "curve_segments",
     )
@@ -133,22 +107,11 @@ class Section:
 
     @staticmethod
     def _add(bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_tri(bm, size.x, size.y, size.z1)
+        s1 = _add_tri(bm, *size.xyz)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2
 
     def _add_bevel(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_tri_bevel(
-            bm,
-            size.x,
-            size.y,
-            size.z1,
-            self.bv_width,
-            self.bv_type,
-            self.bv_segments,
-            self.bv_profile,
-            self.curve_factor,
-            self.curve_segments,
-        )
+        s1 = _add_tri_bevel(self, bm, size)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2
