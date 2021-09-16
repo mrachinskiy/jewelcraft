@@ -212,7 +212,7 @@ def _weighting_materials() -> EnumItems3:
 
 
 def asset_folders(self, context) -> EnumItems3:
-    _asset_folders()
+    return _asset_folders()
 
 
 def asset_folders_refresh() -> None:
