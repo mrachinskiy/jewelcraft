@@ -35,7 +35,7 @@ def _get_obs(context):
                 app(ob)
                 break
 
-    return obs, obs[0][0].users_collection
+    return obs, obs[0].users_collection
 
 
 def _distribute(context, ob, size):
