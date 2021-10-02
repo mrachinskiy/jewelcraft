@@ -144,24 +144,13 @@ def _stones(lang: str) -> EnumItems4:
 # ---------------------------
 
 
-_wlib_cache = False
-
-
 def weighting_lib_refresh(self=None, context=None) -> None:
-    global _wlib_cache
-    _wlib_cache = False
+    bpy.context.window_manager.jewelcraft.weighting_lists.clear()
 
 
 def weighting_lib() -> None:
-    global _wlib_cache
-
-    if _wlib_cache:
-        return
-
-    _wlib_cache = True
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     lib = bpy.context.window_manager.jewelcraft.weighting_lists
-    lib.clear()
 
     if not prefs.weighting_hide_builtin_lists:
         for child in var.WEIGHTING_LIB_BUILTIN_DIR.iterdir():

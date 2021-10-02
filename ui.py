@@ -250,9 +250,11 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
     bl_ui_units_x = 15
 
     def draw(self, context):
-        wm_props = context.window_manager.jewelcraft
+        lib = context.window_manager.jewelcraft.weighting_lists
         lib_path = str(pathutils.get_weighting_lib_path())
-        dynamic_list.weighting_lib()
+
+        if not lib:
+            dynamic_list.weighting_lib()
 
         layout = self.layout
 
@@ -267,7 +269,7 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
 
         layout.separator()
 
-        for item in wm_props.weighting_lists:
+        for item in lib:
             row = layout.row(align=True)
 
             if item.default:
@@ -278,7 +280,7 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
                 row.operator("wm.jewelcraft_weighting_list_set_default", text="", icon="RADIOBUT_OFF", emboss=False).load_id = item.load_id
 
             sub = row.row()
-            sub.emboss = "UI_EMBOSS_NONE_OR_STATUS"
+            sub.emboss = "NONE_OR_STATUS"
 
             if item.builtin:
                 sub.label(text=item.name, text_ctxt="Jewelry")
@@ -321,6 +323,7 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
         return unit.check(context) is not False
 
     def draw_header(self, context):
+        self.layout.alert = True
         self.layout.label(icon="ERROR")
 
     def draw(self, context):
