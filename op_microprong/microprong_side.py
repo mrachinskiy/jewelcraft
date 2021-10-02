@@ -32,7 +32,7 @@ def _get_obs(context):
     for ob in context.selected_objects:
         for con in ob.constraints:
             if con.type == "FOLLOW_PATH":
-                app((ob, con))
+                app(ob)
                 break
 
     return obs, obs[0][0].users_collection
@@ -44,7 +44,7 @@ def _distribute(context, ob, size):
     space_data = context.space_data
     use_local_view = bool(space_data.local_view)
 
-    for is_last, (parent, pcon) in iterutils.spot_last(obs):
+    for is_last, parent in iterutils.spot_last(obs):
 
         if is_last:
             ob_copy = ob
@@ -57,12 +57,10 @@ def _distribute(context, ob, size):
         if use_local_view:
             ob_copy.local_view_set(space_data, True)
 
-        ob_copy.location += parent.location
+        ob_copy.location.xy = parent.location.xy
         ob_copy.scale *= parent.dimensions.y / size
-
-        con = ob_copy.constraints[0]
-        con.offset = pcon.offset
-        con.target = pcon.target
+        ob_copy.parent = parent
+        ob_copy.matrix_parent_inverse = parent.matrix_basis.inverted()
 
 
 def execute(self, context):
