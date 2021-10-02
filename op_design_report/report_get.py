@@ -89,7 +89,6 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
 
     known_stones = gemlib.STONES.keys()
     known_cuts = gemlib.CUTS.keys()
-    orig_instance_obs = {dup.instance_object.original for dup in depsgraph.object_instances if dup.is_instance}
 
     for dup in depsgraph.object_instances:
 
@@ -98,8 +97,8 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
         else:
             ob = dup.object.original
 
-        if "gem" not in ob or (not dup.is_instance and ob in orig_instance_obs):
-            continue  # Skip original instance gem objects
+        if "gem" not in ob:
+            continue
 
         # Gem
         stone = ob["gem"]["stone"]
