@@ -89,10 +89,10 @@ msgid "Save To Image"
 msgstr "Сохранить в изображение"
 
 msgid "Gem Map"
-msgstr "Карта камней"
+msgstr "Карта вставок"
 
 msgid "Gem Table"
-msgstr "Таблица камней"
+msgstr "Таблица вставок"
 
 msgid "Gem Size"
 msgstr "Размер камня"
@@ -897,7 +897,7 @@ msgstr "Задать единицы измерения"
 
 msgctxt "Operator"
 msgid "Gem Map"
-msgstr "Карта Камней"
+msgstr "Карта вставок"
 
 msgctxt "Operator"
 msgid "Add New Measurement"
