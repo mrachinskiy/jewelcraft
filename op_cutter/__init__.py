@@ -20,7 +20,7 @@
 
 
 from bpy.types import Operator, PropertyGroup
-from bpy.props import BoolProperty, FloatProperty, IntProperty, PointerProperty
+from bpy.props import BoolProperty, FloatProperty, IntProperty, PointerProperty, StringProperty
 
 from .. import var
 
@@ -48,7 +48,10 @@ class OBJECT_OT_cutter_add(Operator):
         "(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
     )
     bl_idname = "object.jewelcraft_cutter_add"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {"REGISTER", "UNDO", "PRESET"}
+
+    cut: StringProperty()
+    shape: IntProperty()
 
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
@@ -105,7 +108,7 @@ class OBJECT_OT_cutter_add(Operator):
             return {"CANCELLED"}
 
         self.gem_dim = ob.dimensions.copy()
-        self.cut = ob["gem"]["cut"] if "gem" in ob else None
+        self.cut = ob["gem"]["cut"] if "gem" in ob else "ROUND"
         try:
             self.shape = gemlib.CUTS[self.cut].shape
         except KeyError:
