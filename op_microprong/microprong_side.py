@@ -72,6 +72,7 @@ def execute(self, context):
     coords = (
         ( w, l,  w + self.handle_z),
         ( w, l, -w),
+        ( 0.0, l, -w - self.wedge_z),
         (-w, l, -w),
         (-w, l,  w + self.handle_z),
     )
@@ -84,21 +85,8 @@ def execute(self, context):
 
     es, _ = mesh.bridge_verts(bm, vs_north, vs_south)
 
-    if self.bevel_btm:
-        edges = (es[1], es[2])
-        ofst = self.bevel_btm / 100.0 * self.dim_x
-        bmesh.ops.bevel(
-            bm,
-            geom=edges,
-            affect="EDGES",
-            clamp_overlap=False,
-            offset=ofst,
-            offset_type="OFFSET",
-            segments=self.bevel_segments, profile=0.5,
-        )
-
     if self.bevel_top:
-        edges = (es[0], es[3])
+        edges = (es[0], es[4])
         ofst = self.bevel_top / 100.0 * self.dim_x
         bmesh.ops.bevel(
             bm,
@@ -107,10 +95,37 @@ def execute(self, context):
             clamp_overlap=False,
             offset=ofst,
             offset_type="OFFSET",
-            segments=self.bevel_segments, profile=0.5,
+            segments=self.bevel_segments,
+            profile=0.5,
         )
 
-    if self.bevel_btm or self.bevel_top:
+    if self.bevel_wedge and self.wedge_z:
+        bmesh.ops.bevel(
+            bm,
+            geom=(es[2],),
+            affect="EDGES",
+            clamp_overlap=False,
+            offset=self.bevel_wedge,
+            offset_type="PERCENT",
+            segments=self.bevel_segments,
+            profile=0.5,
+        )
+
+    if self.bevel_btm:
+        edges = (es[1], es[3])
+        ofst = self.bevel_btm / 100.0 * self.dim_x
+        bmesh.ops.bevel(
+            bm,
+            geom=edges,
+            affect="EDGES",
+            clamp_overlap=False,
+            offset=ofst,
+            offset_type="OFFSET",
+            segments=self.bevel_segments,
+            profile=0.5,
+        )
+
+    if self.bevel_btm or self.bevel_top or (self.bevel_wedge and self.wedge_z):
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
 
     ob = microprong_lib.prepare_object(self, bm)

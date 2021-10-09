@@ -23,9 +23,18 @@ from bpy.types import Operator
 from bpy.props import FloatProperty, IntProperty, EnumProperty
 
 
-def upd_cutter_type(self, context):
+def upd_width(self):
     if self.cutter_type == "SIDE":
         self.dim_x = self.size_active * 0.5
+
+
+def upd_cutter_type(self, context):
+    upd_width(self)
+
+    if self.cutter_type == "SIDE":
+        self.wedge_z = 0.0
+    else:
+        self.dim_x = self.wedge_z = 0.3
 
 
 class OBJECT_OT_microprong_cutter_add(Operator):
@@ -47,7 +56,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
     dim_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
 
     handle_z: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
-    wedge_z: FloatProperty(name="Wedge", default=0.3, min=0.0, step=1, unit="LENGTH")
+    wedge_z: FloatProperty(name="Wedge", default=0.3, step=1, unit="LENGTH")
 
     rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
@@ -65,6 +74,13 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         default=50.0,
         min=0.0,
         max=50.0,
+        precision=0,
+        subtype="PERCENTAGE",
+    )
+    bevel_wedge: FloatProperty(
+        name="Wedge",
+        min=0.0,
+        max=100.0,
         precision=0,
         subtype="PERCENTAGE",
     )
@@ -94,14 +110,14 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.prop(self, "dim_y")
         col.separator()
         col.prop(self, "handle_z")
+        col.prop(self, "wedge_z")
 
-        if self.cutter_type == "BETWEEN":
-            col.prop(self, "wedge_z")
-        else:
+        if self.cutter_type == "SIDE":
             layout.label(text="Bevel")
             col = layout.column(align=True)
             col.prop(self, "bevel_top")
             col.prop(self, "bevel_btm")
+            col.prop(self, "bevel_wedge")
             col.separator()
             col.prop(self, "bevel_segments")
 
@@ -158,7 +174,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
             active = ob
 
         self.size_active = active.dimensions.y
-        upd_cutter_type(self, context)
+        upd_width(self)
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
