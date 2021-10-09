@@ -43,7 +43,7 @@ def _get_obs(context):
     return obs, fp.target, fp.id_data.users_collection
 
 
-def _distribute(context, curve_length, ob):
+def _distribute(context, ob, curve_length):
     obs, curve, colls = _get_obs(context)
 
     space_data = context.space_data
@@ -94,6 +94,6 @@ def execute(self, context):
     mesh.bridge_verts(bm, vs_north, vs_south)
 
     ob = microprong_lib.prepare_object(self, bm)
-    _distribute(context, self.curve_length, ob)
+    _distribute(context, ob, self.curve_length)
 
     return {"FINISHED"}
