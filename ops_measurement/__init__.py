@@ -20,8 +20,9 @@
 
 
 import bpy
-from bpy.types import Operator
+from bpy.types import Operator, UILayout
 from bpy.props import BoolProperty, StringProperty, EnumProperty
+from bpy.app.translations import pgettext_iface as _
 
 from ..lib import dynamic_list
 
@@ -67,7 +68,6 @@ class WM_OT_ul_measurements_add(Operator):
     material: EnumProperty(
         name="Material",
         items=dynamic_list.weighting_materials,
-        options={"SKIP_SAVE"},
     )
     x: BoolProperty(name="X", default=True, options={"SKIP_SAVE"})
     y: BoolProperty(name="Y", default=True, options={"SKIP_SAVE"})
@@ -110,10 +110,11 @@ class WM_OT_ul_measurements_add(Operator):
         item.type = self.type
 
         if self.type == "WEIGHT":
-            item.collection = bpy.data.collections[self.collection_name]
+            if self.collection_name:
+                item.collection = bpy.data.collections[self.collection_name]
         else:
-            item.name = self.object_name
-            item.object = bpy.data.objects[self.object_name]
+            if self.object_name:
+                item.object = bpy.data.objects[self.object_name]
 
         if self.type == "WEIGHT":
             materials = context.scene.jewelcraft.weighting_materials
@@ -122,10 +123,13 @@ class WM_OT_ul_measurements_add(Operator):
             item.material_name = mat.name
             item.material_density = mat.density
         elif self.type == "DIMENSIONS":
+            item.name = "{} {}".format(_("Dimensions"), self.object_name)
             item.x = self.x
             item.y = self.y
             item.z = self.z
         elif self.type == "RING_SIZE":
+            size_format = UILayout.enum_item_name(self, "ring_size", self.ring_size)
+            item.name = "{} ({})".format(_("Ring Size"), size_format)
             item.ring_size = self.ring_size
             item.axis = self.axis
 
@@ -134,13 +138,12 @@ class WM_OT_ul_measurements_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.object:
-            self.report({"ERROR"}, "No active object")
-            return {"CANCELLED"}
-
         dynamic_list.weighting_materials_refresh()
-        self.collection_name = context.collection.name
-        self.object_name = context.object.name
+
+        if context.collection is not None:
+            self.collection_name = context.collection.name
+        if context.object is not None:
+            self.object_name = context.object.name
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
