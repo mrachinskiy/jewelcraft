@@ -19,6 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import bpy
 from bpy.types import Operator
 from bpy.props import BoolProperty, StringProperty, EnumProperty
 
@@ -31,14 +32,15 @@ class WM_OT_ul_measurements_add(Operator):
     bl_idname = "wm.jewelcraft_ul_measurements_add"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
-    item_name: StringProperty(name="Name", options={"SKIP_SAVE"})
+    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    object_name: StringProperty(name="Object", options={"SKIP_SAVE"})
     type: EnumProperty(
         name="Type",
         description="Measurement type",
         items=(
-            ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 0),
+            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 0),
             ("WEIGHT", "Weight", "", "FILE_3D", 1),
-            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 2),
+            ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 2),
         ),
     )
     ring_size: EnumProperty(
@@ -78,17 +80,24 @@ class WM_OT_ul_measurements_add(Operator):
 
         layout.separator()
 
-        row = layout.row(align=True)
-        row.prop(self, "type", text="Type", icon_only=True)
-        row.prop(self, "item_name", text="")
+        layout.prop(self, "type", text="Type", icon_only=True)
 
-        if self.type == "DIMENSIONS":
+        col = layout.column()
+
+        if self.type == "WEIGHT":
+            col.alert = not self.collection_name
+            col.prop_search(self, "collection_name", bpy.data, "collections")
+        else:
+            col.alert = not self.object_name
+            col.prop_search(self, "object_name", bpy.data, "objects")
+
+        if self.type == "WEIGHT":
+            layout.prop(self, "material")
+        elif self.type == "DIMENSIONS":
             col = layout.column(heading="Dimensions", align=True)
             col.prop(self, "x")
             col.prop(self, "y")
             col.prop(self, "z")
-        elif self.type == "WEIGHT":
-            layout.prop(self, "material")
         elif self.type == "RING_SIZE":
             layout.prop(self, "ring_size")
             layout.prop(self, "axis", expand=True)
@@ -98,19 +107,24 @@ class WM_OT_ul_measurements_add(Operator):
     def execute(self, context):
         item = context.scene.jewelcraft.measurements.add()
 
-        item.name = self.item_name
-        item.object = context.object
         item.type = self.type
 
-        if self.type == "DIMENSIONS":
+        if self.type == "WEIGHT":
+            item.collection = bpy.data.collections[self.collection_name]
+        else:
+            item.name = self.object_name
+            item.object = bpy.data.objects[self.object_name]
+
+        if self.type == "WEIGHT":
+            materials = context.scene.jewelcraft.weighting_materials
+            mat = materials.values()[int(self.material)]
+            item.name = mat.name
+            item.material_name = mat.name
+            item.material_density = mat.density
+        elif self.type == "DIMENSIONS":
             item.x = self.x
             item.y = self.y
             item.z = self.z
-        elif self.type == "WEIGHT":
-            materials = context.scene.jewelcraft.weighting_materials
-            mat = materials.values()[int(self.material)]
-            item.material_name = mat.name
-            item.material_density = mat.density
         elif self.type == "RING_SIZE":
             item.ring_size = self.ring_size
             item.axis = self.axis
@@ -125,7 +139,8 @@ class WM_OT_ul_measurements_add(Operator):
             return {"CANCELLED"}
 
         dynamic_list.weighting_materials_refresh()
-        self.item_name = context.object.name
+        self.collection_name = context.collection.name
+        self.object_name = context.object.name
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
@@ -149,6 +164,7 @@ class WM_OT_ul_measurements_material_select(Operator):
 
         materials = context.scene.jewelcraft.weighting_materials
         mat = materials.values()[int(self.material)]
+        item.name = mat.name
         item.material_name = mat.name
         item.material_density = mat.density
 

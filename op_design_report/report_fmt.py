@@ -64,7 +64,7 @@ def data_format(Report, _: Callable[[str], str]) -> None:
 
         mats_fmt = []
 
-        for (mat_name, density), vol in Report.materials.items():
+        for mat_name, density, vol in Report.materials:
             weight = round(vol * density, 2)
             weightf = f"{weight} {_g}"
 

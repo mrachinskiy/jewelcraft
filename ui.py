@@ -86,7 +86,7 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
     }
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        layout.alert = item.object is None
+        layout.alert = item.collection is None and item.object is None
         layout.prop(item, "name", text="", emboss=False, icon=self.icons.get(item.type, "BLANK1"))
 
 
@@ -661,19 +661,24 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
             item = measures_list.coll[measures_list.index]
 
             col = layout.column()
-            col.alert = item.object is None
-            col.prop(item, "object")
 
-            if item.type == "DIMENSIONS":
-                col = layout.column(heading="Dimensions", align=True)
-                col.prop(item, "x")
-                col.prop(item, "y")
-                col.prop(item, "z")
-            elif item.type == "WEIGHT":
+            if item.type == "WEIGHT":
+                col.alert = item.collection is None
+                col.prop(item, "collection")
+            else:
+                col.alert = item.object is None
+                col.prop(item, "object")
+
+            if item.type == "WEIGHT":
                 box = layout.box()
                 row = box.row()
                 row.label(text=item.material_name, translate=False)
                 row.operator("wm.jewelcraft_ul_measurements_material_select", text="", icon="DOWNARROW_HLT", emboss=False)
+            elif item.type == "DIMENSIONS":
+                col = layout.column(heading="Dimensions", align=True)
+                col.prop(item, "x")
+                col.prop(item, "y")
+                col.prop(item, "z")
             elif item.type == "RING_SIZE":
                 layout.prop(item, "ring_size")
                 layout.prop(item, "axis", expand=True)
