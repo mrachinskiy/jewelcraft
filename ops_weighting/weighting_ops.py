@@ -87,7 +87,10 @@ class OBJECT_OT_weight_display(Operator):
     def execute(self, context):
         from ..lib import unit, mesh, ui_lib
 
-        obs = [ob for ob in context.selected_objects if ob.type == "MESH"]
+        obs = [
+            ob for ob in context.selected_objects
+            if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
+        ]
 
         if not obs:
             self.report({"ERROR"}, "At least one mesh object must be selected")

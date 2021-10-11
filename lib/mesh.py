@@ -19,6 +19,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from collections.abc import Iterable
+
 import bpy
 from bpy.types import Object
 import bmesh
@@ -28,7 +30,7 @@ from mathutils import Matrix
 from .iterutils import pairwise_cyclic, quadwise_cyclic
 
 
-def est_volume(obs: list[Object]) -> float:
+def est_volume(obs: Iterable[Object]) -> float:
     depsgraph = bpy.context.evaluated_depsgraph_get()
     bm = bmesh.new()
 
@@ -41,7 +43,7 @@ def est_volume(obs: list[Object]) -> float:
 
         ob_eval.to_mesh_clear()
 
-    bmesh.ops.triangulate(bm, faces=bm.faces, quad_method="SHORT_EDGE")
+    bmesh.ops.triangulate(bm, faces=bm.faces)
 
     vol = bm.calc_volume()
     bm.free()

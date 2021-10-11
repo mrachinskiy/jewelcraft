@@ -33,7 +33,7 @@ class _Data:
 
     def __init__(self):
         self.gems = collections.defaultdict(int)
-        self.materials = collections.defaultdict(float)
+        self.materials = []
         self.notes = []
         self.warnings = []
 
@@ -56,15 +56,18 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
 
         for item in props.measurements.coll:
 
-            if not item.object:
+            if item.collection is None and item.object is None:
                 continue
 
             if item.type == "WEIGHT":
-                if item.object.type == "MESH":
-                    name = item.material_name
-                    density = unit.convert_cm3_mm3(item.material_density)
-                    vol = Scale.from_scene_vol(mesh.est_volume((item.object,)))
-                    Report.materials[(name, density)] += vol
+                name = item.material_name
+                density = unit.convert_cm3_mm3(item.material_density)
+                obs = (
+                    ob for ob in item.collection.objects
+                    if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
+                )
+                vol = Scale.from_scene_vol(mesh.est_volume(obs))
+                Report.materials.append((name, density, vol))
 
             elif item.type == "DIMENSIONS":
                 axes = []

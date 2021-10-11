@@ -22,7 +22,7 @@
 from pathlib import Path
 
 import bpy
-from bpy.types import PropertyGroup, AddonPreferences, Object
+from bpy.types import PropertyGroup, AddonPreferences, Object, Collection
 from bpy.props import (
     EnumProperty,
     BoolProperty,
@@ -178,14 +178,15 @@ class MaterialListCollection(PropertyGroup):
 
 class MeasurementCollection(PropertyGroup):
     name: StringProperty(name="Name", default="Untitled")
+    collection: PointerProperty(name="Collection", type=Collection)
     object: PointerProperty(name="Object", description="Measured object", type=Object)
     type: EnumProperty(
         name="Type",
         description="Measurement type",
         items=(
-            ("DIMENSIONS", "", "", 0),
+            ("RING_SIZE", "", "", 0),
             ("WEIGHT", "", "", 1),
-            ("RING_SIZE", "", "", 2),
+            ("DIMENSIONS", "", "", 2),
         ),
     )
     ring_size: EnumProperty(
