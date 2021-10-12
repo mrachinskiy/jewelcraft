@@ -44,8 +44,9 @@ def prepare_object(self, bm):
     if self.loc_z:
         ob.matrix_world @= Matrix.Translation((0.0, 0.0, self.loc_z))
 
-    con = ob.constraints.new("FOLLOW_PATH")
-    con.use_curve_follow = True
-    con.forward_axis = "FORWARD_X"
+    if self.cutter_type == "BETWEEN":
+        con = ob.constraints.new("FOLLOW_PATH")
+        con.use_curve_follow = True
+        con.forward_axis = "FORWARD_X"
 
     return ob
