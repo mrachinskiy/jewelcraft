@@ -261,7 +261,8 @@ def invoke(self, context, event):
         self.cyclic = curve.data.splines[0].use_cyclic_u
         self.base_unit = 100.0 / mesh.est_curve_length(curve)
 
-        if not sizes.length():
+        if not event.ctrl or not sizes.length():
+            sizes.clear()
             item = sizes.add()
             item.qty = 10
             item.size = ob.dimensions.y

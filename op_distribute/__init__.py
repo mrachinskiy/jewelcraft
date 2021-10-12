@@ -92,7 +92,10 @@ class Distribute:
 
 class OBJECT_OT_curve_distribute(Distribute, Operator):
     bl_label = "Distribute on Curve"
-    bl_description = "Distribute selected object along active curve"
+    bl_description = (
+        "Distribute selected object along active curve\n"
+        "(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+    )
     bl_idname = "object.jewelcraft_curve_distribute"
     bl_options = {"REGISTER", "UNDO"}
 
