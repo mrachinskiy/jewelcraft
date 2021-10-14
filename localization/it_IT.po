@@ -79,9 +79,6 @@ msgstr "Sistema di unità non supportato"
 msgid "Overlapping Gems"
 msgstr "Gemme sovrapposte"
 
-msgid "Limit By Selection"
-msgstr "Limita per selezione"
-
 msgid "Viewport Background"
 msgstr ""
 

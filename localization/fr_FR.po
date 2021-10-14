@@ -79,9 +79,6 @@ msgstr "Système d'unités non supporté"
 msgid "Overlapping Gems"
 msgstr "Superposition de pierres"
 
-msgid "Limit By Selection"
-msgstr "Limiter à la sélection"
-
 msgid "Viewport Background"
 msgstr ""
 

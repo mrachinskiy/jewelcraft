@@ -114,7 +114,7 @@ def draw_gems(self, context, gamma_corr=False):
         else:
             ob = dup.object.original
 
-        if "gem" not in ob or (self.use_select and not ob.select_get()):
+        if "gem" not in ob:
             continue
 
         ob_stone = ob["gem"]["stone"]

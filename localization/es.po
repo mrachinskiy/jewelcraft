@@ -79,9 +79,6 @@ msgstr ""
 msgid "Overlapping Gems"
 msgstr ""
 
-msgid "Limit By Selection"
-msgstr ""
-
 msgid "Viewport Background"
 msgstr ""
 
