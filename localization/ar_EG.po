@@ -79,9 +79,6 @@ msgstr "نظام وحدة غير مدعم"
 msgid "Overlapping Gems"
 msgstr "الاحجار المتداخلة"
 
-msgid "Limit By Selection"
-msgstr "حدد بالاختيار"
-
 msgid "Viewport Background"
 msgstr ""
 

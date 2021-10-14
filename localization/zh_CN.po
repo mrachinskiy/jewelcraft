@@ -79,9 +79,6 @@ msgstr "不支持的单位制"
 msgid "Overlapping Gems"
 msgstr "重叠宝石"
 
-msgid "Limit By Selection"
-msgstr "按选择限制"
-
 msgid "Viewport Background"
 msgstr ""
 
