@@ -485,9 +485,6 @@ msgstr "تحذير"
 msgid "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)"
 msgstr "الأحجار الكريمة من التجميعات المخفية تظهر في تقرير ( لا تستخدم الاخفاء في مساحة العرض علي التجميعات )"
 
-msgid "Possible gem instance face leftovers"
-msgstr "احتمالية وجود نسخة من حجر كريم باقية"
-
 msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
 msgstr "رموز مجهولة للاحجار ، لا يتم حساب الأوزان للأحجار المحددة(*)"
 

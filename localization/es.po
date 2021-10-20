@@ -490,9 +490,6 @@ msgstr "ADVERTENCIA"
 msgid "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)"
 msgstr ""
 
-msgid "Possible gem instance face leftovers"
-msgstr "Posibles restos de instance face de gemas"
-
 msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
 msgstr "ID de gemas desconocidas, los quilates no se calcularon para las gemas marcadas (*)"
 
