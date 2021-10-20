@@ -22,7 +22,7 @@
 from collections.abc import Iterator
 
 import bpy
-from bpy.types import LayerCollection, Object
+from bpy.types import LayerCollection, DepsgraphObjectInstance
 from mathutils import Vector, Matrix
 
 from ..lib import unit, asset
@@ -40,57 +40,64 @@ def _collection_walk(coll: LayerCollection) -> Iterator[LayerCollection]:
 
 class Warnings:
     __slots__ = (
-        "run_checks",
-        "df_leftovers",
-        "overlap_data",
-        "is_unknown_id",
-        "is_df_leftovers",
-        "is_gem_overlap",
-        "is_collection_visibility",
+        "_overlap_data",
+        "_known_stones",
+        "_known_cuts",
+        "_is_unknown_id",
     )
 
-    def __init__(self, show_warnings: bool) -> None:
-        self.overlap_data: list[ObjectData] = []
-        self.is_unknown_id = False
-        self.is_df_leftovers = False
-        self.is_gem_overlap = False
-        self.is_collection_visibility = False
+    def __init__(self) -> None:
+        from ..lib import gemlib
 
-        methods = ("run_checks", "df_leftovers")
+        self._overlap_data: list[ObjectData] = []
+        self._known_stones = frozenset(gemlib.STONES.keys())
+        self._known_cuts = frozenset(gemlib.CUTS.keys())
+        self._is_unknown_id = False
 
-        for method in methods:
+    def report(self, report: list) -> None:
+        if self._is_unknown_id:
+            report.append("Unknown gem IDs, carats are not calculated for marked gems (*)")
 
-            if show_warnings:
-                func = getattr(self, f"_{method}")
-            else:
-                func = self._blank
+        if self._check_overlap(self._overlap_data):
+            report.append("Overlapping gems")
 
-            setattr(self, method, func)
+        if self._check_collection_visibility():
+            report.append("Gems from hidden collections appear in report (don't use Hide in Viewport on collections)")
 
-    def _run_checks(self) -> None:
-        self.is_gem_overlap = self._gem_overlap(self.overlap_data)
-        self.is_collection_visibility = self._collection_visibility()
+    def overlap(self, dup: DepsgraphObjectInstance, dim: Vector) -> None:
+        loc = dup.matrix_world.to_translation()
+        rad = max(dim.xy) / 2
+
+        if dup.is_instance:
+            mat = dup.matrix_world.copy()
+        else:
+            mat_loc = Matrix.Translation(loc)
+            mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
+            mat = mat_loc @ mat_rot
+
+        loc.freeze()
+        mat.freeze()
+
+        self._overlap_data.append((loc, rad, mat))
+
+    def validate_id(self, stone: str, cut: str) -> tuple[str, str]:
+        if stone not in self._known_stones:
+            stone = "*" + stone
+            self._is_unknown_id = True
+
+        if cut not in self._known_cuts:
+            cut = "*" + cut
+            self._is_unknown_id = True
+
+        return stone, cut
 
     @staticmethod
-    def _blank(x=None):
-        pass
-
-    def _df_leftovers(self, ob: Object) -> None:
-        if (
-            ob.parent and
-            ob.parent.type == "MESH" and
-            ob.parent.instance_type == "NONE"
-        ):
-            self.is_df_leftovers = True
-            self.df_leftovers = self._blank
-
-    @staticmethod
-    def _gem_overlap(ob_data: list[ObjectData]) -> bool:
+    def _check_overlap(ob_data: list[ObjectData]) -> bool:
         threshold = unit.Scale(bpy.context).to_scene(0.1)
         return asset.gem_overlap(bpy.context, ob_data, threshold, first_match=True)
 
     @staticmethod
-    def _collection_visibility() -> bool:
+    def _check_collection_visibility() -> bool:
         for coll in _collection_walk(bpy.context.view_layer.layer_collection):
             if coll.hide_viewport:
                 for ob in coll.collection.all_objects:

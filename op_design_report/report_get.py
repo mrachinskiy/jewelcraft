@@ -22,9 +22,8 @@
 import collections
 
 import bpy
-from mathutils import Matrix
 
-from ..lib import unit, mesh, gemlib
+from ..lib import unit, mesh
 from . import report_warn
 
 
@@ -50,7 +49,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
     props = scene.jewelcraft
     Scale = unit.Scale(bpy.context)
     Report = _Data()
-    Warn = report_warn.Warnings(show_warnings)
+    Warn = report_warn.Warnings()
 
     if not gem_map:
 
@@ -90,9 +89,6 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
     # Gems
     # ---------------------------
 
-    known_stones = gemlib.STONES.keys()
-    known_cuts = gemlib.CUTS.keys()
-
     for dup in depsgraph.object_instances:
 
         if dup.is_instance:
@@ -109,45 +105,12 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
         size = tuple(round(x, 2) for x in Scale.from_scene_batch(ob.dimensions))
 
         # Warnings
-        loc = dup.matrix_world.to_translation()
-        rad = max(ob.dimensions[:2]) / 2
-        if dup.is_instance:
-            mat = dup.matrix_world.copy()
-        else:
-            mat_loc = Matrix.Translation(loc)
-            mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
-            mat = mat_loc @ mat_rot
-        loc.freeze()
-        mat.freeze()
-
-        Warn.overlap_data.append((loc, rad, mat))
-        Warn.df_leftovers(ob)
-
-        if stone not in known_stones:
-            stone = "*" + stone
-            Warn.is_unknown_id = True
-
-        if cut not in known_cuts:
-            cut = "*" + cut
-            Warn.is_unknown_id = True
+        Warn.overlap(dup, ob.dimensions)
+        stone, cut = Warn.validate_id(stone, cut)
 
         Report.gems[(stone, cut, size)] += 1
 
-    # Warnings
-    # ---------------------------
-
-    Warn.run_checks()
-
-    if Warn.is_collection_visibility:
-        Report.warnings.append("Gems from hidden collections appear in report (don't use Hide in Viewport on collections)")
-
-    if Warn.is_df_leftovers:
-        Report.warnings.append("Possible gem instance face leftovers")
-
-    if Warn.is_gem_overlap:
-        Report.warnings.append("Overlapping gems")
-
-    if Warn.is_unknown_id:
-        Report.warnings.append("Unknown gem IDs, carats are not calculated for marked gems (*)")
+    if show_warnings:
+        Warn.report(Report.warnings)
 
     return Report

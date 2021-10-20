@@ -489,9 +489,6 @@ msgstr "ПРЕДУПРЕЖДЕНИЕ"
 msgid "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)"
 msgstr "Камни из скрытых коллекций отображаются в отчете (не используйте Hide in Viewport на коллекциях)"
 
-msgid "Possible gem instance face leftovers"
-msgstr "Возможные остатки instance face камней"
-
 msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
 msgstr "Неизвестные идентификаторы камней, караты не рассчитываются для отмеченных камней (*)"
 
