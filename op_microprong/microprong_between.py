@@ -40,6 +40,22 @@ def _get_obs(context):
 
     obs.sort(key=operator.itemgetter(1), reverse=True)
 
+    # Cap ends
+    size_1, ofst_1 = obs[0]
+    _, ofst_2 = obs[1]
+    size_n1, ofst_n1 = obs[-1]
+    _, ofst_n2 = obs[-2]
+
+    ofst_start = ofst_1 - (ofst_2 - ofst_1)
+    ofst_end = ofst_n1 + (ofst_n1 - ofst_n2)
+    is_cyclic = round(ofst_start - 100.0, 2) == round(ofst_n1, 2)
+
+    if is_cyclic:
+        app((size_1, ofst_end))
+    else:
+        obs.insert(0, (size_1, ofst_start))
+        app((size_n1, ofst_end))
+
     return obs, fp.target, fp.id_data.users_collection
 
 
