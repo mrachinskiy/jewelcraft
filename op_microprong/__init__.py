@@ -165,13 +165,13 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         self.color = prefs.color_cutter
         self.curve_length = mesh.est_curve_length(curve)
 
-        active = context.object
+        active = ob
 
-        for con in active.constraints:
-            if con.type == "FOLLOW_PATH":
-                break
-        else:
-            active = ob
+        if context.object is not None:
+            for con in context.object.constraints:
+                if con.type == "FOLLOW_PATH":
+                    active = context.object
+                    break
 
         self.size_active = active.dimensions.y
         upd_width(self)
