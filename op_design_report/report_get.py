@@ -44,47 +44,12 @@ class _Data:
 
 
 def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
-    scene = bpy.context.scene
-    depsgraph = bpy.context.evaluated_depsgraph_get()
-    props = scene.jewelcraft
-    Scale = unit.Scale(bpy.context)
     Report = _Data()
     Warn = report_warn.Warnings()
+    Scale = unit.Scale(bpy.context)
 
-    if not gem_map:
-
-        for item in props.measurements.coll:
-
-            if item.collection is None and item.object is None:
-                continue
-
-            if item.type == "WEIGHT":
-                name = item.material_name
-                density = unit.convert_cm3_mm3(item.material_density)
-                obs = (
-                    ob for ob in item.collection.objects
-                    if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
-                )
-                vol = Scale.from_scene_vol(mesh.est_volume(obs))
-                Report.materials.append((name, density, vol))
-
-            elif item.type == "DIMENSIONS":
-                axes = []
-                if item.x: axes.append(0)
-                if item.y: axes.append(1)
-                if item.z: axes.append(2)
-
-                if not axes:
-                    continue
-
-                dim = Scale.from_scene_batch(item.object.dimensions)
-                values = tuple(round(dim[x], 2) for x in axes)
-                Report.notes.append((item.type, item.name, values))
-
-            elif item.type == "RING_SIZE":
-                dim = Scale.from_scene(item.object.dimensions[int(item.axis)])
-                values = (round(dim, 2), item.ring_size)
-                Report.notes.append((item.type, item.name, values))
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    props = bpy.context.scene.jewelcraft
 
     # Gems
     # ---------------------------
@@ -112,5 +77,44 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
 
     if show_warnings:
         Warn.report(Report.warnings)
+
+    if gem_map:
+        return Report
+
+    # Measurements
+    # ---------------------------
+
+    for item in props.measurements.coll:
+
+        if item.collection is None and item.object is None:
+            continue
+
+        if item.type == "WEIGHT":
+            name = item.material_name
+            density = unit.convert_cm3_mm3(item.material_density)
+            obs = (
+                ob for ob in item.collection.objects
+                if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
+            )
+            vol = Scale.from_scene_vol(mesh.est_volume(obs))
+            Report.materials.append((name, density, vol))
+
+        elif item.type == "DIMENSIONS":
+            axes = []
+            if item.x: axes.append(0)
+            if item.y: axes.append(1)
+            if item.z: axes.append(2)
+
+            if not axes:
+                continue
+
+            dim = Scale.from_scene_batch(item.object.dimensions)
+            values = tuple(round(dim[x], 2) for x in axes)
+            Report.notes.append((item.type, item.name, values))
+
+        elif item.type == "RING_SIZE":
+            dim = Scale.from_scene(item.object.dimensions[int(item.axis)])
+            values = (round(dim, 2), item.ring_size)
+            Report.notes.append((item.type, item.name, values))
 
     return Report
