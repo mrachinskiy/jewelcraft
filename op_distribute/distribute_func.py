@@ -310,4 +310,12 @@ def invoke(self, context, event):
         ofst2, size2 = values_dstr[1]
         self.spacing = (ofst2 - ofst1) / self.base_unit - (size1 + size2) / 2
 
+    elif self.cyclic and len(values_dstr) > 1:
+        ofst_1 = values_dstr[0][0]
+        ofst_n1 = values_dstr[-1][0]
+        ofst_n2 = values_dstr[-2][0]
+        ofst_n = round(ofst_n1 + (ofst_n1 - ofst_n2), 2)
+        if (ofst_n - 100.0) == ofst_1:
+            self.end = ofst_n
+
     return wm.invoke_props_popup(self, event)
