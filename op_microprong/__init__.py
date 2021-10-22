@@ -20,21 +20,7 @@
 
 
 from bpy.types import Operator
-from bpy.props import FloatProperty, IntProperty, EnumProperty
-
-
-def upd_width(self):
-    if self.cutter_type == "SIDE":
-        self.dim_x = self.size_active * 0.5
-
-
-def upd_cutter_type(self, context):
-    upd_width(self)
-
-    if self.cutter_type == "SIDE":
-        self.wedge_z = 0.0
-    else:
-        self.dim_x = self.wedge_z = 0.3
+from bpy.props import FloatProperty, IntProperty, BoolProperty
 
 
 class OBJECT_OT_microprong_cutter_add(Operator):
@@ -43,20 +29,18 @@ class OBJECT_OT_microprong_cutter_add(Operator):
     bl_idname = "object.jewelcraft_microprong_cutter_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    cutter_type: EnumProperty(
-        name="Type",
-        items=(
-            ("BETWEEN", "Between", ""),
-            ("SIDE", "Side", ""),
-        ),
-        update=upd_cutter_type,
-    )
+    use_between: BoolProperty(name="Between", default=True)
+    use_side: BoolProperty(name="Side", default=True)
 
-    dim_x: FloatProperty(name="Width", default=0.3, min=0.0, step=1, unit="LENGTH")
-    dim_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
+    between_x: FloatProperty(name="Width", default=0.3, min=0.0, step=1, unit="LENGTH")
+    between_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
+    between_z1: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
+    between_z2: FloatProperty(name="Wedge", default=0.3, min=0.0, step=1, unit="LENGTH")
 
-    handle_z: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
-    wedge_z: FloatProperty(name="Wedge", default=0.3, step=1, unit="LENGTH")
+    side_x: FloatProperty(name="Width", default=0.5, min=0.0, step=1, unit="LENGTH")
+    side_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
+    side_z1: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
+    side_z2: FloatProperty(name="Wedge", default=0.0, step=1, unit="LENGTH")
 
     rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
     rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
@@ -100,26 +84,40 @@ class OBJECT_OT_microprong_cutter_add(Operator):
 
         layout.separator()
 
-        layout.prop(self, "cutter_type")
+        row = layout.row()
+        row.use_property_split = False
+        row.prop(self, "use_between")
+
+        col = layout.column(align=True)
+        col.enabled = self.use_between
+        col.prop(self, "between_x")
+        col.prop(self, "between_y")
+        col.separator()
+        col.prop(self, "between_z1")
+        col.prop(self, "between_z2")
 
         layout.separator()
 
-        layout.label(text="Dimensions")
-        col = layout.column(align=True)
-        col.prop(self, "dim_x")
-        col.prop(self, "dim_y")
-        col.separator()
-        col.prop(self, "handle_z")
-        col.prop(self, "wedge_z")
+        row = layout.row()
+        row.use_property_split = False
+        row.prop(self, "use_side")
 
-        if self.cutter_type == "SIDE":
-            layout.label(text="Bevel")
-            col = layout.column(align=True)
-            col.prop(self, "bevel_top")
-            col.prop(self, "bevel_btm")
-            col.prop(self, "bevel_wedge")
-            col.separator()
-            col.prop(self, "bevel_segments")
+        col = layout.column(align=True)
+        col.enabled = self.use_side
+        col.prop(self, "side_x")
+        col.prop(self, "side_y")
+        col.separator()
+        col.prop(self, "side_z1")
+        col.prop(self, "side_z2")
+
+        col = layout.column(align=True)
+        col.enabled = self.use_side
+        col.label(text="Bevel")
+        col.prop(self, "bevel_top")
+        col.prop(self, "bevel_btm")
+        col.prop(self, "bevel_wedge")
+        col.separator()
+        col.prop(self, "bevel_segments")
 
         layout.label(text="Transforms")
         col = layout.column(align=True)
@@ -128,12 +126,15 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.prop(self, "loc_z")
 
     def execute(self, context):
-        if self.cutter_type == "BETWEEN":
+        if self.use_between:
             from . import microprong_between
-            return microprong_between.execute(self, context)
+            microprong_between.add(self, context)
 
-        from . import microprong_side
-        return microprong_side.execute(self, context)
+        if self.use_side:
+            from . import microprong_side
+            microprong_side.add(self, context)
+
+        return {"FINISHED"}
 
     def invoke(self, context, event):
         from .. import var
@@ -174,7 +175,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
                     break
 
         self.size_active = active.dimensions.y
-        upd_width(self)
+        self.side_x = self.size_active * 0.5
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)

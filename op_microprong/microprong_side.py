@@ -63,18 +63,18 @@ def _distribute(context, ob, size):
         ob_copy.matrix_parent_inverse = parent.matrix_basis.inverted()
 
 
-def execute(self, context):
+def add(self, context):
     bm = bmesh.new()
 
-    w = self.dim_x / 2
-    l = self.dim_y / 2
+    w = self.side_x / 2
+    l = self.side_y / 2
 
     coords = (
-        ( w, l,  w + self.handle_z),
-        ( w, l, -w),
-        ( 0.0, l, -w - self.wedge_z),
-        (-w, l, -w),
-        (-w, l,  w + self.handle_z),
+        ( w,   l,  w + self.side_z1),
+        ( w,   l, -w),
+        ( 0.0, l, -w - self.side_z2),
+        (-w,   l, -w),
+        (-w,   l,  w + self.side_z1),
     )
 
     vs_north = [bm.verts.new(co) for co in coords]
@@ -87,7 +87,7 @@ def execute(self, context):
 
     if self.bevel_top:
         edges = (es[0], es[4])
-        ofst = self.bevel_top / 100.0 * self.dim_x
+        ofst = self.bevel_top / 100.0 * self.side_x
         bmesh.ops.bevel(
             bm,
             geom=edges,
@@ -99,7 +99,21 @@ def execute(self, context):
             profile=0.5,
         )
 
-    if self.bevel_wedge and self.wedge_z:
+    if self.bevel_btm:
+        edges = (es[1], es[3])
+        ofst = self.bevel_btm / 100.0 * self.side_x
+        bmesh.ops.bevel(
+            bm,
+            geom=edges,
+            affect="EDGES",
+            clamp_overlap=False,
+            offset=ofst,
+            offset_type="OFFSET",
+            segments=self.bevel_segments,
+            profile=0.5,
+        )
+
+    if self.bevel_wedge and self.side_z2:
         bmesh.ops.bevel(
             bm,
             geom=(es[2],),
@@ -111,24 +125,8 @@ def execute(self, context):
             profile=0.5,
         )
 
-    if self.bevel_btm:
-        edges = (es[1], es[3])
-        ofst = self.bevel_btm / 100.0 * self.dim_x
-        bmesh.ops.bevel(
-            bm,
-            geom=edges,
-            affect="EDGES",
-            clamp_overlap=False,
-            offset=ofst,
-            offset_type="OFFSET",
-            segments=self.bevel_segments,
-            profile=0.5,
-        )
-
-    if self.bevel_btm or self.bevel_top or (self.bevel_wedge and self.wedge_z):
+    if self.bevel_btm or self.bevel_top or (self.bevel_wedge and self.side_z2):
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
 
-    ob = microprong_lib.prepare_object(self, bm)
+    ob = microprong_lib.prepare_object(self, bm, follow_path=False)
     _distribute(context, ob, self.size_active)
-
-    return {"FINISHED"}

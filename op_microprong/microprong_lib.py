@@ -25,7 +25,7 @@ from mathutils import Matrix
 from ..lib import asset
 
 
-def prepare_object(self, bm):
+def prepare_object(self, bm, follow_path=True):
 
     ob_name = "Microprong Cutter"
     me = bpy.data.meshes.new(ob_name)
@@ -44,7 +44,7 @@ def prepare_object(self, bm):
     if self.loc_z:
         ob.matrix_world @= Matrix.Translation((0.0, 0.0, self.loc_z))
 
-    if self.cutter_type == "BETWEEN":
+    if follow_path:
         con = ob.constraints.new("FOLLOW_PATH")
         con.use_curve_follow = True
         con.forward_axis = "FORWARD_X"

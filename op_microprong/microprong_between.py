@@ -87,18 +87,18 @@ def _distribute(context, ob, curve_length):
         con.target = curve
 
 
-def execute(self, context):
+def add(self, context):
     bm = bmesh.new()
 
-    w = self.dim_x / 2
-    l = self.dim_y / 2
+    w = self.between_x / 2
+    l = self.between_y / 2
 
     coords = (
-        ( w,   l,  self.handle_z),
+        ( w,   l,  self.between_z1),
         ( w,   l,  0.0),
-        ( 0.0, l, -self.wedge_z),
+        ( 0.0, l, -self.between_z2),
         (-w,   l,  0.0),
-        (-w,   l,  self.handle_z),
+        (-w,   l,  self.between_z1),
     )
 
     vs_north = [bm.verts.new(co) for co in coords]
@@ -111,5 +111,3 @@ def execute(self, context):
 
     ob = microprong_lib.prepare_object(self, bm)
     _distribute(context, ob, self.curve_length)
-
-    return {"FINISHED"}
