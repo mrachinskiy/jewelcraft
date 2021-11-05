@@ -187,7 +187,7 @@ class OBJECT_OT_gem_edit(Operator):
                     ob["gem"]["cut"] = self.cut
 
                     if not self.use_id_only:
-                        size_orig = ob.dimensions[1]
+                        size_orig = ob.dimensions.y
                         mats_orig = ob.data.materials
 
                         ob.data = me.copy()

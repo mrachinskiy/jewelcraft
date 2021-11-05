@@ -311,8 +311,8 @@ class OBJECT_OT_make_instance_face(Operator):
         ob = context.object or obs[0]
 
         df_name = ob.name + " Instance Face"
-        df_radius = min(ob.dimensions[:2]) * 0.15
-        df_offset = ob.dimensions[0] * 1.5
+        df_radius = min(ob.dimensions.xy) * 0.15
+        df_offset = ob.dimensions.x * 1.5
 
         verts = [
             (df_offset - df_radius, -df_radius, 0.0),
