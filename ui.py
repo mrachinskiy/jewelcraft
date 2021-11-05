@@ -320,7 +320,7 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
 
     @classmethod
     def poll(cls, context):
-        return unit.check(context) is not False
+        return unit.check(context) is not unit.WARN_NONE
 
     def draw_header(self, context):
         self.layout.alert = True

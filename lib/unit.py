@@ -19,25 +19,28 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Union
-
 from mathutils import Vector
 
 
+WARN_NONE = 0
 WARN_SCALE = 1
 WARN_SYSTEM = 2
 
 
-def check(context) -> Union[int, bool]:
+def _eq(a: float, b: float) -> bool:
+    return abs(a - b) < 0.0000000001
+
+
+def check(context) -> int:
     unit = context.scene.unit_settings
 
-    if unit.system == "METRIC" and round(unit.scale_length, 4) != 0.001:
+    if unit.system == "METRIC" and not _eq(unit.scale_length, 0.001):
         return WARN_SCALE
 
     if unit.system == "IMPERIAL":
         return WARN_SYSTEM
 
-    return False
+    return WARN_NONE
 
 
 def convert_cm3_mm3(x: float) -> float:
@@ -62,39 +65,30 @@ class Scale:
     __slots__ = (
         "scale",
         "from_scene",
-        "from_scene_batch",
+        "from_scene_vec",
         "from_scene_vol",
         "to_scene",
-        "to_scene_batch",
+        "to_scene_vec",
         "to_scene_vol",
     )
 
     def __init__(self, context) -> None:
         unit = context.scene.unit_settings
-        self.scale = round(unit.scale_length, 4)
 
-        if unit.system == "METRIC" and self.scale != 0.001:
-            self.from_scene = self._from_scene
-            self.from_scene_batch = self._from_scene_batch
-            self.from_scene_vol = self._from_scene_vol
+        if unit.system == "METRIC" and not _eq(unit.scale_length, 0.001):
+            self.scale = round(unit.scale_length, 10)
+            for prop in self.__slots__[1:]:
+                setattr(self, prop, getattr(self, f"_{prop}"))
+            return
 
-            self.to_scene = self._to_scene
-            self.to_scene_batch = self._to_scene_batch
-            self.to_scene_vol = self._to_scene_vol
-        else:
-            self.from_scene = self._blank
-            self.from_scene_batch = self._blank
-            self.from_scene_vol = self._blank
-
-            self.to_scene = self._blank
-            self.to_scene_batch = self._blank
-            self.to_scene_vol = self._blank
+        for prop in self.__slots__[1:]:
+            setattr(self, prop, self._blank)
 
     def _from_scene(self, x: float) -> float:
         return x * 1000 * self.scale
 
-    def _from_scene_batch(self, values: Vector) -> tuple[float, float, float]:
-        return tuple(v * 1000 * self.scale for v in values)
+    def _from_scene_vec(self, vec: Vector) -> tuple[float, ...]:
+        return tuple(x * 1000 * self.scale for x in vec)
 
     def _from_scene_vol(self, x: float) -> float:
         return x * 1000 ** 3 * self.scale ** 3
@@ -102,8 +96,8 @@ class Scale:
     def _to_scene(self, x: float) -> float:
         return x / 1000 / self.scale
 
-    def _to_scene_batch(self, values: Vector) -> tuple[float, float, float]:
-        return tuple(v / 1000 / self.scale for v in values)
+    def _to_scene_vec(self, vec: Vector) -> tuple[float, ...]:
+        return tuple(x / 1000 / self.scale for x in vec)
 
     def _to_scene_vol(self, x: float) -> float:
         return x / 1000 ** 3 / self.scale ** 3

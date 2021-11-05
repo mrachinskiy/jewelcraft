@@ -67,7 +67,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
         # Gem
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in Scale.from_scene_batch(ob.dimensions))
+        size = tuple(round(x, 2) for x in Scale.from_scene_vec(ob.dimensions))
 
         # Warnings
         Warn.overlap(dup, ob.dimensions)
@@ -108,7 +108,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
             if not axes:
                 continue
 
-            dim = Scale.from_scene_batch(item.object.dimensions)
+            dim = Scale.from_scene_vec(item.object.dimensions)
             values = tuple(round(dim[x], 2) for x in axes)
             Report.notes.append((item.type, item.name, values))
 
