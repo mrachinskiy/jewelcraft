@@ -356,10 +356,10 @@ class OBJECT_OT_move_over_under(Operator):
                     z_object = min(x[2] for x in bbox)
 
                 if curve:
-                    z_pivot = curve.location[2]
+                    z_pivot = curve.location.z
                 else:
                     z_pivot = 0.0
 
-                ob.location[2] += z_pivot - z_object
+                ob.location.z += z_pivot - z_object
 
         return {"FINISHED"}
