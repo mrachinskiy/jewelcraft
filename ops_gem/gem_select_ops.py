@@ -151,7 +151,7 @@ class OBJECT_OT_gem_select_overlapping(Operator):
 
             if "gem" in ob:
                 loc = dup.matrix_world.to_translation()
-                rad = max(ob.dimensions[:2]) / 2
+                rad = max(ob.dimensions.xy) / 2
 
                 if dup.is_instance:
                     mat = dup.matrix_world.copy()
