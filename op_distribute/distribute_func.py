@@ -30,6 +30,10 @@ from mathutils import Matrix, Vector
 from ..lib import mesh, asset, iterutils
 
 
+def _eq(a: float, b: float) -> bool:
+    return abs(a - b) < 0.000001
+
+
 def _get_obs() -> tuple[Optional[Object], Optional[Object]]:
     ob1, ob2 = bpy.context.selected_objects
     is_curve1 = ob1.type == "CURVE"
@@ -121,7 +125,10 @@ def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> list[t
                 if con.type == "FOLLOW_PATH":
                     break
 
-        ob_copy.scale *= size / ob_copy.dimensions.y
+        scaling = size / ob_copy.dimensions.y
+
+        if not _eq(scaling, 1.0):
+            ob_copy.scale *= scaling
 
         app((con, None, size))
 
@@ -277,19 +284,19 @@ def invoke(self, context, event):
     for con in _get_cons():
         ob = con.id_data
         curve = con.target
-        app((-con.offset, round(ob.dimensions.y, 2)))
+        app((-con.offset, ob.dimensions.y))
 
     if not curve:
         self.report({"ERROR"}, "Selected objects do not have Follow Path constraint")
         return {"CANCELLED"}
 
     values_dstr.sort(key=operator.itemgetter(0))
-    prev_size = None
+    prev_size = -1.0
     sizes.clear()
 
     for _, size in values_dstr:
 
-        if size == prev_size:
+        if _eq(size, prev_size):
             item.qty += 1
         else:
             item = sizes.add()
