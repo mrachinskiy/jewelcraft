@@ -599,7 +599,7 @@ class OBJECT_OT_lattice_profile(Operator):
         else:
 
             lat.location = (*self.BBox.loc.xy, self.BBox.max.z)
-            lat.scale[1] = dim_xy * 1.5
+            lat.scale.y = dim_xy * 1.5
 
             lat_data.points_u = 1
             lat_data.points_v = 7
