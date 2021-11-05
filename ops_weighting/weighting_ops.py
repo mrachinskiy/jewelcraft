@@ -111,6 +111,6 @@ class OBJECT_OT_weight_display(Operator):
                 weight_fmt = "{} {}  {}".format(weight, _("g"), mat.name)
                 weight_report.append(weight_fmt)
 
-        ui_lib.popup_report_batch(self, context, msgs=weight_report, title=_("Weighting"))
+        ui_lib.popup_list(self, _("Weighting"), weight_report)
 
         return {"FINISHED"}

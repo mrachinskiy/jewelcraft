@@ -197,7 +197,6 @@ def register():
 
 def unregister():
     import bpy.utils.previews
-    from .lib import dynamic_list
     from .lib.view3d_lib import spacing_overlay
 
     for cls in classes:
