@@ -19,25 +19,18 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-def popup_report(self, context, msg: str = "", title: str = "", icon: str = "INFO") -> None:
+import bpy
+
+
+def popup_list(op, title: str, msgs: list, icon: str = "INFO") -> None:
 
     def draw(self, context):
-        self.layout.label(text=msg)
-
-    self.report({"INFO"}, f"{title}: {msg}")
-    context.window_manager.popup_menu(draw, title=title, icon=icon)
-
-
-def popup_report_batch(self, context, msgs: list[str] = None, title: str = "", icon: str = "INFO") -> None:
-
-    def draw(self, context):
-        layout = self.layout
         for text in msgs:
-            layout.label(text=text)
+            self.layout.label(text=text)
 
-    self.report({"OPERATOR"}, f"{title}:")
+    op.report({"INFO"}, f"{title}:")
 
     for text in msgs:
-        self.report({"INFO"}, text)
+        op.report({"INFO"}, text)
 
-    context.window_manager.popup_menu(draw, title=title, icon=icon)
+    bpy.context.window_manager.popup_menu(draw, title=title, icon=icon)

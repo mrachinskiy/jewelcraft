@@ -252,7 +252,7 @@ class CURVE_OT_length_display(Operator):
         length = unit.Scale(context).from_scene(mesh.est_curve_length(ob))
         report = f"{length:.2f} {_('mm')}"
 
-        ui_lib.popup_report(self, context, msg=report, title=_("Curve Length"))
+        ui_lib.popup_list(self, _("Curve Length"), (report,))
 
         return {"FINISHED"}
 
