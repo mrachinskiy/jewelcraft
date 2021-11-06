@@ -31,7 +31,7 @@ from ..lib import mesh, asset, iterutils
 
 
 def _eq(a: float, b: float) -> bool:
-    return abs(a - b) < 0.000001
+    return abs(a - b) < 1e-6
 
 
 def _get_obs() -> tuple[Optional[Object], Optional[Object]]:

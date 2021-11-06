@@ -28,7 +28,7 @@ WARN_SYSTEM = 2
 
 
 def _eq(a: float, b: float) -> bool:
-    return abs(a - b) < 0.0000000001
+    return abs(a - b) < 1e-7
 
 
 def check(context) -> int:
@@ -76,7 +76,7 @@ class Scale:
         unit = context.scene.unit_settings
 
         if unit.system == "METRIC" and not _eq(unit.scale_length, 0.001):
-            self.scale = round(unit.scale_length, 10)
+            self.scale = round(unit.scale_length, 7)
             for prop in self.__slots__[1:]:
                 setattr(self, prop, getattr(self, f"_{prop}"))
             return
