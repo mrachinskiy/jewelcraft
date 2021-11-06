@@ -277,8 +277,8 @@ def invoke(self, context, event):
         wm.invoke_props_popup(self, event)
         return self.execute(context)
 
-    values_dstr = []
-    app = values_dstr.append
+    obs = []
+    app = obs.append
     curve = None
 
     for con in _get_cons():
@@ -286,15 +286,15 @@ def invoke(self, context, event):
         curve = con.target
         app((-con.offset, ob.dimensions.y))
 
-    if not curve:
+    if curve is None:
         self.report({"ERROR"}, "Selected objects do not have Follow Path constraint")
         return {"CANCELLED"}
 
-    values_dstr.sort(key=operator.itemgetter(0))
+    obs.sort(key=operator.itemgetter(0))
     prev_size = -1.0
     sizes.clear()
 
-    for _, size in values_dstr:
+    for _, size in obs:
 
         if _eq(size, prev_size):
             item.qty += 1
@@ -306,23 +306,23 @@ def invoke(self, context, event):
         prev_size = size
 
     self.use_absolute_offset = sizes.length() > 1
-    self.start = values_dstr[0][0]
-    self.end = values_dstr[-1][0]
+    self.start = obs[0][0]
+    self.end = obs[-1][0]
     self.cyclic = curve.data.splines[0].use_cyclic_u
     self.base_unit = 100.0 / mesh.est_curve_length(curve)
     self.hash_sizes = _hash(sizes.values())
 
-    if self.use_absolute_offset:
-        ofst1, size1 = values_dstr[0]
-        ofst2, size2 = values_dstr[1]
-        self.spacing = (ofst2 - ofst1) / self.base_unit - (size1 + size2) / 2
-
-    elif self.cyclic and len(values_dstr) > 1:
-        ofst_1 = values_dstr[0][0]
-        ofst_n1 = values_dstr[-1][0]
-        ofst_n2 = values_dstr[-2][0]
-        ofst_n = round(ofst_n1 + (ofst_n1 - ofst_n2), 2)
-        if (ofst_n - 100.0) == ofst_1:
-            self.end = ofst_n
+    if len(obs) > 1:
+        if self.use_absolute_offset:
+            ofst1, size1 = obs[0]
+            ofst2, size2 = obs[1]
+            self.spacing = (ofst2 - ofst1) / self.base_unit - (size1 + size2) / 2
+        elif self.cyclic:
+            ofst_1 = obs[0][0]
+            ofst_n1 = obs[-1][0]
+            ofst_n2 = obs[-2][0]
+            ofst_n = round(ofst_n1 + (ofst_n1 - ofst_n2), 2)
+            if (ofst_n - 100.0) == ofst_1:
+                self.end = ofst_n
 
     return wm.invoke_props_popup(self, event)
