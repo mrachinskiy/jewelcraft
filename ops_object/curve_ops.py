@@ -48,7 +48,7 @@ def set_ring_size(self, context):
 
     try:
         size = ringsizelib.cir_to_size(
-            unit.Scale(context).from_scene(self.circumference),
+            unit.Scale().from_scene(self.circumference),
             self.size_format,
         )
     except ValueError:
@@ -83,7 +83,7 @@ def upd_size(self, context):
 
     cir = ringsizelib.size_to_cir(size, self.size_format)
 
-    self["circumference"] = unit.Scale(context).to_scene(cir)
+    self["circumference"] = unit.Scale().to_scene(cir)
     set_diameter(self, context)
 
 
@@ -249,7 +249,7 @@ class CURVE_OT_length_display(Operator):
             self.report({"ERROR"}, "Active object must be a curve")
             return {"CANCELLED"}
 
-        length = unit.Scale(context).from_scene(mesh.est_curve_length(ob))
+        length = unit.Scale().from_scene(mesh.est_curve_length(ob))
         report = f"{length:.2f} {_('mm')}"
 
         ui_lib.popup_list(self, _("Curve Length"), (report,))

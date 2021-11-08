@@ -102,7 +102,7 @@ def draw_gems(self, context, gamma_corr=False):
         _center_xy = (self.region.width / 2, self.region.height / 2)
         view_loc = region_2d_to_origin_3d(self.region, self.region_3d, _center_xy)
 
-    from_scene_scale_vec = unit.Scale(context).from_scene_vec
+    from_scene_scale_vec = unit.Scale().from_scene_vec
     depsgraph = context.evaluated_depsgraph_get()
     gems = []
     _app = gems.append

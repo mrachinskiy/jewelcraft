@@ -19,6 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import bpy
 from mathutils import Vector
 
 
@@ -72,8 +73,8 @@ class Scale:
         "to_scene_vol",
     )
 
-    def __init__(self, context) -> None:
-        unit = context.scene.unit_settings
+    def __init__(self) -> None:
+        unit = bpy.context.scene.unit_settings
 
         if unit.system == "METRIC" and not _eq(unit.scale_length, 0.001):
             self.scale = round(unit.scale_length, 7)

@@ -71,7 +71,7 @@ def gem_overlap(context, data: list[ObjectData], threshold: float, first_match=F
 
     kd.balance()
 
-    UnitScale = unit.Scale(context)
+    UnitScale = unit.Scale()
     from_scene_scale = UnitScale.from_scene
 
     overlap_indices = set()
