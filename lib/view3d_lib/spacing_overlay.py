@@ -185,7 +185,7 @@ def _draw(self, context):
         else:
             ob1_spacing = default_spacing
 
-        from_scene_scale = unit.Scale(context).from_scene
+        from_scene_scale = unit.Scale().from_scene
 
         if is_df:
             df_pass = False

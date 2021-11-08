@@ -31,11 +31,11 @@ from ..lib import dynamic_list, unit
 
 def upd_set_weight(self, context):
     if self.stone == "DIAMOND" and self.cut == "ROUND":
-        self["weight"] = unit.convert_mm_ct(unit.Scale(context).from_scene(self.size))
+        self["weight"] = unit.convert_mm_ct(unit.Scale().from_scene(self.size))
 
 
 def upd_weight(self, context):
-    self["size"] = unit.Scale(context).to_scene(unit.convert_ct_mm(self.weight))
+    self["size"] = unit.Scale().to_scene(unit.convert_ct_mm(self.weight))
 
 
 class OBJECT_OT_gem_add(Operator):

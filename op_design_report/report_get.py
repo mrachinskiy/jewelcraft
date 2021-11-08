@@ -46,7 +46,7 @@ class _Data:
 def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
     Report = _Data()
     Warn = report_warn.Warnings()
-    Scale = unit.Scale(bpy.context)
+    Scale = unit.Scale()
 
     depsgraph = bpy.context.evaluated_depsgraph_get()
     props = bpy.context.scene.jewelcraft
