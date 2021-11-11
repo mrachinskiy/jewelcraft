@@ -229,7 +229,7 @@ class CURVE_OT_size_curve_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.warn_scale = unit.check(context) is unit.WARN_SCALE
+        self.warn_scale = unit.check() is unit.WARN_SCALE
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)

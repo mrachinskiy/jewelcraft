@@ -173,7 +173,7 @@ class OBJECT_OT_gem_select_overlapping(Operator):
                 obs.append(sel)
                 ob_data.append((loc, rad, mat))
 
-        overlaps = asset.gem_overlap(context, ob_data, self.threshold)
+        overlaps = asset.gem_overlap(ob_data, self.threshold)
 
         if overlaps:
             for i in overlaps:

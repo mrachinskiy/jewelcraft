@@ -29,8 +29,8 @@ from .. import var
 from ..lib import dynamic_list, pathutils
 
 
-def asset_menu_lock(context):
-    context.window_manager.jewelcraft.asset_menu_ui_lock = True
+def _asset_menu_lock():
+    bpy.context.window_manager.jewelcraft.asset_menu_ui_lock = True
 
 
 def upd_asset_name(self, context):
@@ -117,7 +117,7 @@ class AssetAdd:
             dynamic_list.assets_refresh()
             context.area.tag_redraw()
         else:
-            asset_menu_lock(context)
+            _asset_menu_lock()
 
         return {"FINISHED"}
 
@@ -175,7 +175,7 @@ class WM_OT_asset_remove(Operator):
         Path(self.filepath + ".png").unlink(missing_ok=True)
 
         dynamic_list.assets_refresh(preview_id=self.filepath, favs=True)
-        asset_menu_lock(context)
+        _asset_menu_lock()
         context.area.tag_redraw()
 
         return {"FINISHED"}
@@ -228,7 +228,7 @@ class WM_OT_asset_rename(Operator):
             preview.rename(preview_new)
 
         dynamic_list.assets_refresh(favs=True)
-        asset_menu_lock(context)
+        _asset_menu_lock()
         context.area.tag_redraw()
 
         return {"FINISHED"}
@@ -256,7 +256,7 @@ class WM_OT_asset_preview_replace(Operator):
         asset.render_preview(resolution, resolution, Path(self.filepath).with_suffix(".png"))
 
         dynamic_list.assets_refresh(preview_id=self.filepath)
-        asset_menu_lock(context)
+        _asset_menu_lock()
         context.area.tag_redraw()
 
         return {"FINISHED"}

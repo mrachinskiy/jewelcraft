@@ -121,7 +121,7 @@ def _circle_cos(radius: float, mat: Matrix) -> tuple[Vector, ...]:
     )
 
 
-def get_df_transform(df, context, depsgraph) -> tuple[Vector, Matrix]:
+def _get_df_transform(df, context, depsgraph) -> tuple[Vector, Matrix]:
     df.update_from_editmode()
 
     if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
@@ -189,7 +189,7 @@ def _draw(self, context):
 
         if is_df:
             df_pass = False
-            loc1, mat_rot = get_df_transform(df, context, depsgraph)
+            loc1, mat_rot = _get_df_transform(df, context, depsgraph)
         else:
             loc1 = ob1.matrix_world.to_translation()
             mat_rot = ob1.matrix_world.to_quaternion().to_matrix().to_4x4()

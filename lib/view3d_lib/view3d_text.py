@@ -19,6 +19,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+import bpy
 import blf
 
 
@@ -30,22 +31,22 @@ TYPE_DEP_ON = 4
 TYPE_DEP_OFF = 5
 
 
-def padding_init(context, x=20, y=10) -> tuple[int, int]:
-    for region in context.area.regions:
+def padding_init(x=20, y=10) -> tuple[int, int]:
+    for region in bpy.context.area.regions:
         if region.type == "HEADER":
             y += region.height
         elif region.type == "TOOLS":
             x += region.width
 
-    view = context.preferences.view
-    overlay = context.space_data.overlay
+    view = bpy.context.preferences.view
+    overlay = bpy.context.space_data.overlay
 
     if overlay.show_text and (view.show_view_name or view.show_object_info):
         y += 60
     if overlay.show_stats:
         y += 140
 
-    y = context.region.height - y
+    y = bpy.context.region.height - y
 
     return x, y
 
