@@ -94,7 +94,7 @@ class Warnings:
     @staticmethod
     def _check_overlap(ob_data: list[ObjectData]) -> bool:
         threshold = unit.Scale().to_scene(0.1)
-        return asset.gem_overlap(bpy.context, ob_data, threshold, first_match=True)
+        return asset.gem_overlap(ob_data, threshold, first_match=True)
 
     @staticmethod
     def _check_collection_visibility() -> bool:

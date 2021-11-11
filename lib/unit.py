@@ -32,8 +32,8 @@ def _eq(a: float, b: float) -> bool:
     return abs(a - b) < 1e-7
 
 
-def check(context) -> int:
-    unit = context.scene.unit_settings
+def check() -> int:
+    unit = bpy.context.scene.unit_settings
 
     if unit.system == "METRIC" and not _eq(unit.scale_length, 0.001):
         return WARN_SCALE

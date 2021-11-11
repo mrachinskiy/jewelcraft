@@ -485,7 +485,7 @@ class OBJECT_OT_gem_recover(Operator):
 
         # Onscreen
 
-        self.padding_x, self.padding_y = view3d_lib.padding_init(context)
+        self.padding_x, self.padding_y = view3d_lib.padding_init()
 
         view3d_lib.options_init(
             self,

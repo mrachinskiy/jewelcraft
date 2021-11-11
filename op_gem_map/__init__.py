@@ -141,7 +141,7 @@ class VIEW3D_OT_gem_map(Operator):
         # 3D View
         # ----------------------------
 
-        self.view_padding_left, self.view_padding_top = view3d_lib.padding_init(context)
+        self.view_padding_left, self.view_padding_top = view3d_lib.padding_init()
         self.view_margin = 40
 
         view3d_lib.options_init(

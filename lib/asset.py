@@ -63,7 +63,7 @@ def calc_gap(co1: Vector, co2: Vector, loc1: Vector, dist_locs: float, rad1: flo
     return (co1 - co2).length
 
 
-def gem_overlap(context, data: list[ObjectData], threshold: float, first_match=False) -> Union[set[int], bool]:
+def gem_overlap(data: list[ObjectData], threshold: float, first_match=False) -> Union[set[int], bool]:
     kd = kdtree.KDTree(len(data))
 
     for i, (loc, _, _) in enumerate(data):

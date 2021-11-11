@@ -320,7 +320,7 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
 
     @classmethod
     def poll(cls, context):
-        return unit.check(context) is not unit.WARN_NONE
+        return unit.check() is not unit.WARN_NONE
 
     def draw_header(self, context):
         self.layout.alert = True
@@ -332,7 +332,7 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
         row = layout.row()
         row.alignment = "CENTER"
 
-        warning = unit.check(context)
+        warning = unit.check()
 
         if warning is unit.WARN_SCALE:
             row.label(text="Scene scale is not optimal")
