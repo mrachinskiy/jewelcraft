@@ -75,13 +75,13 @@ class VIEW3D_OT_gem_map(Operator):
         if self.is_rendering:
             from . import onrender
 
-            onrender.render_map(self, context)
+            onrender.render_map(self)
             self.is_rendering = False
 
         elif self.use_navigate:
             self.use_navigate = False
             self.view_state = self.region_3d.perspective_matrix.copy()
-            self.offscreen_refresh(context)
+            self.offscreen_refresh()
 
         elif event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
             bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
@@ -112,7 +112,7 @@ class VIEW3D_OT_gem_map(Operator):
 
             if self.view_state != self.region_3d.perspective_matrix:
                 self.view_state = self.region_3d.perspective_matrix.copy()
-                self.offscreen_refresh(context)
+                self.offscreen_refresh()
 
         return {"PASS_THROUGH"}
 
@@ -168,7 +168,7 @@ class VIEW3D_OT_gem_map(Operator):
         # Handlers
         # ----------------------------
 
-        self.offscreen_refresh(context)
+        self.offscreen_refresh()
         self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_handler.draw, (self, context), "WINDOW", "POST_PIXEL")
 
         context.window_manager.modal_handler_add(self)
@@ -192,9 +192,9 @@ class VIEW3D_OT_gem_map(Operator):
 
         return self.execute(context)
 
-    def offscreen_refresh(self, context) -> None:
+    def offscreen_refresh(self) -> None:
         from . import offscreen
-        offscreen.offscreen_refresh(self, context)
+        offscreen.offscreen_refresh(self)
 
     def get_resolution(self) -> tuple[int, int]:
         if self.is_rendering:
