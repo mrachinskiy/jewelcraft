@@ -37,12 +37,12 @@ def srgb_to_linear(color) -> Color:
     return Color(x ** (1.0 / 2.2) for x in color)  # NOTE T74139
 
 
-def _text_color(context, use_background: bool) -> tuple[float, float, float]:
+def _text_color(use_background: bool) -> tuple[float, float, float]:
     if use_background:
-        shading = context.space_data.shading
+        shading = bpy.context.space_data.shading
 
         if shading.background_type == "THEME":
-            gradients = context.preferences.themes[0].view_3d.space.gradients
+            gradients = bpy.context.preferences.themes[0].view_3d.space.gradients
 
             if gradients.background_type == "RADIAL":
                 bgc = gradients.gradient
@@ -50,7 +50,7 @@ def _text_color(context, use_background: bool) -> tuple[float, float, float]:
                 bgc = gradients.high_gradient
 
         elif shading.background_type == "WORLD":
-            bgc = srgb_to_linear(context.scene.world.color)
+            bgc = srgb_to_linear(bpy.context.scene.world.color)
         elif shading.background_type == "VIEWPORT":
             bgc = srgb_to_linear(shading.background_color)
 
@@ -60,7 +60,7 @@ def _text_color(context, use_background: bool) -> tuple[float, float, float]:
     return (0.0, 0.0, 0.0)
 
 
-def render_map(self, context):
+def render_map(self):
     image_name = "Gem Map"
     temp_filepath = Path(tempfile.gettempdir()) / "gem_map_temp.png"
 
@@ -111,8 +111,8 @@ def render_map(self, context):
             # Gem map
             # --------------------------------
 
-            draw_gems(self, context)
-            onscreen_text.onscreen_gem_table(self, x, y, color=_text_color(context, self.use_background))
+            draw_gems(self)
+            onscreen_text.onscreen_gem_table(self, x, y, color=_text_color(self.use_background))
 
         buffer = fb.read_color(0, 0, width, height, 4, 0, "UBYTE")
         buffer.dimensions = width * height * 4

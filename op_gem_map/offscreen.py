@@ -21,6 +21,7 @@
 
 import operator
 
+import bpy
 from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
 import blf
 import gpu
@@ -33,16 +34,16 @@ from ..lib import unit
 class _LocAdapt:
     __slots__ = "region", "region_3d", "scale", "offset"
 
-    def __init__(self, op, context) -> None:
-        self.region = context.region
-        self.region_3d = context.space_data.region_3d
+    def __init__(self, op) -> None:
+        self.region = op.region
+        self.region_3d = op.region_3d
         self.scale = Vector((1.0, 1.0))
         self.offset = Vector((0.0, 0.0))
 
         if op.is_rendering:
             if self.region_3d.view_perspective == "CAMERA":
                 width, height = op.get_resolution()
-                frame_width, frame_height, frame_offset = self._get_frame(context)
+                frame_width, frame_height, frame_offset = self._get_frame()
 
                 self.scale.xy = width / frame_width, height / frame_height
                 self.offset = frame_offset.xy
@@ -53,11 +54,12 @@ class _LocAdapt:
         v = location_3d_to_region_2d(self.region, self.region_3d, loc)
         return (v - self.offset) * self.scale
 
-    def _get_frame(self, context) -> tuple[float, float, Vector]:
-        cam = context.scene.camera
+    def _get_frame(self) -> tuple[float, float, Vector]:
+        scene = bpy.context.scene
+        cam = scene.camera
         frame = [
             location_3d_to_region_2d(self.region, self.region_3d, cam.matrix_world @ p)
-            for p in cam.data.view_frame(scene=context.scene)
+            for p in cam.data.view_frame(scene=scene)
         ]
         return frame[1].x - frame[2].x, frame[0].y - frame[1].y, frame[2]
 
@@ -66,7 +68,7 @@ def linear_to_srgb(color) -> list:
     return [x ** 2.2 for x in color]  # NOTE T74139
 
 
-def offscreen_refresh(self, context):
+def offscreen_refresh(self):
     if self.offscreen is not None:
         self.offscreen.free()
 
@@ -87,14 +89,11 @@ def offscreen_refresh(self, context):
             gpu.matrix.load_matrix(mat_offscreen)
             gpu.matrix.load_projection_matrix(Matrix())
 
-            draw_gems(self, context, gamma_corr=True)
+            draw_gems(self, gamma_corr=True)
 
 
-def draw_gems(self, context, gamma_corr=False):
-    if gamma_corr:
-        _c = linear_to_srgb
-    else:
-        _c = lambda x: x
+def draw_gems(self, gamma_corr=False):
+    _c = linear_to_srgb if gamma_corr else lambda x: x
 
     if self.region_3d.is_perspective:
         view_loc = self.region_3d.view_matrix.inverted().translation
@@ -103,7 +102,7 @@ def draw_gems(self, context, gamma_corr=False):
         view_loc = region_2d_to_origin_3d(self.region, self.region_3d, _center_xy)
 
     from_scene_scale_vec = unit.Scale().from_scene_vec
-    depsgraph = context.evaluated_depsgraph_get()
+    depsgraph = bpy.context.evaluated_depsgraph_get()
     gems = []
     _app = gems.append
 
@@ -135,7 +134,7 @@ def draw_gems(self, context, gamma_corr=False):
     blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
     shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
 
-    LocAdapt = _LocAdapt(self, context)
+    LocAdapt = _LocAdapt(self)
     _loc2d = LocAdapt.to_2d
 
     gems.sort(key=operator.itemgetter(0), reverse=True)
