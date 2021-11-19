@@ -85,11 +85,18 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         layout.separator()
 
         row = layout.row()
+        row.enabled = self.is_ob_multiple
         row.use_property_split = False
         row.prop(self, "use_between")
 
+        if not self.is_ob_multiple:
+            row = layout.row()
+            row.alert = True
+            row.alignment = "RIGHT"
+            row.label(text="At least two objects must be selected", icon="ERROR")
+
         col = layout.column(align=True)
-        col.enabled = self.use_between
+        col.enabled = self.use_between and self.is_ob_multiple
         col.prop(self, "between_x")
         col.prop(self, "between_y")
         col.separator()
@@ -126,7 +133,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.prop(self, "loc_z")
 
     def execute(self, context):
-        if self.use_between:
+        if self.use_between and self.is_ob_multiple:
             from . import microprong_between
             microprong_between.add(self, context)
 
@@ -158,13 +165,10 @@ class OBJECT_OT_microprong_cutter_add(Operator):
             self.report({"ERROR"}, "Selected objects do not have Follow Path constraint")
             return {"CANCELLED"}
 
-        if obs_count < 2:
-            self.report({"ERROR"}, "At least two objects must be selected")
-            return {"CANCELLED"}
-
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_cutter
         self.curve_length = mesh.est_curve_length(curve)
+        self.is_ob_multiple = obs_count > 1
 
         active = ob
 
