@@ -42,6 +42,11 @@ class OBJECT_OT_mirror(Operator):
     x: BoolProperty(name="X", options={"SKIP_SAVE"})
     y: BoolProperty(name="Y", options={"SKIP_SAVE"})
     z: BoolProperty(name="Z", options={"SKIP_SAVE"})
+    keep_z: BoolProperty(
+        name="Keep Z Direction",
+        description="Makes transforms on Z axis consistent with original object (does not affect gems)",
+        default=True,
+    )
     use_cursor: BoolProperty(name="Use 3D Cursor")
 
     def draw(self, context):
@@ -55,6 +60,11 @@ class OBJECT_OT_mirror(Operator):
         col.prop(self, "x")
         col.prop(self, "y")
         col.prop(self, "z")
+
+        layout.separator()
+
+        col = layout.column(heading="Orientation", align=True)
+        col.prop(self, "keep_z")
 
         layout.separator()
 
@@ -84,7 +94,7 @@ class OBJECT_OT_mirror(Operator):
 
         for ob_orig in context.selected_objects:
             is_gem = "gem" in ob_orig
-            use_rot = ob_orig.type in rotate_types or is_gem
+            use_rot = is_gem or ob_orig.type in rotate_types
 
             ob = ob_orig.copy()
 
@@ -113,6 +123,7 @@ class OBJECT_OT_mirror(Operator):
 
             for i in axes:
 
+                # Orientation
                 if use_rot:
                     quat = ob.matrix_world.to_quaternion()
                     mat_rot_inv = quat.to_matrix().to_4x4().inverted()
@@ -131,6 +142,12 @@ class OBJECT_OT_mirror(Operator):
                     ob.matrix_world[i][1] *= -1
                     ob.matrix_world[i][2] *= -1
 
+                    if self.keep_z:
+                        rot = Matrix.Rotation(pi, 4, "X")
+                        ob.matrix_world @= rot
+                        ob.data.transform(rot.inverted())
+
+                # Translation
                 ob.matrix_world[i][3] *= -1
 
                 if self.use_cursor:
