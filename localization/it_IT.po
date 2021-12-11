@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.11\n"
-"POT-Creation-Date: 2021-10-12\n"
+"POT-Creation-Date: 2021-12-11\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: De Palo Domenico\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -227,6 +227,12 @@ msgid "No corresponding size"
 msgstr ""
 
 msgid "Wedge"
+msgstr ""
+
+msgid "Keep Z Direction"
+msgstr ""
+
+msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr ""
 
 msgid "Add gemstone to the scene"

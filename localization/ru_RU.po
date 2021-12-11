@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.11\n"
-"POT-Creation-Date: 2021-10-12\n"
-"PO-Revision-Date: 2021-10-12\n"
+"POT-Creation-Date: 2021-12-11\n"
+"PO-Revision-Date: 2021-12-11\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
@@ -228,6 +228,12 @@ msgstr "Нет соответствующего размера"
 
 msgid "Wedge"
 msgstr "Клин"
+
+msgid "Keep Z Direction"
+msgstr "Сохранять направление Z"
+
+msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
+msgstr "Приводит трансформации по оси Z в соответствии исходному объекту (не влияет на камни)"
 
 msgid "Add gemstone to the scene"
 msgstr "Добавить камень в сцену"
