@@ -88,6 +88,8 @@ class OBJECT_OT_mirror(Operator):
         use_local_view = bool(space_data.local_view)
         cursor_offset = context.scene.cursor.location * 2
         is_odd_axis_count = len(axes) != 2
+        flip_z = Matrix.Rotation(pi, 4, "X")
+        flip_z_inv = flip_z.inverted()
         rotate_types = {"CAMERA", "LAMP", "SPEAKER", "FONT"}
         duplimap = {}
         children = {}
@@ -143,9 +145,8 @@ class OBJECT_OT_mirror(Operator):
                     ob.matrix_world[i][2] *= -1
 
                     if self.keep_z:
-                        rot = Matrix.Rotation(pi, 4, "X")
-                        ob.matrix_world @= rot
-                        ob.data.transform(rot.inverted())
+                        ob.matrix_world @= flip_z
+                        ob.data.transform(flip_z_inv)
 
                 # Translation
                 ob.matrix_world[i][3] *= -1
