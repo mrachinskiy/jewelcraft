@@ -94,7 +94,7 @@ class OBJECT_OT_gem_select_by_trait(Operator):
                 if self.use_select_children and ob.children:
                     for child in ob.children:
                         child.select_set(True)
-            elif not self.use_extend:
+            elif not self.use_extend and not (self.use_select_children and "gem" in ob.parent):
                 ob.select_set(False)
 
         if context.object is None or not context.object.select_get():
