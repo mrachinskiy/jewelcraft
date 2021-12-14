@@ -76,28 +76,28 @@ class OBJECT_OT_gem_select_by_trait(Operator):
 
     def execute(self, context):
         size = round(self.size, 2)
-        check_size = check_stone = check_cut = lambda x: True
-
-        if self.filter_size:
-            check_size = lambda ob: round(ob.dimensions.y, 2) == size
-        if self.filter_stone:
-            check_stone = lambda ob: ob["gem"]["stone"] == self.stone
-        if self.filter_cut:
-            check_cut = lambda ob: ob["gem"]["cut"] == self.cut
-
+        eq_size = (lambda ob: round(ob.dimensions.y, 2) == size) if self.filter_size else (lambda x: True)
+        eq_stone = (lambda ob: ob["gem"]["stone"] == self.stone) if self.filter_stone else (lambda x: True)
+        eq_cut = (lambda ob: ob["gem"]["cut"] == self.cut) if self.filter_cut else (lambda x: True)
         selected = None
 
+        if not self.use_extend:
+            for ob in context.selected_objects:
+                ob.select_set(False)
+
         for ob in context.visible_objects:
-            if "gem" in ob and check_size(ob) and check_stone(ob) and check_cut(ob):
-                selected = ob
+            if "gem" in ob and eq_size(ob) and eq_stone(ob) and eq_cut(ob):
                 ob.select_set(True)
+
+                if ob.select_get():
+                    selected = ob
+
                 if self.use_select_children and ob.children:
                     for child in ob.children:
                         child.select_set(True)
-            elif not self.use_extend and not (self.use_select_children and "gem" in ob.parent):
-                ob.select_set(False)
 
-        if context.object is None or not context.object.select_get():
+        ob = context.object
+        if ob is None or not (ob.select_get() and "gem" in ob):
             context.view_layer.objects.active = selected
 
         return {"FINISHED"}
