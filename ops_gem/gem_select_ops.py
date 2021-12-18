@@ -138,51 +138,37 @@ class OBJECT_OT_gem_select_overlapping(Operator):
 
         obs = []
         ob_data = []
+        app_obs = obs.append
+        app_data = ob_data.append
         depsgraph = context.evaluated_depsgraph_get()
 
         for dup in depsgraph.object_instances:
 
             if dup.is_instance:
                 ob = dup.instance_object.original
+                sel = dup.parent.original
             else:
                 ob = dup.object.original
+                sel = ob
 
             ob.select_set(False)
 
             if "gem" in ob:
-                loc = dup.matrix_world.to_translation()
                 rad = max(ob.dimensions.xy) / 2
-
-                if dup.is_instance:
-                    mat = dup.matrix_world.copy()
-
-                    if ob.parent and ob.parent.is_instancer:
-                        sel = ob.parent
-                    else:
-                        sel = None
-                else:
-                    mat_loc = Matrix.Translation(loc)
-                    mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
-                    mat = mat_loc @ mat_rot
-
-                    sel = ob
-
+                loc, rot, _sca = dup.matrix_world.decompose()
+                mat = Matrix.LocRotScale(loc, rot, (1.0, 1.0, 1.0))
                 loc.freeze()
                 mat.freeze()
 
-                obs.append(sel)
-                ob_data.append((loc, rad, mat))
+                app_obs(sel)
+                app_data((loc, rad, mat))
 
         overlaps = asset.gem_overlap(ob_data, self.threshold)
 
         if overlaps:
             for i in overlaps:
-                ob = obs[i]
-                if ob:
-                    ob.select_set(True)
-
+                obs[i].select_set(True)
             self.report({"WARNING"}, _("{} overlaps found").format(len(overlaps)))
-
         else:
             self.report({"INFO"}, _("{} overlaps found").format(0))
 
