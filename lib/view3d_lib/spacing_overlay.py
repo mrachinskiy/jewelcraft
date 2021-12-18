@@ -27,7 +27,7 @@ from bpy_extras.view3d_utils import location_3d_to_region_2d
 import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
-from mathutils import Matrix, Vector
+from mathutils import Matrix, Vector, Quaternion
 
 from ... import var
 from .. import unit
@@ -121,22 +121,22 @@ def _circle_cos(radius: float, mat: Matrix) -> tuple[Vector, ...]:
     )
 
 
-def _get_df_transform(df, context, depsgraph) -> tuple[Vector, Matrix]:
-    df.update_from_editmode()
+def _get_df_transform(ob, context, depsgraph) -> tuple[Vector, Quaternion]:
+    ob.update_from_editmode()
 
-    if df.modifiers and df.is_deform_modified(context.scene, "PREVIEW"):
-        df_eval = df.evaluated_get(depsgraph)
-        polys = df_eval.to_mesh().polygons
+    if ob.modifiers and ob.is_deform_modified(context.scene, "PREVIEW"):
+        ob_eval = ob.evaluated_get(depsgraph)
+        polys = ob_eval.to_mesh().polygons
     else:
-        df_eval = df
-        polys = df.data.polygons
+        ob_eval = ob
+        polys = ob.data.polygons
 
-    poly = polys[df.data.polygons.active]
-    loc1 = df.matrix_world @ poly.center
-    mat_rot = poly.normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
-    df_eval.to_mesh_clear()
+    poly = polys[ob.data.polygons.active]
+    loc = ob.matrix_world @ poly.center
+    rot = poly.normal.to_track_quat("Z", "Y")
+    ob_eval.to_mesh_clear()
 
-    return loc1, mat_rot
+    return loc, rot
 
 
 def _draw(self, context):
@@ -189,14 +189,13 @@ def _draw(self, context):
 
         if is_df:
             df_pass = False
-            loc1, mat_rot = _get_df_transform(df, context, depsgraph)
+            loc1, _rot = _get_df_transform(df, context, depsgraph)
         else:
             loc1 = ob1.matrix_world.to_translation()
-            mat_rot = ob1.matrix_world.to_quaternion().to_matrix().to_4x4()
+            _rot = ob1.matrix_world.to_quaternion()
 
         rad1 = max(ob1.dimensions.xy) / 2
-        mat_loc = Matrix.Translation(loc1)
-        mat1 = mat_loc @ mat_rot
+        mat1 = Matrix.LocRotScale(loc1, _rot, (1.0, 1.0, 1.0))
         mat1.freeze()
 
     # Shader
@@ -270,13 +269,8 @@ def _draw(self, context):
             shader.uniform_float("color", _color)
             shader.uniform_float("lineWidth", _linewidth)
 
-            if dup.is_instance:
-                mat2 = dup.matrix_world.copy()
-            else:
-                mat_loc = Matrix.Translation(loc2)
-                mat_rot = dup.matrix_world.to_quaternion().to_matrix().to_4x4()
-                mat2 = mat_loc @ mat_rot
-
+            _loc, _rot, _ = dup.matrix_world.decompose()
+            mat2 = Matrix.LocRotScale(_loc, _rot, (1.0, 1.0, 1.0))
             mat2.freeze()
 
         # Show distance
