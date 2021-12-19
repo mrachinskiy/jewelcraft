@@ -181,9 +181,9 @@ def _draw(self, context):
     if is_gem:
 
         if use_ovrd and "gem_overlay" in ob1:
-            ob1_spacing = ob1["gem_overlay"].get("spacing", default_spacing)
+            spacing1 = ob1["gem_overlay"].get("spacing", default_spacing)
         else:
-            ob1_spacing = default_spacing
+            spacing1 = default_spacing
 
         from_scene_scale = unit.Scale().from_scene
 
@@ -252,7 +252,7 @@ def _draw(self, context):
 
             use_diplay_dis = not is_act and proximity_thold
 
-        # Gem 2 transform
+        # Gem 2 transform and spacing
         # -----------------------------------
 
         if show_all or use_diplay_dis:
@@ -260,11 +260,11 @@ def _draw(self, context):
             if use_ovrd and "gem_overlay" in ob2:
                 _color = ob2["gem_overlay"].get("color", default_color)
                 _linewidth = ob2["gem_overlay"].get("linewidth", default_linewidth)
-                _spacing = ob2["gem_overlay"].get("spacing", default_spacing)
+                spacing2 = ob2["gem_overlay"].get("spacing", default_spacing)
             else:
                 _color = default_color
                 _linewidth = default_linewidth
-                _spacing = default_spacing
+                spacing2 = default_spacing
 
             shader.uniform_float("color", _color)
             shader.uniform_float("lineWidth", _linewidth)
@@ -288,7 +288,7 @@ def _draw(self, context):
                 if not (show_all or gap_thold):
                     continue
 
-                spacing_thold = dis_gap < (_spacing + 0.3)
+                spacing_thold = dis_gap < (spacing2 + 0.3)
                 mid = co1.lerp(co2, 0.5)
             else:
                 co1 = co2 = mid = loc2.copy()
@@ -299,10 +299,10 @@ def _draw(self, context):
 
                 if dis_gap < 0.1:
                     shader.uniform_float("color", (1.0, 0.0, 0.0, 1.0))
-                elif dis_gap < _spacing:
+                elif dis_gap < spacing2:
                     shader.uniform_float("color", (1.0, 0.9, 0.0, 1.0))
 
-                _font_loc.append((dis_gap, mid, from_scene_scale(max(ob1_spacing, _spacing))))
+                _font_loc.append((dis_gap, mid, from_scene_scale(max(spacing1, spacing2))))
 
                 batch = batch_for_shader(shader, "LINES", {"pos": (co1, co2)})
                 batch.draw(shader)
@@ -311,7 +311,7 @@ def _draw(self, context):
         # -----------------------------------
 
         if show_all or spacing_thold:
-            batch = batch_for_shader(shader, "LINE_LOOP", {"pos": _circle_cos(rad2 + _spacing, mat2)})
+            batch = batch_for_shader(shader, "LINE_LOOP", {"pos": _circle_cos(rad2 + spacing2, mat2)})
             batch.draw(shader)
 
     _CC.set(show_all, gems_count)
