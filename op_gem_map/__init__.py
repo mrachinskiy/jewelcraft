@@ -64,18 +64,10 @@ class VIEW3D_OT_gem_map(Operator):
         layout.prop(self, "use_save")
 
     def modal(self, context, event):
-        import time
-
         self.region.tag_redraw()
-
-        inbound = (
-            0 < event.mouse_region_x < self.region.width and
-            0 < event.mouse_region_y < self.region.height
-        )
 
         if self.is_rendering:
             from . import onrender
-
             onrender.render_map(self)
             self.is_rendering = False
 
@@ -103,26 +95,12 @@ class VIEW3D_OT_gem_map(Operator):
             self.is_rendering = True
             return {"RUNNING_MODAL"}
 
-        elif inbound and (
-            (event.type in {
-                "MIDDLEMOUSE",
-                "WHEELUPMOUSE",
-                "WHEELDOWNMOUSE",
-                "NUMPAD_5",
-                "NUMPAD_MINUS",
-                "NUMPAD_PLUS",
-            } and event.value == "PRESS") or
-            (event.type == "LEFTMOUSE" and event.value == "CLICK") or
-            event.type == "EVT_TWEAK_L"
-        ):
+        elif self.is_mouse_inbound(event) and (self.is_navigate(event) or self.is_select(event)):
             self.use_navigate = True
 
-        elif time.time() - self.time_tag > 1.0:
-            self.time_tag = time.time()
-
-            if self.view_state != self.region_3d.perspective_matrix:
-                self.view_state = self.region_3d.perspective_matrix.copy()
-                self.offscreen_refresh()
+        elif self.is_time_elapsed() and self.view_state != self.region_3d.perspective_matrix:
+            self.view_state = self.region_3d.perspective_matrix.copy()
+            self.offscreen_refresh()
 
         return {"PASS_THROUGH"}
 
@@ -217,3 +195,30 @@ class VIEW3D_OT_gem_map(Operator):
                 return round(self.region.width * resolution_scale), round(self.region.height * resolution_scale)
 
         return self.region.width, self.region.height
+
+    def is_time_elapsed(self) -> bool:
+        import time
+
+        if (time.time() - self.time_tag) > 1.0:
+            self.time_tag = time.time()
+            return True
+
+        return False
+
+    def is_mouse_inbound(self, event) -> bool:
+        return (0 < event.mouse_region_x < self.region.width) and (0 < event.mouse_region_y < self.region.height)
+
+    def is_navigate(self, event) -> bool:
+        return event.type in {
+            "MIDDLEMOUSE",
+            "WHEELUPMOUSE",
+            "WHEELDOWNMOUSE",
+            "NUMPAD_5",
+            "NUMPAD_MINUS",
+            "NUMPAD_PLUS",
+        } and event.value == "PRESS"
+
+    def is_select(self, event) -> bool:
+        return self.use_select and (
+            (event.type == "LEFTMOUSE" and event.value == "CLICK") or event.type == "EVT_TWEAK_L"
+        )
