@@ -32,6 +32,7 @@ class VIEW3D_OT_gem_map(Operator):
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
 
+    use_select: BoolProperty()
     use_background: BoolProperty()
     lang: EnumProperty(
         name="Report Language",
@@ -89,6 +90,11 @@ class VIEW3D_OT_gem_map(Operator):
             context.workspace.status_text_set(None)
             return {"FINISHED"}
 
+        elif event.type == "S" and event.value == "PRESS":
+            self.use_select = not self.use_select
+            self.offscreen_refresh()
+            return {"RUNNING_MODAL"}
+
         elif event.type == "B" and event.value == "PRESS":
             self.use_background = not self.use_background
             return {"RUNNING_MODAL"}
@@ -97,14 +103,18 @@ class VIEW3D_OT_gem_map(Operator):
             self.is_rendering = True
             return {"RUNNING_MODAL"}
 
-        elif inbound and ((event.type in {
-            "MIDDLEMOUSE",
-            "WHEELUPMOUSE",
-            "WHEELDOWNMOUSE",
-            "NUMPAD_5",
-            "NUMPAD_MINUS",
-            "NUMPAD_PLUS",
-        } and event.value == "PRESS") or event.type == "EVT_TWEAK_L"):
+        elif inbound and (
+            (event.type in {
+                "MIDDLEMOUSE",
+                "WHEELUPMOUSE",
+                "WHEELDOWNMOUSE",
+                "NUMPAD_5",
+                "NUMPAD_MINUS",
+                "NUMPAD_PLUS",
+            } and event.value == "PRESS") or
+            (event.type == "LEFTMOUSE" and event.value == "CLICK") or
+            event.type == "EVT_TWEAK_L"
+        ):
             self.use_navigate = True
 
         elif time.time() - self.time_tag > 1.0:
@@ -147,6 +157,7 @@ class VIEW3D_OT_gem_map(Operator):
         view3d_lib.options_init(
             self,
             (
+                (_("Limit By Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
                 (_("Viewport Background"), "(B)", "use_background", view3d_lib.TYPE_BOOL),
                 (_("Save To Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
             ),

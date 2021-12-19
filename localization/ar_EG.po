@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.11\n"
-"POT-Creation-Date: 2021-12-11\n"
+"Project-Id-Version: JewelCraft 2.12\n"
+"POT-Creation-Date: 2021-12-19\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: Ahmed Hamad\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -78,6 +78,9 @@ msgstr "نظام وحدة غير مدعم"
 
 msgid "Overlapping Gems"
 msgstr "الاحجار المتداخلة"
+
+msgid "Limit By Selection"
+msgstr "حدد بالاختيار"
 
 msgid "Viewport Background"
 msgstr ""
