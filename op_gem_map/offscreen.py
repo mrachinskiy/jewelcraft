@@ -110,10 +110,12 @@ def draw_gems(self, gamma_corr=False):
 
         if dup.is_instance:
             ob = dup.instance_object.original
+            selected = dup.parent.original.select_get()
         else:
             ob = dup.object.original
+            selected = ob.select_get()
 
-        if "gem" not in ob:
+        if "gem" not in ob or (self.use_select and not selected):
             continue
 
         ob_stone = ob["gem"]["stone"]
