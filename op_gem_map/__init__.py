@@ -135,9 +135,9 @@ class VIEW3D_OT_gem_map(Operator):
         view3d_lib.options_init(
             self,
             (
-                (_("Limit By Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
+                (_("Limit by Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
                 (_("Viewport Background"), "(B)", "use_background", view3d_lib.TYPE_BOOL),
-                (_("Save To Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
+                (_("Save to Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
             ),
         )
 

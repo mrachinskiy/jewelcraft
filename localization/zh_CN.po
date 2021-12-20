@@ -79,13 +79,13 @@ msgstr "不支持的单位制"
 msgid "Overlapping Gems"
 msgstr "重叠宝石"
 
-msgid "Limit By Selection"
+msgid "Limit by Selection"
 msgstr "按选择限制"
 
 msgid "Viewport Background"
 msgstr ""
 
-msgid "Save To Image"
+msgid "Save to Image"
 msgstr "保存到图像"
 
 msgid "Gem Map"

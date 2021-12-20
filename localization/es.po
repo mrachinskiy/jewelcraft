@@ -79,13 +79,13 @@ msgstr ""
 msgid "Overlapping Gems"
 msgstr ""
 
-msgid "Limit By Selection"
+msgid "Limit by Selection"
 msgstr ""
 
 msgid "Viewport Background"
 msgstr ""
 
-msgid "Save To Image"
+msgid "Save to Image"
 msgstr ""
 
 msgid "Gem Map"

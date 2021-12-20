@@ -79,13 +79,13 @@ msgstr "Неподдерживаемая система единиц измер�
 msgid "Overlapping Gems"
 msgstr "Пересекающиеся камни"
 
-msgid "Limit By Selection"
+msgid "Limit by Selection"
 msgstr "Ограничить выделением"
 
 msgid "Viewport Background"
 msgstr "Фон вьюпорта"
 
-msgid "Save To Image"
+msgid "Save to Image"
 msgstr "Сохранить в изображение"
 
 msgid "Gem Map"
