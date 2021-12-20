@@ -79,13 +79,13 @@ msgstr "Système d'unités non supporté"
 msgid "Overlapping Gems"
 msgstr "Superposition de pierres"
 
-msgid "Limit By Selection"
+msgid "Limit by Selection"
 msgstr "Limiter à la sélection"
 
 msgid "Viewport Background"
 msgstr ""
 
-msgid "Save To Image"
+msgid "Save to Image"
 msgstr "Enregistrer au format image"
 
 msgid "Gem Map"
