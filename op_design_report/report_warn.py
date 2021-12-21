@@ -65,9 +65,14 @@ class Warnings:
             report.append("Gems from hidden collections appear in report (don't use Hide in Viewport on collections)")
 
     def overlap(self, dup: DepsgraphObjectInstance, dim: Vector) -> None:
-        rad = max(dim.xy) / 2
-        loc, rot, _ = dup.matrix_world.decompose()
-        mat = Matrix.LocRotScale(loc, rot, (1.0, 1.0, 1.0))
+        loc, _rot, _sca = dup.matrix_world.decompose()
+
+        if dup.is_instance:
+            rad = max(dim.xy * _sca.xy) / 2
+        else:
+            rad = max(dim.xy) / 2
+
+        mat = Matrix.LocRotScale(loc, _rot, (1.0, 1.0, 1.0))
         loc.freeze()
         mat.freeze()
 

@@ -225,8 +225,18 @@ def _draw(self, context):
 
         gems_count += 1
 
-        rad2 = max(ob2.dimensions.xy) / 2
-        loc2 = dup.matrix_world.translation
+        # Gem 2 transform
+        # -----------------------------------
+
+        loc2, _rot, _sca = dup.matrix_world.decompose()
+
+        if dup.is_instance:
+            rad2 = max(ob2.dimensions.xy * _sca.xy) / 2
+        else:
+            rad2 = max(ob2.dimensions.xy) / 2
+
+        mat2 = Matrix.LocRotScale(loc2, _rot, (1.0, 1.0, 1.0))
+        mat2.freeze()
 
         # Filter out by distance
         # -----------------------------------
@@ -252,7 +262,7 @@ def _draw(self, context):
 
             use_diplay_dis = not is_act and proximity_thold
 
-        # Gem 2 transform and spacing
+        # Gem 2 shader and spacing overrride
         # -----------------------------------
 
         if show_all or use_diplay_dis:
@@ -268,10 +278,6 @@ def _draw(self, context):
 
             shader.uniform_float("color", _color)
             shader.uniform_float("lineWidth", _linewidth)
-
-            _loc, _rot, _ = dup.matrix_world.decompose()
-            mat2 = Matrix.LocRotScale(_loc, _rot, (1.0, 1.0, 1.0))
-            mat2.freeze()
 
         # Show distance
         # -----------------------------------
@@ -291,7 +297,7 @@ def _draw(self, context):
                 spacing_thold = dis_gap < (spacing2 + 0.3)
                 mid = co1.lerp(co2, 0.5)
             else:
-                co1 = co2 = mid = loc2.copy()
+                co1 = co2 = mid = loc2
                 dis_gap = proximity_dis
                 gap_thold = spacing_thold = True
 
