@@ -8,15 +8,15 @@ Features:
 * Calculate weight in a variety of precious alloys.
 * Generate color-coded gem map.
 * Present summary information about your design.
-* Support multiple languages:
-  * Arabic
-  * English
-  * Spanish
-  * French
-  * Italian
-  * Russian
-  * Simplified Chinese
-  * Your language is missing? [Contribute translation](#translations).
+* Translated to multiple languages:
+  * English ![100%](https://progress-bar.dev/100)
+  * Russian ![100%](https://progress-bar.dev/100)
+  * Arabic ![95%](https://progress-bar.dev/95)
+  * Italian ![80%](https://progress-bar.dev/80)
+  * French ![72%](https://progress-bar.dev/72)
+  * Spanish ![65%](https://progress-bar.dev/65)
+  * Simplified Chinese ![57%](https://progress-bar.dev/57)
+  * Your language is missing or incomplete? [Contribute translation](#translations).
 
 Video:
 
