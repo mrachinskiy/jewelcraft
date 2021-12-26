@@ -9,13 +9,13 @@ Features:
 * Generate color-coded gem map.
 * Present summary information about your design.
 * Translated to multiple languages:
-  * English ![100%](https://progress-bar.dev/100)
-  * Russian ![100%](https://progress-bar.dev/100)
-  * Arabic ![95%](https://progress-bar.dev/95)
-  * Italian ![80%](https://progress-bar.dev/80)
-  * French ![72%](https://progress-bar.dev/72)
-  * Spanish ![65%](https://progress-bar.dev/65)
-  * Simplified Chinese ![57%](https://progress-bar.dev/57)
+  * ![100%](https://progress-bar.dev/100) English
+  * ![100%](https://progress-bar.dev/100) Russian
+  * ![95%](https://progress-bar.dev/95) Arabic
+  * ![80%](https://progress-bar.dev/80) Italian
+  * ![72%](https://progress-bar.dev/72) French
+  * ![65%](https://progress-bar.dev/65) Spanish
+  * ![57%](https://progress-bar.dev/57) Simplified Chinese
   * Your language is missing or incomplete? [Contribute translation](#translations).
 
 Video:
