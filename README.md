@@ -76,7 +76,8 @@ Contributing
 ### Translations
 
 * It is advised that you use a dedicated `.po` editor like [Poedit](https://poedit.net).
-* To create new transltation in Poedit use `File` → `New from POT/PO file`, then pick `.po` file from add-on `localization` folder (doesn't matter which one).
+  * To create new transltation in Poedit use `File` → `New from POT/PO file`, then pick `.po` file from add-on `localization` folder (doesn't matter which one).
+  * To complete existing transltation in Poedit use `File` → `Open`, then pick `.po` file for specific language from add-on `localization` folder.
 * Translating tips:
   * The UI convention for English language is to use Title Case formatting for property names and button titles, to know formatting convention for your language just see how Blender handles it and follow the rule.
   * Preserve empty braces `{}` in translation, they used as placeholders for additional information and will not appear in UI.
