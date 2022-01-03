@@ -76,9 +76,6 @@ msgstr "场景比例不是最佳的"
 msgid "Unsupported unit system"
 msgstr "不支持的单位制"
 
-msgid "Overlapping Gems"
-msgstr "重叠宝石"
-
 msgid "Limit by Selection"
 msgstr "按选择限制"
 

@@ -76,9 +76,6 @@ msgstr ""
 msgid "Unsupported unit system"
 msgstr ""
 
-msgid "Overlapping Gems"
-msgstr ""
-
 msgid "Limit by Selection"
 msgstr ""
 

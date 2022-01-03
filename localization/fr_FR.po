@@ -76,9 +76,6 @@ msgstr "L'échelle de la scène n'est pas optimal"
 msgid "Unsupported unit system"
 msgstr "Système d'unités non supporté"
 
-msgid "Overlapping Gems"
-msgstr "Superposition de pierres"
-
 msgid "Limit by Selection"
 msgstr "Limiter à la sélection"
 
