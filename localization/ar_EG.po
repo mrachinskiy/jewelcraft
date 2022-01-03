@@ -76,9 +76,6 @@ msgstr "مقياس المشهد غير مفضل"
 msgid "Unsupported unit system"
 msgstr "نظام وحدة غير مدعم"
 
-msgid "Overlapping Gems"
-msgstr "الاحجار المتداخلة"
-
 msgid "Limit by Selection"
 msgstr "حدد بالاختيار"
 
