@@ -2,12 +2,12 @@ JewelCraft—jewelry design toolkit add-on for Blender.
 
 Features:
 
-* Create and customize gems, prongs and cutters.
-* Organize library of components using in add-on asset manager.
-* Manage distances between gems to create compact setting.
+* Create and customize gems, prongs and cutters. [[▸]](https://youtu.be/h4-emum2orE)
+* Organize library of components using in add-on asset manager. [[▸]](https://youtu.be/SYMHsImXe_c)
+* Manage distances between gems to create compact setting. [[▸]](https://youtu.be/9VN_-seau3k)
 * Calculate weight in a variety of precious alloys.
-* Generate color-coded gem map.
-* Present summary information about your design.
+* Generate color-coded gem map. [[▸]](https://youtu.be/aQ__ec0BAbE)
+* Present summary information about your design. [[▸]](https://youtu.be/6UxJAw_t5R0)
 * Translated to multiple languages:
   * ![100%](https://progress-bar.dev/100) English
   * ![100%](https://progress-bar.dev/100) Russian
@@ -17,18 +17,6 @@ Features:
   * ![65%](https://progress-bar.dev/65) Spanish
   * ![57%](https://progress-bar.dev/57) Simplified Chinese
   * Your language is missing or incomplete? [Contribute translation](#translations).
-
-Video:
-
-* [Prongs & Cutters v2.0](https://youtu.be/AZlCFg8bDSg)
-* [Widgets v2.3](https://youtu.be/9VN_-seau3k)
-* [Gem Map v2.3](https://youtu.be/aQ__ec0BAbE)
-* [Asset Manager v2.6](https://youtu.be/SYMHsImXe_c)
-* [Distribute on Curve v2.8](https://youtu.be/h4-emum2orE)
-* [Design Report v2.8](https://youtu.be/6UxJAw_t5R0)
-* [Recover Gem v2.8](https://youtu.be/dn1XBbslgEw)
-
-[More videos][playlist_en] | [Больше видео][playlist_ru]
 
 
 How to install
@@ -92,5 +80,3 @@ Contributing
 [download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.12.0-blender3.0.0/jewelcraft-2_12_0.zip
 [report_bug]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
 [submit_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
-[playlist_en]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KhfestF7xCic1jf5YjXiVh
-[playlist_ru]: https://www.youtube.com/playlist?list=PLCoK1Ao0T01KQ0cobvQLR2q3sYF6fH2lh
