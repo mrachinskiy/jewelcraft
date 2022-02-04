@@ -23,21 +23,22 @@ import bmesh
 from bmesh.types import BMesh, BMVert
 
 from ...lib import mesh, gemlib
+from ._types import SectionSize
 
 
 def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     return [
-        bm.verts.new(co)
-        for co in (
-            ( x,  y, z),
-            (-x,  y, z),
-            (-x, -y, z),
-            ( x, -y, z),
-        )
+        bm.verts.new(( x,  y, z)),
+        bm.verts.new((-x,  y, z)),
+        bm.verts.new((-x, -y, z)),
+        bm.verts.new(( x, -y, z)),
     ]
 
 
-def _add_rect_bevel(self, bm: BMesh, size) -> list[BMVert]:
+def _add_rect_bevel(self, bm: BMesh, size: SectionSize) -> list[BMVert]:
+    if not self.bv_width:
+        return _add_rect(bm, *size.xyz)
+
     bm_temp = bmesh.new()
     vs = _add_rect(bm_temp, *size.xyz)
     bm_temp.faces.new(vs)
@@ -47,11 +48,12 @@ def _add_rect_bevel(self, bm: BMesh, size) -> list[BMVert]:
     f = next(iter(bm_temp.faces))
     verts = [bm.verts.new(v.co) for v in f.verts]
     bm_temp.free()
+
     return verts
 
 
 class Section:
-    __slots__ = "add", "bv_width", "bv_type", "bv_segments", "bv_profile"
+    __slots__ = "bv_width", "bv_type", "bv_segments", "bv_profile"
 
     def __init__(self, operator) -> None:
         if operator.shape is gemlib.SHAPE_RECTANGLE:
@@ -60,27 +62,17 @@ class Section:
         else:
             self.bv_type = "PERCENT"
             self.bv_width = operator.bevel_corners_percent
+
         self.bv_segments = operator.bevel_corners_segments
         self.bv_profile = operator.bevel_corners_profile
 
-        if self.bv_width:
-            self.add = self._add_bevel
-        else:
-            self.add = self._add
-
-    @staticmethod
-    def _add(bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_rect(bm, *size.xyz)
-        s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
-        return s1, s2
-
-    def _add_bevel(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_rect_bevel(self, bm, size)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2
 
     @staticmethod
-    def add_seat_rect(bm, girdle_verts, Girdle, Hole) -> None:
+    def add_seat_rect(bm: BMesh, girdle_verts: list[BMVert], Girdle: SectionSize, Hole: SectionSize) -> None:
         scale_y = Hole.y / (Girdle.y or Hole.y)
         vs = [bm.verts.new((v.co.x, v.co.y * scale_y, Hole.z1)) for v in girdle_verts]
         es = mesh.connect_verts(bm, vs)

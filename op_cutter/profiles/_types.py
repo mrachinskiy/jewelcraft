@@ -19,22 +19,15 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-from typing import Type
+class SectionSize:
+    __slots__ = "x", "y", "z1", "z2"
 
-from ...lib import gemlib
-from ._types import SectionSize
-from . import (
-    _fantasy,
-    _rectangle,
-    _round,
-    _triangle,
-)
+    def __init__(self, x: float, y: float, z1: float, z2: float) -> None:
+        self.x = x
+        self.y = y
+        self.z1 = z1
+        self.z2 = z2
 
-
-sections: dict[int, Type[_round.Section]] = {
-    gemlib.SHAPE_FANTASY: _fantasy.Section,
-    gemlib.SHAPE_RECTANGLE: _rectangle.Section,
-    gemlib.SHAPE_SQUARE: _rectangle.Section,
-    gemlib.SHAPE_ROUND: _round.Section,
-    gemlib.SHAPE_TRIANGLE: _triangle.Section,
-}
+    @property
+    def xyz(self):
+        return self.x, self.y, self.z1

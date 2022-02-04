@@ -26,39 +26,25 @@ from ..lib import iterutils, mesh, gemlib
 from . import profiles
 
 
-class _SectionSize:
-    __slots__ = "x", "y", "z1", "z2"
-
-    def __init__(self, x: float, y: float, z1: float, z2: float) -> None:
-        self.x = x
-        self.y = y
-        self.z1 = z1
-        self.z2 = z2
-
-    @property
-    def xyz(self):
-        return self.x, self.y, self.z1
-
-
 def get(self):
     bm = bmesh.new()
 
     # Section sizes
     # ---------------------------------
 
-    Handle = _SectionSize(
+    Handle = profiles.SectionSize(
         self.handle_dim.x / 2,
         self.handle_dim.y / 2,
         self.handle_dim.z1,
         self.handle_dim.z2,
     )
-    Girdle = _SectionSize(
+    Girdle = profiles.SectionSize(
         self.gem_dim.x / 2 + self.girdle_dim.x,
         self.gem_dim.y / 2 + self.girdle_dim.y,
         self.girdle_dim.z1,
         -self.girdle_dim.z2,
     )
-    Hole = _SectionSize(
+    Hole = profiles.SectionSize(
         self.hole_dim.x / 2,
         self.hole_dim.y / 2,
         -self.hole_dim.z1,
