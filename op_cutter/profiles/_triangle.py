@@ -25,20 +25,21 @@ import bmesh
 from bmesh.types import BMesh, BMVert
 
 from ...lib import mesh
+from ._types import SectionSize
 
 
 def _add_tri(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     return [
-        bm.verts.new(co)
-        for co in (
-            (  x,  y / 3.0, z),
-            ( -x,  y / 3.0, z),
-            (0.0, -y / 1.5, z),
-        )
+        bm.verts.new((  x,  y / 3.0, z)),
+        bm.verts.new(( -x,  y / 3.0, z)),
+        bm.verts.new((0.0, -y / 1.5, z)),
     ]
 
 
-def _add_tri_bevel(self, bm: BMesh, size) -> list[BMVert]:
+def _add_tri_bevel(self, bm: BMesh, size: SectionSize) -> list[BMVert]:
+    if not (self.bv_width or self.curve_factor):
+        return _add_tri(bm, *size.xyz)
+
     bm_temp = bmesh.new()
     vs = _add_tri(bm_temp, size.x, size.y, 0.0)
     es = mesh.connect_verts(bm_temp, vs)
@@ -58,6 +59,7 @@ def _add_tri_bevel(self, bm: BMesh, size) -> list[BMVert]:
 
     verts = [bm.verts.new((*v.co.xy, size.z1)) for v in f.verts]
     bm_temp.free()
+
     return verts
 
 
@@ -83,9 +85,8 @@ def _edge_loop_walk(verts: list[BMVert]) -> Iterator[BMVert]:
 
 class Section:
     __slots__ = (
-        "add",
-        "bv_width",
         "bv_type",
+        "bv_width",
         "bv_segments",
         "bv_profile",
         "curve_factor",
@@ -100,18 +101,7 @@ class Section:
         self.curve_factor = operator.curve_profile_factor
         self.curve_segments = operator.curve_profile_segments
 
-        if self.bv_width or self.curve_factor:
-            self.add = self._add_bevel
-        else:
-            self.add = self._add
-
-    @staticmethod
-    def _add(bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_tri(bm, *size.xyz)
-        s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
-        return s1, s2
-
-    def _add_bevel(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_tri_bevel(self, bm, size)
         s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
         return s1, s2

@@ -23,6 +23,8 @@ from math import pi, tau, sin, cos
 
 from bmesh.types import BMesh, BMVert
 
+from ._types import SectionSize
+
 
 def _get_oval(detalization: int) -> list[tuple[float, float, float]]:
     angle = -tau / detalization
@@ -135,7 +137,7 @@ class Section:
         else:
             self.coords = _get_oval(detalization)
 
-    def add(self, bm: BMesh, size, co_fmt=lambda a, b: b) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: SectionSize, co_fmt=lambda a, b: b) -> tuple[list[BMVert], list[BMVert]]:
         vs1 = []
         vs2 = []
         app1 = vs1.append
@@ -147,5 +149,5 @@ class Section:
 
         return vs1, vs2
 
-    def add_preserve_z2(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
-        return self.add(bm, size, co_fmt=lambda a, b: a - b)
+    def add_preserve_z2(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
+        return self.add(bm, size, lambda a, b: a - b)

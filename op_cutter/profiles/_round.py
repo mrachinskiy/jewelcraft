@@ -23,6 +23,8 @@ from math import tau, sin, cos
 
 from bmesh.types import BMesh, BMVert
 
+from ._types import SectionSize
+
 
 class Section:
     __slots__ = (
@@ -32,7 +34,7 @@ class Section:
     def __init__(self, operator) -> None:
         self.detalization = operator.detalization
 
-    def add(self, bm: BMesh, size) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
         angle = tau / self.detalization
         vs1 = []
         vs2 = []
