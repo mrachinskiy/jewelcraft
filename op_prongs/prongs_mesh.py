@@ -28,7 +28,7 @@ from mathutils import Matrix
 from ..lib import iterutils, mesh
 
 
-def _circle(bm: BMesh, radius: float, height: float, detalization: int) -> list[BMVert]:
+def _circle(bm: BMesh, radius: float, z: float, detalization: int) -> list[BMVert]:
     angle = tau / detalization
 
     return [
@@ -36,23 +36,22 @@ def _circle(bm: BMesh, radius: float, height: float, detalization: int) -> list[
             (
                 sin(i * angle) * radius,
                 cos(i * angle) * radius,
-                height,
+                z,
             )
         )
         for i in range(detalization)
     ]
 
 
-def _dome(bm: BMesh, radius: float, height: float, scale: float, detalization: int) -> list[BMVert]:
+def _dome(bm: BMesh, radius: float, z_co: float, scale: float, detalization: int) -> list[BMVert]:
     dome_resolution = max(detalization, 4) // 4 + 1
     angle = (pi / 2) / (dome_resolution - 1)
     zero_loop = True
     first_loop = True
 
     for i in range(dome_resolution):
-
         y = sin(i * angle) * radius
-        z = cos(i * angle) * radius * scale + height
+        z = cos(i * angle) * radius * scale + z_co
 
         if zero_loop:
             zero_loop = False
@@ -63,15 +62,13 @@ def _dome(bm: BMesh, radius: float, height: float, scale: float, detalization: i
 
         if first_loop:
             first_loop = False
-            pole = step
+            v3 = bm.verts.new((0.0, 0.0, pole_z))
+            for v1, v2 in iterutils.pairwise_cyclic(step):
+                bm.faces.new((v3, v2, v1))
         else:
             mesh.bridge_verts(bm, step, prev_step)
 
         prev_step = step
-
-    v3 = bm.verts.new((0.0, 0.0, pole_z))
-    for v1, v2 in iterutils.pairwise_cyclic(pole):
-        bm.faces.new((v3, v2, v1))
 
     return step
 
