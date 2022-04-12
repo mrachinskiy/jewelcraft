@@ -121,6 +121,7 @@ class VIEW3D_MT_jewelcraft(Menu):
 
     def draw(self, context):
         layout = self.layout
+        layout.operator_context = "INVOKE_DEFAULT"
         layout.operator("object.jewelcraft_gem_add", icon_value=_icon_menu("GEM_ADD"))
         layout.operator("object.jewelcraft_gem_edit", icon_value=_icon_menu("GEM_EDIT"))
         layout.operator("object.jewelcraft_gem_recover", icon_value=_icon_menu("GEM_RECOVER"))
@@ -161,6 +162,7 @@ class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
 
     def draw(self, context):
         layout = self.layout
+        layout.operator_context = "INVOKE_DEFAULT"
         layout.operator("object.jewelcraft_gem_select_by_trait", text="Size", text_ctxt="*").filter_size = True
         layout.operator("object.jewelcraft_gem_select_by_trait", text="Stone", text_ctxt="*").filter_stone = True
         layout.operator("object.jewelcraft_gem_select_by_trait", text="Cut", text_ctxt="Jewelry").filter_cut = True
