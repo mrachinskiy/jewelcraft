@@ -58,27 +58,29 @@ class VIEW3D_OT_gem_map(Operator):
             self.view_state = self.region_3d.perspective_matrix.copy()
             self.offscreen_refresh()
 
-        elif event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
-            bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
-            self.offscreen.free()
-            context.workspace.status_text_set(None)
-            return {"FINISHED"}
+        elif self.is_mouse_inbound(event):
 
-        elif event.type == "S" and event.value == "PRESS":
-            self.use_select = not self.use_select
-            self.offscreen_refresh()
-            return {"RUNNING_MODAL"}
+            if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
+                bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
+                self.offscreen.free()
+                context.workspace.status_text_set(None)
+                return {"FINISHED"}
 
-        elif event.type == "B" and event.value == "PRESS":
-            self.use_background = not self.use_background
-            return {"RUNNING_MODAL"}
+            elif event.type == "S" and event.value == "PRESS":
+                self.use_select = not self.use_select
+                self.offscreen_refresh()
+                return {"RUNNING_MODAL"}
 
-        elif event.type == "F12" and event.value == "PRESS":
-            self.is_rendering = True
-            return {"RUNNING_MODAL"}
+            elif event.type == "B" and event.value == "PRESS":
+                self.use_background = not self.use_background
+                return {"RUNNING_MODAL"}
 
-        elif self.is_mouse_inbound(event) and (self.is_navigate(event) or self.is_select(event)):
-            self.use_navigate = True
+            elif event.type == "F12" and event.value == "PRESS":
+                self.is_rendering = True
+                return {"RUNNING_MODAL"}
+
+            elif self.is_navigate(event) or self.is_select(event):
+                self.use_navigate = True
 
         elif self.is_time_elapsed() and self.view_state != self.region_3d.perspective_matrix:
             self.view_state = self.region_3d.perspective_matrix.copy()
