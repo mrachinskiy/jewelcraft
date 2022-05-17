@@ -129,26 +129,31 @@ class OBJECT_OT_gem_select_overlapping(Operator):
             if dup.is_instance:
                 ob = dup.instance_object.original
                 sel = dup.parent.original
+                visible = dup.parent.original.visible_get()  # T74368
             else:
                 ob = dup.object.original
                 sel = ob
+                visible = ob.visible_get()
 
             ob.select_set(False)
 
-            if "gem" in ob:
-                loc, _rot, _sca = dup.matrix_world.decompose()
+            if "gem" not in ob or not visible:
+                continue
 
-                if dup.is_instance:
-                    rad = max(ob.dimensions.xy * _sca.xy) / 2
-                else:
-                    rad = max(ob.dimensions.xy) / 2
+            loc, _rot, _sca = dup.matrix_world.decompose()
 
-                mat = Matrix.LocRotScale(loc, _rot, (1.0, 1.0, 1.0))
-                loc.freeze()
-                mat.freeze()
+            if dup.is_instance:
+                _dim = asset.dim_raw(ob)
+                rad = max(_dim.xy * _sca.xy) / 2
+            else:
+                rad = max(ob.dimensions.xy) / 2
 
-                app_obs(sel)
-                app_data((loc, rad, mat))
+            mat = Matrix.LocRotScale(loc, _rot, (1.0, 1.0, 1.0))
+            loc.freeze()
+            mat.freeze()
+
+            app_obs(sel)
+            app_data((loc, rad, mat))
 
         overlaps = asset.gem_overlap(ob_data, self.threshold)
 

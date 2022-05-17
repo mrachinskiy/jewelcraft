@@ -4,7 +4,7 @@
 from collections.abc import Iterator
 
 import bpy
-from bpy.types import LayerCollection, DepsgraphObjectInstance
+from bpy.types import LayerCollection, DepsgraphObjectInstance, Object
 from mathutils import Vector, Matrix
 
 from ..lib import unit, asset
@@ -43,13 +43,14 @@ class Warnings:
         if self._check_overlap(self._overlap_data):
             report.append("Overlapping gems")
 
-    def overlap(self, dup: DepsgraphObjectInstance, dim: Vector) -> None:
+    def overlap(self, dup: DepsgraphObjectInstance, ob: Object) -> None:
         loc, _rot, _sca = dup.matrix_world.decompose()
 
         if dup.is_instance:
-            rad = max(dim.xy * _sca.xy) / 2
+            _dim = asset.dim_raw(ob)
+            rad = max(_dim.xy * _sca.xy) / 2
         else:
-            rad = max(dim.xy) / 2
+            rad = max(ob.dimensions.xy) / 2
 
         mat = Matrix.LocRotScale(loc, _rot, (1.0, 1.0, 1.0))
         loc.freeze()
