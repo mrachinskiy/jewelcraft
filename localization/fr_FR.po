@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.12\n"
-"POT-Creation-Date: 2021-12-19\n"
+"POT-Creation-Date: 2022-05-17\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: émilien\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -172,9 +172,6 @@ msgstr "Décalage de largueur"
 msgid "Position Offset"
 msgstr "Décalage de la position"
 
-msgid "Start Up"
-msgstr "Démarrage"
-
 msgid "Mirror Axis"
 msgstr "Axe de symétrie"
 
@@ -298,8 +295,8 @@ msgstr "Créer des grains pour les pierres sélectionnées\n(Shortcut: maintenez
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
 msgstr "Créer une coupe pour les pierres sélectionnées\n(Shortcut: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
 
-msgid "Make curve start at the top"
-msgstr "Faire que la courbe commence en haut"
+msgid "Curve start position"
+msgstr ""
 
 msgid "Density g/cm³"
 msgstr "Densité g/cm³"

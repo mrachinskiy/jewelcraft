@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.12\n"
-"POT-Creation-Date: 2021-12-19\n"
+"POT-Creation-Date: 2022-05-17\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: De Palo Domenico\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -172,9 +172,6 @@ msgstr "Larghezza Offset"
 msgid "Position Offset"
 msgstr "Posizione Offset"
 
-msgid "Start Up"
-msgstr "Inizio"
-
 msgid "Mirror Axis"
 msgstr "Asse di Simmetria"
 
@@ -298,8 +295,8 @@ msgstr "Crea griffe per le gemme selezionate\n(Scorciatoia: tieni premuto Ctrl q
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
 msgstr "Crea fresa per le gemme selezionate\n(Scorciatoia: tieni premuto Ctrl quando usi lo strumento per evitare il reset delle proprietà)"
 
-msgid "Make curve start at the top"
-msgstr "Fai iniziare la curva dall'alto"
+msgid "Curve start position"
+msgstr ""
 
 msgid "Density g/cm³"
 msgstr "Densità gr/cm³"

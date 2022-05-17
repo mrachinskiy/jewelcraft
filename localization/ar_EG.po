@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.12\n"
-"POT-Creation-Date: 2021-12-19\n"
+"POT-Creation-Date: 2022-05-17\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: Ahmed Hamad\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -172,9 +172,6 @@ msgstr "معامل العرض"
 msgid "Position Offset"
 msgstr "معامل التمركز"
 
-msgid "Start Up"
-msgstr "ابدأ"
-
 msgid "Mirror Axis"
 msgstr "محور الانعكاس"
 
@@ -298,8 +295,8 @@ msgstr "قم بتكوين دعامات للأحجار الكريمة المخت�
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
 msgstr "قم بانشاء ألة القطع للأحجار الكريمة المختارة\n(اختصار: اضغط علي كنترول عند استخدام الأداة لتجنب اعادة انشاء الخصائص)"
 
-msgid "Make curve start at the top"
-msgstr "قم بعمل منحني ابتدائي عند القمة"
+msgid "Curve start position"
+msgstr ""
 
 msgid "Density g/cm³"
 msgstr "الكثافة جم/ سم3"

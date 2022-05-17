@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.12\n"
-"POT-Creation-Date: 2021-12-19\n"
+"POT-Creation-Date: 2022-05-17\n"
 "PO-Revision-Date: 2021-08-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -172,9 +172,6 @@ msgstr "偏移宽度"
 msgid "Position Offset"
 msgstr "偏移位置"
 
-msgid "Start Up"
-msgstr "开始"
-
 msgid "Mirror Axis"
 msgstr "对称轴"
 
@@ -298,8 +295,8 @@ msgstr ""
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
 msgstr ""
 
-msgid "Make curve start at the top"
-msgstr "使曲线从顶部开始r"
+msgid "Curve start position"
+msgstr ""
 
 msgid "Density g/cm³"
 msgstr ""
