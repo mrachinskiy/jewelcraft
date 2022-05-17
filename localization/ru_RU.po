@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.12\n"
-"POT-Creation-Date: 2021-12-19\n"
+"POT-Creation-Date: 2022-05-17\n"
 "PO-Revision-Date: 2021-12-11\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -172,9 +172,6 @@ msgstr "Отступ ширины"
 msgid "Position Offset"
 msgstr "Отступ позиции"
 
-msgid "Start Up"
-msgstr "Начало сверху"
-
 msgid "Mirror Axis"
 msgstr "Оси отражения"
 
@@ -298,8 +295,8 @@ msgstr "Создать корнера для выделенных камней\n
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
 msgstr "Создать выборку для выделенных камней\n(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)"
 
-msgid "Make curve start at the top"
-msgstr "Расположить начало кривой сверху"
+msgid "Curve start position"
+msgstr "Начальное положение кривой"
 
 msgid "Density g/cm³"
 msgstr "Плотность г/см³"
