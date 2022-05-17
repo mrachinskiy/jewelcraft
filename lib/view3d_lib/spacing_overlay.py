@@ -199,10 +199,12 @@ def _draw(self, context):
 
         if dup.is_instance:
             ob2 = dup.instance_object.original
+            visible = dup.parent.original.visible_get()  # T74368
         else:
             ob2 = dup.object.original
+            visible = ob2.visible_get()
 
-        if "gem" not in ob2:
+        if "gem" not in ob2 or not visible:
             continue
 
         gems_count += 1
