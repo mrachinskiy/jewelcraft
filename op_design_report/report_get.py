@@ -54,7 +54,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
         size = tuple(round(x, 2) for x in Scale.from_scene_vec(ob.dimensions))
 
         # Warnings
-        Warn.overlap(dup, ob.dimensions)
+        Warn.overlap(dup, ob)
         stone, cut = Warn.validate_id(stone, cut)
 
         Report.gems[(stone, cut, size)] += 1
