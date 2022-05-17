@@ -43,7 +43,7 @@ else:
         ops_utils,
         ops_weighting,
     )
-    from .lib import on_load
+    from .lib import dynamic_list, on_load
 
 
 classes = (
@@ -206,10 +206,10 @@ def unregister():
     # Previews
     # ---------------------------
 
-    for pcoll in var.preview_collections.values():
+    for pcoll in dynamic_list.preview_collections.values():
         bpy.utils.previews.remove(pcoll)
 
-    var.preview_collections.clear()
+    dynamic_list.preview_collections.clear()
     preferences._folder_cache.clear()
 
 

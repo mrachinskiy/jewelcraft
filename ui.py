@@ -6,7 +6,7 @@ from typing import Optional
 import bpy
 from bpy.types import Panel, Menu, UIList
 
-from . import var, mod_update
+from . import mod_update
 from .lib import dynamic_list, pathutils, unit
 
 
@@ -15,7 +15,7 @@ from .lib import dynamic_list, pathutils, unit
 
 
 def _icon(name: str, override: Optional[float] = None) -> int:
-    if "icons" not in var.preview_collections:
+    if "icons" not in dynamic_list.preview_collections:
         dynamic_list.scan_icons()
 
     if override is not None:
@@ -24,7 +24,7 @@ def _icon(name: str, override: Optional[float] = None) -> int:
         value = bpy.context.preferences.themes[0].user_interface.wcol_tool.text.v
 
     theme = "DARK" if value < 0.5 else "LIGHT"
-    return var.preview_collections["icons"][theme + name].icon_id
+    return dynamic_list.preview_collections["icons"][theme + name].icon_id
 
 
 def _icon_menu(name: str) -> int:
