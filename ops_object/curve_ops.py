@@ -137,10 +137,13 @@ class CURVE_OT_size_curve_add(Operator):
         unit="LENGTH",
         update=upd_circumference,
     )
-    up: BoolProperty(
-        name="Start Up",
-        description="Make curve start at the top",
-        default=True,
+    curve_start_pos: EnumProperty(
+        name="Start",
+        description="Curve start position",
+        items=(
+            ("TOP", "Top", ""),
+            ("BOTTOM", "Bottom", ""),
+        ),
         options={"SKIP_SAVE"},
     )
     use_half_size: BoolProperty(
@@ -181,7 +184,10 @@ class CURVE_OT_size_curve_add(Operator):
         col = layout.column()
         col.prop(self, "diameter")
         col.prop(self, "circumference")
-        col.prop(self, "up")
+
+        layout.separator()
+
+        layout.row().prop(self, "curve_start_pos", expand=True)
 
         layout.separator()
 
@@ -196,7 +202,7 @@ class CURVE_OT_size_curve_add(Operator):
         curve.data.resolution_u = 512
         curve.data.use_radius = False
 
-        if self.up:
+        if self.curve_start_pos == "TOP":
             mat = Matrix.Rotation(pi, 4, "Z")
             curve.data.transform(mat)
 
