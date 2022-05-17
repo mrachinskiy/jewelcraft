@@ -40,10 +40,12 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
 
         if dup.is_instance:
             ob = dup.instance_object.original
+            visible = dup.parent.original.visible_get()  # T74368
         else:
             ob = dup.object.original
+            visible = ob.visible_get()
 
-        if "gem" not in ob:
+        if "gem" not in ob or not visible:
             continue
 
         # Gem

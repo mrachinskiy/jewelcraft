@@ -469,9 +469,6 @@ msgstr ""
 msgid "WARNING"
 msgstr "警告"
 
-msgid "Gems from hidden collections appear in report (don't use Hide in Viewport on collections)"
-msgstr ""
-
 msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
 msgstr ""
 

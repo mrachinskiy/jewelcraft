@@ -43,9 +43,6 @@ class Warnings:
         if self._check_overlap(self._overlap_data):
             report.append("Overlapping gems")
 
-        if self._check_collection_visibility():
-            report.append("Gems from hidden collections appear in report (don't use Hide in Viewport on collections)")
-
     def overlap(self, dup: DepsgraphObjectInstance, dim: Vector) -> None:
         loc, _rot, _sca = dup.matrix_world.decompose()
 
@@ -75,12 +72,3 @@ class Warnings:
     def _check_overlap(ob_data: list[ObjectData]) -> bool:
         threshold = unit.Scale().to_scene(0.1)
         return asset.gem_overlap(ob_data, threshold, first_match=True)
-
-    @staticmethod
-    def _check_collection_visibility() -> bool:
-        for coll in _collection_walk(bpy.context.view_layer.layer_collection):
-            if coll.hide_viewport:
-                for ob in coll.collection.all_objects:
-                    if "gem" in ob:
-                        return True
-        return False
