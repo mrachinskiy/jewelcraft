@@ -19,6 +19,8 @@ EnumItems4 = tuple[tuple[str, str, str, int], ...]
 EnumItems5 = tuple[tuple[str, str, str, Union[str, int], int], ...]
 AssetItems = tuple[tuple[str, str, int, bool], ...]
 
+preview_collections = {}
+
 
 def _iface_lang(context) -> str:
     view = context.preferences.view
@@ -43,14 +45,14 @@ def scan_icons() -> None:
                     filename = child.name + subchild.stem
                     pcoll.load(filename.upper(), str(subchild), "IMAGE")
 
-    var.preview_collections["icons"] = pcoll
+    preview_collections["icons"] = pcoll
 
 
 def _get_icon(name: str) -> int:
-    if "icons" not in var.preview_collections:
+    if "icons" not in preview_collections:
         scan_icons()
 
-    return var.preview_collections["icons"][name].icon_id
+    return preview_collections["icons"][name].icon_id
 
 
 def _preview_get(filepath: str, pcoll: Mapping[str, ImagePreview], default: int) -> int:
@@ -85,7 +87,7 @@ def _cuts(lang: str, color: float) -> EnumItems5:
     from . import gemlib
 
     theme = "DARK" if color < 0.5 else "LIGHT"
-    pcoll = var.preview_collections.get("cuts")
+    pcoll = preview_collections.get("cuts")
 
     if not pcoll:
         import bpy.utils.previews
@@ -99,7 +101,7 @@ def _cuts(lang: str, color: float) -> EnumItems5:
                         preview_id = child.name + subchild.stem
                         pcoll.load(preview_id.upper(), str(subchild), "IMAGE")
 
-        var.preview_collections["cuts"] = pcoll
+        preview_collections["cuts"] = pcoll
 
     return tuple(
         (k, _(_(v.name, "Jewelry")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround
@@ -211,7 +213,7 @@ def assets(lib_path: Path, category: str) -> AssetItems:
     if not folder.exists():
         return ()
 
-    pcoll = var.preview_collections.get("assets")
+    pcoll = preview_collections.get("assets")
 
     if not pcoll:
         import bpy.utils.previews
@@ -227,11 +229,11 @@ def assets(lib_path: Path, category: str) -> AssetItems:
             filepath = str(child.with_suffix(""))
             app((filepath, child.stem, _preview_get(filepath, pcoll, no_preview), filepath in favs))
 
-    var.preview_collections["assets"] = pcoll
+    preview_collections["assets"] = pcoll
 
     if not pcoll:
         bpy.utils.previews.remove(pcoll)
-        del var.preview_collections["assets"]
+        del preview_collections["assets"]
 
     return tuple(list_)
 
@@ -243,7 +245,7 @@ def favorites() -> AssetItems:
 
     import json
 
-    pcoll = var.preview_collections.get("assets")
+    pcoll = preview_collections.get("assets")
 
     if not pcoll:
         import bpy.utils.previews
@@ -257,11 +259,11 @@ def favorites() -> AssetItems:
         for filepath in json.load(file):
             app((filepath, Path(filepath).name, _preview_get(filepath, pcoll, no_preview), True))
 
-    var.preview_collections["assets"] = pcoll
+    preview_collections["assets"] = pcoll
 
     if not pcoll:
         bpy.utils.previews.remove(pcoll)
-        del var.preview_collections["assets"]
+        del preview_collections["assets"]
 
     return tuple(list_)
 
@@ -279,7 +281,7 @@ def _favs_deserialize() -> frozenset[str]:
 
 def assets_refresh(preview_id: Optional[str] = None, hard: bool = False, favs: bool = False) -> None:
     if preview_id or hard:
-        pcoll = var.preview_collections.get("assets")
+        pcoll = preview_collections.get("assets")
 
         if pcoll:
             import bpy.utils.previews
@@ -291,11 +293,11 @@ def assets_refresh(preview_id: Optional[str] = None, hard: bool = False, favs: b
                     del pcoll[preview_id]
                     if not pcoll:
                         bpy.utils.previews.remove(pcoll)
-                        del var.preview_collections["assets"]
+                        del preview_collections["assets"]
 
             elif hard:
                 bpy.utils.previews.remove(pcoll)
-                del var.preview_collections["assets"]
+                del preview_collections["assets"]
 
     if favs:
         _favs_deserialize.cache_clear()
