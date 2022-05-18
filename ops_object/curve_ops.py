@@ -28,42 +28,32 @@ def set_diameter(self, context):
 def set_ring_size(self, context):
     from ..lib import ringsizelib
 
-    try:
-        size = ringsizelib.cir_to_size(
-            unit.Scale().from_scene(self.circumference),
-            self.size_format,
-        )
-    except ValueError:
-        self.warn_no_size = True
+    cir = unit.Scale().from_scene(self.circumference)
+    size = ringsizelib.to_size(cir, self.size_format)
+
+    self.warn_no_size = size is None
+    if self.warn_no_size:
         return
 
-    self.warn_no_size = False
-
-    if self.size_format in {"US", "CH"}:
-        self["size_float"] = size
-    elif self.size_format == "JP":
-        self["size_int"] = size
-    elif self.size_format == "UK":
+    if self.size_format == "UK":
         import string
-        self["size_abc"] = string.ascii_uppercase.index(size.split()[0])
+        self["size_uk"] = string.ascii_uppercase.index(size.split()[0])
         self["use_half_size"] = "1/2" in size
+    else:
+        self["size_" + self.size_format.lower()] = size
 
 
 def upd_size(self, context):
     from ..lib import ringsizelib
 
-    if self.size_format == "CH":
-        size = self.size_float
-    elif self.size_format == "UK":
-        size = float(self.size_abc)
+    if self.size_format == "UK":
+        size = float(self.size_uk)
         if self.use_half_size:
             size += 0.5
-    elif self.size_format == "US":
-        size = self.size_float
-    elif self.size_format == "JP":
-        size = self.size_int
+    else:
+        size = self["size_" + self.size_format.lower()]
 
-    cir = ringsizelib.size_to_cir(size, self.size_format)
+    cir = ringsizelib.to_cir(size, self.size_format)
 
     self["circumference"] = unit.Scale().to_scene(cir)
     set_diameter(self, context)
@@ -98,21 +88,10 @@ class CURVE_OT_size_curve_add(Operator):
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
         ),
-        update=upd_size,
+        update=set_ring_size,
     )
-    size_abc: EnumProperty(
-        name="Size",
-        items=dynamic_list.abc,
-        update=upd_size,
-    )
-    size_int: IntProperty(
-        name="Size",
-        default=8,
-        min=1,
-        max=27,
-        update=upd_size,
-    )
-    size_float: FloatProperty(
+
+    size_us: FloatProperty(
         name="Size",
         default=4.5,
         min=0.0,
@@ -120,6 +99,31 @@ class CURVE_OT_size_curve_add(Operator):
         precision=1,
         update=upd_size,
     )
+    size_ch: FloatProperty(
+        name="Size",
+        default=8.0,
+        min=0.0,
+        step=100,
+        precision=2,
+        update=upd_size,
+    )
+    size_jp: IntProperty(
+        name="Size",
+        default=8,
+        min=1,
+        max=27,
+        update=upd_size,
+    )
+    size_uk: EnumProperty(
+        name="Size",
+        items=dynamic_list.abc,
+        update=upd_size,
+    )
+    use_half_size: BoolProperty(
+        name="1/2",
+        update=upd_size,
+    )
+
     diameter: FloatProperty(
         name="Diameter",
         default=15.29,
@@ -137,6 +141,7 @@ class CURVE_OT_size_curve_add(Operator):
         unit="LENGTH",
         update=upd_circumference,
     )
+
     curve_start_pos: EnumProperty(
         name="Start",
         description="Curve start position",
@@ -146,10 +151,7 @@ class CURVE_OT_size_curve_add(Operator):
         ),
         options={"SKIP_SAVE"},
     )
-    use_half_size: BoolProperty(
-        name="1/2",
-        update=upd_size,
-    )
+
     warn_scale: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
     warn_no_size: BoolProperty(options={"HIDDEN"})
 
@@ -171,13 +173,11 @@ class CURVE_OT_size_curve_add(Operator):
         else:
             if self.size_format == "UK":
                 row = col.row()
-                row.prop(self, "size_abc")
+                row.prop(self, "size_uk")
                 row.separator()
                 row.prop(self, "use_half_size")
-            elif self.size_format == "JP":
-                col.prop(self, "size_int")
             else:
-                col.prop(self, "size_float")
+                col.prop(self, "size_" + self.size_format.lower())
 
         layout.separator()
 

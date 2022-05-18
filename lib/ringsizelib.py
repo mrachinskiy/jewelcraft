@@ -48,21 +48,25 @@ def _to_int(x: float) -> Union[int, float]:
     return x
 
 
-def cir_to_size(cir: float, size_format: str) -> Union[int, float, str]:
+def to_size(cir: float, fmt: str) -> Union[int, float, str, None]:
+    if fmt == "CH":
+        size = round(cir - 40.0, 2)
+        if size >= 0.0:
+            return _to_int(size)
 
-    if size_format in {"US", "JP"}:
+    elif fmt in {"US", "JP"}:
         size = round((cir - CIR_BASE_US) / CIR_STEP_US, 2)
 
         if size >= 0.0:
 
-            if size_format == "US":
+            if fmt == "US":
                 return _to_int(size)
 
             for size_jp, size_us in MAP_SIZE_JP_TO_US.items():
-                if size_us - 0.2 < size < size_us + 0.2:
+                if (size_us - 0.2) < size < (size_us + 0.2):
                     return size_jp
 
-    if size_format == "UK":
+    elif fmt == "UK":
         import string
 
         size_raw = (cir - CIR_BASE_UK) / CIR_STEP_UK
@@ -72,33 +76,23 @@ def cir_to_size(cir: float, size_format: str) -> Union[int, float, str]:
             half_size = 0.25 < fraction < 0.75
             if fraction > 0.75:
                 integer += 1.0
-
             if integer < len(string.ascii_uppercase):
                 size = string.ascii_uppercase[int(integer)]
                 if half_size:
                     size += " 1/2"
                 return size
 
-    if size_format == "CH":
-        size = round(cir - 40.0, 2)
-        if size >= 0.0:
-            return _to_int(size)
 
-    raise ValueError
-
-
-def size_to_cir(size: Union[int, float], size_format: str) -> float:
-    if size_format == "CH":
+def to_cir(size: Union[int, float], fmt: str) -> float:
+    if fmt == "CH":
         cir = size + 40.0
 
-    elif size_format == "UK":
+    elif fmt == "UK":
         cir = CIR_BASE_UK + CIR_STEP_UK * size
 
-    elif size_format in {"US", "JP"}:
-
-        if size_format == "JP":
+    elif fmt in {"US", "JP"}:
+        if fmt == "JP":
             size = MAP_SIZE_JP_TO_US[size]
-
         cir = CIR_BASE_US + CIR_STEP_US * size
 
     return round(cir, 4)
