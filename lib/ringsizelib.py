@@ -5,29 +5,25 @@ from typing import Union
 from math import modf
 
 
-SizeJP = int
-SizeUS = Union[int, float]
-
-
 CIR_BASE_US = 36.537
 CIR_STEP_US = 2.5535
 
 CIR_BASE_UK = 37.5
 CIR_STEP_UK = 1.25
 
-MAP_SIZE_JP_TO_US: dict[SizeJP, SizeUS] = {
+MAP_SIZE_JP_TO_US: dict[int, Union[int, float]] = {
     1: 1,
     2: 2,
     3: 2.5,
     4: 3,
-    5: 3.25,
-    6: 3.75,
+    5: 3.375,
+    6: 3.625,
     7: 4,
     8: 4.5,
     9: 5,
-    10: 5.5,
-    11: 6,
-    12: 6.25,
+    10: 5.375,
+    11: 5.875,
+    12: 6,
     13: 6.5,
     14: 7,
     15: 7.5,
@@ -52,7 +48,7 @@ def _to_int(x: float) -> Union[int, float]:
     return x
 
 
-def cir_to_size(cir: float, size_format: str) -> Union[int, float]:
+def cir_to_size(cir: float, size_format: str) -> Union[int, float, str]:
 
     if size_format in {"US", "JP"}:
         size = round((cir - CIR_BASE_US) / CIR_STEP_US, 2)
@@ -101,9 +97,7 @@ def size_to_cir(size: Union[int, float], size_format: str) -> float:
     elif size_format in {"US", "JP"}:
 
         if size_format == "JP":
-            size = MAP_SIZE_JP_TO_US[
-                min(size, len(MAP_SIZE_JP_TO_US))
-            ]
+            size = MAP_SIZE_JP_TO_US[size]
 
         cir = CIR_BASE_US + CIR_STEP_US * size
 
