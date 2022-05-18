@@ -13,7 +13,7 @@ from mathutils import Matrix, Vector, Quaternion
 
 from ... import var
 from .. import unit
-from ..asset import nearest_coords, calc_gap
+from ..asset import nearest_coords, calc_gap, dim_raw
 
 
 _handler = None
@@ -215,7 +215,8 @@ def _draw(self, context):
         loc2, _rot, _sca = dup.matrix_world.decompose()
 
         if dup.is_instance:
-            rad2 = max(ob2.dimensions.xy * _sca.xy) / 2
+            _dim = dim_raw(ob2)
+            rad2 = max(_dim.xy * _sca.xy) / 2
         else:
             rad2 = max(ob2.dimensions.xy) / 2
 
