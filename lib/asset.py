@@ -389,7 +389,7 @@ def mod_curve_off(ob: Object, mat: Matrix) -> tuple[BoundBox, Optional[Object]]:
     return [mat @ Vector(x) for x in ob.bound_box], curve
 
 
-def dim_raw(ob: Object) -> Vector:
+def bbox_dim(ob: Object) -> Vector:
     p = Vector(ob.bound_box[0])
     x = p - Vector(ob.bound_box[4])
     y = p - Vector(ob.bound_box[3])

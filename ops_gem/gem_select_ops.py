@@ -143,7 +143,7 @@ class OBJECT_OT_gem_select_overlapping(Operator):
             loc, _rot, _sca = dup.matrix_world.decompose()
 
             if dup.is_instance:
-                _dim = asset.dim_raw(ob)
+                _dim = asset.bbox_dim(ob)
                 rad = max(_dim.xy * _sca.xy) / 2
             else:
                 rad = max(ob.dimensions.xy) / 2
