@@ -261,7 +261,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
 
             for ob in context.objects_in_mode:
                 me = ob.data
-                bbox, curve = asset.mod_curve_off(ob, Matrix())
+                curve = asset.mod_curve_off(ob)
 
                 if curve:
                     length = mesh.est_curve_length(curve)
@@ -282,7 +282,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
         else:
 
             for ob in context.selected_objects:
-                bbox, curve = asset.mod_curve_off(ob, ob.matrix_world)
+                curve, bbox = asset.mod_curve_off(ob, ob.matrix_world)
 
                 if curve:
                     length = mesh.est_curve_length(curve)
@@ -317,7 +317,7 @@ class OBJECT_OT_move_over_under(Operator):
                 return {"CANCELLED"}
 
             context.view_layer.update()
-            bbox, curve = asset.mod_curve_off(ob, ob.matrix_world)
+            curve, bbox = asset.mod_curve_off(ob, ob.matrix_world)
 
             if self.under:
                 z_object = max(x[2] for x in bbox)
@@ -336,7 +336,7 @@ class OBJECT_OT_move_over_under(Operator):
         else:
 
             for ob in context.selected_objects:
-                bbox, curve = asset.mod_curve_off(ob, ob.matrix_local)
+                curve, bbox = asset.mod_curve_off(ob, ob.matrix_local)
 
                 if self.under:
                     z_object = max(x[2] for x in bbox)

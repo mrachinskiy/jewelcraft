@@ -12,7 +12,7 @@ from mathutils import Matrix, Vector, kdtree
 from . import mesh, unit
 
 
-ObjectData = tuple[Vector, float, Matrix]
+LocRadMat = tuple[Vector, float, Matrix]
 Color = tuple[float, float, float, float]
 BoundBox = list[Vector]
 
@@ -45,7 +45,7 @@ def calc_gap(co1: Vector, co2: Vector, loc1: Vector, dist_locs: float, rad1: flo
     return (co1 - co2).length
 
 
-def gem_overlap(data: list[ObjectData], threshold: float, first_match=False) -> Union[set[int], bool]:
+def gem_overlap(data: list[LocRadMat], threshold: float, first_match=False) -> Union[set[int], bool]:
     kd = kdtree.KDTree(len(data))
 
     for i, (loc, _, _) in enumerate(data):
@@ -87,7 +87,7 @@ def gem_overlap(data: list[ObjectData], threshold: float, first_match=False) -> 
     return overlap_indices
 
 
-def gem_transform(dup: DepsgraphObjectInstance) -> tuple[float, Vector, Matrix]:
+def gem_transform(dup: DepsgraphObjectInstance) -> LocRadMat:
     loc, rot, sca = dup.matrix_world.decompose()
 
     if dup.is_instance:
@@ -395,7 +395,7 @@ def apply_scale(ob: Object) -> None:
     ob.scale = (1.0, 1.0, 1.0)
 
 
-def mod_curve_off(ob: Object, mat: Matrix) -> tuple[BoundBox, Optional[Object]]:
+def mod_curve_off(ob: Object, mat: Matrix = None) -> tuple[Optional[Object], BoundBox]:
     curve = None
 
     for mod in ob.modifiers:
@@ -409,7 +409,10 @@ def mod_curve_off(ob: Object, mat: Matrix) -> tuple[BoundBox, Optional[Object]]:
             curve = mod.object
             break
 
-    return [mat @ Vector(x) for x in ob.bound_box], curve
+    if mat is None:
+        return curve
+
+    return curve, [mat @ Vector(x) for x in ob.bound_box]
 
 
 class GetBoundBox:
