@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Union, Optional
 
 import bpy
-from bpy.types import Object, BlendData, ID, Space
+from bpy.types import Object, BlendData, ID, Space, DepsgraphObjectInstance
 from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix, Vector, kdtree
 
@@ -85,6 +85,29 @@ def gem_overlap(data: list[ObjectData], threshold: float, first_match=False) -> 
         return False
 
     return overlap_indices
+
+
+def gem_transform(dup: DepsgraphObjectInstance) -> tuple[float, Vector, Matrix]:
+    loc, rot, sca = dup.matrix_world.decompose()
+
+    if dup.is_instance:
+        bbox = dup.instance_object.original.bound_box
+        x, y, z = bbox[0]
+        dim = Vector((
+            bbox[4][0] - x,
+            bbox[3][1] - y,
+            bbox[1][2] - z,
+        ))
+        rad = max(dim.xy * sca.xy) / 2
+    else:
+        dim = dup.object.original.dimensions
+        rad = max(dim.xy) / 2
+
+    mat = Matrix.LocRotScale(loc, rot, (1.0, 1.0, 1.0))
+    loc.freeze()
+    mat.freeze()
+
+    return loc, rad, mat
 
 
 # Material
@@ -387,15 +410,6 @@ def mod_curve_off(ob: Object, mat: Matrix) -> tuple[BoundBox, Optional[Object]]:
             break
 
     return [mat @ Vector(x) for x in ob.bound_box], curve
-
-
-def bbox_dim(ob: Object) -> Vector:
-    p = Vector(ob.bound_box[0])
-    x = p - Vector(ob.bound_box[4])
-    y = p - Vector(ob.bound_box[3])
-    z = p - Vector(ob.bound_box[1])
-
-    return Vector((x.length, y.length, z.length))
 
 
 class GetBoundBox:

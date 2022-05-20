@@ -3,8 +3,7 @@
 
 from collections.abc import Iterator
 
-import bpy
-from bpy.types import LayerCollection, DepsgraphObjectInstance, Object
+from bpy.types import LayerCollection, DepsgraphObjectInstance
 from mathutils import Vector, Matrix
 
 from ..lib import unit, asset
@@ -43,20 +42,8 @@ class Warnings:
         if self._check_overlap(self._overlap_data):
             report.append("Overlapping gems")
 
-    def overlap(self, dup: DepsgraphObjectInstance, ob: Object) -> None:
-        loc, _rot, _sca = dup.matrix_world.decompose()
-
-        if dup.is_instance:
-            _dim = asset.bbox_dim(ob)
-            rad = max(_dim.xy * _sca.xy) / 2
-        else:
-            rad = max(ob.dimensions.xy) / 2
-
-        mat = Matrix.LocRotScale(loc, _rot, (1.0, 1.0, 1.0))
-        loc.freeze()
-        mat.freeze()
-
-        self._overlap_data.append((loc, rad, mat))
+    def overlap(self, dup: DepsgraphObjectInstance) -> None:
+        self._overlap_data.append(asset.gem_transform(dup))
 
     def validate_id(self, stone: str, cut: str) -> tuple[str, str]:
         if stone not in self._known_stones:

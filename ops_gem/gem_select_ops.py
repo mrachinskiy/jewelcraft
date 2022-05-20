@@ -4,7 +4,6 @@
 from bpy.props import EnumProperty, FloatProperty, BoolProperty
 from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
-from mathutils import Matrix
 
 from ..lib import dynamic_list
 
@@ -140,20 +139,8 @@ class OBJECT_OT_gem_select_overlapping(Operator):
             if "gem" not in ob or not visible:
                 continue
 
-            loc, _rot, _sca = dup.matrix_world.decompose()
-
-            if dup.is_instance:
-                _dim = asset.bbox_dim(ob)
-                rad = max(_dim.xy * _sca.xy) / 2
-            else:
-                rad = max(ob.dimensions.xy) / 2
-
-            mat = Matrix.LocRotScale(loc, _rot, (1.0, 1.0, 1.0))
-            loc.freeze()
-            mat.freeze()
-
             app_obs(sel)
-            app_data((loc, rad, mat))
+            app_data(asset.gem_transform(dup))
 
         overlaps = asset.gem_overlap(ob_data, self.threshold)
 
