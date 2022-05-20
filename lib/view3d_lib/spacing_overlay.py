@@ -13,7 +13,7 @@ from mathutils import Matrix, Vector, Quaternion
 
 from ... import var
 from .. import unit
-from ..asset import nearest_coords, calc_gap, bbox_dim
+from ..asset import nearest_coords, calc_gap, gem_transform
 
 
 _handler = None
@@ -208,20 +208,7 @@ def _draw(self, context):
             continue
 
         gems_count += 1
-
-        # Gem 2 transform
-        # -----------------------------------
-
-        loc2, _rot, _sca = dup.matrix_world.decompose()
-
-        if dup.is_instance:
-            _dim = bbox_dim(ob2)
-            rad2 = max(_dim.xy * _sca.xy) / 2
-        else:
-            rad2 = max(ob2.dimensions.xy) / 2
-
-        mat2 = Matrix.LocRotScale(loc2, _rot, (1.0, 1.0, 1.0))
-        mat2.freeze()
+        loc2, rad2, mat2 = gem_transform(dup)
 
         # Filter out by distance
         # -----------------------------------
