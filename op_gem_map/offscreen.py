@@ -10,7 +10,7 @@ import gpu
 from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix, Vector
 
-from ..lib import unit
+from ..lib import unit, asset
 
 
 class _LocAdapt:
@@ -88,18 +88,9 @@ def draw_gems(self, gamma_corr=False):
     gems = []
     _app = gems.append
 
-    for dup in depsgraph.object_instances:
+    for dup, ob, ob_ in asset.iter_gems(depsgraph):
 
-        if dup.is_instance:
-            ob = dup.instance_object.original
-            visible = dup.parent.original.visible_get()  # T74368
-            selected = dup.parent.original.select_get()
-        else:
-            ob = dup.object.original
-            visible = ob.visible_get()
-            selected = ob.select_get()
-
-        if "gem" not in ob or not visible or (self.use_select and not selected):
+        if self.use_select and not ob_.select_get():
             continue
 
         ob_stone = ob["gem"]["stone"]

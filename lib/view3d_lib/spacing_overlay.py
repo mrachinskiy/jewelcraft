@@ -13,7 +13,7 @@ from mathutils import Matrix, Vector, Quaternion
 
 from ... import var
 from .. import unit
-from ..asset import nearest_coords, calc_gap, gem_transform
+from ..asset import iter_gems, gem_transform, nearest_coords, calc_gap
 
 
 _handler = None
@@ -195,18 +195,7 @@ def _draw(self, context):
     # Main loop
     # -----------------------------------
 
-    for dup in depsgraph.object_instances:
-
-        if dup.is_instance:
-            ob2 = dup.instance_object.original
-            visible = dup.parent.original.visible_get()  # T74368
-        else:
-            ob2 = dup.object.original
-            visible = ob2.visible_get()
-
-        if "gem" not in ob2 or not visible:
-            continue
-
+    for dup, ob2, _ in iter_gems(depsgraph):
         gems_count += 1
         loc2, rad2, mat2 = gem_transform(dup)
 

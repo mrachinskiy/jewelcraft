@@ -2,10 +2,10 @@
 # Copyright 2015-2022 Mikhail Rachinskiy
 
 from pathlib import Path
-from typing import Union, Optional
+from typing import Union, Optional, Iterator
 
 import bpy
-from bpy.types import Object, BlendData, ID, Space, DepsgraphObjectInstance
+from bpy.types import Object, BlendData, ID, Space, DepsgraphObjectInstance, Depsgraph
 from bpy.app.translations import pgettext_iface as _
 from mathutils import Matrix, Vector, kdtree
 
@@ -19,6 +19,43 @@ BoundBox = list[Vector]
 
 # Gem
 # ------------------------------------
+
+
+def iter_gems(depsgraph: Depsgraph) -> Iterator[tuple[DepsgraphObjectInstance, Object, Object]]:
+    for dup in depsgraph.object_instances:
+        if dup.is_instance:
+            ob = dup.instance_object.original
+            instancer = dup.parent.original
+        else:
+            ob, instancer = dup.object.original
+
+        if "gem" not in ob or not instancer.visible_get():  # T74368
+            continue
+
+        yield dup, ob, instancer
+
+
+def gem_transform(dup: DepsgraphObjectInstance) -> LocRadMat:
+    loc, rot, sca = dup.matrix_world.decompose()
+
+    if dup.is_instance:
+        bbox = dup.instance_object.original.bound_box
+        x, y, z = bbox[0]
+        dim = Vector((
+            bbox[4][0] - x,
+            bbox[3][1] - y,
+            bbox[1][2] - z,
+        ))
+        rad = max(dim.xy * sca.xy) / 2
+    else:
+        dim = dup.object.original.dimensions
+        rad = max(dim.xy) / 2
+
+    mat = Matrix.LocRotScale(loc, rot, (1.0, 1.0, 1.0))
+    loc.freeze()
+    mat.freeze()
+
+    return loc, rad, mat
 
 
 def nearest_coords(rad1: float, rad2: float, mat1: Matrix, mat2: Matrix) -> tuple[Vector, Vector]:
@@ -85,29 +122,6 @@ def gem_overlap(data: list[LocRadMat], threshold: float, first_match=False) -> U
         return False
 
     return overlap_indices
-
-
-def gem_transform(dup: DepsgraphObjectInstance) -> LocRadMat:
-    loc, rot, sca = dup.matrix_world.decompose()
-
-    if dup.is_instance:
-        bbox = dup.instance_object.original.bound_box
-        x, y, z = bbox[0]
-        dim = Vector((
-            bbox[4][0] - x,
-            bbox[3][1] - y,
-            bbox[1][2] - z,
-        ))
-        rad = max(dim.xy * sca.xy) / 2
-    else:
-        dim = dup.object.original.dimensions
-        rad = max(dim.xy) / 2
-
-    mat = Matrix.LocRotScale(loc, rot, (1.0, 1.0, 1.0))
-    loc.freeze()
-    mat.freeze()
-
-    return loc, rad, mat
 
 
 # Material
