@@ -56,15 +56,15 @@ class OBJECT_OT_gem_select_by_trait(Operator):
         layout.prop(self, "use_select_children")
 
     def execute(self, context):
+        if not self.use_extend:
+            for ob in context.selected_objects:
+                ob.select_set(False)
+
         size = round(self.size, 2)
         eq_size = (lambda ob: round(ob.dimensions.y, 2) == size) if self.filter_size else (lambda x: True)
         eq_stone = (lambda ob: ob["gem"]["stone"] == self.stone) if self.filter_stone else (lambda x: True)
         eq_cut = (lambda ob: ob["gem"]["cut"] == self.cut) if self.filter_cut else (lambda x: True)
         selected = None
-
-        if not self.use_extend:
-            for ob in context.selected_objects:
-                ob.select_set(False)
 
         for ob in context.visible_objects:
             if "gem" in ob and eq_size(ob) and eq_stone(ob) and eq_cut(ob):
@@ -117,29 +117,17 @@ class OBJECT_OT_gem_select_overlapping(Operator):
     def execute(self, context):
         from ..lib import asset
 
+        for ob in context.selected_objects:
+            ob.select_set(False)
+
         obs = []
         ob_data = []
         app_obs = obs.append
         app_data = ob_data.append
         depsgraph = context.evaluated_depsgraph_get()
 
-        for dup in depsgraph.object_instances:
-
-            if dup.is_instance:
-                ob = dup.instance_object.original
-                sel = dup.parent.original
-                visible = dup.parent.original.visible_get()  # T74368
-            else:
-                ob = dup.object.original
-                sel = ob
-                visible = ob.visible_get()
-
-            ob.select_set(False)
-
-            if "gem" not in ob or not visible:
-                continue
-
-            app_obs(sel)
+        for dup, _, ob in asset.iter_gems(depsgraph):
+            app_obs(ob)
             app_data(asset.gem_transform(dup))
 
         overlaps = asset.gem_overlap(ob_data, self.threshold)

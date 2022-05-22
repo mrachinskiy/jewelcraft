@@ -5,7 +5,7 @@ import collections
 
 import bpy
 
-from ..lib import unit, mesh
+from ..lib import unit, mesh, asset
 from . import report_warn
 
 
@@ -36,18 +36,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
     # Gems
     # ---------------------------
 
-    for dup in depsgraph.object_instances:
-
-        if dup.is_instance:
-            ob = dup.instance_object.original
-            visible = dup.parent.original.visible_get()  # T74368
-        else:
-            ob = dup.object.original
-            visible = ob.visible_get()
-
-        if "gem" not in ob or not visible:
-            continue
-
+    for dup, ob, _ in asset.iter_gems(depsgraph):
         # Gem
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
