@@ -156,7 +156,7 @@ class WM_OT_asset_remove(Operator):
         Path(self.filepath + ".blend").unlink(missing_ok=True)
         Path(self.filepath + ".png").unlink(missing_ok=True)
 
-        dynamic_list.assets_refresh(preview_id=self.filepath, favs=True)
+        dynamic_list.assets_refresh(self.filepath, favs=True)
         _asset_menu_lock()
         context.area.tag_redraw()
 
@@ -237,7 +237,7 @@ class WM_OT_asset_preview_replace(Operator):
 
         asset.render_preview(resolution, resolution, Path(self.filepath).with_suffix(".png"))
 
-        dynamic_list.assets_refresh(preview_id=self.filepath)
+        dynamic_list.assets_refresh(self.filepath)
         _asset_menu_lock()
         context.area.tag_redraw()
 
