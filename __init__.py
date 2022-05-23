@@ -43,7 +43,7 @@ else:
         ops_utils,
         ops_weighting,
     )
-    from .lib import dynamic_list, on_load
+    from .lib import dynamic_list, on_load, previewlib
 
 
 classes = (
@@ -178,7 +178,6 @@ def register():
 
 
 def unregister():
-    import bpy.utils.previews
     from .lib.view3d_lib import spacing_overlay
 
     for cls in classes:
@@ -206,10 +205,8 @@ def unregister():
     # Previews
     # ---------------------------
 
-    for pcoll in dynamic_list.preview_collections.values():
-        bpy.utils.previews.remove(pcoll)
+    previewlib.clear_previews()
 
-    dynamic_list.preview_collections.clear()
     preferences._folder_cache.clear()
 
 

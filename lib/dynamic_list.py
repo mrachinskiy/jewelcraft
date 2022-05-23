@@ -4,22 +4,18 @@
 from pathlib import Path
 from functools import lru_cache
 from typing import Optional, Union
-from collections.abc import Mapping
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
-from bpy.types import ImagePreview
 
 from .. import var
-from . import pathutils
+from . import pathutils, previewlib
 
 
 EnumItems3 = tuple[tuple[str, str, str], ...]
 EnumItems4 = tuple[tuple[str, str, str, int], ...]
 EnumItems5 = tuple[tuple[str, str, str, Union[str, int], int], ...]
 AssetItems = tuple[tuple[str, str, int, bool], ...]
-
-preview_collections = {}
 
 
 def _iface_lang(context) -> str:
@@ -29,40 +25,6 @@ def _iface_lang(context) -> str:
         return view.language
 
     return "en_US"
-
-
-def scan_icons() -> None:
-    import bpy.utils.previews
-
-    pcoll = bpy.utils.previews.new()
-
-    for child in var.ICONS_DIR.iterdir():
-        if child.is_file() and child.suffix == ".png":
-            pcoll.load(child.stem.upper(), str(child), "IMAGE")
-        elif child.is_dir():
-            for subchild in child.iterdir():
-                if subchild.is_file() and subchild.suffix == ".png":
-                    filename = child.name + subchild.stem
-                    pcoll.load(filename.upper(), str(subchild), "IMAGE")
-
-    preview_collections["icons"] = pcoll
-
-
-def _get_icon(name: str) -> int:
-    if "icons" not in preview_collections:
-        scan_icons()
-
-    return preview_collections["icons"][name].icon_id
-
-
-def _preview_get(filepath: str, pcoll: Mapping[str, ImagePreview], default: int) -> int:
-    if Path(filepath + ".png").exists():
-        preview_id = str(hash(filepath))
-        if preview_id not in pcoll:
-            pcoll.load(preview_id, filepath + ".png", "IMAGE")
-        return pcoll[preview_id].icon_id
-
-    return default
 
 
 # Gems
@@ -86,22 +48,8 @@ def stones(self, context) -> EnumItems4:
 def _cuts(lang: str, color: float) -> EnumItems5:
     from . import gemlib
 
+    pcoll = previewlib.scan_icons("cuts", var.GEM_ASSET_DIR)
     theme = "DARK" if color < 0.5 else "LIGHT"
-    pcoll = preview_collections.get("cuts")
-
-    if not pcoll:
-        import bpy.utils.previews
-
-        pcoll = bpy.utils.previews.new()
-
-        for child in var.GEM_ASSET_DIR.iterdir():
-            if child.is_dir():
-                for subchild in child.iterdir():
-                    if subchild.is_file() and subchild.suffix == ".png":
-                        preview_id = child.name + subchild.stem
-                        pcoll.load(preview_id.upper(), str(subchild), "IMAGE")
-
-        preview_collections["cuts"] = pcoll
 
     return tuple(
         (k, _(_(v.name, "Jewelry")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround
@@ -213,27 +161,14 @@ def assets(lib_path: Path, category: str) -> AssetItems:
     if not folder.exists():
         return ()
 
-    pcoll = preview_collections.get("assets")
-
-    if not pcoll:
-        import bpy.utils.previews
-        pcoll = bpy.utils.previews.new()
-
     list_ = []
     app = list_.append
-    no_preview = _get_icon("NO_PREVIEW")
     favs = _favs_deserialize()
 
     for child in folder.iterdir():
         if child.is_file() and child.suffix == ".blend":
             filepath = str(child.with_suffix(""))
-            app((filepath, child.stem, _preview_get(filepath, pcoll, no_preview), filepath in favs))
-
-    preview_collections["assets"] = pcoll
-
-    if not pcoll:
-        bpy.utils.previews.remove(pcoll)
-        del preview_collections["assets"]
+            app((filepath, child.stem, previewlib.asset_img(filepath), filepath in favs))
 
     return tuple(list_)
 
@@ -245,25 +180,12 @@ def favorites() -> AssetItems:
 
     import json
 
-    pcoll = preview_collections.get("assets")
-
-    if not pcoll:
-        import bpy.utils.previews
-        pcoll = bpy.utils.previews.new()
-
     list_ = []
     app = list_.append
-    no_preview = _get_icon("NO_PREVIEW")
 
     with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
         for filepath in json.load(file):
-            app((filepath, Path(filepath).name, _preview_get(filepath, pcoll, no_preview), True))
-
-    preview_collections["assets"] = pcoll
-
-    if not pcoll:
-        bpy.utils.previews.remove(pcoll)
-        del preview_collections["assets"]
+            app((filepath, Path(filepath).name, previewlib.asset_img(filepath), True))
 
     return tuple(list_)
 
@@ -279,25 +201,9 @@ def _favs_deserialize() -> frozenset[str]:
         return frozenset(json.load(file))
 
 
-def assets_refresh(preview_id: Optional[str] = None, hard: bool = False, favs: bool = False) -> None:
-    if preview_id or hard:
-        pcoll = preview_collections.get("assets")
-
-        if pcoll:
-            import bpy.utils.previews
-
-            if preview_id:
-                preview_id = str(hash(preview_id))
-
-                if preview_id in pcoll:
-                    del pcoll[preview_id]
-                    if not pcoll:
-                        bpy.utils.previews.remove(pcoll)
-                        del preview_collections["assets"]
-
-            elif hard:
-                bpy.utils.previews.remove(pcoll)
-                del preview_collections["assets"]
+def assets_refresh(preview_id: Optional[str] = None, favs: bool = False) -> None:
+    if preview_id is not None:
+        previewlib.asset_img_del(preview_id)
 
     if favs:
         _favs_deserialize.cache_clear()

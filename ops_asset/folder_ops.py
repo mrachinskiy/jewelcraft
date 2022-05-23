@@ -100,6 +100,6 @@ class WM_OT_asset_ui_refresh(Operator):
     def execute(self, context):
         data.asset_libs_deserialize()
         dynamic_list.asset_folders_refresh()
-        dynamic_list.assets_refresh(hard=True, favs=True)
+        dynamic_list.assets_refresh("ALL", favs=True)
         context.area.tag_redraw()
         return {"FINISHED"}
