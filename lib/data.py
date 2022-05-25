@@ -76,3 +76,19 @@ def weighting_list_deserialize(name: str) -> None:
     else:
         filepath = pathutils.get_weighting_list_filepath(name)
         ul_deserialize(mats, filepath)
+
+
+def versioning_asset_favs():
+    if not var.ASSET_FAVS_FILEPATH.exists():
+        return
+
+    with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    if not (data and Path(data[0]).suffix == ""):
+        return
+
+    data_new = [str(Path(x).with_suffix(".blend")) for x in data]
+
+    with open(var.ASSET_FAVS_FILEPATH, "w", encoding="utf-8") as file:
+        json.dump(data_new, file, indent=4, ensure_ascii=False)
