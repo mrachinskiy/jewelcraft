@@ -84,12 +84,12 @@ class AssetAdd:
 
         if self.is_add:
             wm_props = context.window_manager.jewelcraft
-            filepath = pathutils.get_asset_lib_path() / wm_props.asset_folder / self.asset_name
+            filepath = pathutils.get_asset_lib_path() / wm_props.asset_folder / (self.asset_name + ".blend")
         else:
             filepath = Path(self.filepath)
 
         data_blocks = self.asset_dbs_get()
-        asset.asset_export(data_blocks, filepath.with_suffix(".blend"))
+        asset.asset_export(data_blocks, filepath)
 
         if self.is_add:
             prefs = context.preferences.addons[var.ADDON_ID].preferences
@@ -112,7 +112,7 @@ class AssetAdd:
         if self.is_add:
             upd_asset_name(self, context)
         elif self.filepath:
-            self.asset_name = Path(self.filepath).name
+            self.asset_name = Path(self.filepath).stem
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
@@ -153,8 +153,9 @@ class WM_OT_asset_remove(Operator):
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        Path(self.filepath + ".blend").unlink(missing_ok=True)
-        Path(self.filepath + ".png").unlink(missing_ok=True)
+        path = Path(self.filepath)
+        path.unlink(missing_ok=True)
+        path.with_suffix(".png").unlink(missing_ok=True)
 
         dynamic_list.assets_refresh(self.filepath, favs=True)
         _asset_menu_lock()
@@ -194,7 +195,7 @@ class WM_OT_asset_rename(Operator):
         if self.asset_name == self.name_current:
             return {"CANCELLED"}
 
-        path = Path(self.filepath).with_suffix(".blend")
+        path = Path(self.filepath)
         path_new = path.with_stem(self.asset_name)
 
         if not path.exists():
@@ -216,7 +217,7 @@ class WM_OT_asset_rename(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.name_current = self.asset_name = Path(self.filepath).name
+        self.name_current = self.asset_name = Path(self.filepath).stem
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
@@ -272,7 +273,7 @@ class WM_OT_asset_import(Operator):
         for ob in selected:
             ob.select_set(False)
 
-        imported = asset.asset_import_batch(self.filepath + ".blend")
+        imported = asset.asset_import_batch(self.filepath)
 
         if imported.collections:
             for coll in imported.collections:

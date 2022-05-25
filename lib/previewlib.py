@@ -64,17 +64,19 @@ def _no_preview() -> int:
 # Assets
 
 
-def asset_img(filepath: str) -> int:
+def asset_img(blend_path: str) -> int:
     pcoll = _previews.get("assets")
     if pcoll is None:
         import bpy.utils.previews
         pcoll = bpy.utils.previews.new()
         _previews["assets"] = pcoll
 
-    if Path(filepath + ".png").exists():
-        preview_id = str(hash(filepath))
+    img_path = Path(blend_path).with_suffix(".png")
+
+    if img_path.exists():
+        preview_id = str(hash(blend_path))
         if preview_id not in pcoll:
-            pcoll.load(preview_id, filepath + ".png", "IMAGE")
+            pcoll.load(preview_id, str(img_path), "IMAGE")
         return pcoll[preview_id].icon_id
 
     return _no_preview()

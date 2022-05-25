@@ -167,7 +167,7 @@ def assets(lib_path: Path, category: str) -> AssetItems:
 
     for child in folder.iterdir():
         if child.is_file() and child.suffix == ".blend":
-            filepath = str(child.with_suffix(""))
+            filepath = str(child)
             app((filepath, child.stem, previewlib.asset_img(filepath), filepath in favs))
 
     return tuple(list_)
@@ -185,7 +185,7 @@ def favorites() -> AssetItems:
 
     with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
         for filepath in json.load(file):
-            app((filepath, Path(filepath).name, previewlib.asset_img(filepath), True))
+            app((filepath, Path(filepath).stem, previewlib.asset_img(filepath), True))
 
     return tuple(list_)
 

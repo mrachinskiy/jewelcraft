@@ -43,7 +43,7 @@ else:
         ops_utils,
         ops_weighting,
     )
-    from .lib import dynamic_list, on_load, previewlib
+    from .lib import on_load, previewlib, data
 
 
 classes = (
@@ -175,6 +175,11 @@ def register():
     # ---------------------------
 
     bpy.app.translations.register(__name__, localization.DICTIONARY)
+
+    # Versioning
+    # ---------------------------
+
+    data.versioning_asset_favs()
 
 
 def unregister():
