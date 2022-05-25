@@ -27,7 +27,7 @@ def iter_gems(depsgraph: Depsgraph) -> Iterator[tuple[DepsgraphObjectInstance, O
             ob = dup.instance_object.original
             instancer = dup.parent.original
         else:
-            ob, instancer = dup.object.original
+            ob = instancer = dup.object.original
 
         if "gem" not in ob or not instancer.visible_get():  # T74368
             continue

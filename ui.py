@@ -623,12 +623,12 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
 
             col = layout.column()
 
-            if item.type == "WEIGHT":
-                col.alert = item.collection is None
-                col.prop(item, "collection")
-            else:
+            if item.type == "RING_SIZE":
                 col.alert = item.object is None
                 col.prop(item, "object")
+            else:
+                col.alert = item.collection is None
+                col.prop(item, "collection")
 
             if item.type == "WEIGHT":
                 box = layout.box()
