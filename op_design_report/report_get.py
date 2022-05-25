@@ -66,7 +66,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
             name = item.material_name
             density = unit.convert_cm3_mm3(item.material_density)
             obs = (
-                ob for ob in item.collection.objects
+                ob for ob in item.collection.all_objects
                 if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
             )
             vol = Scale.from_scene_vol(mesh.est_volume(obs))
@@ -81,7 +81,13 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
             if not axes:
                 continue
 
-            dim = Scale.from_scene_vec(item.object.dimensions)
+            obs = (
+                ob for ob in item.collection.all_objects
+                if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
+            )
+            BBox = asset.GetBoundBox(obs)
+            dim = Scale.from_scene_vec(BBox.dim)
+
             values = tuple(round(dim[x], 2) for x in axes)
             Report.notes.append((item.type, item.name, values))
 

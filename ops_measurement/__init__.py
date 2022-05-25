@@ -66,12 +66,12 @@ class WM_OT_ul_measurements_add(Operator):
 
         col = layout.column()
 
-        if self.type == "WEIGHT":
-            col.alert = not self.collection_name
-            col.prop_search(self, "collection_name", bpy.data, "collections")
-        else:
+        if self.type == "RING_SIZE":
             col.alert = not self.object_name
             col.prop_search(self, "object_name", bpy.data, "objects")
+        else:
+            col.alert = not self.collection_name
+            col.prop_search(self, "collection_name", bpy.data, "collections")
 
         if self.type == "WEIGHT":
             layout.prop(self, "material")
@@ -91,12 +91,12 @@ class WM_OT_ul_measurements_add(Operator):
 
         item.type = self.type
 
-        if self.type == "WEIGHT":
-            if self.collection_name:
-                item.collection = bpy.data.collections[self.collection_name]
-        else:
+        if self.type == "RING_SIZE":
             if self.object_name:
                 item.object = bpy.data.objects[self.object_name]
+        else:
+            if self.collection_name:
+                item.collection = bpy.data.collections[self.collection_name]
 
         if self.type == "WEIGHT":
             materials = context.scene.jewelcraft.weighting_materials
@@ -105,7 +105,7 @@ class WM_OT_ul_measurements_add(Operator):
             item.material_name = mat.name
             item.material_density = mat.density
         elif self.type == "DIMENSIONS":
-            item.name = "{} {}".format(_("Dimensions"), self.object_name)
+            item.name = "{} {}".format(self.collection_name, _("Dimensions"))
             item.x = self.x
             item.y = self.y
             item.z = self.z
