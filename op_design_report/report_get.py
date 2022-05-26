@@ -77,17 +77,16 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
             if item.x: axes.append(0)
             if item.y: axes.append(1)
             if item.z: axes.append(2)
-
-            if not axes:
-                continue
-
             obs = (
                 ob for ob in item.collection.all_objects
                 if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
             )
+
+            if not (axes and obs):
+                continue
+
             BBox = asset.ObjectsBoundBox(obs)
             dim = Scale.from_scene_vec(BBox.dimensions)
-
             values = tuple(round(dim[x], 2) for x in axes)
             Report.notes.append((item.type, item.name, values))
 
