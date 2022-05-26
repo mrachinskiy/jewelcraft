@@ -359,7 +359,7 @@ class OBJECT_OT_make_instance_face(Operator):
         return self.execute(context)
 
 
-def get_ratio(a, b):
+def _ratio(a: float, b: float) -> float:
     try:
         return a / b
     except ZeroDivisionError:
@@ -405,8 +405,6 @@ class OBJECT_OT_lattice_project(Operator):
         row.prop_enum(self, "direction", "NEG_Z")
 
     def execute(self, context):
-        direction = self.direction.split("_")
-
         surf = context.object
         surf.select_set(False)
 
@@ -433,58 +431,47 @@ class OBJECT_OT_lattice_project(Operator):
 
         lat.select_set(True)
         context.view_layer.objects.active = lat
+        direction, axis = self.direction.split("_")
 
-        if "X" in direction:
-            ratio = get_ratio(self.BBox.dim.z, self.BBox.dim.y)
-            sca_x = self.BBox.dim.z
-            sca_y = self.BBox.dim.y
-
-            if "NEG" in direction:
+        if axis == "X":
+            lat.scale.xy = self.BBox.dimensions.yz
+            lat.location.yz = self.BBox.location.yz
+            if direction == "NEG":
+                lat.location.x = self.BBox.min.x
                 lat.rotation_euler.y = pi / 2
-                lat.location = (self.BBox.min.x, *self.BBox.loc.yz)
             else:
+                lat.location.x = self.BBox.max.x
                 lat.rotation_euler.y = -pi / 2
-                lat.location = (self.BBox.max.x, *self.BBox.loc.yz)
-
-        elif "Y" in direction:
-            ratio = get_ratio(self.BBox.dim.x, self.BBox.dim.z)
-            sca_x = self.BBox.dim.x
-            sca_y = self.BBox.dim.z
-
-            if "NEG" in direction:
+        elif axis == "Y":
+            lat.scale.xy = self.BBox.dimensions.xz
+            lat.location.xz = self.BBox.location.xz
+            if direction == "NEG":
+                lat.location.y = self.BBox.min.y
                 lat.rotation_euler.x = -pi / 2
-                lat.location = (self.BBox.loc.x, self.BBox.min.y, self.BBox.loc.z)
             else:
+                lat.location.y = self.BBox.max.y
                 lat.rotation_euler.x = pi / 2
-                lat.location = (self.BBox.loc.x, self.BBox.max.y, self.BBox.loc.z)
-
         else:
-            ratio = get_ratio(self.BBox.dim.x, self.BBox.dim.y)
-            sca_x = self.BBox.dim.x
-            sca_y = self.BBox.dim.y
-
-            if "NEG" in direction:
-                lat.location = (*self.BBox.loc.xy, self.BBox.min.z)
+            lat.scale.xy = self.BBox.dimensions.xy
+            lat.location.xy = self.BBox.location.xy
+            if direction == "NEG":
+                lat.location.z = self.BBox.min.z
             else:
+                lat.location.z = self.BBox.max.z
                 lat.rotation_euler.x = -pi
-                lat.location = (*self.BBox.loc.xy, self.BBox.max.z)
 
-        if not ratio:
-            pt_u = 10 if sca_x else 1
-            pt_v = 10 if sca_y else 1
-        elif ratio >= 1.0:
-            pt_u = round(10 * ratio)
-            pt_v = 10
-        else:
-            pt_u = 10
-            pt_v = round(10 / ratio)
-
-        lat_data.points_u = pt_u
-        lat_data.points_v = pt_v
+        ratio = _ratio(*lat.scale.xy)
         lat_data.points_w = 1
 
-        lat.scale.x = sca_x or 1.0
-        lat.scale.y = sca_y or 1.0
+        if ratio >= 1.0:
+            lat_data.points_u = round(10 * ratio)
+            lat_data.points_v = 10
+        elif ratio < 1.0:
+            lat_data.points_u = 10
+            lat_data.points_v = round(10 / ratio)
+        else:
+            lat_data.points_u = 10 if lat.scale.x > 0.0 else 1
+            lat_data.points_v = 10 if lat.scale.y > 0.0 else 1
 
         return {"FINISHED"}
 
@@ -498,7 +485,7 @@ class OBJECT_OT_lattice_project(Operator):
             return {"CANCELLED"}
 
         obs.remove(context.object)
-        self.BBox = asset.GetBoundBox(obs)
+        self.BBox = asset.ObjectsBoundBox(obs)
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
@@ -556,10 +543,10 @@ class OBJECT_OT_lattice_profile(Operator):
 
         if self.axis == "X":
             rot_z = 0.0
-            dim_xy = self.BBox.dim.y or 1.0
+            dim_xy = self.BBox.dimensions.y or 1.0
         else:
             rot_z = pi / 2
-            dim_xy = self.BBox.dim.x or 1.0
+            dim_xy = self.BBox.dimensions.x or 1.0
 
         if is_editmesh:
             bpy.ops.object.mode_set(mode="OBJECT")
@@ -579,8 +566,8 @@ class OBJECT_OT_lattice_profile(Operator):
 
         if self.lat_type == "2D":
 
-            lat.location = self.BBox.loc
-            lat.scale = (1.0, dim_xy * 1.5, self.BBox.dim.z)
+            lat.location = self.BBox.location
+            lat.scale = (1.0, dim_xy * 1.5, self.BBox.dimensions.z)
 
             lat_data.interpolation_type_w = "KEY_LINEAR"
 
@@ -598,7 +585,8 @@ class OBJECT_OT_lattice_profile(Operator):
 
         else:
 
-            lat.location = (*self.BBox.loc.xy, self.BBox.max.z)
+            lat.location.xy = self.BBox.location.xy
+            lat.location.z = self.BBox.max.z
             lat.scale.y = dim_xy * 1.5
 
             lat_data.points_u = 1
@@ -617,9 +605,7 @@ class OBJECT_OT_lattice_profile(Operator):
             # ---------------------------
 
             if ob.type == "MESH":
-
                 v_gr = ob.vertex_groups.get("Lattice profile")
-
                 if not v_gr:
                     v_gr = ob.vertex_groups.new(name="Lattice profile")
 
@@ -650,12 +636,10 @@ class OBJECT_OT_lattice_profile(Operator):
     def invoke(self, context, event):
         from ..lib import asset
 
-        ob = context.object
-
-        if not ob:
+        if not context.object:
             return {"CANCELLED"}
 
-        self.BBox = asset.GetBoundBox((ob,))
+        self.BBox = asset.ObjectsBoundBox((context.object,))
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)

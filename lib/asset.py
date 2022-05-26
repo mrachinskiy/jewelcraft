@@ -429,8 +429,8 @@ def mod_curve_off(ob: Object, mat: Matrix = None) -> tuple[Optional[Object], Bou
     return curve, [mat @ Vector(x) for x in ob.bound_box]
 
 
-class GetBoundBox:
-    __slots__ = "loc", "dim", "min", "max"
+class ObjectsBoundBox:
+    __slots__ = "min", "max", "location", "dimensions"
 
     def __init__(self, obs: list[Object]) -> None:
         bbox = []
@@ -438,23 +438,15 @@ class GetBoundBox:
         for ob in obs:
             bbox += [ob.matrix_world @ Vector(x) for x in ob.bound_box]
 
-        x_min = min(x[0] for x in bbox)
-        y_min = min(x[1] for x in bbox)
-        z_min = min(x[2] for x in bbox)
-
-        x_max = max(x[0] for x in bbox)
-        y_max = max(x[1] for x in bbox)
-        z_max = max(x[2] for x in bbox)
-
-        x_loc = (x_max + x_min) / 2
-        y_loc = (y_max + y_min) / 2
-        z_loc = (z_max + z_min) / 2
-
-        x_dim = x_max - x_min
-        y_dim = y_max - y_min
-        z_dim = z_max - z_min
-
-        self.loc = Vector((x_loc, y_loc, z_loc))
-        self.dim = Vector((x_dim, y_dim, z_dim))
-        self.min = Vector((x_min, y_min, z_min))
-        self.max = Vector((x_max, y_max, z_max))
+        self.min = Vector((
+            min(x[0] for x in bbox),
+            min(x[1] for x in bbox),
+            min(x[2] for x in bbox),
+        ))
+        self.max = Vector((
+            max(x[0] for x in bbox),
+            max(x[1] for x in bbox),
+            max(x[2] for x in bbox),
+        ))
+        self.location = (self.max + self.min) / 2
+        self.dimensions = self.max - self.min
