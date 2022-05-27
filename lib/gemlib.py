@@ -91,16 +91,16 @@ def ct_calc(stone: str, cut: str, size: tuple[float, float, float]) -> float:
     except KeyError:
         return 0
 
-    w, l, h = size
+    a, b, h = size
 
     if shape is VOL_CONE:
-        vol = pi * (l / 2) * (w / 2) * (h / 3)
+        vol = pi * (a / 2) * (b / 2) * (h / 3)
     elif shape is VOL_PYRAMID:
-        vol = (l * w * h) / 3
-    elif shape is VOL_PRISM:
-        vol = l * w * (h / 2)
+        vol = (a * b * h) / 3
     elif shape is VOL_TETRAHEDRON:
-        vol = (l * w * h) / 6
+        vol = (a * b * h) / 6
+    elif shape is VOL_PRISM:
+        vol = a * b * (h / 2)
 
     g = vol * vol_corr * dens
     ct = unit.convert_g_ct(g)
