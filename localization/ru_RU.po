@@ -415,12 +415,6 @@ msgstr "Удалить все элементы списка"
 msgid "Move selected item up/down in the list"
 msgstr "Переместить выбранный элемент вверх/вниз по списку"
 
-msgid "Measured object"
-msgstr "Измеряемый объект"
-
-msgid "Measurement type"
-msgstr "Тип замера"
-
 msgid "Select material"
 msgstr "Выбрать материал"
 

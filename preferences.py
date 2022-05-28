@@ -161,25 +161,23 @@ class MaterialListCollection(PropertyGroup):
 class MeasurementCollection(PropertyGroup):
     name: StringProperty(name="Name", default="Untitled")
     collection: PointerProperty(name="Collection", type=Collection)
-    object: PointerProperty(name="Object", description="Measured object", type=Object)
+    object: PointerProperty(name="Object", type=Object)
     type: EnumProperty(
-        name="Type",
-        description="Measurement type",
         items=(
-            ("RING_SIZE", "", "", 0),
-            ("WEIGHT", "", "", 1),
-            ("DIMENSIONS", "", "", 2),
+            ("RING_SIZE", "", ""),
+            ("WEIGHT", "", ""),
+            ("DIMENSIONS", "", ""),
         ),
     )
     ring_size: EnumProperty(
         name="Format",
         items=(
-            ("DIA", "Diameter", "", 0),
-            ("CIR", "Circumference", "", 1),
-            ("US", "USA", "", 2),
-            ("UK", "Britain", "", 3),
-            ("CH", "Swiss", "", 4),
-            ("JP", "Japan", "", 5),
+            ("DIA", "Diameter", ""),
+            ("CIR", "Circumference", ""),
+            ("US", "USA", ""),
+            ("UK", "Britain", ""),
+            ("CH", "Swiss", ""),
+            ("JP", "Japan", ""),
         ),
     )
     axis: EnumProperty(

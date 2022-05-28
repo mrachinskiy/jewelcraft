@@ -415,12 +415,6 @@ msgstr "قم بمسح كل عناصر القائمة"
 msgid "Move selected item up/down in the list"
 msgstr "قم بتحريك العنصر المختار أعلي أو لأسفل في القائمة"
 
-msgid "Measured object"
-msgstr "عنصر مقاس"
-
-msgid "Measurement type"
-msgstr "نوع القياس"
-
 msgid "Select material"
 msgstr "اختر المادة"
 

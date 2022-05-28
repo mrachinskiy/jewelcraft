@@ -415,12 +415,6 @@ msgstr "Retirer tous les objets dans la liste"
 msgid "Move selected item up/down in the list"
 msgstr "Déplacer les objets sélectionnés dans la liste vers le haut ou vers le bas"
 
-msgid "Measured object"
-msgstr "Objet mesuré"
-
-msgid "Measurement type"
-msgstr "Type de mesure"
-
 msgid "Select material"
 msgstr "Sélectionner la matière"
 

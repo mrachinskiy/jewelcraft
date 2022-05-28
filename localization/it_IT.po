@@ -415,12 +415,6 @@ msgstr "Elimina tutti gli oggetti dell'elenco"
 msgid "Move selected item up/down in the list"
 msgstr "Sposta l'oggetto solezionato su/giù nell'elrnco"
 
-msgid "Measured object"
-msgstr "Oggetti misurati"
-
-msgid "Measurement type"
-msgstr "Tipo di misurazione"
-
 msgid "Select material"
 msgstr "Seleziona materiale"
 
