@@ -19,10 +19,9 @@ class WM_OT_ul_measurements_add(Operator):
     object_name: StringProperty(name="Object", options={"SKIP_SAVE"})
     type: EnumProperty(
         name="Type",
-        description="Measurement type",
         items=(
-            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 0),
-            ("WEIGHT", "Weight", "", "FILE_3D", 1),
+            ("WEIGHT", "Weight", "", "FILE_3D", 0),
+            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 1),
             ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 2),
         ),
     )
@@ -62,7 +61,7 @@ class WM_OT_ul_measurements_add(Operator):
 
         layout.separator()
 
-        layout.prop(self, "type", text="Type", icon_only=True)
+        layout.prop(self, "type")
 
         col = layout.column()
 

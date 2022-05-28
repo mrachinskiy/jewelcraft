@@ -415,12 +415,6 @@ msgstr ""
 msgid "Move selected item up/down in the list"
 msgstr ""
 
-msgid "Measured object"
-msgstr ""
-
-msgid "Measurement type"
-msgstr ""
-
 msgid "Select material"
 msgstr ""
 
