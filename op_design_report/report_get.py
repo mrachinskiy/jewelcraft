@@ -63,14 +63,13 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
             continue
 
         if item.type == "WEIGHT":
-            name = item.material_name
             density = unit.convert_cm3_mm3(item.material_density)
             obs = (
                 ob for ob in item.collection.all_objects
                 if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
             )
             vol = Scale.from_scene_vol(mesh.est_volume(obs))
-            Report.materials.append((name, density, vol))
+            Report.materials.append((item.name, density, vol))
 
         elif item.type == "DIMENSIONS":
             axes = []
