@@ -5,13 +5,13 @@ from typing import Union
 from math import modf
 
 
-CIR_BASE_US = 36.537
-CIR_STEP_US = 2.5535
+US_BASE_CIR = 36.5367
+US_STEP_CIR = 2.5535
 
-CIR_BASE_UK = 37.5
-CIR_STEP_UK = 1.25
+UK_BASE_CIR = 37.5
+UK_STEP_CIR = 1.25
 
-MAP_SIZE_JP_TO_US: dict[int, Union[int, float]] = {
+JP_TO_US_SIZE_MAP = {
     1: 1,
     2: 2,
     3: 2.5,
@@ -48,39 +48,56 @@ def _to_int(x: float) -> Union[int, float]:
     return x
 
 
-def to_size(cir: float, fmt: str) -> Union[int, float, str, None]:
+def _eq(a: float, b: float) -> bool:
+    return abs(a - b) < 0.2
+
+
+def to_size(cir: float, fmt: str) -> Union[int, float, tuple[int, bool], None]:
     if fmt == "CH":
         size = round(cir - 40.0, 2)
         if size >= 0.0:
-            return _to_int(size)
+            return size
 
     elif fmt in {"US", "JP"}:
-        size = round((cir - CIR_BASE_US) / CIR_STEP_US, 2)
-
+        size = round((cir - US_BASE_CIR) / US_STEP_CIR, 2)
         if size >= 0.0:
-
             if fmt == "US":
-                return _to_int(size)
+                return size
 
-            for size_jp, size_us in MAP_SIZE_JP_TO_US.items():
-                if (size_us - 0.2) < size < (size_us + 0.2):
+            for size_jp, size_us in JP_TO_US_SIZE_MAP.items():
+                if _eq(size, size_us):
                     return size_jp
 
     elif fmt == "UK":
         import string
 
-        size_raw = (cir - CIR_BASE_UK) / CIR_STEP_UK
-
+        size_raw = (cir - UK_BASE_CIR) / UK_STEP_CIR
         if size_raw >= 0.0:
             fraction, integer = modf(size_raw)
-            half_size = 0.25 < fraction < 0.75
             if fraction > 0.75:
                 integer += 1.0
             if integer < len(string.ascii_uppercase):
-                size = string.ascii_uppercase[int(integer)]
-                if half_size:
-                    size += " 1/2"
-                return size
+                return int(integer), 0.25 < fraction < 0.75
+
+
+def to_size_fmt(cir: float, fmt: str) -> Union[int, float, str, None]:
+    size = to_size(cir, fmt)
+
+    if size is None:
+        return size
+
+    if fmt in {"CH", "US"}:
+        return _to_int(size)
+    elif fmt == "UK":
+        import string
+
+        i, half_size = size
+        size_str = string.ascii_uppercase[i]
+        if half_size:
+            size_str += " 1/2"
+        return size_str
+
+    return size
 
 
 def to_cir(size: Union[int, float], fmt: str) -> float:
@@ -88,11 +105,11 @@ def to_cir(size: Union[int, float], fmt: str) -> float:
         cir = size + 40.0
 
     elif fmt == "UK":
-        cir = CIR_BASE_UK + CIR_STEP_UK * size
+        cir = UK_BASE_CIR + UK_STEP_CIR * size
 
     elif fmt in {"US", "JP"}:
         if fmt == "JP":
-            size = MAP_SIZE_JP_TO_US[size]
-        cir = CIR_BASE_US + CIR_STEP_US * size
+            size = JP_TO_US_SIZE_MAP[size]
+        cir = US_BASE_CIR + US_STEP_CIR * size
 
     return round(cir, 4)
