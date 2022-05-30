@@ -36,9 +36,7 @@ def set_ring_size(self, context):
         return
 
     if self.size_format == "UK":
-        import string
-        self["size_uk"] = string.ascii_uppercase.index(size.split()[0])
-        self["use_half_size"] = "1/2" in size
+        self["size_uk"], self["use_half_size"] = size
     else:
         self["size_" + self.size_format.lower()] = size
 
