@@ -19,10 +19,7 @@ from ..lib import dynamic_list, unit
 
 
 def set_diameter(self, context):
-    if self.warn_scale:
-        self["diameter"] = self.circumference / pi
-    else:
-        self["diameter"] = round(self.circumference / pi, 2)
+    self["diameter"] = round(self.circumference / pi, self.diameter_precision)
 
 
 def set_ring_size(self, context):
@@ -58,11 +55,7 @@ def upd_size(self, context):
 
 
 def upd_diameter(self, context):
-    if self.warn_scale:
-        self["circumference"] = self.diameter * pi
-    else:
-        self["circumference"] = round(self.diameter * pi, 4)
-
+    self["circumference"] = self.diameter * pi
     set_ring_size(self, context)
 
 
@@ -150,7 +143,7 @@ class CURVE_OT_size_curve_add(Operator):
         options={"SKIP_SAVE"},
     )
 
-    warn_scale: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
+    diameter_precision: IntProperty(options={"HIDDEN", "SKIP_SAVE"})
     warn_no_size: BoolProperty(options={"HIDDEN"})
 
     def draw(self, context):
@@ -215,7 +208,7 @@ class CURVE_OT_size_curve_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        self.warn_scale = unit.check() is unit.WARN_SCALE
+        self.diameter_precision = 5 if unit.check() is unit.WARN_SCALE else 2
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
