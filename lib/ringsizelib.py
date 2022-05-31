@@ -102,14 +102,12 @@ def to_size_fmt(cir: float, fmt: str) -> Union[int, float, str, None]:
 
 def to_cir(size: Union[int, float], fmt: str) -> float:
     if fmt == "CH":
-        cir = size + 40.0
+        return size + 40.0
 
-    elif fmt == "UK":
-        cir = UK_BASE_CIR + UK_STEP_CIR * size
+    if fmt == "UK":
+        return UK_BASE_CIR + UK_STEP_CIR * size
 
-    elif fmt in {"US", "JP"}:
-        if fmt == "JP":
-            size = JP_TO_US_SIZE_MAP[size]
-        cir = US_BASE_CIR + US_STEP_CIR * size
-
-    return round(cir, 4)
+    # US\JP
+    if fmt == "JP":
+        size = JP_TO_US_SIZE_MAP[size]
+    return US_BASE_CIR + US_STEP_CIR * size
