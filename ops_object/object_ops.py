@@ -434,8 +434,8 @@ class OBJECT_OT_lattice_project(Operator):
         direction, axis = self.direction.split("_")
 
         if axis == "X":
-            lat.scale.xy = self.BBox.dimensions.yz
-            lat.location.yz = self.BBox.location.yz
+            lat.scale.xy = self.BBox.dimensions.zy
+            lat.location.zy = self.BBox.location.zy
             if direction == "NEG":
                 lat.location.x = self.BBox.min.x
                 lat.rotation_euler.y = pi / 2
