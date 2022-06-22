@@ -5,30 +5,16 @@ from pathlib import Path
 
 import bpy
 from bpy.types import Operator
-from bpy.props import EnumProperty, BoolProperty, StringProperty
+from bpy.props import BoolProperty, StringProperty
 
-from .. import var
+from .. import var, preferences
 
 
-class WM_OT_design_report(Operator):
+class WM_OT_design_report(preferences.ReportLangEnum, Operator):
     bl_label = "Save Design Report"
     bl_description = "Present summary information about the design, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_design_report"
 
-    lang: EnumProperty(
-        name="Report Language",
-        description="Report language",
-        items=(
-            ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
-            ("ar_EG", "Arabic (ﺔﻴﺑﺮﻌﻟﺍ)", ""),
-            ("en_US", "English (English)", ""),
-            ("es", "Spanish (Español)", ""),
-            ("fr_FR", "French (Français)", ""),
-            ("it_IT", "Italian (Italiano)", ""),
-            ("ru_RU", "Russian (Русский)", ""),
-            ("zh_CN", "Simplified Chinese (简体中文)", ""),
-        ),
-    )
     show_warnings: BoolProperty(
         name="Warnings",
         default=True,
@@ -44,7 +30,7 @@ class WM_OT_design_report(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.prop(self, "lang")
+        layout.prop(self, "report_lang")
         layout.prop(self, "show_warnings")
 
     def execute(self, context):
@@ -58,7 +44,7 @@ class WM_OT_design_report(Operator):
             self.report({"ERROR"}, "Nothing to report")
             return {"CANCELLED"}
 
-        _gettext = gettext.GetText(self.lang).gettext
+        _gettext = gettext.GetText(self.report_lang).gettext
         report_fmt.data_format(Report, _gettext)
         doc = html_doc.make(Report, self.filename, _gettext)
 
@@ -72,7 +58,7 @@ class WM_OT_design_report(Operator):
         if self.first_run:
             self.first_run = False
             prefs = context.preferences.addons[var.ADDON_ID].preferences
-            self.lang = prefs.design_report_lang
+            self.report_lang = prefs.report_lang
 
         if bpy.data.is_saved:
             blend_path = Path(bpy.data.filepath)

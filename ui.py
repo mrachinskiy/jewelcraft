@@ -707,7 +707,7 @@ def prefs_ui(self, context):
 
     elif active_tab == "DESIGN_REPORT":
         col = box.column()
-        col.prop(self, "design_report_lang")
+        col.prop(self, "report_lang")
 
         box.label(text="Gem Map Font Size")
         col = box.column()
