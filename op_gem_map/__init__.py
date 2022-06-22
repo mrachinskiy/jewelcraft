@@ -3,33 +3,19 @@
 
 import bpy
 from bpy.types import Operator
-from bpy.props import EnumProperty, BoolProperty
+from bpy.props import BoolProperty
 from bpy.app.translations import pgettext_iface as _
 
-from .. import var
+from .. import var, preferences
 
 
-class VIEW3D_OT_gem_map(Operator):
+class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
     bl_label = "Gem Map"
     bl_description = "Compose gem table and map it to gems in the scene"
     bl_idname = "view3d.jewelcraft_gem_map"
 
     use_select: BoolProperty()
     use_background: BoolProperty()
-    lang: EnumProperty(
-        name="Report Language",
-        description="Report language",
-        items=(
-            ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
-            ("ar_EG", "Arabic (ﺔﻴﺑﺮﻌﻟﺍ)", ""),
-            ("en_US", "English (English)", ""),
-            ("es", "Spanish (Español)", ""),
-            ("fr_FR", "French (Français)", ""),
-            ("it_IT", "Italian (Italiano)", ""),
-            ("ru_RU", "Russian (Русский)", ""),
-            ("zh_CN", "Simplified Chinese (简体中文)", ""),
-        ),
-    )
     use_save: BoolProperty(
         name="Save To File",
         description="Save to file in project folder",
@@ -42,7 +28,7 @@ class VIEW3D_OT_gem_map(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        layout.prop(self, "lang")
+        layout.prop(self, "report_lang")
         layout.prop(self, "use_save")
 
     def modal(self, context, event):
@@ -128,7 +114,7 @@ class VIEW3D_OT_gem_map(Operator):
         # Gem report
         # ----------------------------
 
-        self.view_data, self.table_data = report_proc.data_process(ReportData, self.lang)
+        self.view_data, self.table_data = report_proc.data_process(ReportData, self.report_lang)
 
         # Warnings
         # ----------------------------
@@ -157,7 +143,7 @@ class VIEW3D_OT_gem_map(Operator):
         self.prefs = context.preferences.addons[var.ADDON_ID].preferences
         if self.first_run:
             self.first_run = False
-            self.lang = self.prefs.design_report_lang
+            self.report_lang = self.prefs.report_lang
 
         if event.ctrl:
             wm = context.window_manager

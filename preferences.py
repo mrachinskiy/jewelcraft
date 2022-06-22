@@ -243,11 +243,31 @@ class SizeList(ListProperty, PropertyGroup):
         return item
 
 
+# Common properties
+
+
+class ReportLangEnum:
+    report_lang: EnumProperty(
+        name="Report Language",
+        items=(
+            ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
+            ("ar_EG", "Arabic (ﺔﻴﺑﺮﻌﻟﺍ)", ""),
+            ("en_US", "English (English)", ""),
+            ("es", "Spanish (Español)", ""),
+            ("fr_FR", "French (Français)", ""),
+            ("it_IT", "Italian (Italiano)", ""),
+            ("ru_RU", "Russian (Русский)", ""),
+            ("zh_CN", "Simplified Chinese (简体中文)", ""),
+            ("zh_TW", "Traditional Chinese (繁體中文)", ""),
+        ),
+    )
+
+
 # Preferences
 # ------------------------------------------
 
 
-class Preferences(mod_update.Preferences, AddonPreferences):
+class Preferences(ReportLangEnum, mod_update.Preferences, AddonPreferences):
     bl_idname = __package__
 
     # Asset
@@ -298,20 +318,6 @@ class Preferences(mod_update.Preferences, AddonPreferences):
     # Design Report
     # ------------------------
 
-    design_report_lang: EnumProperty(
-        name="Report Language",
-        description="Report language",
-        items=(
-            ("AUTO", "Auto (Auto)", "Use user preferences language setting"),
-            ("ar_EG", "Arabic (ﺔﻴﺑﺮﻌﻟﺍ)", ""),
-            ("en_US", "English (English)", ""),
-            ("es", "Spanish (Español)", ""),
-            ("fr_FR", "French (Français)", ""),
-            ("it_IT", "Italian (Italiano)", ""),
-            ("ru_RU", "Russian (Русский)", ""),
-            ("zh_CN", "Simplified Chinese (简体中文)", ""),
-        ),
-    )
     gem_map_fontsize_table: IntProperty(
         name="Gem Table",
         default=19,
