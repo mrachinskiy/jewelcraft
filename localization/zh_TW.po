@@ -876,7 +876,7 @@ msgid "Add New Measurement"
 msgstr "添加新的測量"
 
 msgctxt "Operator"
-msgid "Add To Library"
+msgid "Add to Library"
 msgstr "添加到庫藏"
 
 msgctxt "Operator"
@@ -896,7 +896,7 @@ msgid "Similar"
 msgstr "相似的"
 
 msgctxt "Operator"
-msgid "Save To File"
+msgid "Save to File"
 msgstr "儲存檔案"
 
 msgctxt "Operator"

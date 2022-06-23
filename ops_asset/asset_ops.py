@@ -127,7 +127,7 @@ class AssetAdd:
 
 
 class WM_OT_asset_add(AssetAdd, Operator):
-    bl_label = "Add To Library"
+    bl_label = "Add to Library"
     bl_description = "Add selected objects to asset library"
     bl_idname = "wm.jewelcraft_asset_add"
     bl_options = {"INTERNAL"}

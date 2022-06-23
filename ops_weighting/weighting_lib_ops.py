@@ -9,7 +9,7 @@ from ..lib import data, dynamic_list, pathutils
 
 
 class WM_OT_weighting_list_save(Operator):
-    bl_label = "Save To File"
+    bl_label = "Save to File"
     bl_description = "Save material list to file"
     bl_idname = "wm.jewelcraft_weighting_list_save"
     bl_options = {"INTERNAL"}
