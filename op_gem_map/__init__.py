@@ -17,7 +17,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
     use_select: BoolProperty()
     use_background: BoolProperty()
     use_save: BoolProperty(
-        name="Save To File",
+        name="Save to File",
         description="Save to file in project folder",
         default=True,
     )

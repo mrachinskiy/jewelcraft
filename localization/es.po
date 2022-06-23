@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.12\n"
+"Project-Id-Version: JewelCraft 2.13\n"
 "POT-Creation-Date: 2022-05-17\n"
 "PO-Revision-Date: 2021-08-17\n"
 "Last-Translator: Óscar Hernández\n"
@@ -876,7 +876,7 @@ msgid "Add New Measurement"
 msgstr ""
 
 msgctxt "Operator"
-msgid "Add To Library"
+msgid "Add to Library"
 msgstr ""
 
 msgctxt "Operator"
@@ -896,7 +896,7 @@ msgid "Similar"
 msgstr ""
 
 msgctxt "Operator"
-msgid "Save To File"
+msgid "Save to File"
 msgstr ""
 
 msgctxt "Operator"
