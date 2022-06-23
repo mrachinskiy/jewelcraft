@@ -1,0 +1,908 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: JewelCraft 2.13\n"
+"POT-Creation-Date: 2022-05-17\n"
+"PO-Revision-Date: 2022-06-22\n"
+"Last-Translator: BiseChen\n"
+"Language-Team: Mikhail Rachinskiy\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Asset Manager"
+msgstr "資產管理器"
+
+msgid "Show Asset Name"
+msgstr "顯示資產名稱"
+
+msgid "Design Report"
+msgstr "設計報表"
+
+msgid "Report Language"
+msgstr "報表語言"
+
+msgid "Gems"
+msgstr "寶石"
+
+msgid "Assets"
+msgstr "資產庫"
+
+msgid "Select by Trait"
+msgstr "按特徵選取"
+
+msgid "Jeweling"
+msgstr "珠寶"
+
+msgid "Weighting"
+msgstr "評估重量"
+
+msgid "Hide Built-in Material Lists"
+msgstr "隱藏內建的材料列表"
+
+msgid "Prongs"
+msgstr "鑲釘"
+
+msgid "Cutter"
+msgstr "開孔器"
+
+msgid "Library Folder"
+msgstr "庫藏檔案資料夾"
+
+msgid "Overrides"
+msgstr "使用自訂覆蓋"
+
+msgid "Line Width"
+msgstr "線寬"
+
+msgid "Show Composition"
+msgstr "顯示結構"
+
+msgid "Show Density"
+msgstr "顯示密度"
+
+msgid "Composition"
+msgstr "結構"
+
+msgid "Warnings"
+msgstr "警告"
+
+msgid "Show All"
+msgstr "顯示全部"
+
+msgid "Scene scale is not optimal"
+msgstr "不是最佳的場景比例"
+
+msgid "Unsupported unit system"
+msgstr "不支援的尺寸單位系統"
+
+msgid "Limit by Selection"
+msgstr "依選取限制"
+
+msgid "Viewport Background"
+msgstr "視口背景"
+
+msgid "Save to Image"
+msgstr "保存到影像"
+
+msgid "Gem Map"
+msgstr "寶石對映"
+
+msgid "Gem Table"
+msgstr "寶石列表"
+
+msgid "Gem Size"
+msgstr "寶石大小"
+
+msgid "Weight"
+msgstr "重量"
+
+msgid "Preview Resolution"
+msgstr "預覽解析度"
+
+msgid "Preview Scale"
+msgstr "預覽比例"
+
+msgid "Category is empty"
+msgstr "空的類別"
+
+msgid "Popover Width"
+msgstr "彈出窗口寬度"
+
+msgid "Snap to Edges"
+msgstr "靠齊至邊緣"
+
+msgid "Spacing Overlay"
+msgstr "重疊間距"
+
+msgid "Asset Name"
+msgstr "資產名稱"
+
+msgid "Category Name"
+msgstr "類別名稱"
+
+msgid "Curvature Scale"
+msgstr "彎曲比例"
+
+msgid "Prong Number"
+msgstr "鑲釘數量"
+
+msgid "Detalization"
+msgstr "詳細說明"
+
+msgid "Intersection"
+msgstr "交叉點"
+
+msgid "Bump Scale"
+msgstr "凹凸比例"
+
+msgid "Diameter"
+msgstr "直徑"
+
+msgid "Size Offset"
+msgstr "偏移大小"
+
+msgid "Girdle"
+msgstr "圍繞"
+
+msgid "Hole"
+msgstr "開孔"
+
+msgid "Culet"
+msgstr "寶石底面"
+
+msgid "Handle"
+msgstr "手柄"
+
+msgid "Curve Seat"
+msgstr "曲線位置"
+
+msgid "Curve Profile"
+msgstr "曲線輪廓"
+
+msgid "Bevel Corners"
+msgstr "斜角"
+
+msgid "Length Offset"
+msgstr "偏移長度"
+
+msgid "Width Offset"
+msgstr "偏移寬度"
+
+msgid "Position Offset"
+msgstr "偏移位置"
+
+msgid "Mirror Axis"
+msgstr "鏡射軸"
+
+msgid "Select Children"
+msgstr "選取子代"
+
+msgid "Parent to selected"
+msgstr "選取父代"
+
+msgid "Use 3D Cursor"
+msgstr "使用3D游標"
+
+msgid "Collection Name"
+msgstr "集合名稱"
+
+msgid "Ring Size"
+msgstr "戒指尺寸"
+
+msgid "USA"
+msgstr "美國"
+
+msgid "Britain"
+msgstr "英國"
+
+msgid "Swiss"
+msgstr "瑞士"
+
+msgid "Japan"
+msgstr "日本"
+
+msgid "Circumference"
+msgstr "周長"
+
+msgid "Distribution (%)"
+msgstr "散開（%）"
+
+msgid "Only ID"
+msgstr "只有 ID"
+
+msgid "Force Edit"
+msgstr "強制編輯"
+
+msgid "Zero dimensions"
+msgstr "零維度"
+
+msgid "Action completed"
+msgstr "動作已完成"
+
+msgid "No corresponding size"
+msgstr "沒有相應的大小"
+
+msgid "Wedge"
+msgstr "楔子"
+
+msgid "Keep Z Direction"
+msgstr "保存 Z 方向"
+
+msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
+msgstr "使 Z 軸上的變換與原始物件一致（不影響寶石）"
+
+msgid "Add gemstone to the scene"
+msgstr "在場景中添加寶石"
+
+msgid "Edit selected gems"
+msgstr "編輯選中的寶石"
+
+msgid "Round diamonds only"
+msgstr "僅圓形鑽石"
+
+msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
+msgstr "強制編輯選定的網格物件，可用於從非寶石物件製作寶石"
+
+msgid "Only edit gem identifiers, not affecting object data and materials"
+msgstr "僅編輯寶石標示符號，不影響物件數據和材料"
+
+msgid "Save to file in project folder"
+msgstr "保存在項目資料夾"
+
+msgid "Use user preferences language setting"
+msgstr "以用戶偏好設定語言"
+
+msgid "Select gems by trait"
+msgstr "以特徵選取寶石"
+
+msgid "Distribute selected object along active curve\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr "以當前曲線分布選取物件\n（快捷方式: 按住 Ctrl 以使用該工具時避免屬性重置）"
+
+msgid "Redistribute selected objects along curve"
+msgstr "沿曲線重新分布選取的物件"
+
+msgid "Display weight and volume for selected mesh objects"
+msgstr "顯示所選網格物件的權重和體積"
+
+msgid "Create instance face for selected objects"
+msgstr "為選取的物件建立實例面"
+
+msgid "Create size curve"
+msgstr "建立大小曲線"
+
+msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
+msgstr "沿 X 軸上的曲線拉伸變形欲的物件，也可以在編輯模式下使用選定的頂點"
+
+msgid "Display curve length"
+msgstr "顯示曲線長度"
+
+msgid "Move deformed object over or under the curve"
+msgstr "在曲線上方或下方移動變型的物件"
+
+msgid "Mirror selected objects around one or more axes, keeping object data linked"
+msgstr "圍繞一個或多個軸鏡像選定的物件，保持物件數據鏈接"
+
+msgid "Project selected objects onto active object using Lattice"
+msgstr "使用晶格將選定的物件投影到當前物件上"
+
+msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
+msgstr "使用晶格變形當前物件的輪廓，也可以在編輯模式下使用選定的頂點"
+
+msgid "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr "為選定的寶石建立爪釘/n（快捷方式: 按住 Ctrl 以使用該工具時避免屬性重置）"
+
+msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr "為選定的寶石建立切割器/n（快捷方式: 按住 Ctrl 以使用該工具時避免屬性重置）"
+
+msgid "Curve start position"
+msgstr "曲線開始位置"
+
+msgid "Density g/cm³"
+msgstr "密度 g/cm³"
+
+msgid "Create category"
+msgstr "建立類別"
+
+msgid "Rename category"
+msgstr "重新命名類別"
+
+msgid "Refresh asset UI"
+msgstr "更新用戶資產介面"
+
+msgid "Add selected objects to asset library"
+msgstr "將所選物件添加到資產庫"
+
+msgid "Rename asset"
+msgstr "重新命名資產"
+
+msgid "Remove asset from library"
+msgstr "由庫藏中刪除資產"
+
+msgid "Replace current asset with selected objects"
+msgstr "用所選物件更換當前資產"
+
+msgid "Replace asset preview image"
+msgstr "更換資產預覽圖"
+
+msgid "Import selected asset"
+msgstr "匯入所選資產"
+
+msgid "Asset category"
+msgstr "資產類別"
+
+msgid "Custom library folder path"
+msgstr "自訂庫藏資料夾路徑"
+
+msgid "Show asset name in sidebar"
+msgstr "在邊欄顯示資產名稱"
+
+msgid "Show distance to nearby gems"
+msgstr "顯示與鄰近寶石的距離"
+
+msgid "Use object defined overlay settings"
+msgstr "使物件定義的疊加設定"
+
+msgid "Draw overlay in front of objects"
+msgstr "在物件前面繪製疊加層"
+
+msgid "Override overlay settings for selected objects"
+msgstr "覆寫選定物件的疊加設定"
+
+msgid "Remove overrides from selected objects"
+msgstr "由選取物件中刪除疊加"
+
+msgid "Add new material to the list"
+msgstr "在列表中添加新材料"
+
+msgid "Display material density in the list"
+msgstr "在列表中顯示材料密度"
+
+msgid "Display material composition in the list"
+msgstr "在列表中顯示材料成分"
+
+msgid "Material name"
+msgstr "材料名稱"
+
+msgid "Material composition"
+msgstr "材料成分"
+
+msgid "Use one-dimensional lattice for even deformation"
+msgstr "使用一維晶格實現均勻變形"
+
+msgid "Use two-dimensional lattice for proportional deformation"
+msgstr "使用二維晶格進行比例變形"
+
+msgid "Scale selected objects to given size"
+msgstr "將選取物件縮放至指定大小"
+
+msgid "Move each object individually"
+msgstr "單獨移動個別物件"
+
+msgid "Enable material for weighting display"
+msgstr "啟用加權顯示材料"
+
+msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
+msgstr "匯入父代的資產到選取的物件（快捷方式：使用這工具時按住ALT）"
+
+msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
+msgstr "選取彼此距離小於 0.1 mm 或重疊的寶石"
+
+msgid "Show spacing guide for all visible gems"
+msgstr "顯示所有可見寶石的間距指示"
+
+msgid "Set optimal unit settings for jewelry modelling"
+msgstr "為珠寶建模設定最佳尺寸單位設定"
+
+msgid "Compose gem table and map it to gems in the scene"
+msgstr "編寫寶石表並將其對映到場景中的寶石"
+
+msgid "Present summary information about the design, including gems, sizes and weight"
+msgstr "提供有關設計的摘要資訊，包括寶石、尺寸和重量"
+
+msgid "Add a new measurement"
+msgstr "添加新的測量"
+
+msgid "Add new item to the list"
+msgstr "將新項目添加到列表"
+
+msgid "Remove selected item"
+msgstr "移除選取的項目"
+
+msgid "Remove all list items"
+msgstr "移除列表中全部項目"
+
+msgid "Move selected item up/down in the list"
+msgstr "在列表中上/下移動項目"
+
+msgid "Select material"
+msgstr "選取材料"
+
+msgid "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo"
+msgstr "以放射狀順序建立選定物件的集合實例。\n在現有集合實例上使用以重做"
+
+msgid "Asset preview image size when creating new assets"
+msgstr "建立新資產時的資產預覽圖大小"
+
+msgid "Asset preview scale in sidebar"
+msgstr "側邊欄中的資產預覽比例"
+
+msgid "Filter by name"
+msgstr "以名稱過濾"
+
+msgid "Add to favorites"
+msgstr "添加到最愛收藏"
+
+msgid "Remove from favorites"
+msgstr "從最愛收藏中移除"
+
+msgid "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool"
+msgstr "分開鬆散、中心原點和固定方向（寶石可以從 STL 檔案中恢復），\n注意：寶石 ID 可以使用 寶石編輯工具添加"
+
+msgid "Ring size format"
+msgstr "戒指尺寸格式"
+
+msgid "Create microprong cutter between selected gems"
+msgstr "在選取的寶石之間建立城堡鑲嵌切割器"
+
+msgid "Save material list to file"
+msgstr "將材料清單儲存為檔案"
+
+msgid "Save material list as existing file"
+msgstr "將材料保存至已有的檔案"
+
+msgid "Remove file"
+msgstr "移除檔案"
+
+msgid "Import materials from file"
+msgstr "由檔案中匯入材料"
+
+msgid "Import materials from default list when new scene is created"
+msgstr "創立新場景時從預設列表中匯入材料"
+
+msgid "WARNING"
+msgstr "警告"
+
+msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
+msgstr "未知的寶石 ID ，不計算標記寶石的克拉數（*）"
+
+msgid "Curve Length"
+msgstr "曲線長度"
+
+msgid "At least two objects must be selected"
+msgstr "最少需選取兩個物件"
+
+msgid "At least one gem object must be selected"
+msgstr "最少需選取一個寶石物件"
+
+msgid "At least one mesh object must be selected"
+msgstr "最少需選取一個網格物件"
+
+msgid "Active object must be a curve"
+msgstr "當前物件必須是曲線"
+
+msgid "Selected objects do not have Follow Path constraint"
+msgstr "所選物件沒有「跟隨路徑」的約束"
+
+msgid "File not found"
+msgstr "找不到檔案"
+
+msgid "Name must be specified"
+msgstr "必須指定名稱"
+
+msgid "Collection must be specified"
+msgstr "必須指定集合"
+
+msgid "Overlapping gems"
+msgstr "寶石重疊"
+
+msgid "{} overlaps found"
+msgstr "{} 發現重疊"
+
+msgid "Optimal unit settings are in use"
+msgstr "正在使用最佳單位設定"
+
+msgid "Volume"
+msgstr "體積"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Size (mm)"
+msgstr "尺寸（mm）"
+
+msgid "Gem"
+msgstr "寶石"
+
+msgid "Cut"
+msgstr "切割"
+
+msgid "Qty"
+msgstr "數量"
+
+msgid "Sum (ct)"
+msgstr "總數（ct）"
+
+msgid "Total"
+msgstr "總數"
+
+msgid "Carats"
+msgstr "克拉"
+
+msgid "Materials"
+msgstr "材料費"
+
+msgid "Notes"
+msgstr "附註"
+
+msgid "Round"
+msgstr "圓形"
+
+msgid "Oval"
+msgstr "椭圓形"
+
+msgid "Cushion"
+msgstr "墊形"
+
+msgid "Pear"
+msgstr "梨形"
+
+msgid "Marquise"
+msgstr "馬眼形"
+
+msgid "Princess"
+msgstr "公主方形"
+
+msgid "Baguette"
+msgstr "長方形"
+
+msgid "Square"
+msgstr "正方形"
+
+msgid "Asscher"
+msgstr ""
+
+msgid "Radiant"
+msgstr ""
+
+msgid "Flanders"
+msgstr ""
+
+msgid "Octagon"
+msgstr "八角形"
+
+msgid "Heart"
+msgstr "心形"
+
+msgid "Trillion"
+msgstr ""
+
+msgid "Trilliant"
+msgstr ""
+
+msgid "Triangle"
+msgstr "三角形"
+
+msgid "Alexandrite"
+msgstr "紫翠玉"
+
+msgid "Amethyst"
+msgstr "紫水晶"
+
+msgid "Aquamarine"
+msgstr "海藍寶石"
+
+msgid "Citrine"
+msgstr "黄水晶"
+
+msgid "Cubic Zirconia"
+msgstr "立方氧化鋯"
+
+msgid "Diamond"
+msgstr "鑽石"
+
+msgid "Emerald"
+msgstr "綠寶石"
+
+msgid "Garnet"
+msgstr "石榴石"
+
+msgid "Morganite"
+msgstr "摩根石"
+
+msgid "Peridot"
+msgstr "橄欖石"
+
+msgid "Quartz"
+msgstr "石英"
+
+msgid "Ruby"
+msgstr "紅寶石"
+
+msgid "Sapphire"
+msgstr "藍寶石"
+
+msgid "Spinel"
+msgstr "尖晶石"
+
+msgid "Tanzanite"
+msgstr "坦桑石（丹泉石）"
+
+msgid "Topaz"
+msgstr "托帕石（黃玉）"
+
+msgid "Tourmaline"
+msgstr "碧璽（電氣石）"
+
+msgid "Zircon"
+msgstr "鋯石"
+
+msgid "Yellow Gold 24K"
+msgstr "黃金 24K"
+
+msgid "Yellow Gold 22K"
+msgstr "黃金 22K"
+
+msgid "Yellow Gold 18K"
+msgstr "黃金 18K"
+
+msgid "Yellow Gold 14K"
+msgstr "黃金 14K"
+
+msgid "Yellow Gold 10K"
+msgstr "黃金 10K"
+
+msgid "White Gold 18K Pd"
+msgstr "白金 18K Pd"
+
+msgid "White Gold 18K Ni"
+msgstr "白金 18K  Ni"
+
+msgid "White Gold 14K Pd"
+msgstr "白金 14K Pd"
+
+msgid "White Gold 14K Ni"
+msgstr "白金 14K Ni"
+
+msgid "White Gold 10K"
+msgstr "白金 10K"
+
+msgid "Rose Gold 18K"
+msgstr "玫瑰金 18K"
+
+msgid "Rose Gold 14K"
+msgstr "玫瑰金 14K"
+
+msgid "Rose Gold 10K"
+msgstr "玫瑰金 10K"
+
+msgid "Yellow Gold 999"
+msgstr "黃金 999"
+
+msgid "Yellow Gold 958"
+msgstr "黃金 958"
+
+msgid "Yellow Gold 750"
+msgstr "黃金 750"
+
+msgid "Yellow Gold 585"
+msgstr "黃金 585"
+
+msgid "Yellow Gold 375"
+msgstr "黃金 375"
+
+msgid "White Gold 750 Pd"
+msgstr "白金 750 Pd"
+
+msgid "White Gold 750 Ni"
+msgstr "白金 750 Ni"
+
+msgid "White Gold 585 Pd"
+msgstr "白金 585 Pd"
+
+msgid "White Gold 585 Ni"
+msgstr "白金 585 Ni"
+
+msgid "Red Gold 585"
+msgstr "紅金 585"
+
+msgid "Red Gold 375"
+msgstr "紅金 375"
+
+msgid "Platinum 950"
+msgstr "950 鉑金"
+
+msgid "Platinum 900"
+msgstr "900 鉑金"
+
+msgid "Palladium 950"
+msgstr "950 鈀金"
+
+msgid "Silver 925"
+msgstr "925銀"
+
+msgid "Silver Sterling"
+msgstr "純銀"
+
+msgid "Brass"
+msgstr "黃銅"
+
+msgid "Bronze"
+msgstr "青銅"
+
+msgid "Steel Stainless"
+msgstr "不鏽鋼"
+
+msgid "Titanium"
+msgstr "鈦"
+
+msgid "mm"
+msgstr ""
+
+msgid "mm³"
+msgstr ""
+
+msgid "g"
+msgstr "克"
+
+msgid "ct"
+msgstr "克拉"
+
+msgid "pcs"
+msgstr "件"
+
+msgctxt "Jewelry"
+msgid "Cut"
+msgstr "切割"
+
+msgctxt "Jewelry"
+msgid "Diamond"
+msgstr "鑽石"
+
+msgctxt "Jewelry"
+msgid "Round"
+msgstr "圓形"
+
+msgctxt "Jewelry"
+msgid "Spacing"
+msgstr "設定距離"
+
+msgctxt "Jewelry"
+msgid "Cutter"
+msgstr "開孔器"
+
+msgctxt "Jewelry"
+msgid "Base"
+msgstr "基本"
+
+msgctxt "Jewelry"
+msgid "Precious"
+msgstr "貴金屬"
+
+msgctxt "Jewelry"
+msgid "Precious ГОСТ 30649-99"
+msgstr "貴金屬 ГОСТ 30649-99"
+
+msgctxt "Operator"
+msgid "Add Gem"
+msgstr "添加寶石"
+
+msgctxt "Operator"
+msgid "Recover Gem"
+msgstr "恢復寶石"
+
+msgctxt "Operator"
+msgid "Distribute on Curve"
+msgstr "分布曲線"
+
+msgctxt "Operator"
+msgid "Prongs"
+msgstr "爪鑲工具"
+
+msgctxt "Operator"
+msgid "Lattice Project"
+msgstr "晶格項目"
+
+msgctxt "Operator"
+msgid "Lattice Profile"
+msgstr "晶格輪廓"
+
+msgctxt "Operator"
+msgid "Size Curve"
+msgstr "建立曲線"
+
+msgctxt "Operator"
+msgid "Stretch"
+msgstr "拉長"
+
+msgctxt "Operator"
+msgid "Curve Length"
+msgstr "測量曲線長度"
+
+msgctxt "Operator"
+msgid "Design Report"
+msgstr "設計報表"
+
+msgctxt "Operator"
+msgid "Import Asset"
+msgstr "匯入資產"
+
+msgctxt "Operator"
+msgid "Rename"
+msgstr "重命名"
+
+msgctxt "Operator"
+msgid "Replace Asset"
+msgstr "更換資產"
+
+msgctxt "Operator"
+msgid "Replace Preview"
+msgstr "更換預覽"
+
+msgctxt "Operator"
+msgid "Create Category"
+msgstr "建立類別"
+
+msgctxt "Operator"
+msgid "Rename Category"
+msgstr "重新命名類別"
+
+msgctxt "Operator"
+msgid "Override"
+msgstr "自訂設定"
+
+msgctxt "Operator"
+msgid "Clear List"
+msgstr "清除列表"
+
+msgctxt "Operator"
+msgid "Add New Material"
+msgstr "添加新材料"
+
+msgctxt "Operator"
+msgid "Overlapping"
+msgstr "部分重疊"
+
+msgctxt "Operator"
+msgid "Set Units"
+msgstr "設定尺寸單位"
+
+msgctxt "Operator"
+msgid "Gem Map"
+msgstr "寶石對映"
+
+msgctxt "Operator"
+msgid "Add New Measurement"
+msgstr "添加新的測量"
+
+msgctxt "Operator"
+msgid "Add To Library"
+msgstr "添加到庫藏"
+
+msgctxt "Operator"
+msgid "All"
+msgstr "全部"
+
+msgctxt "Operator"
+msgid "Calculate"
+msgstr "計算"
+
+msgctxt "Operator"
+msgid "Microprong Cutter"
+msgstr "城堡鑲嵌刀具"
+
+msgctxt "Operator"
+msgid "Similar"
+msgstr "相似的"
+
+msgctxt "Operator"
+msgid "Save To File"
+msgstr "儲存檔案"
+
+msgctxt "Operator"
+msgid "Import"
+msgstr "匯入"
+
+msgctxt "Operator"
+msgid "Set Default"
+msgstr "設定預設值"
