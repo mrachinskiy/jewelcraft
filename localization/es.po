@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.13\n"
 "POT-Creation-Date: 2022-05-17\n"
-"PO-Revision-Date: 2021-08-17\n"
-"Last-Translator: Óscar Hernández\n"
+"PO-Revision-Date: 2022-07-01\n"
+"Last-Translator: Oxervision\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -14,10 +14,10 @@ msgid "Asset Manager"
 msgstr "Gestor de Activos"
 
 msgid "Show Asset Name"
-msgstr "Mostrar nombre de activo"
+msgstr "Mostrar Nombre de Activo"
 
 msgid "Design Report"
-msgstr ""
+msgstr "Informe de Diseño"
 
 msgid "Report Language"
 msgstr "Idioma del Informe"
@@ -38,7 +38,7 @@ msgid "Weighting"
 msgstr "Evaluación del Peso"
 
 msgid "Hide Built-in Material Lists"
-msgstr ""
+msgstr "Ocultar Conjuntos Predeterminados"
 
 msgid "Prongs"
 msgstr "Dientes"
@@ -68,52 +68,52 @@ msgid "Warnings"
 msgstr "Alertas"
 
 msgid "Show All"
-msgstr ""
+msgstr "Mostrar Todo"
 
 msgid "Scene scale is not optimal"
-msgstr ""
+msgstr "La escala de la escena no es óptima."
 
 msgid "Unsupported unit system"
-msgstr ""
+msgstr "Sistema de unidades no soportado"
 
 msgid "Limit by Selection"
 msgstr ""
 
 msgid "Viewport Background"
-msgstr ""
+msgstr "Fondo de Vista"
 
 msgid "Save to Image"
-msgstr ""
+msgstr "Guardar a Imagen"
 
 msgid "Gem Map"
-msgstr ""
+msgstr "Mapa de Gemas"
 
 msgid "Gem Table"
-msgstr ""
+msgstr "Tabla de Gemas"
 
 msgid "Gem Size"
-msgstr ""
+msgstr "Tamaño de Gemas"
 
 msgid "Weight"
 msgstr "Peso"
 
 msgid "Preview Resolution"
-msgstr ""
+msgstr "Resolución de Previa"
 
 msgid "Preview Scale"
-msgstr ""
+msgstr "Escala de Previa"
 
 msgid "Category is empty"
-msgstr ""
+msgstr "Categoría vacía"
 
 msgid "Popover Width"
-msgstr ""
+msgstr "Ancho del Panel Emergente"
 
 msgid "Snap to Edges"
-msgstr ""
+msgstr "Adherir a Bordes"
 
 msgid "Spacing Overlay"
-msgstr ""
+msgstr "Superponer Espaciado"
 
 msgid "Asset Name"
 msgstr "Nombre de Activo"
@@ -182,49 +182,49 @@ msgid "Parent to selected"
 msgstr "Padre a Seleccionado"
 
 msgid "Use 3D Cursor"
-msgstr ""
+msgstr "Usar Cursor 3D"
 
 msgid "Collection Name"
-msgstr ""
+msgstr "Nombre de Colección"
 
 msgid "Ring Size"
-msgstr ""
+msgstr "Tamaño de Anillo"
 
 msgid "USA"
-msgstr ""
+msgstr "Estados Unidos"
 
 msgid "Britain"
-msgstr ""
+msgstr "Gran Bretaña"
 
 msgid "Swiss"
-msgstr ""
+msgstr "Suiza"
 
 msgid "Japan"
-msgstr ""
+msgstr "Japón"
 
 msgid "Circumference"
-msgstr ""
+msgstr "Circunferencia"
 
 msgid "Distribution (%)"
-msgstr ""
+msgstr "Distribución (%)"
 
 msgid "Only ID"
-msgstr ""
+msgstr "Solo ID"
 
 msgid "Force Edit"
-msgstr ""
+msgstr "Forzar Edición"
 
 msgid "Zero dimensions"
-msgstr ""
+msgstr "Dimensiones cero"
 
 msgid "Action completed"
-msgstr ""
+msgstr "Acción completada"
 
 msgid "No corresponding size"
-msgstr ""
+msgstr "Sin tamaño correspondiente"
 
 msgid "Wedge"
-msgstr ""
+msgstr "Cuña"
 
 msgid "Keep Z Direction"
 msgstr ""
@@ -239,16 +239,16 @@ msgid "Edit selected gems"
 msgstr "Editar gemas seleccionadas"
 
 msgid "Round diamonds only"
-msgstr ""
+msgstr "Solo diamantes redondos"
 
 msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
-msgstr ""
+msgstr "Forzar la edición de objetos malla seleccionados, se puede usar para hacer gemas a partir de objetos que no son gemas"
 
 msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr ""
+msgstr "Editar solo identificadores de gemas, sin afectar los datos y materiales de los objetos"
 
 msgid "Save to file in project folder"
-msgstr ""
+msgstr "Guardar en archivo en la carpeta del proyecto"
 
 msgid "Use user preferences language setting"
 msgstr "Usar los ajustes de preferencias de usuario del idioma"
@@ -335,10 +335,10 @@ msgid "Custom library folder path"
 msgstr "Ruta de la carpeta de la biblioteca personalizada"
 
 msgid "Show asset name in sidebar"
-msgstr ""
+msgstr "Mostrar nombre de activos en la barra de herramientas"
 
 msgid "Show distance to nearby gems"
-msgstr ""
+msgstr "Mostrar la distancia a las gemas cercanas"
 
 msgid "Use object defined overlay settings"
 msgstr "Usar las anulaciones de los controles definidos por el objeto"
@@ -380,85 +380,85 @@ msgid "Move each object individually"
 msgstr "Mover cada objeto individualmente"
 
 msgid "Enable material for weighting display"
-msgstr ""
+msgstr "Activar material para visualización de pesado"
 
 msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
 msgstr "Activo padre importado a los objetos seleccionados (Atajo: mantener presionada la tecla Alt al usar la herramienta)"
 
 msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
-msgstr ""
+msgstr "Seleccionar gemas que estén a menos de 0.1 mm de distancia entre sí o superpuestas"
 
 msgid "Show spacing guide for all visible gems"
-msgstr ""
+msgstr "Mostrar guía de espaciado para todas las gemas visibles"
 
 msgid "Set optimal unit settings for jewelry modelling"
-msgstr ""
+msgstr "Ajustar la configuración de unidad óptima para el modelado de joyas"
 
 msgid "Compose gem table and map it to gems in the scene"
-msgstr ""
+msgstr "Componer la tabla de gemas y asignar gemas en la escena"
 
 msgid "Present summary information about the design, including gems, sizes and weight"
-msgstr ""
+msgstr "Presentar información resumida sobre el diseño, incluidas gemas, tamaños y peso"
 
 msgid "Add a new measurement"
-msgstr ""
+msgstr "Añadir una nueva medida"
 
 msgid "Add new item to the list"
-msgstr ""
+msgstr "Añadir un nuevo elemento a la lista"
 
 msgid "Remove selected item"
-msgstr ""
+msgstr "Eliminar elemento seleccionado"
 
 msgid "Remove all list items"
-msgstr ""
+msgstr "Eliminar todos los elementos de la lista"
 
 msgid "Move selected item up/down in the list"
-msgstr ""
+msgstr "Mover el elemento seleccionado hacia arriba o hacia abajo en la lista"
 
 msgid "Select material"
-msgstr ""
+msgstr "Seleccionar material"
 
 msgid "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo"
-msgstr ""
+msgstr "Crear instancias de colección de objetos seleccionados en orden radial.\nUsar en instancias de colección existentes para rehacer"
 
 msgid "Asset preview image size when creating new assets"
-msgstr ""
+msgstr "Tamaño de la imagen de vista previa del activo al crear nuevos activos"
 
 msgid "Asset preview scale in sidebar"
-msgstr ""
+msgstr "Escala de previa de activo en la barra lateral"
 
 msgid "Filter by name"
-msgstr ""
+msgstr "Filtrar por nombre"
 
 msgid "Add to favorites"
-msgstr ""
+msgstr "Añadir a favoritos"
 
 msgid "Remove from favorites"
-msgstr ""
+msgstr "Eliminar de favoritos"
 
 msgid "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool"
-msgstr ""
+msgstr "Separar perdidos, centrar origen y arreglar la orientación (se pueden recuperar gemas de un archivo STL).\nNOTA: el ID de gema se puede añadir con la herramienta Editar Gema"
 
 msgid "Ring size format"
-msgstr ""
+msgstr "Formato tamaño anillo"
 
 msgid "Create microprong cutter between selected gems"
-msgstr ""
+msgstr "Crear cortador de micro-clavijas entre las gemas seleccionadas"
 
 msgid "Save material list to file"
-msgstr ""
+msgstr "Guardar lista de materiales a archivo"
 
 msgid "Save material list as existing file"
-msgstr ""
+msgstr "Guardar lista de materiales como archivo existente"
 
 msgid "Remove file"
-msgstr ""
+msgstr "Eliminar archivo"
 
 msgid "Import materials from file"
-msgstr ""
+msgstr "Importar materiales desde archivo"
 
 msgid "Import materials from default list when new scene is created"
-msgstr ""
+msgstr "Importar materiales de la lista predeterminada cuando se crea una nueva escena"
 
 msgid "WARNING"
 msgstr "ADVERTENCIA"
@@ -491,16 +491,16 @@ msgid "Name must be specified"
 msgstr "El nombre debe ser especificado"
 
 msgid "Collection must be specified"
-msgstr ""
+msgstr "Se debe especificar colección"
 
 msgid "Overlapping gems"
-msgstr ""
+msgstr "Gemas superpuestas"
 
 msgid "{} overlaps found"
-msgstr ""
+msgstr "{} superposiciones encontradas"
 
 msgid "Optimal unit settings are in use"
-msgstr ""
+msgstr "Los ajustes óptimos de unidades están en uso"
 
 msgid "Volume"
 msgstr "Volumen"
@@ -527,13 +527,13 @@ msgid "Total"
 msgstr ""
 
 msgid "Carats"
-msgstr ""
+msgstr "Quilates"
 
 msgid "Materials"
-msgstr ""
+msgstr "Materiales"
 
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 msgid "Round"
 msgstr "Redonda"
@@ -765,7 +765,7 @@ msgstr "Redonda"
 
 msgctxt "Jewelry"
 msgid "Spacing"
-msgstr ""
+msgstr "Espaciado"
 
 msgctxt "Jewelry"
 msgid "Cutter"
@@ -789,7 +789,7 @@ msgstr "Añadir Gema"
 
 msgctxt "Operator"
 msgid "Recover Gem"
-msgstr ""
+msgstr "Recuperar Gema"
 
 msgctxt "Operator"
 msgid "Distribute on Curve"
@@ -821,7 +821,7 @@ msgstr "Longitud de Curva"
 
 msgctxt "Operator"
 msgid "Design Report"
-msgstr ""
+msgstr "Informe de Diseño"
 
 msgctxt "Operator"
 msgid "Import Asset"
@@ -861,35 +861,35 @@ msgstr "Añadir Nuevo Material"
 
 msgctxt "Operator"
 msgid "Overlapping"
-msgstr ""
+msgstr "Superposición"
 
 msgctxt "Operator"
 msgid "Set Units"
-msgstr ""
+msgstr "Ajustar Unidades"
 
 msgctxt "Operator"
 msgid "Gem Map"
-msgstr ""
+msgstr "Mapa de Gema"
 
 msgctxt "Operator"
 msgid "Add New Measurement"
-msgstr ""
+msgstr "Añadir Nueva Medida"
 
 msgctxt "Operator"
 msgid "Add to Library"
-msgstr ""
+msgstr "Añadir a Biblioteca"
 
 msgctxt "Operator"
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 msgctxt "Operator"
 msgid "Calculate"
-msgstr ""
+msgstr "Calcular"
 
 msgctxt "Operator"
 msgid "Microprong Cutter"
-msgstr ""
+msgstr "Cortador de Micro-Clavijas"
 
 msgctxt "Operator"
 msgid "Similar"
@@ -897,12 +897,12 @@ msgstr ""
 
 msgctxt "Operator"
 msgid "Save to File"
-msgstr ""
+msgstr "Guardar a Archivo"
 
 msgctxt "Operator"
 msgid "Import"
-msgstr ""
+msgstr "Importar"
 
 msgctxt "Operator"
 msgid "Set Default"
-msgstr ""
+msgstr "Ajustar Predeterminado"
