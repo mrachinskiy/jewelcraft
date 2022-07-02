@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: JewelCraft 2.13\n"
 "POT-Creation-Date: 2022-05-17\n"
 "PO-Revision-Date: 2022-07-01\n"
-"Last-Translator: Oxervision\n"
+"Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgid "Unsupported unit system"
 msgstr "Sistema de unidades no soportado"
 
 msgid "Limit by Selection"
-msgstr ""
+msgstr "Limitar por Selección"
 
 msgid "Viewport Background"
 msgstr "Fondo de Vista"
@@ -227,10 +227,10 @@ msgid "Wedge"
 msgstr "Cuña"
 
 msgid "Keep Z Direction"
-msgstr ""
+msgstr "Conservar Dirección Z"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
-msgstr ""
+msgstr "Hace que las transformaciones en el eje Z sean consistentes con el objeto original (no afecta a las gemas)"
 
 msgid "Add gemstone to the scene"
 msgstr "Añadir gema a la escena"
@@ -296,7 +296,7 @@ msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool
 msgstr "Crea un cortador para las gemas seleccionadas\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
 
 msgid "Curve start position"
-msgstr ""
+msgstr "Posición inicial de la curva"
 
 msgid "Density g/cm³"
 msgstr "Densidad gr/cm³"
