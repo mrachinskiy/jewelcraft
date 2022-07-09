@@ -27,7 +27,6 @@ How to install
 2. Make sure you have Blender 3 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
-5. Check [known issues](#known-issues).
 
 <sup>1</sup> Note for mac users: Safari browser will automatically unpack downloaded zip archive, so in order to install the add-on, you have to pack folder with add-on files back into zip archive. Or use a different browser to download add-on.
 
@@ -41,7 +40,6 @@ How to install
 2. Убедитесь, что у вас установлен Blender 3 или новее.
 3. Откройте `Preferences` → `Add-ons`.
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
-5. Ознакомьтесь с [известными проблемами](#known-issues).
 
 <sup>1</sup> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, поэтому, чтобы установить аддон, необходимо запаковать папку с файлами аддона обратно в zip архив. Или используйте другой браузер для скачивания аддона.
 
@@ -53,14 +51,8 @@ Contributing
 
 ### Did you find a bug?
 
-* Check [known issues](#known-issues).
 * Ensure the bug can be reproduced in the latest add-on version.
 * [Open new bug report][report_bug], be sure to include Blender and add-on versions, and screenshot showing the error message.
-
-### Known issues
-
-* Design Report/Gem Map/Spacing Overlay
-  * [[T74368](https://developer.blender.org/T74368)] Gems from hidden collections appear in report/Spacing Overlay, this happens when collection is hidden with  `Hide in Viewport` (eye icon), instead use `Disable in Viewports` (display icon) or `Exclude from View Layer` (checkbox).
 
 ### Translations
 
