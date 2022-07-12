@@ -793,7 +793,7 @@ msgstr "恢復寶石"
 
 msgctxt "Operator"
 msgid "Distribute on Curve"
-msgstr "分布曲線"
+msgstr "沿著曲線排列"
 
 msgctxt "Operator"
 msgid "Prongs"
@@ -801,7 +801,7 @@ msgstr "爪鑲工具"
 
 msgctxt "Operator"
 msgid "Lattice Project"
-msgstr "晶格項目"
+msgstr "晶格投影"
 
 msgctxt "Operator"
 msgid "Lattice Profile"
