@@ -71,7 +71,7 @@ msgid "Show All"
 msgstr "顯示全部"
 
 msgid "Scene scale is not optimal"
-msgstr "不是最佳的場景比例"
+msgstr "當前尺寸單位非最佳場景比例"
 
 msgid "Unsupported unit system"
 msgstr "不支援的尺寸單位系統"
@@ -188,7 +188,7 @@ msgid "Collection Name"
 msgstr "集合名稱"
 
 msgid "Ring Size"
-msgstr "戒指尺寸"
+msgstr "戒圍尺寸"
 
 msgid "USA"
 msgstr "美國"
@@ -206,7 +206,7 @@ msgid "Circumference"
 msgstr "周長"
 
 msgid "Distribution (%)"
-msgstr "散開（%）"
+msgstr "分佈（%）"
 
 msgid "Only ID"
 msgstr "只有 ID"
@@ -227,7 +227,7 @@ msgid "Wedge"
 msgstr "楔子"
 
 msgid "Keep Z Direction"
-msgstr "保存 Z 方向"
+msgstr "保存 Z 軸方向"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "使 Z 軸上的變換與原始物件一致（不影響寶石）"
@@ -269,7 +269,7 @@ msgid "Create instance face for selected objects"
 msgstr "為選取的物件建立實例面"
 
 msgid "Create size curve"
-msgstr "建立大小曲線"
+msgstr "建立戒圍曲線"
 
 msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
 msgstr "沿 X 軸上的曲線拉伸變形欲的物件，也可以在編輯模式下使用選定的頂點"
@@ -440,7 +440,7 @@ msgid "Separate loose, center origin and fix orientation (can recover gems from 
 msgstr "分開鬆散、中心原點和固定方向（寶石可以從 STL 檔案中恢復），\n注意：寶石 ID 可以使用 寶石編輯工具添加"
 
 msgid "Ring size format"
-msgstr "戒指尺寸格式"
+msgstr "戒圍尺寸格式"
 
 msgid "Create microprong cutter between selected gems"
 msgstr "在選取的寶石之間建立城堡鑲嵌切割器"
@@ -542,7 +542,7 @@ msgid "Oval"
 msgstr "椭圓形"
 
 msgid "Cushion"
-msgstr "墊形"
+msgstr "枕形"
 
 msgid "Pear"
 msgstr "梨形"
@@ -560,13 +560,13 @@ msgid "Square"
 msgstr "正方形"
 
 msgid "Asscher"
-msgstr ""
+msgstr "Asscher 上丁方形"
 
 msgid "Radiant"
-msgstr ""
+msgstr "Radiant 雷地恩形"
 
 msgid "Flanders"
-msgstr ""
+msgstr "Flanders 佛蘭德"
 
 msgid "Octagon"
 msgstr "八角形"
@@ -575,10 +575,10 @@ msgid "Heart"
 msgstr "心形"
 
 msgid "Trillion"
-msgstr ""
+msgstr "弧邊花式三角形"
 
 msgid "Trilliant"
-msgstr ""
+msgstr "直邊花式三角形"
 
 msgid "Triangle"
 msgstr "三角形"
@@ -602,7 +602,7 @@ msgid "Diamond"
 msgstr "鑽石"
 
 msgid "Emerald"
-msgstr "綠寶石"
+msgstr "祖母綠"
 
 msgid "Garnet"
 msgstr "石榴石"
@@ -809,11 +809,11 @@ msgstr "晶格輪廓"
 
 msgctxt "Operator"
 msgid "Size Curve"
-msgstr "建立曲線"
+msgstr "建立戒圍曲線"
 
 msgctxt "Operator"
 msgid "Stretch"
-msgstr "拉長"
+msgstr "拉伸"
 
 msgctxt "Operator"
 msgid "Curve Length"
@@ -821,7 +821,7 @@ msgstr "測量曲線長度"
 
 msgctxt "Operator"
 msgid "Design Report"
-msgstr "設計報表"
+msgstr "建立設計報表"
 
 msgctxt "Operator"
 msgid "Import Asset"
@@ -829,7 +829,7 @@ msgstr "匯入資產"
 
 msgctxt "Operator"
 msgid "Rename"
-msgstr "重命名"
+msgstr "重新命名"
 
 msgctxt "Operator"
 msgid "Replace Asset"
@@ -865,11 +865,11 @@ msgstr "部分重疊"
 
 msgctxt "Operator"
 msgid "Set Units"
-msgstr "設定尺寸單位"
+msgstr "設定最佳尺寸單位"
 
 msgctxt "Operator"
 msgid "Gem Map"
-msgstr "寶石對映"
+msgstr "建立寶石對映"
 
 msgctxt "Operator"
 msgid "Add New Measurement"
