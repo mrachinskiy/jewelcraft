@@ -254,36 +254,33 @@ class OBJECT_OT_stretch_along_curve(Operator):
                 me = ob.data
                 curve = asset.mod_curve_off(ob)
 
-                if curve:
-                    length = mesh.est_curve_length(curve)
-                    length_halved = length / 2 / ob.matrix_world.to_scale()[0]
+                if not curve:
+                    continue
 
-                    bm = bmesh.from_edit_mesh(me)
+                length = mesh.est_curve_length(curve)
+                length_halved = length / 2 / ob.matrix_world.to_scale()[0]
 
-                    for v in bm.verts:
-                        if v.select:
-                            if v.co[0] > 0.0:
-                                v.co[0] = length_halved
-                            else:
-                                v.co[0] = -length_halved
-
-                    bm.normal_update()
-                    bmesh.update_edit_mesh(me)
+                bm = bmesh.from_edit_mesh(me)
+                for v in bm.verts:
+                    if v.select:
+                        if v.co.x > 0.0:
+                            v.co.x = length_halved
+                        else:
+                            v.co.x = -length_halved
+                bm.normal_update()
+                bmesh.update_edit_mesh(me)
 
         else:
 
             for ob in context.selected_objects:
                 curve, bbox = asset.mod_curve_off(ob, ob.matrix_world)
 
-                if curve:
-                    length = mesh.est_curve_length(curve)
+                if not curve:
+                    continue
 
-                    dim = max(x[0] for x in bbox) - min(x[0] for x in bbox)
-
-                    scaling = ob.matrix_local @ ob.scale
-                    scaling.x = length / dim * scaling.x
-
-                    ob.scale = ob.matrix_local.inverted() @ scaling
+                length = mesh.est_curve_length(curve)
+                dim = max(x[0] for x in bbox) - min(x[0] for x in bbox)
+                ob.scale.x = length / dim * ob.scale.x
 
         return {"FINISHED"}
 
