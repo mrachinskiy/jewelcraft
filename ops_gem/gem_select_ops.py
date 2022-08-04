@@ -126,7 +126,7 @@ class OBJECT_OT_gem_select_overlapping(Operator):
         app_data = ob_data.append
         depsgraph = context.evaluated_depsgraph_get()
 
-        for dup, _, ob in asset.iter_gems(depsgraph):
+        for dup, _x, ob in asset.iter_gems(depsgraph):
             app_obs(ob)
             app_data(asset.gem_transform(dup))
 
