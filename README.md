@@ -11,24 +11,24 @@ Features:
 * Translated to multiple languages:
   * ![100%](https://progress-bar.dev/100) English
   * ![100%](https://progress-bar.dev/100) Russian
-  * ![95%](https://progress-bar.dev/95) Arabic
+  * ![100%](https://progress-bar.dev/100) Spanish
+  * ![100%](https://progress-bar.dev/100) Traditional Chinese
+  * ![94%](https://progress-bar.dev/94) Arabic
   * ![80%](https://progress-bar.dev/80) Italian
-  * ![72%](https://progress-bar.dev/72) French
-  * ![65%](https://progress-bar.dev/65) Spanish
-  * ![57%](https://progress-bar.dev/57) Simplified Chinese
+  * ![71%](https://progress-bar.dev/71) French
+  * ![56%](https://progress-bar.dev/56) Simplified Chinese
   * Your language is missing or incomplete? [Contribute translation](#translations).
 
 
 How to install
 ==========================
 
-1. Download [JewelCraft 2.12][download_latest].<sup>1</sup>
+1. Download [JewelCraft 2.13][download_latest].<sup>1</sup>
 2. Make sure you have Blender 3 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
-5. Check [known issues](#known-issues).
 
-<sup>1</sup> Note for mac users: Safari browser will automatically unpack downloaded zip archive, so in order to install the add-on, you have to pack folder with add-on files back into zip archive. Or use a different browser to download add-on.
+<sup>1</sup> Note for mac users: Safari browser will automatically unpack downloaded zip archive, to prevent that go `Safari` → `Preferences` → `General` and uncheck `Open "safe" files after downloading` option.
 
 <sup>2</sup> If error occurs on add-on activation, it means you are trying to install add-on repository instead of release. Make sure you download add-on release using link provided in step one of this guide.
 
@@ -36,13 +36,12 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.12][download_latest].<sup>1</sup>
+1. Загрузите [JewelCraft 2.13][download_latest].<sup>1</sup>
 2. Убедитесь, что у вас установлен Blender 3 или новее.
 3. Откройте `Preferences` → `Add-ons`.
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
-5. Ознакомьтесь с [известными проблемами](#known-issues).
 
-<sup>1</sup> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, поэтому, чтобы установить аддон, необходимо запаковать папку с файлами аддона обратно в zip архив. Или используйте другой браузер для скачивания аддона.
+<sup>1</sup> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, чтобы это предотвратить в настройках `Safari` → `Preferences` → `General` отключите опцию `Open "safe" files after downloading`.
 
 <sup>2</sup> Если при активации аддона возникает ошибка, значит вы пытаетесь установить репозиторий вместо релиза. Для загрузки релиза используйте ссылку, приведённую в первом шаге данного руководства.
 
@@ -52,14 +51,8 @@ Contributing
 
 ### Did you find a bug?
 
-* Check [known issues](#known-issues).
 * Ensure the bug can be reproduced in the latest add-on version.
 * [Open new bug report][report_bug], be sure to include Blender and add-on versions, and screenshot showing the error message.
-
-### Known issues
-
-* Design Report/Gem Map/Spacing Overlay
-  * [[T74368](https://developer.blender.org/T74368)] Gems from hidden collections appear in report/Spacing Overlay, this happens when collection is hidden with  `Hide in Viewport` (eye icon), instead use `Disable in Viewports` (display icon) or `Exclude from View Layer` (checkbox).
 
 ### Translations
 
@@ -77,6 +70,6 @@ Contributing
 * After translation is done submit it back through [issues][submit_translation].
 
 
-[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.12.0-blender3.0.0/jewelcraft-2_12_0.zip
+[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.13.0-blender3.0.0/jewelcraft-2_13_0.zip
 [report_bug]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
 [submit_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
