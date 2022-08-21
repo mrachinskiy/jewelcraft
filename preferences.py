@@ -169,6 +169,12 @@ class MeasurementCollection(PropertyGroup):
             ("DIMENSIONS", "", ""),
         ),
     )
+    datablock_type: EnumProperty(
+        items=(
+            ("OBJECT", "", ""),
+            ("COLLECTION", "", ""),
+        ),
+    )
     ring_size: EnumProperty(
         name="Format",
         items=(

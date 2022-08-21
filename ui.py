@@ -631,7 +631,7 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
 
             col = layout.column()
 
-            if item.type == "RING_SIZE":
+            if item.datablock_type == "OBJECT":
                 col.alert = item.object is None
                 col.prop(item, "object")
             else:
