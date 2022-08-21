@@ -195,6 +195,11 @@ class MeasurementCollection(PropertyGroup):
     material_density: FloatProperty()
 
 
+class Metadata(PropertyGroup):
+    name: StringProperty(default="Untitled", update=data.report_metadata_serialize)
+    value: StringProperty(default="...", update=data.report_metadata_serialize)
+
+
 class AssetLibCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
@@ -214,6 +219,10 @@ class MaterialList(ListProperty, PropertyGroup):
 
 class MeasurementList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=MeasurementCollection)
+
+
+class MetadataList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=Metadata)
 
 
 class AssetLibList(ListProperty, PropertyGroup):
@@ -318,6 +327,21 @@ class Preferences(ReportLangEnum, mod_update.Preferences, AddonPreferences):
     # Design Report
     # ------------------------
 
+    report_use_preview: BoolProperty(
+        name="Preview",
+        description="Include viewport preview image in report",
+        default=True,
+    )
+    report_preview_resolution: IntProperty(
+        name="Preview Resolution",
+        default=512,
+        subtype="PIXEL",
+    )
+    report_use_metadata: BoolProperty(
+        name="Metadata",
+        description="Include metadata in report",
+        default=True,
+    )
     gem_map_fontsize_table: IntProperty(
         name="Gem Table",
         default=19,
@@ -385,8 +409,8 @@ class WmProperties(PropertyGroup):
     prefs_active_tab: EnumProperty(
         items=(
             ("ASSET_MANAGER", "Asset Manager", ""),
-            ("WEIGHTING", "Weighting", ""),
             ("DESIGN_REPORT", "Design Report", ""),
+            ("WEIGHTING", "Weighting", ""),
             ("THEMES", "Themes", ""),
             ("UPDATES", "Updates", ""),
         ),
@@ -411,6 +435,7 @@ class WmProperties(PropertyGroup):
     asset_show_favs: BoolProperty(name="Favorites")
     asset_libs: PointerProperty(type=AssetLibList)
     sizes: PointerProperty(type=SizeList)
+    report_metadata: PointerProperty(type=MetadataList)
 
 
 # Scene properties

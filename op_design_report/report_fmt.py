@@ -42,6 +42,10 @@ def data_format(Report, _: Callable[[str], str]) -> None:
 
         Report.gems = gems_fmt
 
+    if Report.metadata:
+
+        Report.metadata = [(_(k), v) for k, v in Report.metadata]
+
     if Report.materials:
 
         mats_fmt = []

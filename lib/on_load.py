@@ -20,6 +20,7 @@ def handler_del():
 def _execute(dummy):
     _load_weighting_mats()
     data.asset_libs_deserialize()
+    data.report_metadata_deserialize()
 
 
 def _load_weighting_mats():

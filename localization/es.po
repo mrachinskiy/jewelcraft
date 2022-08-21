@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.13\n"
-"POT-Creation-Date: 2022-05-17\n"
+"Project-Id-Version: JewelCraft 2.14\n"
+"POT-Creation-Date: 2022-08-21\n"
 "PO-Revision-Date: 2022-07-01\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -460,6 +460,12 @@ msgstr "Importar materiales desde archivo"
 msgid "Import materials from default list when new scene is created"
 msgstr "Importar materiales de la lista predeterminada cuando se crea una nueva escena"
 
+msgid "Include viewport preview image in report"
+msgstr ""
+
+msgid "Include metadata in report"
+msgstr ""
+
 msgid "WARNING"
 msgstr "ADVERTENCIA"
 
@@ -534,6 +540,15 @@ msgstr "Materiales"
 
 msgid "Notes"
 msgstr "Notas"
+
+msgid "Project"
+msgstr ""
+
+msgid "Modeller"
+msgstr ""
+
+msgid "Date"
+msgstr ""
 
 msgid "Round"
 msgstr "Redonda"

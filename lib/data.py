@@ -35,7 +35,7 @@ def ul_deserialize(ul, filepath: Path, fmt: Callable = lambda k, v: v) -> None:
         for data_item in data:
             item = ul.add()
             for k, v in data_item.items():
-                setattr(item, k, fmt(k, v))
+                item[k] = fmt(k, v)
 
         ul.index = 0
 
@@ -56,6 +56,28 @@ def asset_libs_deserialize() -> None:
         libs = bpy.context.window_manager.jewelcraft.asset_libs
         libs.clear()
         ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
+
+
+def report_metadata_serialize(self=None, context=None) -> None:
+    if not var.CONFIG_DIR.exists():
+        var.CONFIG_DIR.mkdir(parents=True)
+
+    ul_serialize(
+        bpy.context.window_manager.jewelcraft.report_metadata,
+        var.REPORT_METADATA_USER_FILEPATH,
+        ("name", "value"),
+    )
+
+
+def report_metadata_deserialize() -> None:
+    if var.REPORT_METADATA_USER_FILEPATH.exists():
+        filepath = var.REPORT_METADATA_USER_FILEPATH
+    else:
+        filepath = var.REPORT_METADATA_BUILTIN_FILEPATH
+
+    ul = bpy.context.window_manager.jewelcraft.report_metadata
+    ul.clear()
+    ul_deserialize(ul, filepath)
 
 
 def weighting_list_serialize(filepath: Path) -> None:
