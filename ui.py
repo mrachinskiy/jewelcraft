@@ -49,6 +49,14 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
         layout.prop(item, "name", text="", emboss=False, icon=self.icons.get(item.type, "BLANK1"))
 
 
+class VIEW3D_UL_jewelcraft_metadata(UIList):
+
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
+        row = layout.split(factor=0.25, align=True)
+        row.prop(item, "name", text="", emboss=False)
+        row.prop(item, "value", text="", emboss=False)
+
+
 class VIEW3D_UL_jewelcraft_asset_libs(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
@@ -700,19 +708,53 @@ def prefs_ui(self, context):
         col.prop(self, "asset_ui_preview_scale")
         col.prop(self, "asset_show_name")
 
-    elif active_tab == "WEIGHTING":
-        col = box.column()
-        col.prop(self, "weighting_hide_builtin_lists")
-        col.prop(self, "weighting_lib_path")
-
     elif active_tab == "DESIGN_REPORT":
+        box.prop(self, "report_lang")
+
+        box.label(text="Design Report")
+        row = box.row(heading="Preview")
+        row.prop(self, "report_use_preview", text="")
+        sub = row.row()
+        sub.enabled = self.report_use_preview
+        sub.prop(self, "report_preview_resolution", text="")
+
+        row = box.row()
+        row.use_property_split = False
+        row.prop(self, "report_use_metadata", text="Metadata")
+
         col = box.column()
-        col.prop(self, "report_lang")
+        col.active = self.report_use_metadata
+        row = col.row()
+
+        col = row.column()
+        col.template_list(
+            "VIEW3D_UL_jewelcraft_metadata",
+            "",
+            wm_props.report_metadata,
+            "coll",
+            wm_props.report_metadata,
+            "index",
+            rows=4,
+        )
+
+        col = row.column(align=True)
+        col.operator("wm.jewelcraft_ul_add", text="", icon="ADD").prop = "report_metadata"
+        col.operator("wm.jewelcraft_ul_del", text="", icon="REMOVE").prop = "report_metadata"
+        col.separator()
+        op = col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_UP")
+        op.prop = "report_metadata"
+        op.move_up = True
+        col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "report_metadata"
 
         box.label(text="Gem Map Font Size")
         col = box.column()
         col.prop(self, "gem_map_fontsize_table")
         col.prop(self, "gem_map_fontsize_gem_size")
+
+    elif active_tab == "WEIGHTING":
+        col = box.column()
+        col.prop(self, "weighting_hide_builtin_lists")
+        col.prop(self, "weighting_lib_path")
 
     elif active_tab == "THEMES":
         box.label(text="Spacing Overlay")
