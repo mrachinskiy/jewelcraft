@@ -18,7 +18,7 @@ class Cut(NamedTuple):
     shape: int
     vol_shape: int
     vol_correction: float
-    xy_symmetry: bool = False
+    trait: int = 0
 
 
 DENSITY_CORUNDUM = 4.1
@@ -39,6 +39,9 @@ VOL_CONE = 0
 VOL_PYRAMID = 1
 VOL_PRISM = 2
 VOL_TETRAHEDRON = 3
+
+TRAIT_XY_SYMMETRY = 1
+TRAIT_X_SIZE = 2
 
 STONES = {
     "DIAMOND": Stone("Diamond", 3.53, COLOR_WHITE),
@@ -62,22 +65,22 @@ STONES = {
 }
 
 CUTS = {
-    "ROUND": Cut("Round", SHAPE_ROUND, VOL_CONE, 1.3056, True),
+    "ROUND": Cut("Round", SHAPE_ROUND, VOL_CONE, 1.3056, TRAIT_XY_SYMMETRY),
     "OVAL": Cut("Oval", SHAPE_FANTASY, VOL_CONE, 1.34455),
     "CUSHION": Cut("Cushion", SHAPE_SQUARE, VOL_PYRAMID, 1.2852),
     "PEAR": Cut("Pear", SHAPE_FANTASY, VOL_CONE, 1.24936),
     "MARQUISE": Cut("Marquise", SHAPE_FANTASY, VOL_CONE, 1.20412),
     "PRINCESS": Cut("Princess", SHAPE_SQUARE, VOL_PYRAMID, 1.43301),
     "BAGUETTE": Cut("Baguette", SHAPE_RECTANGLE, VOL_PRISM, 1.197),
-    "SQUARE": Cut("Square", SHAPE_SQUARE, VOL_PYRAMID, 1.6, True),
+    "SQUARE": Cut("Square", SHAPE_SQUARE, VOL_PYRAMID, 1.6, TRAIT_XY_SYMMETRY),
     "EMERALD": Cut("Emerald", SHAPE_RECTANGLE, VOL_PRISM, 1.025),
-    "ASSCHER": Cut("Asscher", SHAPE_SQUARE, VOL_PYRAMID, 1.379, True),
+    "ASSCHER": Cut("Asscher", SHAPE_SQUARE, VOL_PYRAMID, 1.379, TRAIT_XY_SYMMETRY),
     "RADIANT": Cut("Radiant", SHAPE_SQUARE, VOL_PYRAMID, 1.3494),
-    "FLANDERS": Cut("Flanders", SHAPE_SQUARE, VOL_PYRAMID, 1.2407, True),
-    "OCTAGON": Cut("Octagon", SHAPE_SQUARE, VOL_CONE, 1.479, True),
-    "HEART": Cut("Heart", SHAPE_FANTASY, VOL_CONE, 1.29),
-    "TRILLION": Cut("Trillion", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.644),
-    "TRILLIANT": Cut("Trilliant", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.888),
+    "FLANDERS": Cut("Flanders", SHAPE_SQUARE, VOL_PYRAMID, 1.2407, TRAIT_XY_SYMMETRY),
+    "OCTAGON": Cut("Octagon", SHAPE_SQUARE, VOL_CONE, 1.479, TRAIT_XY_SYMMETRY),
+    "HEART": Cut("Heart", SHAPE_FANTASY, VOL_CONE, 1.29, TRAIT_X_SIZE),
+    "TRILLION": Cut("Trillion", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.644, TRAIT_X_SIZE),
+    "TRILLIANT": Cut("Trilliant", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.888, TRAIT_X_SIZE),
     "TRIANGLE": Cut("Triangle", SHAPE_TRIANGLE, VOL_TETRAHEDRON, 1.531),
 }
 
