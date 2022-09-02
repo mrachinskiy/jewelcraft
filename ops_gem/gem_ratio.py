@@ -9,20 +9,18 @@ from ..lib import asset
 _cuts = {
     "OVAL": (
         (
-            (5, 12, 2),
-            (14, 16, 4),
-            (18, 20, 5),
+            (set(range(5, 12 + 1)), 2),
+            ({14, 16}, 4),
+            ({18, 20}, 5),
         ),
         1.6,
     ),
     "PEAR": (
         (
-            (5, 7, 2),
-            (9, 10, 3),
-            (12, 13, 4),
-            (14, 15, 5),
-            (15, 17, 4),
-            (18, 20, 5),
+            ({5, 6, 7}, 2),
+            ({9, 10}, 3),
+            ({12, 13, 16}, 4),
+            ({14, 15, 18, 20}, 5),
         ),
         1.6,
     ),
@@ -34,13 +32,10 @@ def validate(ob: Object, cut: str, size: float) -> None:
         return
 
     ranges, scale_correction = _cuts[cut]
+    size_int = int(size)
 
-    for start, end, delta in ranges:
-        if start <= size <= end:
-            size_x = size - delta
-            break
-    else:
-        return
-
-    ob.scale.x = size_x * scale_correction
-    asset.apply_scale(ob)
+    for range_, delta in ranges:
+        if size_int in range_:
+            ob.scale.x = (size_int - delta) * (size / size_int) * scale_correction
+            asset.apply_scale(ob)
+            return
