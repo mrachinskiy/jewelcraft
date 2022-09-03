@@ -32,7 +32,7 @@ def validate(ob: Object, cut: str, size: float) -> None:
         return
 
     ranges, scale_correction = _cuts[cut]
-    size_int = int(size)
+    size_int = int(size + 0.5)
 
     for range_, delta in ranges:
         if size_int in range_:
