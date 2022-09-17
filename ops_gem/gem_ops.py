@@ -65,6 +65,7 @@ class OBJECT_OT_gem_add(Operator):
 
     def execute(self, context):
         from ..lib import asset, gemlib
+        from . import gem_ratio
 
         scene = context.scene
         view_layer = context.view_layer
@@ -88,6 +89,7 @@ class OBJECT_OT_gem_add(Operator):
         ob.select_set(True)
         ob["gem"] = {"cut": self.cut, "stone": self.stone}
 
+        gem_ratio.validate(ob, self.cut, self.size)
         asset.add_material(ob, name=stone_name, color=color, is_gem=True)
 
         if context.mode == "EDIT_MESH":

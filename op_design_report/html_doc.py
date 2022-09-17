@@ -10,6 +10,15 @@ from ..lib import htmlutils
 def make(Report, filename: str, _: Callable[[str], str]) -> str:
     Doc = htmlutils.Document(var.HTML_DESIGN_REPORT_DIR)
 
+    if Report.preview:
+        Doc.write_img(Report.preview)
+
+    if Report.metadata:
+        Doc.write_list(Report.metadata)
+
+    if Doc.contents:
+        Doc.write_section_meta()
+
     if Report.gems:
         header = (
             _("Gem"),

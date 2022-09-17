@@ -4,7 +4,7 @@
 bl_info = {
     "name": "JewelCraft",
     "author": "Mikhail Rachinskiy",
-    "version": (2, 13, 3),
+    "version": (2, 14, 0),
     "blender": (3, 0, 0),
     "location": "3D View > Sidebar",
     "description": "Jewelry design toolkit.",
@@ -48,11 +48,13 @@ else:
 
 classes = (
     preferences.MeasurementCollection,
+    preferences.Metadata,
     preferences.MaterialCollection,
     preferences.MaterialListCollection,
     preferences.AssetLibCollection,
     preferences.SizeCollection,
     preferences.MeasurementList,
+    preferences.MetadataList,
     preferences.MaterialList,
     preferences.AssetLibList,
     preferences.SizeList,
@@ -61,6 +63,7 @@ classes = (
     preferences.SceneProperties,
     ui.VIEW3D_UL_jewelcraft_material_list,
     ui.VIEW3D_UL_jewelcraft_measurements,
+    ui.VIEW3D_UL_jewelcraft_metadata,
     ui.VIEW3D_UL_jewelcraft_asset_libs,
     ui.VIEW3D_UL_jewelcraft_asset_libs_select,
     ui.VIEW3D_UL_jewelcraft_sizes,

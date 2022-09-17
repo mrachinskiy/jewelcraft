@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.13\n"
-"POT-Creation-Date: 2022-05-17\n"
+"Project-Id-Version: JewelCraft 2.14\n"
+"POT-Creation-Date: 2022-08-21\n"
 "PO-Revision-Date: 2022-06-22\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -460,6 +460,12 @@ msgstr "由檔案中匯入材料"
 msgid "Import materials from default list when new scene is created"
 msgstr "創立新場景時從預設列表中匯入材料"
 
+msgid "Include viewport preview image in report"
+msgstr ""
+
+msgid "Include metadata in report"
+msgstr ""
+
 msgid "WARNING"
 msgstr "警告"
 
@@ -534,6 +540,15 @@ msgstr "材料費"
 
 msgid "Notes"
 msgstr "附註"
+
+msgid "Project"
+msgstr ""
+
+msgid "Modeller"
+msgstr ""
+
+msgid "Date"
+msgstr ""
 
 msgid "Round"
 msgstr "圓形"

@@ -27,20 +27,26 @@ def data_format(Report, _: Callable[[str], str]) -> None:
             try:
                 stonef = _(gemlib.STONES[stone].name)
                 cutf = _(gemlib.CUTS[cut].name)
-                xy_symmetry = gemlib.CUTS[cut].xy_symmetry
+                trait = gemlib.CUTS[cut].trait
             except KeyError:
                 stonef = stone
                 cutf = cut
-                xy_symmetry = False
+                trait = None
 
-            if xy_symmetry:
+            if trait is gemlib.TRAIT_XY_SYMMETRY:
                 sizef = str(l)
+            elif trait is gemlib.TRAIT_X_SIZE:
+                sizef = f"{w} × {l}"
             else:
                 sizef = f"{l} × {w}"
 
             gems_fmt.append((stonef, cutf, sizef, ct, qty, total_ct))
 
         Report.gems = gems_fmt
+
+    if Report.metadata:
+
+        Report.metadata = [(_(k), v) for k, v in Report.metadata]
 
     if Report.materials:
 

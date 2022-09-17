@@ -18,12 +18,14 @@ if not CONFIG_DIR.exists():
     else:
         CONFIG_DIR = Path.home() / ".config" / "blender" / "JewelCraft"
 
+ICONS_DIR = ADDON_DIR / "assets" / "icons"
 GEM_ASSET_DIR = ADDON_DIR / "assets" / "gems"
 GEM_ASSET_FILEPATH = GEM_ASSET_DIR / "gems.blend"
-ICONS_DIR = ADDON_DIR / "assets" / "icons"
-HTML_DESIGN_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "design_report"
 WEIGHTING_LIB_BUILTIN_DIR = ADDON_DIR / "assets" / "weighting"
+HTML_DESIGN_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
+REPORT_METADATA_BUILTIN_FILEPATH = ADDON_DIR / "assets" / "templates" / "report_metadata.json"
 
-WEIGHTING_LIB_USER_DIR = CONFIG_DIR / "Weighting Library"
 ASSET_LIBS_FILEPATH = CONFIG_DIR / "libraries.json"
 ASSET_FAVS_FILEPATH = CONFIG_DIR / "favorites.json"
+WEIGHTING_LIB_USER_DIR = CONFIG_DIR / "Weighting Library"
+REPORT_METADATA_USER_FILEPATH = CONFIG_DIR / "report_metadata.json"

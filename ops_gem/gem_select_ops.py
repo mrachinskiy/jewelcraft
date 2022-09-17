@@ -56,12 +56,15 @@ class OBJECT_OT_gem_select_by_trait(Operator):
         layout.prop(self, "use_select_children")
 
     def execute(self, context):
+        from ..lib import gemlib
+
         if not self.use_extend:
             for ob in context.selected_objects:
                 ob.select_set(False)
 
+        axis = 0 if gemlib.CUTS[self.cut].trait is gemlib.TRAIT_X_SIZE else 1
         size = round(self.size, 2)
-        eq_size = (lambda ob: round(ob.dimensions.y, 2) == size) if self.filter_size else (lambda x: True)
+        eq_size = (lambda ob: round(ob.dimensions[axis], 2) == size) if self.filter_size else (lambda x: True)
         eq_stone = (lambda ob: ob["gem"]["stone"] == self.stone) if self.filter_stone else (lambda x: True)
         eq_cut = (lambda ob: ob["gem"]["cut"] == self.cut) if self.filter_cut else (lambda x: True)
         selected = None
