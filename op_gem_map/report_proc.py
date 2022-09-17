@@ -50,15 +50,18 @@ def data_process(ReportData, lang):
         try:
             stone_fmt = _(gemlib.STONES[stone].name)
             cut_fmt = _(gemlib.CUTS[cut].name)
-            xy_symmetry = gemlib.CUTS[cut].xy_symmetry
+            trait = gemlib.CUTS[cut].trait
         except KeyError:
             stone_fmt = stone
             cut_fmt = cut
-            xy_symmetry = False
+            trait = None
 
-        if xy_symmetry:
+        if trait is gemlib.TRAIT_XY_SYMMETRY:
             size_raw_fmt = str(l)
             size_fmt = f"{l} {_mm}"
+        elif trait is gemlib.TRAIT_X_SIZE:
+            size_raw_fmt = f"{w}×{l}"
+            size_fmt = f"{w} × {l} {_mm}"
         else:
             size_raw_fmt = f"{l}×{w}"
             size_fmt = f"{l} × {w} {_mm}"
