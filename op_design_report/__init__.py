@@ -50,7 +50,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
 
         with open(self.filepath, "w", encoding="utf-8") as file:
             file.write(doc)
-            webbrowser.open(self.filepath)
+            webbrowser.open(f"file://{self.filepath}")
 
         return {"FINISHED"}
 
