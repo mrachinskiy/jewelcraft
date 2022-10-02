@@ -85,6 +85,9 @@ msgstr "Фон вьюпорта"
 msgid "Save to Image"
 msgstr "Сохранить в изображение"
 
+msgid "Additional Entries"
+msgstr "Дополнительные сведения"
+
 msgid "Gem Map"
 msgstr "Карта вставок"
 

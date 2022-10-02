@@ -23,6 +23,7 @@ class WM_OT_ul_measurements_add(Operator):
             ("WEIGHT", "Weight", "", "FILE_3D", 0),
             ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 1),
             ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 2),
+            ("METADATA", "Metadata", "", "DOT", 3),
         ),
     )
     datablock_type: EnumProperty(
@@ -72,6 +73,9 @@ class WM_OT_ul_measurements_add(Operator):
 
         layout.separator()
 
+        if self.type == "METADATA":
+            return
+
         col = layout.column()
         col.row().prop(self, "datablock_type", expand=True)
 
@@ -99,16 +103,18 @@ class WM_OT_ul_measurements_add(Operator):
 
     def execute(self, context):
         item = context.scene.jewelcraft.measurements.add()
-
         item.type = self.type
         item.datablock_type = self.datablock_type
 
-        if self.datablock_type == "OBJECT":
-            if self.object_name:
-                item.object = bpy.data.objects[self.object_name]
-        else:
-            if self.collection_name:
-                item.collection = bpy.data.collections[self.collection_name]
+        if self.type == "METADATA":
+            item.name = "..."
+            item.value = "..."
+            return {"FINISHED"}
+
+        if self.datablock_type == "OBJECT" and self.object_name:
+            item.object = bpy.data.objects[self.object_name]
+        elif self.datablock_type == "COLLECTION" and self.collection_name:
+            item.collection = bpy.data.collections[self.collection_name]
 
         if self.type == "WEIGHT":
             materials = context.scene.jewelcraft.weighting_materials

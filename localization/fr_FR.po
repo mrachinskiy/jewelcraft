@@ -85,6 +85,9 @@ msgstr ""
 msgid "Save to Image"
 msgstr "Enregistrer au format image"
 
+msgid "Additional Entries"
+msgstr ""
+
 msgid "Gem Map"
 msgstr "Plan d'empierrage"
 

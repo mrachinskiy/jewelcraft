@@ -85,6 +85,9 @@ msgstr ""
 msgid "Save to Image"
 msgstr "احفظها في صورة"
 
+msgid "Additional Entries"
+msgstr ""
+
 msgid "Gem Map"
 msgstr "خريطة الأحجار"
 

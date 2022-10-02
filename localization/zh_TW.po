@@ -85,6 +85,9 @@ msgstr "視口背景"
 msgid "Save to Image"
 msgstr "保存到影像"
 
+msgid "Additional Entries"
+msgstr ""
+
 msgid "Gem Map"
 msgstr "寶石對映"
 
