@@ -85,6 +85,9 @@ msgstr ""
 msgid "Save to Image"
 msgstr "Salva immagine"
 
+msgid "Additional Entries"
+msgstr ""
+
 msgid "Gem Map"
 msgstr "Mappa delle Gemme"
 

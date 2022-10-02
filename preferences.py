@@ -167,6 +167,7 @@ class MeasurementCollection(PropertyGroup):
             ("RING_SIZE", "", ""),
             ("WEIGHT", "", ""),
             ("DIMENSIONS", "", ""),
+            ("METADATA", "", ""),
         ),
     )
     datablock_type: EnumProperty(
@@ -199,10 +200,11 @@ class MeasurementCollection(PropertyGroup):
     z: BoolProperty(name="Z")
     material_name: StringProperty()
     material_density: FloatProperty()
+    value: StringProperty()
 
 
 class Metadata(PropertyGroup):
-    name: StringProperty(default="Untitled", update=data.report_metadata_serialize)
+    name: StringProperty(default="...", update=data.report_metadata_serialize)
     value: StringProperty(default="...", update=data.report_metadata_serialize)
 
 

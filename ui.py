@@ -42,11 +42,15 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
         "DIMENSIONS": "SHADING_BBOX",
         "WEIGHT": "FILE_3D",
         "RING_SIZE": "MESH_CIRCLE",
+        "METADATA": "DOT",
     }
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        layout.alert = item.collection is None and item.object is None
+        is_meta = item.type == "METADATA"
+        layout.alert = not is_meta and item.collection is None and item.object is None
         layout.prop(item, "name", text="", emboss=False, icon=self.icons.get(item.type, "BLANK1"))
+        if is_meta:
+            layout.prop(item, "value", text="", emboss=False)
 
 
 class VIEW3D_UL_jewelcraft_metadata(UIList):
@@ -589,7 +593,7 @@ class VIEW3D_PT_jewelcraft_design_report(SidebarSetup, Panel):
 
 
 class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
-    bl_label = "Measurement"
+    bl_label = "Additional Entries"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_design_report"
 
@@ -628,6 +632,9 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
 
         if measures_list.coll:
             item = measures_list.coll[measures_list.index]
+
+            if item.type == "METADATA":
+                return
 
             col = layout.column()
 

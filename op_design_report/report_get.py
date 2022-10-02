@@ -2,6 +2,7 @@
 # Copyright 2015-2022 Mikhail Rachinskiy
 
 import collections
+from collections.abc import Iterator
 from pathlib import Path
 
 import bpy
@@ -28,14 +29,20 @@ class _Data:
         return True
 
 
+def _iter_metadata() -> Iterator[tuple[str, str]]:
+    for item in bpy.context.window_manager.jewelcraft.report_metadata.coll:
+        yield item.name, item.value
+    for item in bpy.context.scene.jewelcraft.measurements.coll:
+        if item.type == "METADATA":
+            yield item.name, item.value
+
+
 def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadata: bool = True) -> _Data:
     Report = _Data()
     Warn = report_warn.Warnings()
     Scale = unit.Scale()
 
     depsgraph = bpy.context.evaluated_depsgraph_get()
-    scene_props = bpy.context.scene.jewelcraft
-    wm_props = bpy.context.window_manager.jewelcraft
 
     # Gems
     # ---------------------------
@@ -66,19 +73,16 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
         date = datetime.date.today().isoformat()
         filename = Path(bpy.data.filepath).stem
 
-        for item in wm_props.report_metadata.coll:
-
-            value = item.value.format(FILENAME=filename, DATE=date)
-
-            if not value or value == "...":
+        for meta_name, meta_value in _iter_metadata():
+            meta_value = meta_value.format(FILENAME=filename, DATE=date)
+            if not meta_value or meta_value == "...":
                 continue
-
-            Report.metadata.append((item.name, value))
+            Report.metadata.append((meta_name, meta_value))
 
     # Measurements
     # ---------------------------
 
-    for item in scene_props.measurements.coll:
+    for item in bpy.context.scene.jewelcraft.measurements.coll:
 
         if item.collection is None and item.object is None:
             continue
@@ -100,14 +104,11 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
             density = unit.convert_cm3_mm3(item.material_density)
             vol = Scale.from_scene_vol(mesh.est_volume(obs))
             Report.materials.append((item.name, density, vol))
-
         elif item.type == "DIMENSIONS":
-            axes = [i for i, prop in enumerate((item.x, item.y, item.z)) if prop]
-            if not axes:
+            values = tuple(round(v, 2) for k, v in zip((item.x, item.y, item.z), dim) if k)
+            if not values:
                 continue
-            values = tuple(round(dim[x], 2) for x in axes)
             Report.notes.append((item.type, item.name, values))
-
         elif item.type == "RING_SIZE":
             values = (round(dim[int(item.axis)], 2), item.ring_size)
             Report.notes.append((item.type, item.name, values))
