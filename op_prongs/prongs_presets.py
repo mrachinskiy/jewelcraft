@@ -69,6 +69,9 @@ def init_presets(self):
             self.intersection = -10.0
 
     elif self.shape is gemlib.SHAPE_FANTASY:
+        self.diameter = 0.28 * self.gem_dim.x
+        self.z1 = 0.15 * self.gem_dim.x
+        self.z2 = 0.3 * self.gem_dim.x
 
         if self.cut == "OVAL":
             self.position = radians(30.0)
@@ -81,14 +84,5 @@ def init_presets(self):
             self.symmetry_pivot = radians(-90.0)
 
         elif self.cut == "MARQUISE":
-            self.z1 = 0.15 * self.gem_dim.x
-            self.z2 = 0.3 * self.gem_dim.x
             self.position = radians(16.0)
-            self.intersection = 75.0
-
-            if self.gem_dim.y >= 4.0:
-                self.diameter = 0.7
-            elif self.gem_dim.y >= 2.0:
-                self.diameter = 0.6
-                self.position = radians(20.0)
-                self.intersection = 68.0
+            self.intersection = 70.0
