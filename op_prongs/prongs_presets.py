@@ -11,14 +11,14 @@ def init_presets(self):
     # Defaults
     # ---------------------------
 
-    self.number = 4
+    self.number = 2
     self.diameter = 0.4 * self.gem_dim.y
-    self.z1 = 0.3 * self.gem_dim.y
-    self.z2 = 0.5 * self.gem_dim.y
+    self.z1 = 0.15 * self.gem_dim.y
+    self.z2 = 0.3 * self.gem_dim.y
     self.position = radians(45.0)
-    self.intersection = 30.0
+    self.intersection = 0.0
     self.alignment = 0.0
-    self.use_symmetry = False
+    self.use_symmetry = True
     self.symmetry_pivot = 0.0
     self.bump_scale = 0.5
     self.taper = 0.0
@@ -29,42 +29,28 @@ def init_presets(self):
 
     if self.gem_dim.y >= 2.5:
         self.diameter = 0.8
-        self.z1 = 0.8
-        self.z2 = 1.2
-
     elif self.gem_dim.y >= 1.7:
         self.diameter = 0.7
-        self.z1 = 0.6
-        self.z2 = 0.9
-
     elif self.gem_dim.y >= 1.5:
         self.diameter = 0.6
-        self.z1 = 0.5
-        self.z2 = 0.7
-
     elif self.gem_dim.y >= 1.2:
         self.diameter = 0.5
-        self.z1 = 0.4
-        self.z2 = 0.6
-
     elif self.gem_dim.y >= 1.0:
         self.diameter = 0.4
-        self.z1 = 0.3
-        self.z2 = 0.5
 
     # Shapes
     # ---------------------------
 
     if self.shape is gemlib.SHAPE_ROUND:
-        self.number = 2
-        self.position = radians(-30.0)
-        self.intersection = 30.0
+        self.number = 1
+        self.position = radians(60.0)
 
-    elif self.shape is gemlib.SHAPE_TRIANGLE:
+    elif self.shape is gemlib.SHAPE_TRIANGLE or self.cut == "HEART":
         self.number = 3
         self.position = radians(60.0)
         self.intersection = 0.0
         self.alignment = radians(10.0)
+        self.use_symmetry = False
 
     elif self.shape is gemlib.SHAPE_SQUARE:
         self.intersection = -20.0
@@ -83,24 +69,26 @@ def init_presets(self):
             self.intersection = -10.0
 
     elif self.shape is gemlib.SHAPE_FANTASY:
-        self.number = 2
-        self.position = radians(0.0)
-        self.intersection = 0.0
-        self.alignment = radians(10.0)
 
         if self.cut == "OVAL":
             self.position = radians(30.0)
             self.intersection = 40.0
-            self.use_symmetry = True
-
-        elif self.cut == "HEART":
-            self.number = 3
-            self.position = radians(60.0)
-            self.intersection = -10.0
 
         elif self.cut == "PEAR":
             self.number = 1
             self.position = radians(50.0)
             self.intersection = 40.0
-            self.use_symmetry = True
             self.symmetry_pivot = radians(-90.0)
+
+        elif self.cut == "MARQUISE":
+            self.z1 = 0.15 * self.gem_dim.x
+            self.z2 = 0.3 * self.gem_dim.x
+            self.position = radians(16.0)
+            self.intersection = 75.0
+
+            if self.gem_dim.y >= 4.0:
+                self.diameter = 0.7
+            elif self.gem_dim.y >= 2.0:
+                self.diameter = 0.6
+                self.position = radians(20.0)
+                self.intersection = 68.0
