@@ -11,8 +11,8 @@ Features:
 * Translated to multiple languages:
   * ![100%](https://progress-bar.dev/100) English
   * ![100%](https://progress-bar.dev/100) Russian
-  * ![99%](https://progress-bar.dev/100) Spanish
-  * ![99%](https://progress-bar.dev/100) Traditional Chinese
+  * ![99%](https://progress-bar.dev/99) Spanish
+  * ![99%](https://progress-bar.dev/99) Traditional Chinese
   * ![94%](https://progress-bar.dev/94) Arabic
   * ![80%](https://progress-bar.dev/80) Italian
   * ![71%](https://progress-bar.dev/71) French
@@ -23,7 +23,7 @@ Features:
 How to install
 ==========================
 
-1. Download [JewelCraft 2.14][download_latest].<sup>1</sup>
+1. Download [JewelCraft 2.14][download_latest]<sup>1</sup>
 2. Make sure you have Blender 3 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
@@ -36,9 +36,9 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.14][download_latest].<sup>1</sup>
+1. Загрузите [JewelCraft 2.14][download_latest]<sup>1</sup>
 2. Убедитесь, что у вас установлен Blender 3 или новее.
-3. Откройте `Preferences` → `Add-ons`.
+3. Откройте `Preferences` → `Add-ons`
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
 
 <sup>1</sup> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, чтобы это предотвратить в настройках `Safari` → `Preferences` → `General` отключите опцию `Open "safe" files after downloading`.
