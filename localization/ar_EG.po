@@ -544,15 +544,6 @@ msgstr "المواد"
 msgid "Notes"
 msgstr "ملاحظات"
 
-msgid "Project"
-msgstr ""
-
-msgid "Modeller"
-msgstr ""
-
-msgid "Date"
-msgstr ""
-
 msgid "Round"
 msgstr "مدور"
 

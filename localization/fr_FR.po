@@ -544,15 +544,6 @@ msgstr "Matière"
 msgid "Notes"
 msgstr ""
 
-msgid "Project"
-msgstr ""
-
-msgid "Modeller"
-msgstr ""
-
-msgid "Date"
-msgstr ""
-
 msgid "Round"
 msgstr "Rond"
 
@@ -755,10 +746,10 @@ msgid "Titanium"
 msgstr "Titane"
 
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 msgid "mm³"
-msgstr ""
+msgstr "mm³"
 
 msgid "g"
 msgstr ""

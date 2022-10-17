@@ -544,15 +544,6 @@ msgstr "Материалы"
 msgid "Notes"
 msgstr "Примечания"
 
-msgid "Project"
-msgstr "Проект"
-
-msgid "Modeller"
-msgstr "Моделлер"
-
-msgid "Date"
-msgstr "Дата"
-
 msgid "Round"
 msgstr "Кр-57"
 
