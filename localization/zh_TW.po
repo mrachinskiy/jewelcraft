@@ -544,15 +544,6 @@ msgstr "材料費"
 msgid "Notes"
 msgstr "附註"
 
-msgid "Project"
-msgstr ""
-
-msgid "Modeller"
-msgstr ""
-
-msgid "Date"
-msgstr ""
-
 msgid "Round"
 msgstr "圓形"
 
@@ -755,10 +746,10 @@ msgid "Titanium"
 msgstr "鈦"
 
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 msgid "mm³"
-msgstr ""
+msgstr "mm³"
 
 msgid "g"
 msgstr "克"
