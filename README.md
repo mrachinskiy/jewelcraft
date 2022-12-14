@@ -11,10 +11,10 @@ Features:
 * Translated to multiple languages:
   * ![100%](https://progress-bar.dev/100) English
   * ![100%](https://progress-bar.dev/100) Russian
-  * ![99%](https://progress-bar.dev/98) Traditional Chinese
-  * ![99%](https://progress-bar.dev/97) Spanish
-  * ![94%](https://progress-bar.dev/93) Arabic
-  * ![80%](https://progress-bar.dev/79) Italian
+  * ![98%](https://progress-bar.dev/98) Traditional Chinese
+  * ![97%](https://progress-bar.dev/97) Spanish
+  * ![93%](https://progress-bar.dev/93) Arabic
+  * ![79%](https://progress-bar.dev/79) Italian
   * ![71%](https://progress-bar.dev/71) French
   * ![56%](https://progress-bar.dev/56) Simplified Chinese
   * Your language is missing or incomplete? [Contribute translation](#translations).
@@ -23,7 +23,7 @@ Features:
 How to install
 ==========================
 
-1. Download [JewelCraft 2.14][download_latest]<sup>1</sup>
+1. Download [JewelCraft 2.14.1][download_latest]<sup>1</sup>
 2. Make sure you have Blender 3 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
@@ -36,7 +36,7 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.14][download_latest]<sup>1</sup>
+1. Загрузите [JewelCraft 2.14.1][download_latest]<sup>1</sup>
 2. Убедитесь, что у вас установлен Blender 3 или новее.
 3. Откройте `Preferences` → `Add-ons`
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
@@ -70,6 +70,6 @@ Contributing
 * After translation is done submit it back through [issues][submit_translation].
 
 
-[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.14.0-blender3.0.0/jewelcraft-2_14_0.zip
+[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.14.1-blender3.0.0/jewelcraft-2_14_1.zip
 [report_bug]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
 [submit_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
