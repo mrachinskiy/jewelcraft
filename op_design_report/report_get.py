@@ -91,10 +91,10 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
             obs = (item.object,)
             dim = Scale.from_scene_vec(item.object.dimensions)
         else:
-            obs = (
+            obs = [
                 ob for ob in item.collection.all_objects
                 if ob.type in {"MESH", "CURVE", "SURFACE", "FONT", "META"}
-            )
+            ]
             if not obs:
                 continue
             BBox = asset.ObjectsBoundBox(obs)
