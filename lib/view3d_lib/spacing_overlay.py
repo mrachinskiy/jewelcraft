@@ -298,9 +298,9 @@ def _draw_font(self, context):
     prefs = context.preferences.addons[var.ADDON_ID].preferences
     font_size = prefs.overlay_fontsize_distance
     fontid = 0
-    blf.size(fontid, font_size, 72)
+    blf.size(fontid, font_size)
     blf.color(fontid, 1.0, 1.0, 1.0, 1.0)
-    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+    shader = gpu.shader.from_builtin("UNIFORM_COLOR")
     indices = ((0, 1, 2), (0, 2, 3))
 
     for dist, loc, spacing in _font_loc:

@@ -107,9 +107,9 @@ def draw_gems(self, gamma_corr=False):
         _app((dist_from_view, ob, mat, size_fmt, color))
 
     fontid = 0
-    blf.size(fontid, self.prefs.gem_map_fontsize_gem_size, 72)
+    blf.size(fontid, self.prefs.gem_map_fontsize_gem_size)
     blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
-    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+    shader = gpu.shader.from_builtin("UNIFORM_COLOR")
 
     LocAdapt = _LocAdapt(self)
     _loc2d = LocAdapt.to_2d

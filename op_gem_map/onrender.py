@@ -62,7 +62,7 @@ def render_map(self):
 
     gpu.state.blend_set("ALPHA")
 
-    shader = gpu.shader.from_builtin("2D_IMAGE")
+    shader = gpu.shader.from_builtin("IMAGE")
     offscreen = gpu.types.GPUOffScreen(width, height)
 
     with offscreen.bind():
