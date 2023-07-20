@@ -14,12 +14,12 @@ Color = tuple[float, float, float]
 
 def onscreen_gem_table(self, x: int, y: int, color: Optional[Color] = None) -> int:
     fontid = 1
-    shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+    shader = gpu.shader.from_builtin("UNIFORM_COLOR")
 
     if color is None:
         color = bpy.context.preferences.themes[0].view_3d.space.text_hi
 
-    blf.size(fontid, self.prefs.gem_map_fontsize_table, 72)
+    blf.size(fontid, self.prefs.gem_map_fontsize_table)
     blf.color(fontid, *color, 1.0)
 
     _, font_h = blf.dimensions(fontid, "Row Height")
@@ -52,7 +52,7 @@ def onscreen_gem_table(self, x: int, y: int, color: Optional[Color] = None) -> i
 
 def onscreen_warning(self, x, y):
     fontid = 1
-    blf.size(fontid, self.prefs.gem_map_fontsize_table, 72)
+    blf.size(fontid, self.prefs.gem_map_fontsize_table)
     blf.color(fontid, 1.0, 0.3, 0.3, 1.0)
 
     _, font_h = blf.dimensions(fontid, "Row Height")

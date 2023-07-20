@@ -5,12 +5,12 @@ import bpy
 import blf
 
 
-TYPE_BOOL = 0
-TYPE_NUM = 1
-TYPE_PROC = 2
-TYPE_ENUM = 3
-TYPE_DEP_ON = 4
-TYPE_DEP_OFF = 5
+TYPE_BOOL = 1
+TYPE_NUM = 2
+TYPE_PROC = 3
+TYPE_ENUM = 4
+TYPE_DEP_ON = 5
+TYPE_DEP_OFF = 6
 
 
 def padding_init(x=20, y=10) -> tuple[int, int]:
@@ -50,9 +50,9 @@ def options_display(self, context, x: int, y: int) -> None:
     color_blue = (0.5, 0.6, 1.0, 1.0)
 
     fontid = 1
-    fontsize = round(prefs.ui_styles[0].widget_label.points * prefs.view.ui_scale)
+    fontsize = round(prefs.ui_styles[0].widget_label.points * prefs.view.ui_scale * 1.333)
 
-    blf.size(fontid, fontsize, 104)
+    blf.size(fontid, fontsize)
 
     font_w_1, font_h = blf.dimensions(fontid, self.option_col_1_max)
     font_w_2, _ = blf.dimensions(fontid, self.option_col_2_max)
