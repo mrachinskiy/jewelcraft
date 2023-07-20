@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 from math import pi
 
 from . import unit
@@ -10,7 +10,7 @@ from . import unit
 class Stone(NamedTuple):
     name: str
     density: float
-    color: Optional[tuple[float, float, float, float]] = None
+    color: tuple[float, float, float, float] | None = None
 
 
 class Cut(NamedTuple):
@@ -29,16 +29,16 @@ COLOR_WHITE = (1.0, 1.0, 1.0, 1.0)
 COLOR_RED = (0.57, 0.011, 0.005, 1.0)
 COLOR_BLUE = (0.004, 0.019, 0.214, 1.0)
 
-SHAPE_ROUND = 0
-SHAPE_SQUARE = 1
-SHAPE_RECTANGLE = 2
-SHAPE_TRIANGLE = 3
-SHAPE_FANTASY = 4
+SHAPE_ROUND = 1
+SHAPE_SQUARE = 2
+SHAPE_RECTANGLE = 3
+SHAPE_TRIANGLE = 4
+SHAPE_FANTASY = 5
 
-VOL_CONE = 0
-VOL_PYRAMID = 1
-VOL_PRISM = 2
-VOL_TETRAHEDRON = 3
+VOL_CONE = 1
+VOL_PYRAMID = 2
+VOL_PRISM = 3
+VOL_TETRAHEDRON = 4
 
 TRAIT_XY_SYMMETRY = 1
 TRAIT_X_SIZE = 2

@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from typing import Union
 from math import modf
 
 
@@ -42,7 +41,7 @@ JP_TO_US_SIZE_MAP = {
 }
 
 
-def _to_int(x: float) -> Union[int, float]:
+def _to_int(x: float) -> int | float:
     if x.is_integer():
         return int(x)
     return x
@@ -52,7 +51,7 @@ def _eq(a: float, b: float) -> bool:
     return abs(a - b) < 0.2
 
 
-def to_size(cir: float, fmt: str) -> Union[int, float, tuple[int, bool], None]:
+def to_size(cir: float, fmt: str) -> int | float | tuple[int, bool] | None:
     if fmt == "CH":
         size = round(cir - 40.0, 2)
         if size >= 0.0:
@@ -80,7 +79,7 @@ def to_size(cir: float, fmt: str) -> Union[int, float, tuple[int, bool], None]:
                 return int(integer), 0.25 < fraction < 0.75
 
 
-def to_size_fmt(cir: float, fmt: str) -> Union[int, float, str, None]:
+def to_size_fmt(cir: float, fmt: str) -> int | float | str | None:
     size = to_size(cir, fmt)
 
     if size is None:
@@ -100,7 +99,7 @@ def to_size_fmt(cir: float, fmt: str) -> Union[int, float, str, None]:
     return size
 
 
-def to_cir(size: Union[int, float], fmt: str) -> float:
+def to_cir(size: int | float, fmt: str) -> float:
     if fmt == "CH":
         return size + 40.0
 

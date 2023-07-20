@@ -2,7 +2,7 @@
 # Copyright 2015-2022 Mikhail Rachinskiy
 
 from pathlib import Path
-from typing import Union, Optional, Iterator
+from collections.abc import Iterator
 
 import bpy
 from bpy.types import Object, BlendData, ID, Space, DepsgraphObjectInstance, Depsgraph
@@ -82,7 +82,7 @@ def calc_gap(co1: Vector, co2: Vector, loc1: Vector, dist_locs: float, rad1: flo
     return (co1 - co2).length
 
 
-def gem_overlap(data: list[LocRadMat], threshold: float, first_match=False) -> Union[set[int], bool]:
+def gem_overlap(data: list[LocRadMat], threshold: float, first_match=False) -> set[int] | bool:
     kd = kdtree.KDTree(len(data))
 
     for i, (loc, _, _) in enumerate(data):
@@ -134,7 +134,7 @@ def color_rnd() -> Color:
     return random.choice(seq), random.choice(seq), random.choice(seq), 1.0
 
 
-def add_material(ob: Object, name="New Material", color: Optional[Color] = None, is_gem=False) -> None:
+def add_material(ob: Object, name="New Material", color: Color | None = None, is_gem=False) -> None:
     mat = bpy.data.materials.get(name)
 
     if not mat:
@@ -204,7 +204,7 @@ def asset_export(data_blocks: set[ID], filepath: Path) -> None:
     bpy.data.libraries.write(str(filepath), data_blocks, compress=True)
 
 
-def render_preview(width: int, height: int, filepath: Path, compression=100, gamma: Optional[float] = None, use_transparent=True) -> None:
+def render_preview(width: int, height: int, filepath: Path, compression=100, gamma: float | None = None, use_transparent=True) -> None:
     scene = bpy.context.scene
     render_props = scene.render
     image_props = render_props.image_settings
@@ -274,7 +274,7 @@ def render_preview(width: int, height: int, filepath: Path, compression=100, gam
             setattr(props, k, v)
 
 
-def show_window(width: int, height: int, area_type: Optional[str] = None, space_data: Optional[Space] = None) -> None:
+def show_window(width: int, height: int, area_type: str | None = None, space_data: Space | None = None) -> None:
     render = bpy.context.scene.render
 
     render_config = {
@@ -329,7 +329,7 @@ def show_window(width: int, height: int, area_type: Optional[str] = None, space_
 # ------------------------------------
 
 
-def bm_to_scene(bm, name="New object", color: Optional[Color] = None) -> None:
+def bm_to_scene(bm, name="New object", color: Color | None = None) -> None:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data.local_view)
 
@@ -409,7 +409,7 @@ def apply_scale(ob: Object) -> None:
     ob.scale = (1.0, 1.0, 1.0)
 
 
-def mod_curve_off(ob: Object, mat: Matrix = None) -> tuple[Optional[Object], BoundBox]:
+def mod_curve_off(ob: Object, mat: Matrix = None) -> tuple[Object | None, BoundBox]:
     curve = None
 
     for mod in ob.modifiers:

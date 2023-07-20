@@ -2,7 +2,6 @@
 # Copyright 2015-2022 Mikhail Rachinskiy
 
 import operator
-from typing import Optional
 from collections.abc import Iterator
 
 import bpy
@@ -16,7 +15,7 @@ def _eq(a: float, b: float) -> bool:
     return abs(a - b) < 1e-6
 
 
-def _get_obs() -> tuple[Optional[Object], Optional[Object]]:
+def _get_obs() -> tuple[Object | None, Object | None]:
     ob1, ob2 = bpy.context.selected_objects
     is_curve1 = ob1.type == "CURVE"
     is_curve2 = ob2.type == "CURVE"

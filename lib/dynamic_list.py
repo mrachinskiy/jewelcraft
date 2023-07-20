@@ -3,7 +3,6 @@
 
 from pathlib import Path
 from functools import lru_cache
-from typing import Optional, Union
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
@@ -14,7 +13,7 @@ from . import pathutils, previewlib
 
 EnumItems3 = tuple[tuple[str, str, str], ...]
 EnumItems4 = tuple[tuple[str, str, str, int], ...]
-EnumItems5 = tuple[tuple[str, str, str, Union[str, int], int], ...]
+EnumItems5 = tuple[tuple[str, str, str, str | int, int], ...]
 AssetItems = tuple[tuple[str, str, int, bool], ...]
 
 
@@ -201,7 +200,7 @@ def _favs_deserialize() -> frozenset[str]:
         return frozenset(json.load(file))
 
 
-def assets_refresh(preview_id: Optional[str] = None, favs: bool = False) -> None:
+def assets_refresh(preview_id: str | None = None, favs: bool = False) -> None:
     if preview_id is not None:
         previewlib.asset_img_del(preview_id)
 
