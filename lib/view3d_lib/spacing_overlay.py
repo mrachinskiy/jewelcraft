@@ -1,19 +1,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from math import tau, sin, cos
 from functools import lru_cache
+from math import cos, sin, tau
 
-import bpy
-from bpy_extras.view3d_utils import location_3d_to_region_2d
 import blf
+import bpy
 import gpu
+from bpy_extras.view3d_utils import location_3d_to_region_2d
 from gpu_extras.batch import batch_for_shader
-from mathutils import Matrix, Vector, Quaternion
+from mathutils import Matrix, Quaternion, Vector
 
 from ... import var
 from .. import unit
-from ..asset import iter_gems, gem_transform, nearest_coords, calc_gap
+from ..asset import calc_gap, gem_transform, iter_gems, nearest_coords
 
 
 _handler = None
@@ -72,7 +72,7 @@ class CacheControl:
             self.wrap(self.cache_size)
 
     @staticmethod
-    def wrap(size):
+    def wrap(size: int) -> None:
         global _circle_cos
 
         _circle_cos.cache_clear()
@@ -188,8 +188,7 @@ def _draw(self, context):
     if not props.overlay_show_in_front:
         gpu.state.depth_test_set("LESS_EQUAL")
 
-    shader = gpu.shader.from_builtin("3D_POLYLINE_UNIFORM_COLOR")
-    shader.bind()
+    shader = gpu.shader.from_builtin("POLYLINE_UNIFORM_COLOR")
     shader.uniform_float("viewportSize", (context.area.width, context.area.height))
 
     # Main loop
