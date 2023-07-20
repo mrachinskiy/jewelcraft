@@ -12,8 +12,7 @@ def draw_axis(self, context):
     if not self.axis_in_front:
         gpu.state.depth_test_set("LESS_EQUAL")
 
-    shader = gpu.shader.from_builtin("3D_POLYLINE_SMOOTH_COLOR")
-    shader.bind()
+    shader = gpu.shader.from_builtin("POLYLINE_SMOOTH_COLOR")
     shader.uniform_float("viewportSize", (context.area.width, context.area.height))
     shader.uniform_float("lineWidth", self.axis_width)
 
