@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from typing import Optional
-
 import bpy
 import blf
 import gpu
@@ -12,7 +10,7 @@ from gpu_extras.batch import batch_for_shader
 Color = tuple[float, float, float]
 
 
-def onscreen_gem_table(self, x: int, y: int, color: Optional[Color] = None) -> int:
+def onscreen_gem_table(self, x: int, y: int, color: Color | None = None) -> int:
     fontid = 1
     shader = gpu.shader.from_builtin("UNIFORM_COLOR")
 

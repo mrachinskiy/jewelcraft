@@ -5,9 +5,9 @@ import bpy
 from mathutils import Vector
 
 
-WARN_NONE = 0
-WARN_SCALE = 1
-WARN_SYSTEM = 2
+WARN_NONE = 1
+WARN_SCALE = 2
+WARN_SYSTEM = 3
 
 
 def _eq(a: float, b: float) -> bool:

@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from typing import Type
-
 from ...lib import gemlib
 from ._types import SectionSize
 from . import (
@@ -13,7 +11,7 @@ from . import (
 )
 
 
-sections: dict[int, Type[_round.Section]] = {
+sections: dict[int, type[_round.Section]] = {
     gemlib.SHAPE_FANTASY: _fantasy.Section,
     gemlib.SHAPE_RECTANGLE: _rectangle.Section,
     gemlib.SHAPE_SQUARE: _rectangle.Section,

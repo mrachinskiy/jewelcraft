@@ -1,14 +1,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from typing import Union
-
 from mathutils import Color
 
 from ..lib import gettext, gemlib
 
 
-def _to_int(x: float) -> Union[int, float]:
+def _to_int(x: float) -> int | float:
     if x.is_integer():
         return int(x)
     return x

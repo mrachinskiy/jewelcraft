@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from typing import Optional
 from pathlib import Path
 
 import bpy
@@ -43,7 +42,7 @@ def scan_icons(pcoll_name: str, folder: Path) -> dict:
     return pcoll
 
 
-def icon(name: str, override: Optional[float] = None) -> int:
+def icon(name: str, override: float | None = None) -> int:
     if override is not None:
         value = override
     else:
