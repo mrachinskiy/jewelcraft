@@ -120,6 +120,26 @@ def _get_df_transform(ob, context, depsgraph) -> tuple[Vector, Quaternion]:
 
     return loc, rot
 
+def _draw_diameter(self, context):
+    global _font_loc
+
+    # checking if we have a selected object and it is a gem
+    ob = context.object
+    if not ob or "gem" not in ob:
+        return
+
+    # Calculate the diameter
+    rad = max(ob.dimensions.xy)
+    diameter = unit.Scale().from_scene(rad)
+
+    # Position of the gem
+    loc = ob.matrix_world.to_translation()
+
+    # Append the diameter info to be drawn in _draw_font
+    _font_loc.append((diameter, loc, 0))
+
+
+
 
 def _draw(self, context):
     if not context.space_data.overlay.show_overlays:
@@ -281,7 +301,7 @@ def _draw(self, context):
             batch.draw(shader)
 
     _CC.set(show_all, gems_count)
-
+    _draw_diameter(self, context)
     gpu.state.blend_set("NONE")
     gpu.state.depth_test_set("NONE")
     gpu.state.depth_mask_set(False)
@@ -303,18 +323,23 @@ def _draw_font(self, context):
     shader = gpu.shader.from_builtin("UNIFORM_COLOR")
     indices = ((0, 1, 2), (0, 2, 3))
 
-    for dist, loc, spacing in _font_loc:
+    for value, loc, spacing in _font_loc:
         gpu.state.blend_set("ALPHA")
 
-        if dist < 0.1:
-            color = (0.9, 0.0, 0.0, 1.0)
-        elif dist < spacing:
-            color = (0.9, 0.7, 0.0, 1.0)
+        if spacing == 0:  # This means we are drawing the diameter of the gem
+            color = (0.0, 0.0, 0.0, 0.3)  # adjust color as needed
+            value_str = f"Dia: {value:.2f}"
         else:
-            color = (0.0, 0.0, 0.0, 0.3)
+            if value < 0.1:
+                color = (0.9, 0.0, 0.0, 1.0)
+            elif value < spacing:
+                color = (0.9, 0.7, 0.0, 1.0)
+            else:
+                color = (0.0, 0.0, 0.0, 0.3)
 
-        dis_str = f"{dist:.2f}"
-        dim_x, dim_y = blf.dimensions(fontid, dis_str)
+            value_str = f"{value:.2f}"
+
+        dim_x, dim_y = blf.dimensions(fontid, value_str)
         pos_x, pos_y = location_3d_to_region_2d(region, region_3d, loc).to_tuple(0)
         points = (
             (pos_x - 3,         pos_y - 4),
@@ -329,7 +354,7 @@ def _draw_font(self, context):
         batch_font.draw(shader)
 
         blf.position(fontid, pos_x, pos_y, 0.0)
-        blf.draw(fontid, dis_str)
+        blf.draw(fontid, value_str)
 
     _font_loc.clear()
     gpu.state.blend_set("NONE")
