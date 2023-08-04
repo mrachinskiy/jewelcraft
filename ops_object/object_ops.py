@@ -4,7 +4,7 @@
 from math import pi, tau
 
 import bpy
-from bpy.types import Operator
+from bpy.types import Operator, Collection, Object
 from bpy.props import (
     FloatProperty,
     IntProperty,
@@ -13,6 +13,8 @@ from bpy.props import (
     StringProperty,
 )
 from mathutils import Matrix
+
+from .. import var
 
 
 class OBJECT_OT_mirror(Operator):
@@ -161,6 +163,22 @@ class OBJECT_OT_mirror(Operator):
         return wm.invoke_props_popup(self, event)
 
 
+def _move_to_coll(obs: list[Object], coll: Collection) -> None:
+    for ob in obs:
+        for c in ob.users_collection:
+            c.objects.unlink(ob)
+        coll.objects.link(ob)
+        ob.select_set(False)
+
+
+def _ob_link(ob: Object, colls: tuple[Collection]) -> None:
+    for coll in colls:
+        coll.objects.link(ob)
+
+    if (sd := bpy.context.space_data).local_view:
+        ob.local_view_set(sd, True)
+
+
 class OBJECT_OT_radial_instance(Operator):
     bl_label = "Radial Instance"
     bl_description = (
@@ -170,8 +188,9 @@ class OBJECT_OT_radial_instance(Operator):
     bl_idname = "object.jewelcraft_radial_instance"
     bl_options = {"REGISTER", "UNDO"}
 
-    new_instance = True
-
+    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    count: IntProperty(name="Count", default=1, min=1, options={"SKIP_SAVE"})
+    angle: FloatProperty(name="Angle", default=tau, step=10, unit="ROTATION", options={"SKIP_SAVE"})
     axis: EnumProperty(
         name="Axis",
         items=(
@@ -181,10 +200,14 @@ class OBJECT_OT_radial_instance(Operator):
         ),
         default="2",
     )
-    number: IntProperty(name="Number", default=1, min=1, options={"SKIP_SAVE"})
-    angle: FloatProperty(name="Angle", default=tau, step=10, unit="ROTATION", options={"SKIP_SAVE"})
-    use_cursor: BoolProperty(name="Use 3D Cursor")
-    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    pivot: EnumProperty(
+        name="Pivot Point",
+        items=(
+            ("SCENE", "Scene", ""),
+            ("OBJECT", "Object", ""),
+        ),
+    )
+    use_include_original: BoolProperty(name="Include Original", default=True)
 
     def draw(self, context):
         layout = self.layout
@@ -195,101 +218,88 @@ class OBJECT_OT_radial_instance(Operator):
 
         col = layout.column()
         col.alert = not self.collection_name
+        col.prop(self, "collection_name", text="Collection Name")
 
-        if self.new_instance:
-            col.prop(self, "collection_name", text="Collection Name")
-        else:
-            col.prop_search(self, "collection_name", bpy.data, "collections")
+        layout.separator()
 
-        layout.prop(self, "number")
+        layout.prop(self, "count")
+        layout.prop(self, "use_include_original")
+
+        layout.separator()
+
         layout.prop(self, "angle")
         layout.row().prop(self, "axis", expand=True)
 
         layout.separator()
 
-        col = layout.column(heading="Pivot Point")
-        col.prop(self, "use_cursor")
+        layout.row().prop(self, "pivot", expand=True)
 
         layout.separator()
 
     def execute(self, context):
-        if self.number == 1 or not self.collection_name:
+        if self.count == 1 or not self.collection_name:
             return {"FINISHED"}
 
-        if self.new_instance:
-            coll_rad = bpy.data.collections.new(self.collection_name)
-            context.scene.collection.children.link(coll_rad)
-            colls_inst = context.selected_objects[0].users_collection
+        from ..lib import asset
 
-            for ob in context.selected_objects:
-                for coll in ob.users_collection:
-                    coll.objects.unlink(ob)
-                coll_rad.objects.link(ob)
-                ob.select_set(False)
-        else:
-            coll_rad = bpy.data.collections[self.collection_name]
-            colls_inst = None
+        obs = context.selected_objects
 
-            for ob in context.selected_objects:
-                if ob.type == "EMPTY" and ob.instance_collection is not None:
-                    if colls_inst is None:
-                        colls_inst = ob.users_collection
-                    bpy.data.objects.remove(ob)
+        for ob in obs:
+            if "gem" in ob:
+                break
 
-        if self.use_cursor:
-            coll_rad.instance_offset = context.scene.cursor.location
+        coll_obs = bpy.data.collections.new(self.collection_name)
+        context.scene.collection.children.link(coll_obs)
 
-        dup_number = self.number - 1
-        is_cyclic = round(self.angle, 2) == round(tau, 2)
-        angle_offset = self.angle / (self.number if is_cyclic else dup_number)
-        angle = angle_offset
-        i = int(self.axis)
+        # Radial instance object
 
-        for _ in range(dup_number):
-            ob = bpy.data.objects.new(coll_rad.name, None)
+        rd_name = f"{coll_obs.name} Radial Instance"
 
-            for coll in colls_inst:
-                coll.objects.link(ob)
+        me = bpy.data.meshes.new(rd_name)
+        rd = bpy.data.objects.new(rd_name, me)
+        _ob_link(rd, ob.users_collection)
+        bpy.context.view_layer.objects.active = rd
+        rd.select_set(True)
 
-            ob.instance_type = "COLLECTION"
-            ob.instance_collection = coll_rad
-            ob.rotation_euler[i] = angle
-            ob.select_set(True)
+        _move_to_coll(obs, coll_obs)
 
-            ob.location = coll_rad.instance_offset
+        # Nodes
 
-            angle += angle_offset
+        ng_name = "Radial Instance"
 
-        context.view_layer.objects.active = ob
+        if (ng := bpy.data.node_groups.get(ng_name)) is None:
+            imported = asset.asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
+            ng = imported.node_groups[0]
+
+        md = rd.modifiers.new("Radial Instance", "NODES")
+        md.node_group = ng
+        md["Input_11"] = coll_obs
+        md["Input_3"] = self.count
+        md["Input_16"] = self.use_include_original
+        md["Input_8"] = self.angle
+        md["Input_13"] = self.axis == "0"
+        md["Input_14"] = self.axis == "1"
+        md["Input_15"] = self.axis == "2"
+
+        if self.pivot == "OBJECT":
+            pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
+            _ob_link(pivot, (context.collection,))
+            pivot.empty_display_size = 0.5
+            md["Input_12"] = pivot
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.selected_objects:
+        obs = context.selected_objects
+
+        if not obs:
             return {"CANCELLED"}
 
-        obs = [
-            ob for ob in context.selected_objects
-            if ob.type == "EMPTY" and ob.instance_collection is not None
-        ]
+        for ob in obs:
+            if "gem" in ob:
+                break
 
-        if obs:
-            self.new_instance = False
-            self.use_cursor = False
-            self.number = len(obs) + 1
-            self.collection_name = obs[0].instance_collection.name
-
-            if self.number > 2:
-                ob1, ob2 = obs[:2]
-                mat1 = ob1.matrix_local.to_quaternion().to_matrix()
-                mat2 = ob2.matrix_local.to_quaternion().to_matrix()
-
-                for i in range(3):
-                    if mat1.col[i] == mat2.col[i]:
-                        self.axis = str(i)
-                        break
-        else:
-            self.collection_name = context.selected_objects[0].name
+        self.collection_name = ob.name
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
@@ -301,24 +311,55 @@ class OBJECT_OT_make_instance_face(Operator):
     bl_idname = "object.jewelcraft_make_instance_face"
     bl_options = {"REGISTER", "UNDO"}
 
-    apply_scale: BoolProperty(name="Apply Scale", default=True)
+    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    pivot: EnumProperty(
+        name="Pivot Point",
+        items=(
+            ("SCENE", "Scene", ""),
+            ("OBJECT", "Object", ""),
+        ),
+        options={"SKIP_SAVE"},
+    )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        layout.separator()
+
+        col = layout.column()
+        col.alert = not self.collection_name
+        col.prop(self, "collection_name", text="Collection Name")
+
+        layout.separator()
+
+        layout.row().prop(self, "pivot", expand=True)
+
+        layout.separator()
 
     def execute(self, context):
         from ..lib import asset
 
-        space_data = context.space_data
         obs = context.selected_objects
-        ob = context.object or obs[0]
 
-        df_name = ob.name + " Instance Face"
+        for ob in obs:
+            if "gem" in ob:
+                break
+
+        coll_obs = bpy.data.collections.new(self.collection_name)
+        context.scene.collection.children.link(coll_obs)
+
+        # DF object
+
+        df_name = f"{coll_obs.name} Instance Face"
         df_radius = min(ob.dimensions.xy) * 0.15
-        df_offset = ob.dimensions.x * 1.5
 
         verts = [
-            (df_offset - df_radius, -df_radius, 0.0),
-            (df_offset + df_radius, -df_radius, 0.0),
-            (df_offset + df_radius,  df_radius, 0.0),
-            (df_offset - df_radius,  df_radius, 0.0),
+            (-df_radius, -df_radius, 0.0),
+            ( df_radius, -df_radius, 0.0),
+            ( df_radius,  df_radius, 0.0),
+            (-df_radius,  df_radius, 0.0),
         ]
         faces = [(0, 1, 2, 3)]
 
@@ -326,36 +367,51 @@ class OBJECT_OT_make_instance_face(Operator):
         me.from_pydata(verts, [], faces)
 
         df = bpy.data.objects.new(df_name, me)
-
-        for coll in ob.users_collection:
-            coll.objects.link(df)
-
-        if space_data.local_view:
-            df.local_view_set(space_data, True)
-
-        df.location = ob.location
-        df.instance_type = "FACES"
+        _ob_link(df, ob.users_collection)
+        bpy.context.view_layer.objects.active = df
         df.select_set(True)
+        df.location = ob.location
+        df.location.x += ob.dimensions.x * 1.5
 
-        context.view_layer.objects.active = df
+        # Setup relations
 
-        mat_inv = Matrix.Translation(df.location).inverted()
+        _move_to_coll(obs, coll_obs)
 
-        for ob in obs:
+        ng_name = "Instance Face"
 
-            if self.apply_scale:
-                asset.apply_scale(ob)
+        if (ng := bpy.data.node_groups.get(ng_name)) is None:
+            imported = asset.asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
+            ng = imported.node_groups[0]
 
-            ob.select_set(False)
-            ob.parent = df
-            ob.matrix_parent_inverse = mat_inv
+        md = df.modifiers.new("Instance Face", "NODES")
+        md.node_group = ng
+        md["Input_3"] = coll_obs
+
+        if self.pivot == "OBJECT":
+            pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
+            _ob_link(pivot, (context.collection,))
+            pivot.empty_display_size = max(ob.dimensions.xy) * 0.75
+            pivot.location = ob.location
+            md["Input_4"] = pivot
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.selected_objects:
+        obs = context.selected_objects
+
+        if not obs:
             return {"CANCELLED"}
 
+        for ob in obs:
+            if "gem" in ob:
+                break
+
+        self.collection_name = ob.name
+        if ob.location.length_squared != 0.0:
+            self.pivot = "OBJECT"
+
+        wm = context.window_manager
+        wm.invoke_props_popup(self, event)
         return self.execute(context)
 
 
