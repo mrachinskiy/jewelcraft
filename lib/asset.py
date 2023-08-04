@@ -1,16 +1,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2022 Mikhail Rachinskiy
 
-from pathlib import Path
 from collections.abc import Iterator
+from pathlib import Path
 
 import bpy
-from bpy.types import Object, BlendData, ID, Space, DepsgraphObjectInstance, Depsgraph
 from bpy.app.translations import pgettext_iface as _
+from bpy.types import ID, BlendData, Depsgraph, DepsgraphObjectInstance, Object, Space
 from mathutils import Matrix, Vector, kdtree
 
 from . import mesh, unit
-
 
 LocRadMat = tuple[Vector, float, Matrix]
 Color = tuple[float, float, float, float]
@@ -175,7 +174,7 @@ def add_material(ob: Object, name="New Material", color: Color | None = None, is
 # ------------------------------------
 
 
-def asset_import(filepath: Path, ob_name=False, me_name=False) -> BlendData:
+def asset_import(filepath: Path, ob_name=False, me_name=False, ng_name=False) -> BlendData:
 
     with bpy.data.libraries.load(str(filepath)) as (data_from, data_to):
 
@@ -184,6 +183,9 @@ def asset_import(filepath: Path, ob_name=False, me_name=False) -> BlendData:
 
         if me_name:
             data_to.meshes = [me_name]
+
+        if ng_name:
+            data_to.node_groups = [ng_name]
 
     return data_to
 
