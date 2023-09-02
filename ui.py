@@ -373,6 +373,35 @@ class VIEW3D_PT_jewelcraft_spacing_overlay(SidebarSetup, Panel):
         row.operator("object.jewelcraft_overlay_override_del")
 
 
+class VIEW3D_PT_jewelcraft_gem_map_overlay(SidebarSetup, Panel):
+    bl_label = "Gem Map Overlay"
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
+
+    def draw_header(self, context):
+        wm_props = context.window_manager.jewelcraft
+        self.layout.prop(wm_props, "show_gem_map", text="")
+
+    def draw(self, context):
+        props = context.scene.jewelcraft
+        wm_props = context.window_manager.jewelcraft
+
+        layout = self.layout
+
+        if self.is_popover:
+            row = layout.row(align=True)
+            row.prop(wm_props, "show_gem_map", text="")
+            row.label(text="Gem Map Overlay")
+
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        col = layout.column(align=True)
+        col.active = wm_props.show_gem_map
+        col.prop(props, "overlay_gem_map_show_all")
+        col.prop(props, "overlay_gem_map_show_in_front")
+
+
 class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
     bl_label = "Assets"
     bl_options = {"DEFAULT_CLOSED"}

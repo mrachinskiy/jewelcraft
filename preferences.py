@@ -66,8 +66,13 @@ def upd_asset_popover_width(self, context):
 
 
 def upd_spacing_overlay(self, context):
-    from .lib.view3d_lib import spacing_overlay
-    spacing_overlay.handler_toggle(self, context)
+    from .lib import overlays
+    overlays.spacing.handler_toggle(self, context)
+
+
+def upd_gem_map_overlay(self, context):
+    from .lib import overlays
+    overlays.gem_map.handler_toggle(self, context)
 
 
 def upd_material_list_rename(self, context):
@@ -428,6 +433,11 @@ class WmProperties(PropertyGroup):
         description="Show distance to nearby gems",
         update=upd_spacing_overlay,
     )
+    show_gem_map: BoolProperty(
+        name="Gem Map",
+        description="Show color-coded gem map",
+        update=upd_gem_map_overlay,
+    )
     asset_folder: EnumProperty(
         name="Category",
         description="Asset category",
@@ -481,4 +491,12 @@ class SceneProperties(PropertyGroup):
         step=1,
         precision=2,
         unit="LENGTH",
+    )
+    overlay_gem_map_show_all: BoolProperty(
+        name="Show All",
+        description="Show gem map for all visible gems",
+    )
+    overlay_gem_map_show_in_front: BoolProperty(
+        name="In Front",
+        description="Draw overlay in front of objects",
     )
