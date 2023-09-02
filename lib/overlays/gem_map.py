@@ -1,20 +1,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
-import bpy
 import blf
 import bpy
 import gpu
+import numpy as np
 from bpy_extras.view3d_utils import location_3d_to_region_2d
 from gpu_extras.batch import batch_for_shader
-from mathutils import Matrix
-import numpy as np
-from mathutils import Color
+from mathutils import Color, Matrix
 
 from ... import var
-from .. import unit, gemlib
-from ..asset import iter_gems, gem_transform
-
+from .. import gemlib, unit
+from ..asset import gem_transform, iter_gems
 
 _handler = None
 _handler_font = None
@@ -65,6 +62,7 @@ def _draw(self, context):
     gem_map = {}
     props = context.scene.jewelcraft
     show_all = props.overlay_gem_map_show_all
+    opacity = props.overlay_gem_map_opacity
     from_scene_scale = unit.Scale().from_scene
     ob = context.object
 
@@ -100,7 +98,7 @@ def _draw(self, context):
         # Color
         # ---------------------------
 
-        color = (*color_var, 0.8)
+        color = (*color_var, opacity)
         color_var.h += 0.15
 
         if color_var.h == 0.0:

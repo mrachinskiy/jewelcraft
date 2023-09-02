@@ -500,3 +500,11 @@ class SceneProperties(PropertyGroup):
         name="In Front",
         description="Draw overlay in front of objects",
     )
+    overlay_gem_map_opacity: FloatProperty(
+        name="Opacity",
+        default=0.8,
+        min=0.0,
+        max=1.0,
+        precision=2,
+        subtype="FACTOR",
+    )
