@@ -178,9 +178,8 @@ def _draw_font(self, context):
     region = context.region
     region_3d = context.space_data.region_3d
     prefs = context.preferences.addons[var.ADDON_ID].preferences
-    font_size = prefs.overlay_fontsize_distance
     fontid = 0
-    blf.size(fontid, font_size)
+    blf.size(fontid, prefs.gem_map_fontsize_gem_size)
     blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
 
     for text, loc in _font_loc:

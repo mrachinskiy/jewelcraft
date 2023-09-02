@@ -3,14 +3,14 @@
 
 import operator
 
-import bpy
-from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
 import blf
+import bpy
 import gpu
+from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
 from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix, Vector
 
-from ..lib import unit, asset
+from ..lib import asset, unit
 
 
 class _LocAdapt:
