@@ -400,6 +400,7 @@ class VIEW3D_PT_jewelcraft_gem_map_overlay(SidebarSetup, Panel):
         col.active = wm_props.show_gem_map
         col.prop(props, "overlay_gem_map_show_all")
         col.prop(props, "overlay_gem_map_show_in_front")
+        col.prop(props, "overlay_gem_map_opacity")
 
 
 class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
