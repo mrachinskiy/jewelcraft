@@ -77,6 +77,7 @@ classes = (
     ui.VIEW3D_PT_jewelcraft_warning,
     ui.VIEW3D_PT_jewelcraft_gems,
     ui.VIEW3D_PT_jewelcraft_spacing_overlay,
+    ui.VIEW3D_PT_jewelcraft_gem_map_overlay,
     ui.VIEW3D_PT_jewelcraft_assets,
     ui.VIEW3D_PT_jewelcraft_jeweling,
     ui.VIEW3D_PT_jewelcraft_object,
@@ -186,7 +187,7 @@ def register():
 
 
 def unregister():
-    from .lib.view3d_lib import spacing_overlay
+    from .lib import overlays
 
     for cls in classes:
         bpy.utils.unregister_class(cls)
@@ -202,7 +203,7 @@ def unregister():
     # Handlers
     # ---------------------------
 
-    spacing_overlay.handler_del()
+    overlays.handlers_del()
     on_load.handler_del()
 
     # Translations

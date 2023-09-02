@@ -153,7 +153,7 @@ def _draw(self, context):
     default_color = prefs.overlay_color
     default_linewidth = prefs.overlay_linewidth
 
-    diplay_thold = default_spacing + 0.5
+    display_thold = default_spacing + 0.5
     gems_count = 0
     depsgraph = context.evaluated_depsgraph_get()
 
@@ -206,7 +206,7 @@ def _draw(self, context):
         if is_gem:
             dis_obs = (loc1 - loc2).length
             proximity_dis = from_scene_scale(dis_obs - (rad1 + rad2))
-            proximity_thold = proximity_dis < diplay_thold
+            proximity_thold = proximity_dis < display_thold
 
             if not (show_all or proximity_thold):
                 continue
@@ -249,7 +249,7 @@ def _draw(self, context):
             if dis_obs:
                 co1, co2 = nearest_coords(rad1, rad2, mat1, mat2)
                 dis_gap = from_scene_scale(calc_gap(co1, co2, loc1, dis_obs, rad1))
-                gap_thold = dis_gap < diplay_thold
+                gap_thold = dis_gap < display_thold
 
                 if not (show_all or gap_thold):
                     continue
