@@ -44,20 +44,24 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
                 context.workspace.status_text_set(None)
                 overlays.gem_map.handler_del()
                 onscreen.handler_del()
+                self.region.tag_redraw()
                 return {"FINISHED"}
 
             elif event.type == "S" and event.value == "PRESS":
                 self.use_select = not self.use_select
                 overlays.gem_map.handler_del()
                 overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select)
+                self.region.tag_redraw()
                 return {"RUNNING_MODAL"}
 
             elif event.type == "B" and event.value == "PRESS":
                 self.use_background = not self.use_background
+                self.region.tag_redraw()
                 return {"RUNNING_MODAL"}
 
             elif event.type == "F12" and event.value == "PRESS":
                 self.is_rendering = True
+                self.region.tag_redraw()
                 return {"RUNNING_MODAL"}
 
         return {"PASS_THROUGH"}
