@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
+from collections.abc import Callable
+
 import blf
 import bpy
 import gpu
@@ -18,12 +20,12 @@ _handler_font = None
 _font_loc = []
 
 
-def handler_add(self, context):
+def handler_add(self, context, is_overlay: bool = True, use_select: bool = False):
     global _handler
     global _handler_font
 
     if _handler is None:
-        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context), "WINDOW", "POST_VIEW")
+        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context, is_overlay, use_select), "WINDOW", "POST_VIEW")
         _handler_font = bpy.types.SpaceView3D.draw_handler_add(_draw_font, (self, context), "WINDOW", "POST_PIXEL")
 
 
@@ -52,18 +54,28 @@ def _to_int(x: float) -> int | float:
     return x
 
 
-def _draw(self, context):
+def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
     global _font_loc
+
     depsgraph = context.evaluated_depsgraph_get()
     Scale = unit.Scale()
+    from_scene_scale = Scale.from_scene
+    from_scene_vec = Scale.from_scene_vec
     mat_sca = Matrix.Diagonal((1.003, 1.003, 1.003)).to_4x4()
     color_var = Color((0.85, 0.35, 0.35))
     gems = set()
     gem_map = {}
-    props = context.scene.jewelcraft
-    show_all = props.overlay_gem_map_show_all
-    opacity = props.overlay_gem_map_opacity
-    from_scene_scale = unit.Scale().from_scene
+
+    if is_overlay:
+        props = context.scene.jewelcraft
+        show_all = props.overlay_gem_map_show_all
+        opacity = props.overlay_gem_map_opacity
+        in_front = props.overlay_gem_map_show_in_front
+    else:
+        show_all = not use_select
+        opacity = 1.0
+        in_front = True
+
     ob = context.object
 
     if (is_gem := ob.select_get() and "gem" in ob):
@@ -75,7 +87,7 @@ def _draw(self, context):
 
     gpu.state.blend_set("ALPHA")
     gpu.state.depth_mask_set(True)
-    if not props.overlay_gem_map_show_in_front:
+    if not in_front:
         gpu.state.depth_test_set("LESS_EQUAL")
     gpu.state.face_culling_set("BACK")
 
@@ -87,7 +99,7 @@ def _draw(self, context):
     for dup, ob, _ in iter_gems(depsgraph):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in Scale.from_scene_vec(ob.dimensions))
+        size = tuple(round(x, 2) for x in from_scene_vec(ob.dimensions))
         gems.add((stone, cut, size))
 
     # Sort and assign colors
@@ -133,7 +145,7 @@ def _draw(self, context):
         if not show_all:
             show = ob.select_get()
 
-            if not show and is_gem:
+            if is_overlay and not show and is_gem:
                 show = from_scene_scale((loc1 - loc2).length - (rad1 + rad2)) < 0.7
 
             if not show:
@@ -141,7 +153,7 @@ def _draw(self, context):
 
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in Scale.from_scene_vec(ob.dimensions))
+        size = tuple(round(x, 2) for x in from_scene_vec(ob.dimensions))
         size, color = gem_map[(stone, cut, size)]
 
         ob_eval = ob.evaluated_get(depsgraph)
@@ -169,7 +181,7 @@ def _draw(self, context):
     gpu.state.face_culling_set("NONE")
 
 
-def _draw_font(self, context):
+def _draw_font(self, context, to_2d: Callable = location_3d_to_region_2d):
     global _font_loc
 
     if not _font_loc:
@@ -184,7 +196,7 @@ def _draw_font(self, context):
 
     for text, loc in _font_loc:
         dim_x, dim_y = blf.dimensions(fontid, text)
-        pos_x, pos_y = location_3d_to_region_2d(region, region_3d, loc).to_tuple(0)
+        pos_x, pos_y = to_2d(region, region_3d, loc)
         blf.position(fontid, pos_x - dim_x // 2, pos_y - dim_y // 2, 0.0)
         blf.draw(fontid, text)
 

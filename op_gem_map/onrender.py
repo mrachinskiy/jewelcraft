@@ -5,18 +5,27 @@ import tempfile
 from pathlib import Path
 
 import bpy
-from bpy_extras.image_utils import load_image
 import gpu
+from bpy_extras.image_utils import load_image
+from bpy_extras.view3d_utils import location_3d_to_region_2d
 from gpu_extras.batch import batch_for_shader
-from mathutils import Matrix, Color
+from mathutils import Color, Matrix, Vector
 
-from ..lib import asset
-from . import onscreen_text
-from .offscreen import draw_gems
+from ..lib import asset, overlays
+from . import onscreen
 
 
-def srgb_to_linear(color) -> Color:
+def _srgb_to_linear(color) -> Color:
     return Color(x ** (1.0 / 2.2) for x in color)  # NOTE T74139
+
+
+def _get_resolution(region, region_3d, render) -> tuple[int, int]:
+    resolution_scale = render.resolution_percentage / 100
+
+    if region_3d.view_perspective == "CAMERA":
+        return round(render.resolution_x * resolution_scale), round(render.resolution_y * resolution_scale)
+    else:
+        return round(region.width * resolution_scale), round(region.height * resolution_scale)
 
 
 def _text_color(use_background: bool) -> tuple[float, float, float]:
@@ -32,9 +41,9 @@ def _text_color(use_background: bool) -> tuple[float, float, float]:
                 bgc = gradients.high_gradient
 
         elif shading.background_type == "WORLD":
-            bgc = srgb_to_linear(bpy.context.scene.world.color)
+            bgc = _srgb_to_linear(bpy.context.scene.world.color)
         elif shading.background_type == "VIEWPORT":
-            bgc = srgb_to_linear(shading.background_color)
+            bgc = _srgb_to_linear(shading.background_color)
 
         if bgc.v < 0.5:
             return (1.0, 1.0, 1.0)
@@ -46,7 +55,8 @@ def render_map(self):
     image_name = "Gem Map"
     temp_filepath = Path(tempfile.gettempdir()) / "gem_map_temp.png"
 
-    width, height = self.get_resolution()
+    render = bpy.context.scene.render
+    width, height = _get_resolution(self.region, self.region_3d, render)
     padding = 30
     x = padding
     y = height - padding
@@ -69,12 +79,10 @@ def render_map(self):
         fb = gpu.state.active_framebuffer_get()
         fb.clear(color=(1.0, 1.0, 1.0, 1.0))
 
+        # Render result
         with gpu.matrix.push_pop():
             gpu.matrix.load_matrix(mat_offscreen)
             gpu.matrix.load_projection_matrix(Matrix())
-
-            # Render result
-            # --------------------------------
 
             tex = gpu.texture.from_image(render_image)
 
@@ -90,11 +98,29 @@ def render_map(self):
             batch = batch_for_shader(shader, "TRIS", args, indices=indices)
             batch.draw(shader)
 
-            # Gem map
-            # --------------------------------
+        # Gems
+        with gpu.matrix.push_pop():
+            if self.region_3d.view_perspective == "CAMERA":
+                view_matrix = bpy.context.scene.camera.matrix_world.inverted()
+                projection_matrix = bpy.context.scene.camera.calc_matrix_camera(
+                    bpy.context.evaluated_depsgraph_get(), x=width, y=height
+                )
+            else:
+                view_matrix = self.region_3d.view_matrix
+                projection_matrix = self.region_3d.window_matrix
 
-            draw_gems(self)
-            onscreen_text.onscreen_gem_table(self, x, y, color=_text_color(self.use_background))
+            gpu.matrix.load_matrix(view_matrix)
+            gpu.matrix.load_projection_matrix(projection_matrix)
+            overlays.gem_map._draw(self, bpy.context, is_overlay=False, use_select=self.use_select)
+
+        # Text
+        with gpu.matrix.push_pop():
+            gpu.matrix.load_matrix(mat_offscreen)
+            gpu.matrix.load_projection_matrix(Matrix())
+
+            to_2d = _ViewToCamLoc(self.region, self.region_3d, render).to_2d
+            overlays.gem_map._draw_font(self, bpy.context, to_2d)
+            onscreen.gem_table(self, x, y, color=_text_color(self.use_background))
 
         buffer = fb.read_color(0, 0, width, height, 4, 0, "UBYTE")
         buffer.dimensions = width * height * 4
@@ -125,3 +151,34 @@ def render_map(self):
     # ----------------------------
 
     asset.show_window(width, height, space_data={"image": image})
+
+
+
+class _ViewToCamLoc:
+    __slots__ = "scale", "offset"
+
+    def __init__(self, region, region_3d, render) -> None:
+        self.scale = Vector((1.0, 1.0))
+        self.offset = Vector((0.0, 0.0))
+
+        if region_3d.view_perspective == "CAMERA":
+            width, height = _get_resolution(region, region_3d, render)
+            frame_width, frame_height, frame_offset = self._get_frame(region, region_3d)
+            self.scale.xy = width / frame_width, height / frame_height
+            self.offset = frame_offset.xy
+        else:
+            self.scale.xy = render.resolution_percentage / 100
+
+    def to_2d(self, region, region_3d, loc: Vector) -> Vector:
+        v = location_3d_to_region_2d(region, region_3d, loc)
+        return (v - self.offset) * self.scale
+
+    @staticmethod
+    def _get_frame(region, region_3d) -> tuple[float, float, Vector]:
+        scene = bpy.context.scene
+        cam = scene.camera
+        frame = [
+            location_3d_to_region_2d(region, region_3d, cam.matrix_world @ p)
+            for p in cam.data.view_frame(scene=scene)
+        ]
+        return frame[1].x - frame[2].x, frame[0].y - frame[1].y, frame[2]
