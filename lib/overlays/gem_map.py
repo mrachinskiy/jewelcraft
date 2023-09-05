@@ -139,11 +139,11 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
     # Display
     # -----------------------------------
 
-    for dup, ob, _ in iter_gems(depsgraph):
+    for dup, ob, _ob_ in iter_gems(depsgraph):
         loc2, rad2, _ = gem_transform(dup)
 
         if not show_all:
-            show = ob.select_get()
+            show = _ob_.select_get()
 
             if is_overlay and not show and is_gem:
                 show = from_scene_scale((loc1 - loc2).length - (rad1 + rad2)) < 0.7
