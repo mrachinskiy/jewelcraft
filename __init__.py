@@ -203,7 +203,7 @@ def unregister():
     # Handlers
     # ---------------------------
 
-    overlays.handlers_del()
+    overlays.clear()
     on_load.handler_del()
 
     # Translations

@@ -1,16 +1,55 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
-import bpy
 import blf
+import bpy
 import gpu
 from gpu_extras.batch import batch_for_shader
 
+from ..lib import view3d_lib
 
 Color = tuple[float, float, float]
+_handler = None
 
 
-def onscreen_gem_table(self, x: int, y: int, color: Color | None = None) -> int:
+def handler_add(self, context):
+    global _handler
+
+    if _handler is None:
+        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context), "WINDOW", "POST_PIXEL")
+
+
+def handler_del():
+    global _handler
+
+    if _handler is not None:
+        bpy.types.SpaceView3D.draw_handler_remove(_handler, "WINDOW")
+        _handler = None
+
+
+def _draw(self, context):
+    x = self.view_padding_left
+    y = self.view_padding_top
+
+    # Onscreen text
+    # -----------------------------
+
+    y = gem_table(self, x, y)
+    y -= self.view_margin
+
+    if self.show_warn:
+        y = warning(self, x, y)
+        y -= self.view_margin
+
+    view3d_lib.options_display(self, context, x, y)
+
+    # Reset state
+    # ----------------------------
+
+    gpu.state.blend_set("NONE")
+
+
+def gem_table(self, x: int, y: int, color: Color | None = None) -> int:
     fontid = 1
     shader = gpu.shader.from_builtin("UNIFORM_COLOR")
 
@@ -48,7 +87,7 @@ def onscreen_gem_table(self, x: int, y: int, color: Color | None = None) -> int:
     return y
 
 
-def onscreen_warning(self, x, y):
+def warning(self, x, y):
     fontid = 1
     blf.size(fontid, self.prefs.gem_map_fontsize_table)
     blf.color(fontid, 1.0, 0.3, 0.3, 1.0)

@@ -4,6 +4,6 @@
 from . import gem_map, spacing
 
 
-def handlers_del():
+def clear():
     gem_map.handler_del()
     spacing.handler_del()

@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
-import bpy
-from bpy.types import Operator
-from bpy.props import BoolProperty
 from bpy.app.translations import pgettext_iface as _
+from bpy.props import BoolProperty
+from bpy.types import Operator
 
-from .. import var, preferences
+from .. import preferences, var
+from ..lib import overlays
 
 
 class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
@@ -32,29 +32,24 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         layout.prop(self, "use_save")
 
     def modal(self, context, event):
-        self.region.tag_redraw()
-
         if self.is_rendering:
             from . import onrender
             onrender.render_map(self)
             self.is_rendering = False
 
-        elif self.use_navigate:
-            self.use_navigate = False
-            self.view_state = self.region_3d.perspective_matrix.copy()
-            self.offscreen_refresh()
-
         elif self.is_mouse_inbound(event):
 
             if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
-                bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
-                self.offscreen.free()
+                from . import onscreen
                 context.workspace.status_text_set(None)
+                overlays.gem_map.handler_del()
+                onscreen.handler_del()
                 return {"FINISHED"}
 
             elif event.type == "S" and event.value == "PRESS":
                 self.use_select = not self.use_select
-                self.offscreen_refresh()
+                overlays.gem_map.handler_del()
+                overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select)
                 return {"RUNNING_MODAL"}
 
             elif event.type == "B" and event.value == "PRESS":
@@ -65,20 +60,12 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
                 self.is_rendering = True
                 return {"RUNNING_MODAL"}
 
-            elif self.is_navigate(event) or self.is_select(event):
-                self.use_navigate = True
-
-        elif self.is_time_elapsed() and self.view_state != self.region_3d.perspective_matrix:
-            self.view_state = self.region_3d.perspective_matrix.copy()
-            self.offscreen_refresh()
-
         return {"PASS_THROUGH"}
 
     def execute(self, context):
-        import time
         from ..lib import view3d_lib
         from ..op_design_report import report_get
-        from . import draw_handler, report_proc
+        from . import onscreen, report_proc
 
         ReportData = report_get.data_collect(gem_map=True)
 
@@ -88,13 +75,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
 
         self.region = context.region
         self.region_3d = context.space_data.region_3d
-        self.view_state = self.region_3d.perspective_matrix.copy()
-        self.render = context.scene.render
-        self.offscreen = None
-        self.handler = None
-        self.use_navigate = False
         self.is_rendering = False
-        self.time_tag = time.time()
 
         # 3D View
         # ----------------------------
@@ -127,8 +108,9 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         # Handlers
         # ----------------------------
 
-        self.offscreen_refresh()
-        self.handler = bpy.types.SpaceView3D.draw_handler_add(draw_handler.draw, (self, context), "WINDOW", "POST_PIXEL")
+        context.window_manager.jewelcraft.show_gem_map = False
+        overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select)
+        onscreen.handler_add(self, context)
 
         context.window_manager.modal_handler_add(self)
         context.workspace.status_text_set("ESC/↵/␣: Exit")
@@ -151,44 +133,5 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
 
         return self.execute(context)
 
-    def offscreen_refresh(self) -> None:
-        from . import offscreen
-        offscreen.offscreen_refresh(self)
-
-    def get_resolution(self) -> tuple[int, int]:
-        if self.is_rendering:
-            resolution_scale = self.render.resolution_percentage / 100
-
-            if self.region_3d.view_perspective == "CAMERA":
-                return round(self.render.resolution_x * resolution_scale), round(self.render.resolution_y * resolution_scale)
-            else:
-                return round(self.region.width * resolution_scale), round(self.region.height * resolution_scale)
-
-        return self.region.width, self.region.height
-
-    def is_time_elapsed(self) -> bool:
-        import time
-
-        if (time.time() - self.time_tag) > 1.0:
-            self.time_tag = time.time()
-            return True
-
-        return False
-
     def is_mouse_inbound(self, event) -> bool:
         return (0 < event.mouse_region_x < self.region.width) and (0 < event.mouse_region_y < self.region.height)
-
-    def is_navigate(self, event) -> bool:
-        return event.type in {
-            "MIDDLEMOUSE",
-            "WHEELUPMOUSE",
-            "WHEELDOWNMOUSE",
-            "NUMPAD_5",
-            "NUMPAD_MINUS",
-            "NUMPAD_PLUS",
-        } and event.value == "PRESS"
-
-    def is_select(self, event) -> bool:
-        return self.use_select and (
-            (event.type == "LEFTMOUSE" and event.value == "CLICK") or event.type == "EVT_TWEAK_L"
-        )
