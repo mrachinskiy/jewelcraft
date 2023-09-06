@@ -78,7 +78,7 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
 
     ob = context.object
 
-    if (is_gem := ob.select_get() and "gem" in ob):
+    if ob is not None and (is_gem := ob.select_get() and "gem" in ob):
         loc1 = ob.matrix_world.translation
         rad1 = max(ob.dimensions.xy) / 2
 
