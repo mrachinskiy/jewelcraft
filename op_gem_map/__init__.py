@@ -23,6 +23,8 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
     )
     first_run: BoolProperty(default=True, options={"HIDDEN"})
 
+    is_running = False
+
     def draw(self, context):
         layout = self.layout
         layout.use_property_split = True
@@ -41,6 +43,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
 
             if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
                 from . import onscreen
+                self.__class__.is_running = False
                 context.workspace.status_text_set(None)
                 overlays.gem_map.handler_del()
                 onscreen.handler_del()
@@ -77,6 +80,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
             self.report({"ERROR"}, "No gems in the scene")
             return {"CANCELLED"}
 
+        self.__class__.is_running = True
         self.region = context.region
         self.region_3d = context.space_data.region_3d
         self.is_rendering = False
@@ -122,6 +126,10 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         return {"RUNNING_MODAL"}
 
     def invoke(self, context, event):
+        if self.__class__.is_running:
+            self.report({"ERROR"}, "Operator already running")
+            return {"CANCELLED"}
+
         if context.area.type != "VIEW_3D":
             self.report({"ERROR"}, "Area type is not 3D View")
             return {"CANCELLED"}
