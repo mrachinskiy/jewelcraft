@@ -116,6 +116,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.operator("object.jewelcraft_gem_recover", icon_value=icon_menu("GEM_RECOVER"))
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
         layout.operator("wm.call_panel", text="Spacing Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing_overlay"
+        layout.operator("wm.call_panel", text="Gem Map Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_gem_map_overlay"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
         layout.separator()
