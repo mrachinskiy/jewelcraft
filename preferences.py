@@ -494,7 +494,7 @@ class SceneProperties(PropertyGroup):
     )
     overlay_gem_map_show_all: BoolProperty(
         name="Show All",
-        description="Show gem map for all visible gems",
+        description="Show for all visible gems",
     )
     overlay_gem_map_show_in_front: BoolProperty(
         name="In Front",

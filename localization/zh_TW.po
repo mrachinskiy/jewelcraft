@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.14\n"
-"POT-Creation-Date: 2022-08-21\n"
+"Project-Id-Version: JewelCraft 2.15\n"
+"POT-Creation-Date: 2023-09-08\n"
 "PO-Revision-Date: 2022-06-22\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -90,6 +90,9 @@ msgstr ""
 
 msgid "Gem Map"
 msgstr "寶石對映"
+
+msgid "Gem Map Overlay"
+msgstr ""
 
 msgid "Gem Table"
 msgstr "寶石列表"
@@ -394,6 +397,9 @@ msgstr "選取彼此距離小於 0.1 mm 或重疊的寶石"
 msgid "Show spacing guide for all visible gems"
 msgstr "顯示所有可見寶石的間距指示"
 
+msgid "Show for all visible gems"
+msgstr ""
+
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "為珠寶建模設定最佳尺寸單位設定"
 
@@ -501,6 +507,9 @@ msgstr "必須指定名稱"
 
 msgid "Collection must be specified"
 msgstr "必須指定集合"
+
+msgid "Operator already running"
+msgstr ""
 
 msgid "Overlapping gems"
 msgstr "寶石重疊"

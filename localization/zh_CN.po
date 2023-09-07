@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.14\n"
-"POT-Creation-Date: 2022-08-21\n"
+"Project-Id-Version: JewelCraft 2.15\n"
+"POT-Creation-Date: 2023-09-08\n"
 "PO-Revision-Date: 2021-08-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -90,6 +90,9 @@ msgstr ""
 
 msgid "Gem Map"
 msgstr "宝石地图"
+
+msgid "Gem Map Overlay"
+msgstr ""
 
 msgid "Gem Table"
 msgstr "宝石表"
@@ -394,6 +397,9 @@ msgstr ""
 msgid "Show spacing guide for all visible gems"
 msgstr ""
 
+msgid "Show for all visible gems"
+msgstr ""
+
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr ""
 
@@ -500,6 +506,9 @@ msgid "Name must be specified"
 msgstr "必须指定名称"
 
 msgid "Collection must be specified"
+msgstr ""
+
+msgid "Operator already running"
 msgstr ""
 
 msgid "Overlapping gems"
