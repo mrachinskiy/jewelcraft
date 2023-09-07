@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.14\n"
-"POT-Creation-Date: 2022-08-21\n"
+"Project-Id-Version: JewelCraft 2.15\n"
+"POT-Creation-Date: 2023-09-08\n"
 "PO-Revision-Date: 2022-07-01\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -90,6 +90,9 @@ msgstr ""
 
 msgid "Gem Map"
 msgstr "Mapa de Gemas"
+
+msgid "Gem Map Overlay"
+msgstr ""
 
 msgid "Gem Table"
 msgstr "Tabla de Gemas"
@@ -394,6 +397,9 @@ msgstr "Seleccionar gemas que estén a menos de 0.1 mm de distancia entre sí o 
 msgid "Show spacing guide for all visible gems"
 msgstr "Mostrar guía de espaciado para todas las gemas visibles"
 
+msgid "Show for all visible gems"
+msgstr ""
+
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "Ajustar la configuración de unidad óptima para el modelado de joyas"
 
@@ -501,6 +507,9 @@ msgstr "El nombre debe ser especificado"
 
 msgid "Collection must be specified"
 msgstr "Se debe especificar colección"
+
+msgid "Operator already running"
+msgstr ""
 
 msgid "Overlapping gems"
 msgstr "Gemas superpuestas"
