@@ -39,7 +39,7 @@ def _distribute(context, ob, size):
         if use_local_view:
             ob_copy.local_view_set(space_data, True)
 
-        ob_copy.location.xy = parent.location.xy
+        ob_copy.location += parent.location
         ob_copy.scale *= parent.dimensions.y / size
         ob_copy.parent = parent
         ob_copy.matrix_parent_inverse = parent.matrix_basis.inverted()
@@ -110,5 +110,5 @@ def add(self, context):
     if self.bevel_btm or self.bevel_top or (self.bevel_wedge and self.side_z2):
         bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
 
-    ob = microprong_lib.prepare_object(self, bm, follow_path=False)
+    ob = microprong_lib.prepare_object(self, bm, is_between=False)
     _distribute(context, ob, self.size_active)

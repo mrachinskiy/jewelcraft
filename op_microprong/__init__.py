@@ -19,14 +19,18 @@ class OBJECT_OT_microprong_cutter_add(Operator):
     between_z1: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
     between_z2: FloatProperty(name="Wedge", default=0.3, min=0.0, step=1, unit="LENGTH")
 
+    between_rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
+    between_rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
+    between_loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
+
     side_x: FloatProperty(name="Width", default=0.5, min=0.0, step=1, unit="LENGTH")
     side_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
     side_z1: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
     side_z2: FloatProperty(name="Wedge", default=0.0, step=1, unit="LENGTH")
 
-    rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
-    rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
-    loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
+    side_rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
+    side_rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
+    side_loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
 
     bevel_top: FloatProperty(
         name="Top",
@@ -85,6 +89,13 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.prop(self, "between_z1")
         col.prop(self, "between_z2")
 
+        col = layout.column(align=True)
+        col.enabled = self.use_between and self.is_ob_multiple
+        col.label(text="Transforms")
+        col.prop(self, "between_rot_x")
+        col.prop(self, "between_rot_z")
+        col.prop(self, "between_loc_z")
+
         layout.separator()
 
         row = layout.row()
@@ -108,11 +119,12 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.separator()
         col.prop(self, "bevel_segments")
 
-        layout.label(text="Transforms")
         col = layout.column(align=True)
-        col.prop(self, "rot_x")
-        col.prop(self, "rot_z")
-        col.prop(self, "loc_z")
+        col.enabled = self.use_side
+        col.label(text="Transforms")
+        col.prop(self, "side_rot_x")
+        col.prop(self, "side_rot_z")
+        col.prop(self, "side_loc_z")
 
     def execute(self, context):
         if self.use_between and self.is_ob_multiple:
