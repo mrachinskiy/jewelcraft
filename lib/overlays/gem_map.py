@@ -89,7 +89,6 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
     gpu.state.depth_mask_set(True)
     if not in_front:
         gpu.state.depth_test_set("LESS_EQUAL")
-    gpu.state.face_culling_set("BACK")
 
     shader = gpu.shader.from_builtin("UNIFORM_COLOR")
 
