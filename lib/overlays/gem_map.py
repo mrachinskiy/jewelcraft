@@ -177,7 +177,6 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
     gpu.state.blend_set("NONE")
     gpu.state.depth_test_set("NONE")
     gpu.state.depth_mask_set(False)
-    gpu.state.face_culling_set("NONE")
 
 
 def _draw_font(self, context, to_2d: Callable = location_3d_to_region_2d):
