@@ -23,9 +23,24 @@ class OBJECT_OT_mirror(Operator):
     bl_idname = "object.jewelcraft_mirror"
     bl_options = {"REGISTER", "UNDO"}
 
+    mirror_type: EnumProperty(
+        name="Mirror Type",
+        items=(
+            ("INSTANCE", "Instance", ""),
+            ("OBJECT", "Object", ""),
+        ),
+    )
     x: BoolProperty(name="X", options={"SKIP_SAVE"})
     y: BoolProperty(name="Y", options={"SKIP_SAVE"})
     z: BoolProperty(name="Z", options={"SKIP_SAVE"})
+    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    pivot: EnumProperty(
+        name="Pivot Point",
+        items=(
+            ("SCENE", "Scene", ""),
+            ("OBJECT", "Object", ""),
+        ),
+    )
     keep_z: BoolProperty(
         name="Keep Z Direction",
         description="Makes transforms on Z axis consistent with original object (does not affect gems)",
@@ -40,6 +55,10 @@ class OBJECT_OT_mirror(Operator):
 
         layout.separator()
 
+        layout.row().prop(self, "mirror_type", expand=True)
+
+        layout.separator()
+
         col = layout.column(heading="Mirror Axis", align=True)
         col.prop(self, "x")
         col.prop(self, "y")
@@ -47,13 +66,25 @@ class OBJECT_OT_mirror(Operator):
 
         layout.separator()
 
-        col = layout.column(heading="Orientation", align=True)
-        col.prop(self, "keep_z")
+        if self.mirror_type == "INSTANCE":
 
-        layout.separator()
+            col = layout.column()
+            col.alert = not self.collection_name
+            col.prop(self, "collection_name", text="Collection Name")
 
-        col = layout.column(heading="Pivot Point")
-        col.prop(self, "use_cursor")
+            layout.separator()
+
+            layout.row().prop(self, "pivot", expand=True)
+
+        else:
+
+            col = layout.column(heading="Orientation", align=True)
+            col.prop(self, "keep_z")
+
+            layout.separator()
+
+            col = layout.column(heading="Pivot Point")
+            col.prop(self, "use_cursor")
 
         layout.separator()
 
@@ -68,24 +99,75 @@ class OBJECT_OT_mirror(Operator):
         if not axes:
             return {"FINISHED"}
 
-        obs = []
-        for ob in context.selected_objects:
-            ob.select_set(False)
-            obs.append((ob, False))
+        if self.mirror_type == "INSTANCE":
+            obs = context.selected_objects
 
-        for axis in axes:
-            obs = self.object_mirror(obs, axis)
+            for ob in obs:
+                if "gem" in ob:
+                    break
 
-        for ob, flipped in obs:
-            if flipped and ob.type == "MESH":
-                asset.apply_scale(ob)
-                ob.data.flip_normals()
+            coll_obs = bpy.data.collections.new(self.collection_name)
+            context.scene.collection.children.link(coll_obs)
+
+            # Radial instance object
+
+            rd_name = f"{coll_obs.name} Mirror Instance"
+
+            me = bpy.data.meshes.new(rd_name)
+            rd = bpy.data.objects.new(rd_name, me)
+            _ob_link(rd, ob.users_collection)
+            bpy.context.view_layer.objects.active = rd
+            rd.select_set(True)
+
+            _move_to_coll(obs, coll_obs)
+
+            # Nodes
+
+            ng_name = "Mirror Instance"
+
+            if (ng := bpy.data.node_groups.get(ng_name)) is None:
+                imported = asset.asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
+                ng = imported.node_groups[0]
+
+            md = rd.modifiers.new("Mirror Instance", "NODES")
+            md.node_group = ng
+            md["Input_2"] = coll_obs
+            md["Input_3"] = self.x
+            md["Input_4"] = self.y
+            md["Input_5"] = self.z
+
+            if self.pivot == "OBJECT":
+                pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
+                _ob_link(pivot, (context.collection,))
+                pivot.empty_display_size = 0.5
+                md["Input_6"] = pivot
+        else:
+            obs = []
+            for ob in context.selected_objects:
+                ob.select_set(False)
+                obs.append((ob, False))
+
+            for axis in axes:
+                obs = self.object_mirror(obs, axis)
+
+            for ob, flipped in obs:
+                if flipped and ob.type == "MESH":
+                    asset.apply_scale(ob)
+                    ob.data.flip_normals()
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        if not context.selected_objects:
+        obs = context.selected_objects
+
+        if not obs:
             return {"CANCELLED"}
+
+        for ob in obs:
+            if "gem" in ob:
+                break
+
+        self.collection_name = ob.name
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
