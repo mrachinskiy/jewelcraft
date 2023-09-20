@@ -68,21 +68,47 @@ class OBJECT_OT_mirror(Operator):
         if not axes:
             return {"FINISHED"}
 
+        obs = []
+        for ob in context.selected_objects:
+            ob.select_set(False)
+            obs.append((ob, False))
+
+        for axis in axes:
+            obs = self.object_mirror(obs, axis)
+
+        for ob, flipped in obs:
+            if flipped and ob.type == "MESH":
+                asset.apply_scale(ob)
+                ob.data.flip_normals()
+
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        if not context.selected_objects:
+            return {"CANCELLED"}
+
+        wm = context.window_manager
+        return wm.invoke_props_popup(self, event)
+
+    def object_mirror(self, obs: tuple[Object, bool], i: int) -> tuple[Object, bool]:
+        context = bpy.context
         space_data = context.space_data
         use_local_view = bool(space_data.local_view)
         cursor_offset = context.scene.cursor.location * 2
-        is_odd_axis_count = len(axes) != 2
         flip_z = Matrix.Rotation(pi, 4, "X")
         flip_z_inv = flip_z.inverted()
         rotate_types = {"CAMERA", "LAMP", "SPEAKER", "FONT"}
         duplimap = {}
         children = {}
+        obs_mirrored = []
 
-        for ob_orig in context.selected_objects:
+        for ob_orig, flipped in obs:
             is_gem = "gem" in ob_orig
             use_rot = is_gem or ob_orig.type in rotate_types
 
+            # Duplicate
             ob = ob_orig.copy()
+            obs_mirrored.append((ob, False if use_rot else not flipped))
 
             duplimap[ob_orig] = ob
 
@@ -104,43 +130,36 @@ class OBJECT_OT_mirror(Operator):
                     ob.constraints.remove(con)
 
             ob.select_set(True)
-            ob_orig.select_set(False)
             ob.matrix_world = ob_orig.matrix_world
 
-            for i in axes:
+            # Orientation
+            if use_rot:
+                quat = ob.matrix_world.to_quaternion()
+                mat_rot_inv = quat.to_matrix().to_4x4().inverted()
+                w, x, y, z = quat
 
-                # Orientation
-                if use_rot:
-                    quat = ob.matrix_world.to_quaternion()
-                    mat_rot_inv = quat.to_matrix().to_4x4().inverted()
-                    w, x, y, z = quat
-
-                    if i == 0:
-                        quat[:] = w, x, -y, -z
-                    elif i == 1:
-                        quat[:] = z, y, x, w
-                    else:
-                        quat[:] = y, -z, w, -x
-
-                    ob.matrix_world @= mat_rot_inv @ quat.to_matrix().to_4x4()
+                if i == 0:
+                    quat[:] = w, x, -y, -z
+                elif i == 1:
+                    quat[:] = z, y, x, w
                 else:
-                    ob.matrix_world[i][0] *= -1
-                    ob.matrix_world[i][1] *= -1
-                    ob.matrix_world[i][2] *= -1
+                    quat[:] = y, -z, w, -x
 
-                    if self.keep_z:
-                        ob.matrix_world @= flip_z
-                        ob.data.transform(flip_z_inv)
+                ob.matrix_world @= mat_rot_inv @ quat.to_matrix().to_4x4()
+            else:
+                ob.matrix_world[i][0] *= -1
+                ob.matrix_world[i][1] *= -1
+                ob.matrix_world[i][2] *= -1
 
-                # Translation
-                ob.matrix_world[i][3] *= -1
+                if self.keep_z:
+                    ob.matrix_world @= flip_z
+                    ob.data.transform(flip_z_inv)
 
-                if self.use_cursor:
-                    ob.matrix_world[i][3] += cursor_offset[i]
+            # Translation
+            ob.matrix_world[i][3] *= -1
 
-            if is_odd_axis_count and not use_rot and ob.type == "MESH":
-                asset.apply_scale(ob)
-                ob.data.flip_normals()
+            if self.use_cursor:
+                ob.matrix_world[i][3] += cursor_offset[i]
 
         context.view_layer.objects.active = ob
 
@@ -153,14 +172,7 @@ class OBJECT_OT_mirror(Operator):
                 child.parent = parent
                 child.matrix_parent_inverse = parent.matrix_world.inverted()
 
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        if not context.selected_objects:
-            return {"CANCELLED"}
-
-        wm = context.window_manager
-        return wm.invoke_props_popup(self, event)
+        return obs + obs_mirrored
 
 
 def _move_to_coll(obs: list[Object], coll: Collection) -> None:
