@@ -10,7 +10,8 @@ from bpy.types import (ID, BlendData, Collection, Depsgraph,
                        DepsgraphObjectInstance, Modifier, Object, Space)
 from mathutils import Matrix, Vector, kdtree
 
-from . import mesh, unit, var
+from .. import var
+from . import mesh, unit
 
 LocRadMat = tuple[Vector, float, Matrix]
 Color = tuple[float, float, float, float]

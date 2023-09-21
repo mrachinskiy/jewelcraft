@@ -352,6 +352,11 @@ class OBJECT_OT_make_instance_face(Operator):
         from ..lib import asset
 
         obs = context.selected_objects
+
+        for ob in obs:
+            if "gem" in ob:
+                break
+
         md, coll_obs = asset.gn_setup(obs, self.collection_name, "Instance Face")
         md["Input_2"] = coll_obs
 
@@ -363,10 +368,6 @@ class OBJECT_OT_make_instance_face(Operator):
 
         # Setup instance face object
         # -------------------------------
-
-        for ob in obs:
-            if "gem" in ob:
-                break
 
         r = min(ob.dimensions.xy) * 0.15
         verts = [
