@@ -6,10 +6,11 @@ from pathlib import Path
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
-from bpy.types import ID, BlendData, Depsgraph, DepsgraphObjectInstance, Object, Space
+from bpy.types import (ID, BlendData, Collection, Depsgraph,
+                       DepsgraphObjectInstance, Modifier, Object, Space)
 from mathutils import Matrix, Vector, kdtree
 
-from . import mesh, unit
+from . import mesh, unit, var
 
 LocRadMat = tuple[Vector, float, Matrix]
 Color = tuple[float, float, float, float]
@@ -168,6 +169,66 @@ def add_material(ob: Object, name="New Material", color: Color | None = None, is
         ob.material_slots[0].material = mat
     else:
         ob.data.materials.append(mat)
+
+
+# GN
+# ------------------------------------
+
+
+def move_to_coll(obs: list[Object], coll: Collection) -> None:
+    for ob in obs:
+        for c in ob.users_collection:
+            c.objects.unlink(ob)
+        coll.objects.link(ob)
+        ob.select_set(False)
+
+
+def ob_link(ob: Object, colls: tuple[Collection]) -> None:
+    for coll in colls:
+        coll.objects.link(ob)
+
+    if (sd := bpy.context.space_data).local_view:
+        ob.local_view_set(sd, True)
+
+
+def gn_setup(obs: list[Object], coll_name: str, ng_name: str) -> tuple[Modifier, Collection]:
+    for ob in obs:
+        if "gem" in ob:
+            break
+
+    coll = bpy.data.collections.new(coll_name)
+    bpy.context.scene.collection.children.link(coll)
+
+    # GN object
+
+    gn_name = f"{coll.name} {ng_name}"
+
+    me = bpy.data.meshes.new(gn_name)
+    gn = bpy.data.objects.new(gn_name, me)
+    ob_link(gn, ob.users_collection)
+    bpy.context.view_layer.objects.active = gn
+    gn.select_set(True)
+
+    move_to_coll(obs, coll)
+
+    # Modifier
+
+    if (ng := bpy.data.node_groups.get(ng_name)) is None:
+        imported = asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
+        ng = imported.node_groups[0]
+
+    md = gn.modifiers.new(ng_name, "NODES")
+    md.node_group = ng
+
+    return md, coll
+
+
+def pivot_add(coll_obs: Collection) -> Object:
+    pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
+    ob_link(pivot, (bpy.context.collection,))
+    pivot.empty_display_size = 0.5
+
+    return pivot
 
 
 # Asset

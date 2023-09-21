@@ -4,17 +4,10 @@
 from math import pi, tau
 
 import bpy
-from bpy.types import Operator, Collection, Object
-from bpy.props import (
-    FloatProperty,
-    IntProperty,
-    BoolProperty,
-    EnumProperty,
-    StringProperty,
-)
+from bpy.props import (BoolProperty, EnumProperty, FloatProperty, IntProperty,
+                       StringProperty)
+from bpy.types import Object, Operator
 from mathutils import Matrix
-
-from .. import var
 
 
 class OBJECT_OT_mirror(Operator):
@@ -101,45 +94,14 @@ class OBJECT_OT_mirror(Operator):
 
         if self.mirror_type == "INSTANCE":
             obs = context.selected_objects
-
-            for ob in obs:
-                if "gem" in ob:
-                    break
-
-            coll_obs = bpy.data.collections.new(self.collection_name)
-            context.scene.collection.children.link(coll_obs)
-
-            # Radial instance object
-
-            rd_name = f"{coll_obs.name} Mirror Instance"
-
-            me = bpy.data.meshes.new(rd_name)
-            rd = bpy.data.objects.new(rd_name, me)
-            _ob_link(rd, ob.users_collection)
-            bpy.context.view_layer.objects.active = rd
-            rd.select_set(True)
-
-            _move_to_coll(obs, coll_obs)
-
-            # Nodes
-
-            ng_name = "Mirror Instance"
-
-            if (ng := bpy.data.node_groups.get(ng_name)) is None:
-                imported = asset.asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
-                ng = imported.node_groups[0]
-
-            md = rd.modifiers.new("Mirror Instance", "NODES")
-            md.node_group = ng
+            md, coll_obs = asset.gn_setup(obs, self.collection_name, "Mirror Instance")
             md["Input_2"] = coll_obs
             md["Input_3"] = self.x
             md["Input_4"] = self.y
             md["Input_5"] = self.z
 
             if self.pivot == "OBJECT":
-                pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
-                _ob_link(pivot, (context.collection,))
-                pivot.empty_display_size = 0.5
+                pivot = asset.pivot_add(coll_obs)
                 md["Input_6"] = pivot
         else:
             obs = []
@@ -257,22 +219,6 @@ class OBJECT_OT_mirror(Operator):
         return obs + obs_mirrored
 
 
-def _move_to_coll(obs: list[Object], coll: Collection) -> None:
-    for ob in obs:
-        for c in ob.users_collection:
-            c.objects.unlink(ob)
-        coll.objects.link(ob)
-        ob.select_set(False)
-
-
-def _ob_link(ob: Object, colls: tuple[Collection]) -> None:
-    for coll in colls:
-        coll.objects.link(ob)
-
-    if (sd := bpy.context.space_data).local_view:
-        ob.local_view_set(sd, True)
-
-
 class OBJECT_OT_radial_instance(Operator):
     bl_label = "Radial Instance"
     bl_description = (
@@ -338,35 +284,7 @@ class OBJECT_OT_radial_instance(Operator):
 
         obs = context.selected_objects
 
-        for ob in obs:
-            if "gem" in ob:
-                break
-
-        coll_obs = bpy.data.collections.new(self.collection_name)
-        context.scene.collection.children.link(coll_obs)
-
-        # Radial instance object
-
-        rd_name = f"{coll_obs.name} Radial Instance"
-
-        me = bpy.data.meshes.new(rd_name)
-        rd = bpy.data.objects.new(rd_name, me)
-        _ob_link(rd, ob.users_collection)
-        bpy.context.view_layer.objects.active = rd
-        rd.select_set(True)
-
-        _move_to_coll(obs, coll_obs)
-
-        # Nodes
-
-        ng_name = "Radial Instance"
-
-        if (ng := bpy.data.node_groups.get(ng_name)) is None:
-            imported = asset.asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
-            ng = imported.node_groups[0]
-
-        md = rd.modifiers.new("Radial Instance", "NODES")
-        md.node_group = ng
+        md, coll_obs = asset.gn_setup(obs, self.collection_name, "Radial Instance")
         md["Input_2"] = coll_obs
         md["Input_3"] = self.count
         md["Input_4"] = self.use_include_original
@@ -376,9 +294,7 @@ class OBJECT_OT_radial_instance(Operator):
         md["Input_8"] = self.axis == "2"
 
         if self.pivot == "OBJECT":
-            pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
-            _ob_link(pivot, (context.collection,))
-            pivot.empty_display_size = 0.5
+            pivot = asset.pivot_add(coll_obs)
             md["Input_9"] = pivot
 
         return {"FINISHED"}
@@ -436,57 +352,35 @@ class OBJECT_OT_make_instance_face(Operator):
         from ..lib import asset
 
         obs = context.selected_objects
+        md, coll_obs = asset.gn_setup(obs, self.collection_name, "Instance Face")
+        md["Input_2"] = coll_obs
+
+        if self.pivot == "OBJECT":
+            pivot = asset.pivot_add(coll_obs)
+            pivot.empty_display_size = max(ob.dimensions.xy) * 0.75
+            pivot.location = ob.location
+            md["Input_3"] = pivot
+
+        # Setup instance face object
+        # -------------------------------
 
         for ob in obs:
             if "gem" in ob:
                 break
 
-        coll_obs = bpy.data.collections.new(self.collection_name)
-        context.scene.collection.children.link(coll_obs)
-
-        # DF object
-
-        df_name = f"{coll_obs.name} Instance Face"
-        df_radius = min(ob.dimensions.xy) * 0.15
-
+        r = min(ob.dimensions.xy) * 0.15
         verts = [
-            (-df_radius, -df_radius, 0.0),
-            ( df_radius, -df_radius, 0.0),
-            ( df_radius,  df_radius, 0.0),
-            (-df_radius,  df_radius, 0.0),
+            (-r, -r, 0.0),
+            ( r, -r, 0.0),
+            ( r,  r, 0.0),
+            (-r,  r, 0.0),
         ]
         faces = [(0, 1, 2, 3)]
 
-        me = bpy.data.meshes.new(df_name)
-        me.from_pydata(verts, [], faces)
-
-        df = bpy.data.objects.new(df_name, me)
-        _ob_link(df, ob.users_collection)
-        bpy.context.view_layer.objects.active = df
-        df.select_set(True)
+        df = md.id_data
+        df.data.from_pydata(verts, [], faces)
         df.location = ob.location
         df.location.x += ob.dimensions.x * 1.5
-
-        # Setup relations
-
-        _move_to_coll(obs, coll_obs)
-
-        ng_name = "Instance Face"
-
-        if (ng := bpy.data.node_groups.get(ng_name)) is None:
-            imported = asset.asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
-            ng = imported.node_groups[0]
-
-        md = df.modifiers.new("Instance Face", "NODES")
-        md.node_group = ng
-        md["Input_2"] = coll_obs
-
-        if self.pivot == "OBJECT":
-            pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
-            _ob_link(pivot, (context.collection,))
-            pivot.empty_display_size = max(ob.dimensions.xy) * 0.75
-            pivot.location = ob.location
-            md["Input_3"] = pivot
 
         return {"FINISHED"}
 
