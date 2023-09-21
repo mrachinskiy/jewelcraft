@@ -367,19 +367,19 @@ class OBJECT_OT_radial_instance(Operator):
 
         md = rd.modifiers.new("Radial Instance", "NODES")
         md.node_group = ng
-        md["Input_11"] = coll_obs
+        md["Input_2"] = coll_obs
         md["Input_3"] = self.count
-        md["Input_16"] = self.use_include_original
-        md["Input_8"] = self.angle
-        md["Input_13"] = self.axis == "0"
-        md["Input_14"] = self.axis == "1"
-        md["Input_15"] = self.axis == "2"
+        md["Input_4"] = self.use_include_original
+        md["Input_5"] = self.angle
+        md["Input_6"] = self.axis == "0"
+        md["Input_7"] = self.axis == "1"
+        md["Input_8"] = self.axis == "2"
 
         if self.pivot == "OBJECT":
             pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
             _ob_link(pivot, (context.collection,))
             pivot.empty_display_size = 0.5
-            md["Input_12"] = pivot
+            md["Input_9"] = pivot
 
         return {"FINISHED"}
 
@@ -479,14 +479,14 @@ class OBJECT_OT_make_instance_face(Operator):
 
         md = df.modifiers.new("Instance Face", "NODES")
         md.node_group = ng
-        md["Input_3"] = coll_obs
+        md["Input_2"] = coll_obs
 
         if self.pivot == "OBJECT":
             pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
             _ob_link(pivot, (context.collection,))
             pivot.empty_display_size = max(ob.dimensions.xy) * 0.75
             pivot.location = ob.location
-            md["Input_4"] = pivot
+            md["Input_3"] = pivot
 
         return {"FINISHED"}
 
