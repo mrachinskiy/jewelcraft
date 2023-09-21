@@ -288,7 +288,8 @@ class OBJECT_OT_radial_instance(Operator):
         md["Input_2"] = coll_obs
         md["Input_3"] = self.count
         md["Input_4"] = self.use_include_original
-        md["Input_5"] = self.angle
+        if abs(self.angle - tau) > 1e-05:  # blender/blender#112646
+            md["Input_5"] = self.angle
         md["Input_6"] = self.axis == "0"
         md["Input_7"] = self.axis == "1"
         md["Input_8"] = self.axis == "2"
