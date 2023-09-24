@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
-from bpy.types import Operator
+from bpy.types import Operator, Object
 from bpy.props import FloatProperty, IntProperty, BoolProperty
 
 
@@ -13,6 +13,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
 
     use_between: BoolProperty(name="Between", default=True)
     use_side: BoolProperty(name="Side", default=True)
+    use_channel: BoolProperty(name="Channel", default=True)
 
     between_x: FloatProperty(name="Width", default=0.3, min=0.0, step=1, unit="LENGTH")
     between_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
@@ -61,6 +62,9 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         soft_max=30,
         step=1,
     )
+
+    channel_diameter: FloatProperty(name="Diameter", default=1.0, min=0.0, step=1, unit="LENGTH")
+
     size_active: FloatProperty(options={"HIDDEN", "SKIP_SAVE"})
 
     def draw(self, context):
@@ -126,14 +130,37 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.prop(self, "side_rot_z")
         col.prop(self, "side_loc_z")
 
-    def execute(self, context):
-        if self.use_between and self.is_ob_multiple:
-            from . import microprong_between
-            microprong_between.add(self, context)
+        layout.separator()
 
+        row = layout.row()
+        row.use_property_split = False
+        row.prop(self, "use_channel")
+
+        if not self.is_ob_multiple:
+            row = layout.row()
+            row.alert = True
+            row.alignment = "RIGHT"
+            row.label(text="At least two objects must be selected", icon="ERROR")
+
+        col = layout.column(align=True)
+        col.enabled = self.use_channel and self.is_ob_multiple
+        col.prop(self, "channel_diameter")
+
+    def execute(self, context):
         if self.use_side:
             from . import microprong_side
             microprong_side.add(self, context)
+
+        if self.is_ob_multiple:
+            start = self.gem_offset_start
+            end = self.gem_offset_end
+
+            if self.use_between:
+                from . import microprong_between
+                start, end = microprong_between.add(self, context)
+
+            if self.use_channel:
+                self.set_channel(context, start, end)
 
         return {"FINISHED"}
 
@@ -164,6 +191,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         self.curve_length = mesh.est_curve_length(curve)
         self.is_ob_multiple = obs_count > 1
 
+        # Side
         active = ob
 
         if context.object is not None:
@@ -175,6 +203,43 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         self.size_active = active.dimensions.y
         self.side_x = self.size_active * 0.5
 
+        # Channel
+        if self.is_ob_multiple:
+            gem_offset = []
+
+            for ob in context.selected_objects:
+                for con in ob.constraints:
+                    if con.type == "FOLLOW_PATH":
+                        gem_offset.append(-con.offset)
+                        break
+
+            gem_offset.sort()
+
+            self.channel_diameter = self.size_active * 0.5
+            self.gem_offset_start = gem_offset[0]
+            self.gem_offset_end = gem_offset[-1]
+
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
         return self.execute(context)
+
+    @staticmethod
+    def get_curve(context) -> Object:
+        for ob in context.selected_objects:
+            for con in ob.constraints:
+                if con.type == "FOLLOW_PATH":
+                    return con.target
+
+    def set_channel(self, context, start: float, end: float) -> None:
+        from ..lib import asset
+
+        curve = self.get_curve(context)
+
+        md = asset.gn_setup("Channel", "Microprong")
+        md["Input_2"] = curve
+        md["Input_3"] = self.channel_diameter
+        md["Input_6"] = start / 100
+        md["Input_7"] = end / 100
+        md["Input_8"] = -0.01
+
+        asset.add_material(md.id_data, name="Cutter", color=self.color)

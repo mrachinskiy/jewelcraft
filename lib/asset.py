@@ -184,35 +184,26 @@ def move_to_coll(obs: list[Object], coll: Collection) -> None:
         ob.select_set(False)
 
 
-def ob_link(ob: Object, colls: tuple[Collection]) -> None:
-    for coll in colls:
+def ob_link(ob: Object, coll: Collection | tuple[Collection]) -> None:
+    if isinstance(coll, tuple):
+        for c in coll:
+            c.objects.link(ob)
+    else:
         coll.objects.link(ob)
 
     if (sd := bpy.context.space_data).local_view:
         ob.local_view_set(sd, True)
 
 
-def gn_setup(obs: list[Object], coll_name: str, ng_name: str) -> tuple[Modifier, Collection]:
-    for ob in obs:
-        if "gem" in ob:
-            break
-
-    coll = bpy.data.collections.new(coll_name)
-    bpy.context.scene.collection.children.link(coll)
-
-    # GN object
-
-    gn_name = f"{coll.name} {ng_name}"
-
+def gn_setup(ng_name: str, prefix: str, set_active: bool = False) -> Modifier:
+    gn_name = f"{prefix} {ng_name}"
     me = bpy.data.meshes.new(gn_name)
     gn = bpy.data.objects.new(gn_name, me)
-    ob_link(gn, ob.users_collection)
-    bpy.context.view_layer.objects.active = gn
-    gn.select_set(True)
 
-    move_to_coll(obs, coll)
-
-    # Modifier
+    ob_link(gn, bpy.context.scene.collection)
+    if set_active:
+        gn.select_set(True)
+        bpy.context.view_layer.objects.active = gn
 
     if (ng := bpy.data.node_groups.get(ng_name)) is None:
         imported = asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
@@ -221,12 +212,29 @@ def gn_setup(obs: list[Object], coll_name: str, ng_name: str) -> tuple[Modifier,
     md = gn.modifiers.new(ng_name, "NODES")
     md.node_group = ng
 
+    return md
+
+
+def gn_setup_coll(ng_name: str, obs: list[Object], coll_name: str | None = None) -> tuple[Modifier, Collection]:
+    for ob in obs:
+        if "gem" in ob:
+            break
+
+    if coll_name is None:
+        coll = ob.users_collection[0]
+    else:
+        coll = bpy.data.collections.new(coll_name)
+        bpy.context.scene.collection.children.link(coll)
+        move_to_coll(obs, coll)
+
+    md = gn_setup(ng_name, coll.name, set_active=True)
+
     return md, coll
 
 
-def pivot_add(coll_obs: Collection) -> Object:
-    pivot = bpy.data.objects.new(f"{coll_obs.name} Pivot", None)
-    ob_link(pivot, (bpy.context.collection,))
+def pivot_add(prefix: str) -> Object:
+    pivot = bpy.data.objects.new(f"{prefix} Pivot", None)
+    ob_link(pivot, bpy.context.scene.collection)
     pivot.empty_display_size = 0.5
 
     return pivot
@@ -459,12 +467,14 @@ def ob_copy_to_faces(ob: Object) -> None:
 
         for mat in mats:
             ob_copy = ob.copy()
+
             collection.objects.link(ob_copy)
-            ob_copy.matrix_world = mat
-            ob_copy.select_set(True)
 
             if use_local_view:
                 ob_copy.local_view_set(space_data, True)
+
+            ob_copy.matrix_world = mat
+            ob_copy.select_set(True)
 
 
 def apply_scale(ob: Object) -> None:

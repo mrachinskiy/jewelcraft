@@ -26,6 +26,7 @@ class OBJECT_OT_mirror(Operator):
     x: BoolProperty(name="X", options={"SKIP_SAVE"})
     y: BoolProperty(name="Y", options={"SKIP_SAVE"})
     z: BoolProperty(name="Z", options={"SKIP_SAVE"})
+    use_coll_move: BoolProperty(name="Move to Collection", default=True, options={"SKIP_SAVE"})
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
     pivot: EnumProperty(
         name="Pivot Point",
@@ -52,6 +53,19 @@ class OBJECT_OT_mirror(Operator):
 
         layout.separator()
 
+        if self.mirror_type == "INSTANCE":
+            row = layout.row(heading="Move to Collection")
+            row.prop(self, "use_coll_move", text="")
+            sub = row.row()
+            sub.enabled = self.use_coll_move
+            sub.alert = self.use_coll_move and not self.collection_name
+            sub.prop(self, "collection_name", text="")
+        else:
+            col = layout.column(heading="Orientation", align=True)
+            col.prop(self, "keep_z")
+
+        layout.separator()
+
         col = layout.column(heading="Mirror Axis", align=True)
         col.prop(self, "x")
         col.prop(self, "y")
@@ -60,22 +74,8 @@ class OBJECT_OT_mirror(Operator):
         layout.separator()
 
         if self.mirror_type == "INSTANCE":
-
-            col = layout.column()
-            col.alert = not self.collection_name
-            col.prop(self, "collection_name", text="Collection Name")
-
-            layout.separator()
-
             layout.row().prop(self, "pivot", expand=True)
-
         else:
-
-            col = layout.column(heading="Orientation", align=True)
-            col.prop(self, "keep_z")
-
-            layout.separator()
-
             col = layout.column(heading="Pivot Point")
             col.prop(self, "use_cursor")
 
@@ -94,14 +94,16 @@ class OBJECT_OT_mirror(Operator):
 
         if self.mirror_type == "INSTANCE":
             obs = context.selected_objects
-            md, coll_obs = asset.gn_setup(obs, self.collection_name, "Mirror Instance")
+            coll_name = self.collection_name if self.use_coll_move else None
+
+            md, coll_obs = asset.gn_setup_coll("Mirror Instance", obs, coll_name)
             md["Input_2"] = coll_obs
             md["Input_3"] = self.x
             md["Input_4"] = self.y
             md["Input_5"] = self.z
 
             if self.pivot == "OBJECT":
-                pivot = asset.pivot_add(coll_obs)
+                pivot = asset.pivot_add(coll_obs.name)
                 md["Input_6"] = pivot
         else:
             obs = []
@@ -228,6 +230,7 @@ class OBJECT_OT_radial_instance(Operator):
     bl_idname = "object.jewelcraft_radial_instance"
     bl_options = {"REGISTER", "UNDO"}
 
+    use_coll_move: BoolProperty(name="Move to Collection", default=True, options={"SKIP_SAVE"})
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
     count: IntProperty(name="Count", default=1, min=1, options={"SKIP_SAVE"})
     angle: FloatProperty(name="Angle", default=tau, step=10, unit="ROTATION", options={"SKIP_SAVE"})
@@ -256,9 +259,12 @@ class OBJECT_OT_radial_instance(Operator):
 
         layout.separator()
 
-        col = layout.column()
-        col.alert = not self.collection_name
-        col.prop(self, "collection_name", text="Collection Name")
+        row = layout.row(heading="Move to Collection")
+        row.prop(self, "use_coll_move", text="")
+        sub = row.row()
+        sub.enabled = self.use_coll_move
+        sub.alert = self.use_coll_move and not self.collection_name
+        sub.prop(self, "collection_name", text="")
 
         layout.separator()
 
@@ -277,14 +283,15 @@ class OBJECT_OT_radial_instance(Operator):
         layout.separator()
 
     def execute(self, context):
-        if self.count == 1 or not self.collection_name:
+        if self.count == 1 or (self.use_coll_move and not self.collection_name):
             return {"FINISHED"}
 
         from ..lib import asset
 
         obs = context.selected_objects
+        coll_name = self.collection_name if self.use_coll_move else None
 
-        md, coll_obs = asset.gn_setup(obs, self.collection_name, "Radial Instance")
+        md, coll_obs = asset.gn_setup_coll("Radial Instance", obs, coll_name)
         md["Input_2"] = coll_obs
         md["Input_3"] = self.count
         md["Input_4"] = self.use_include_original
@@ -295,7 +302,7 @@ class OBJECT_OT_radial_instance(Operator):
         md["Input_8"] = self.axis == "2"
 
         if self.pivot == "OBJECT":
-            pivot = asset.pivot_add(coll_obs)
+            pivot = asset.pivot_add(coll_obs.name)
             md["Input_9"] = pivot
 
         return {"FINISHED"}
@@ -322,6 +329,7 @@ class OBJECT_OT_make_instance_face(Operator):
     bl_idname = "object.jewelcraft_make_instance_face"
     bl_options = {"REGISTER", "UNDO"}
 
+    use_coll_move: BoolProperty(name="Move to Collection", default=True, options={"SKIP_SAVE"})
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
     pivot: EnumProperty(
         name="Pivot Point",
@@ -339,9 +347,12 @@ class OBJECT_OT_make_instance_face(Operator):
 
         layout.separator()
 
-        col = layout.column()
-        col.alert = not self.collection_name
-        col.prop(self, "collection_name", text="Collection Name")
+        row = layout.row(heading="Move to Collection")
+        row.prop(self, "use_coll_move", text="")
+        sub = row.row()
+        sub.enabled = self.use_coll_move
+        sub.alert = self.use_coll_move and not self.collection_name
+        sub.prop(self, "collection_name", text="")
 
         layout.separator()
 
@@ -353,16 +364,17 @@ class OBJECT_OT_make_instance_face(Operator):
         from ..lib import asset
 
         obs = context.selected_objects
+        coll_name = self.collection_name if self.use_coll_move else None
 
         for ob in obs:
             if "gem" in ob:
                 break
 
-        md, coll_obs = asset.gn_setup(obs, self.collection_name, "Instance Face")
+        md, coll_obs = asset.gn_setup_coll("Instance Face", obs, coll_name)
         md["Input_2"] = coll_obs
 
         if self.pivot == "OBJECT":
-            pivot = asset.pivot_add(coll_obs)
+            pivot = asset.pivot_add(coll_obs.name)
             pivot.empty_display_size = max(ob.dimensions.xy) * 0.75
             pivot.location = ob.location
             md["Input_3"] = pivot

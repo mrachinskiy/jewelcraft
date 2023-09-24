@@ -2,9 +2,9 @@
 # Copyright 2015-2023 Mikhail Rachinskiy
 
 import bpy
-from bpy.props import EnumProperty, FloatProperty, BoolProperty
-from bpy.types import Operator
 from bpy.app.translations import pgettext_iface as _
+from bpy.props import BoolProperty, EnumProperty, FloatProperty
+from bpy.types import Operator
 from mathutils import Matrix
 
 from .. import var
@@ -69,7 +69,6 @@ class OBJECT_OT_gem_add(Operator):
 
         scene = context.scene
         view_layer = context.view_layer
-        space_data = context.space_data
         cut_name = gemlib.CUTS[self.cut].name
         stone_name = gemlib.STONES[self.stone].name
         color = gemlib.STONES[self.stone].color or self.color
@@ -79,10 +78,7 @@ class OBJECT_OT_gem_add(Operator):
 
         imported = asset.asset_import(var.GEM_ASSET_FILEPATH, ob_name=cut_name)
         ob = imported.objects[0]
-        context.collection.objects.link(ob)
-
-        if space_data.local_view:
-            ob.local_view_set(space_data, True)
+        asset.ob_link(ob, context.collection)
 
         ob.scale *= self.size
         ob.location = scene.cursor.location
@@ -322,8 +318,8 @@ class OBJECT_OT_gem_recover(Operator):
 
     def execute(self, context):
         import collections
-        import operator
         import itertools
+        import operator
 
         rotvar = self.rot_var - 1
         yvar = self.y_var - 1
