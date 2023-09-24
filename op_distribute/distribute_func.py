@@ -197,7 +197,7 @@ def execute(self, context):
         num = len(obs)
 
         if num > 1:
-            closed_distribution = round(end - start, 1) == 100.0
+            closed_distribution = abs((end - start) - 100.0) < 0.1
 
             if self.cyclic and closed_distribution:
                 ofst = (end - start) / num
@@ -303,7 +303,7 @@ def invoke(self, context, event):
             ofst_n1 = obs[-1][0]
             ofst_n2 = obs[-2][0]
             ofst_n = round(ofst_n1 + (ofst_n1 - ofst_n2), 2)
-            if (ofst_n - 100.0) == ofst_1:
+            if abs((ofst_n - 100.0) - ofst_1) < 0.1:
                 self.end = ofst_n
 
     return wm.invoke_props_popup(self, event)

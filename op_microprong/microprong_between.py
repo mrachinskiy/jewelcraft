@@ -10,7 +10,7 @@ from ..lib import iterutils, mesh
 from . import microprong_lib
 
 
-def _get_obs(context) -> tuple[list[Object], Object, tuple[Collection]]:
+def _get_obs(context, is_cyclic: bool) -> tuple[list[Object], Object, tuple[Collection]]:
     obs = []
     app = obs.append
 
@@ -31,7 +31,6 @@ def _get_obs(context) -> tuple[list[Object], Object, tuple[Collection]]:
 
     ofst_start = ofst_1 - (ofst_2 - ofst_1)
     ofst_end = ofst_n1 + (ofst_n1 - ofst_n2)
-    is_cyclic = round(ofst_start - 100.0, 2) == round(ofst_n1, 2)
 
     if is_cyclic:
         app((size_1, ofst_end))
@@ -42,8 +41,8 @@ def _get_obs(context) -> tuple[list[Object], Object, tuple[Collection]]:
     return obs, fp.target, fp.id_data.users_collection
 
 
-def _distribute(context, ob: Object, curve_length: float) -> tuple[float, float]:
-    obs, curve, colls = _get_obs(context)
+def _distribute(context, ob: Object, curve_length: float, is_cyclic: bool) -> tuple[float, float]:
+    obs, curve, colls = _get_obs(context, is_cyclic)
 
     space_data = context.space_data
     use_local_view = bool(space_data.local_view)
@@ -99,4 +98,4 @@ def add(self, context) -> tuple[float, float]:
     mesh.bridge_verts(bm, vs_north, vs_south)
 
     ob = microprong_lib.prepare_object(self, bm)
-    return _distribute(context, ob, self.curve_length)
+    return _distribute(context, ob, self.curve_length, self.is_cyclic)

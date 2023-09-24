@@ -203,21 +203,25 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         self.size_active = active.dimensions.y
         self.side_x = self.size_active * 0.5
 
-        # Channel
+        # Between & Channel
         if self.is_ob_multiple:
-            gem_offset = []
+            ofst = []
 
             for ob in context.selected_objects:
                 for con in ob.constraints:
                     if con.type == "FOLLOW_PATH":
-                        gem_offset.append(-con.offset)
+                        ofst.append(-con.offset)
+                        curve = con.target
                         break
 
-            gem_offset.sort()
+            ofst.sort()
 
             self.channel_diameter = self.size_active * 0.5
-            self.gem_offset_start = gem_offset[0]
-            self.gem_offset_end = gem_offset[-1]
+            self.gem_offset_start = ofst[0]
+            self.gem_offset_end = ofst[-1]
+            cyclic = curve.data.splines[0].use_cyclic_u
+            closed_distribution = abs(ofst[1] - ofst[0] + ofst[-1] - 100 - ofst[0]) < 0.1
+            self.is_cyclic = cyclic and closed_distribution
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
@@ -238,8 +242,10 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         md = asset.gn_setup("Channel", "Microprong")
         md["Input_2"] = curve
         md["Input_3"] = self.channel_diameter
-        md["Input_6"] = start / 100
-        md["Input_7"] = end / 100
+        if not self.is_cyclic:
+            md["Input_6"] = start / 100
+            md["Input_7"] = end / 100
         md["Input_8"] = -0.01
 
+        md.id_data.location = curve.location
         asset.add_material(md.id_data, name="Cutter", color=self.color)
