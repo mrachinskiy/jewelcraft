@@ -4,8 +4,8 @@
 from pathlib import Path
 
 import bpy
+from bpy.props import BoolProperty, EnumProperty, StringProperty
 from bpy.types import Operator
-from bpy.props import StringProperty, BoolProperty, EnumProperty
 
 from .. import var
 from ..lib import dynamic_list, pathutils
@@ -284,10 +284,10 @@ class WM_OT_asset_import(Operator):
             if not ob.users:
                 collection.objects.link(ob)
 
-            ob.select_set(True)
-
             if use_local_view:
                 ob.local_view_set(space_data, True)
+
+            ob.select_set(True)
 
         if len(imported.objects) == 1:
             ob.location = context.scene.cursor.location

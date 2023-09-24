@@ -4,12 +4,13 @@
 import operator
 
 import bmesh
+from bpy.types import Collection, Object
 
-from ..lib import mesh, iterutils
+from ..lib import iterutils, mesh
 from . import microprong_lib
 
 
-def _get_obs(context):
+def _get_obs(context) -> tuple[list[Object], Object, tuple[Collection]]:
     obs = []
     app = obs.append
 
@@ -41,7 +42,7 @@ def _get_obs(context):
     return obs, fp.target, fp.id_data.users_collection
 
 
-def _distribute(context, ob, curve_length):
+def _distribute(context, ob: Object, curve_length: float) -> tuple[float, float]:
     obs, curve, colls = _get_obs(context)
 
     space_data = context.space_data
@@ -52,11 +53,15 @@ def _distribute(context, ob, curve_length):
 
     for (size1, ofst1), (size2, ofst2) in iterutils.pairwise(obs):
 
+        offset = (ofst2 + ofst1 - base_unit * (size1 - size2) / 2) / 2
+
         if first_cycle:
-            ob_copy = ob
             first_cycle = False
+            ob_copy = ob
+            start = -offset
         else:
             ob_copy = ob.copy()
+            end = -offset
 
         for coll in colls:
             coll.objects.link(ob_copy)
@@ -65,11 +70,13 @@ def _distribute(context, ob, curve_length):
             ob_copy.local_view_set(space_data, True)
 
         con = ob_copy.constraints[0]
-        con.offset = (ofst2 + ofst1 - base_unit * (size1 - size2) / 2) / 2
+        con.offset = offset
         con.target = curve
 
+    return start, end
 
-def add(self, context):
+
+def add(self, context) -> tuple[float, float]:
     bm = bmesh.new()
 
     w = self.between_x / 2
@@ -92,4 +99,4 @@ def add(self, context):
     mesh.bridge_verts(bm, vs_north, vs_south)
 
     ob = microprong_lib.prepare_object(self, bm)
-    _distribute(context, ob, self.curve_length)
+    return _distribute(context, ob, self.curve_length)
