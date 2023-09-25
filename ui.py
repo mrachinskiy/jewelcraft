@@ -236,43 +236,35 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
         row.label(text="Library")
 
         sub = row.row(align=True)
+        sub.emboss = "NONE"
         sub.alignment = "RIGHT"
         sub.scale_x = 1.1
-        sub.operator("wm.jewelcraft_weighting_ui_refresh", text="", icon="FILE_REFRESH", emboss=False)
-        sub.operator("wm.path_open", text="", icon="FILE_FOLDER", emboss=False).filepath = lib_path
+        sub.operator("wm.jewelcraft_weighting_ui_refresh", text="", icon="FILE_REFRESH")
+        sub.operator("wm.path_open", text="", icon="FILE_FOLDER").filepath = lib_path
 
         layout.separator()
 
         for item in lib:
             row = layout.row(align=True)
-
-            if item.default:
-                sub = row.row()
-                sub.emboss = "NONE"
-                sub.label(icon="RADIOBUT_ON")
-            else:
-                row.operator("wm.jewelcraft_weighting_list_set_default", text="", icon="RADIOBUT_OFF", emboss=False).load_id = item.load_id
-
-            sub = row.row()
-            sub.emboss = "NONE_OR_STATUS"
-
-            if item.builtin:
-                sub.label(text=item.name, text_ctxt="Jewelry")
-            else:
-                sub.prop(item, "name", text="")
+            row.emboss = "NONE"
+            row.operator("wm.jewelcraft_weighting_list_set_default", text="", icon="RADIOBUT_ON" if item.default else "RADIOBUT_OFF").load_id = item.load_id
+            row.separator()
+            row.label(text=item.name, text_ctxt="Jewelry", translate=item.builtin)
 
             sub = row.row(align=True)
             sub.scale_x = 1.1
-            sub.operator("wm.jewelcraft_weighting_list_import", text="", icon="IMPORT", emboss=False).load_id = item.load_id
-            editrow = sub.row(align=True)
-            editrow.enabled = not item.builtin
-            editrow.operator("wm.jewelcraft_weighting_list_save_as", text="", icon="FILE_TICK", emboss=False).list_name = item.name
-            editrow.operator("wm.jewelcraft_weighting_list_del", text="", icon="TRASH", emboss=False).list_name = item.name
+            sub.operator("wm.jewelcraft_weighting_list_import", text="", icon="IMPORT").load_id = item.load_id
+
+            sub2 = sub.row(align=True)
+            sub2.enabled = not item.builtin
+            sub2.operator("wm.jewelcraft_weighting_list_save_as", text="", icon="FILE_TICK").list_name = item.name
+            sub2.operator("wm.jewelcraft_weighting_list_del", text="", icon="TRASH").list_name = item.name
 
         row = layout.row()
+        row.emboss = "NONE"
         row.alignment = "RIGHT"
         row.scale_x = 1.1
-        row.operator("wm.jewelcraft_weighting_list_save", text="", icon="ADD", emboss=False)
+        row.operator("wm.jewelcraft_weighting_list_save", text="", icon="ADD")
 
 
 # Panels
