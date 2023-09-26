@@ -257,14 +257,14 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
 
             sub2 = sub.row(align=True)
             sub2.enabled = not item.builtin
-            sub2.operator("wm.jewelcraft_weighting_list_save_as", text="", icon="FILE_TICK").list_name = item.name
+            sub2.operator("wm.jewelcraft_weighting_list_replace", text="", icon="FILE_TICK").list_name = item.name
             sub2.operator("wm.jewelcraft_weighting_list_del", text="", icon="TRASH").list_name = item.name
 
         row = layout.row()
         row.emboss = "NONE"
         row.alignment = "RIGHT"
         row.scale_x = 1.1
-        row.operator("wm.jewelcraft_weighting_list_save", text="", icon="ADD")
+        row.operator("wm.jewelcraft_weighting_list_add", text="", icon="ADD")
 
 
 # Panels

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.15\n"
-"POT-Creation-Date: 2023-09-08\n"
+"POT-Creation-Date: 2023-09-27\n"
 "PO-Revision-Date: 2021-08-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -322,7 +322,7 @@ msgstr "将所选对象添加到资源库"
 msgid "Rename asset"
 msgstr "重命名资产"
 
-msgid "Remove asset from library"
+msgid "Remove from library"
 msgstr "从库中删除资产"
 
 msgid "Replace current asset with selected objects"
@@ -361,10 +361,10 @@ msgstr ""
 msgid "Add new material to the list"
 msgstr ""
 
-msgid "Display material density in the list"
+msgid "Show material density"
 msgstr ""
 
-msgid "Display material composition in the list"
+msgid "Show material composition"
 msgstr ""
 
 msgid "Material name"
@@ -418,7 +418,7 @@ msgstr ""
 msgid "Remove selected item"
 msgstr ""
 
-msgid "Remove all list items"
+msgid "Remove all items"
 msgstr ""
 
 msgid "Move selected item up/down in the list"
@@ -454,19 +454,16 @@ msgstr ""
 msgid "Create microprong cutter between selected gems"
 msgstr ""
 
-msgid "Save material list to file"
+msgid "Add materials list to library"
 msgstr ""
 
-msgid "Save material list as existing file"
+msgid "Replace materials list"
 msgstr ""
 
-msgid "Remove file"
+msgid "Import materials list"
 msgstr ""
 
-msgid "Import materials from file"
-msgstr ""
-
-msgid "Import materials from default list when new scene is created"
+msgid "Set materials list imported by default"
 msgstr ""
 
 msgid "Include viewport preview image in report"

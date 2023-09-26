@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.15\n"
-"POT-Creation-Date: 2023-09-08\n"
+"POT-Creation-Date: 2023-09-27\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: Ahmed Hamad\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -322,7 +322,7 @@ msgstr "أضف العناصر المختارة الي مكتبة العناصر"
 msgid "Rename asset"
 msgstr "أعد تسمية العنصر"
 
-msgid "Remove asset from library"
+msgid "Remove from library"
 msgstr "قم بمسح العنصر من المكتبة"
 
 msgid "Replace current asset with selected objects"
@@ -361,10 +361,10 @@ msgstr "ازالة الاعدادات البديلة للعناصر المختا
 msgid "Add new material to the list"
 msgstr "أضف مادة جديدة الي القائمة"
 
-msgid "Display material density in the list"
+msgid "Show material density"
 msgstr "قم باظهار كثافة المادة في القائمة"
 
-msgid "Display material composition in the list"
+msgid "Show material composition"
 msgstr "أظهر مكونات المادة في القائمة"
 
 msgid "Material name"
@@ -418,7 +418,7 @@ msgstr "أضف عنصر جديد الي القائمة"
 msgid "Remove selected item"
 msgstr "قم بمسح العنصر المختار"
 
-msgid "Remove all list items"
+msgid "Remove all items"
 msgstr "قم بمسح كل عناصر القائمة"
 
 msgid "Move selected item up/down in the list"
@@ -454,20 +454,17 @@ msgstr "تنسيق حجم الحلقة"
 msgid "Create microprong cutter between selected gems"
 msgstr "أضف أداة قطع الدعامة الدقيقة بين الأحجار الكريمة المختارة"
 
-msgid "Save material list to file"
-msgstr "قم بحفظ قائمة المواد في ملف"
+msgid "Add materials list to library"
+msgstr ""
 
-msgid "Save material list as existing file"
-msgstr "قم بحفظ قائمة المواد للملف الموجود"
+msgid "Replace materials list"
+msgstr ""
 
-msgid "Remove file"
-msgstr "قم بازالة الملف"
+msgid "Import materials list"
+msgstr ""
 
-msgid "Import materials from file"
-msgstr "قم باستيراد المواد من ملف"
-
-msgid "Import materials from default list when new scene is created"
-msgstr "قم باستيراد المواد من القائمة الافتراضية عند تكوين مشهد جديد"
+msgid "Set materials list imported by default"
+msgstr ""
 
 msgid "Include viewport preview image in report"
 msgstr ""

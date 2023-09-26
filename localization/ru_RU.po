@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.15\n"
-"POT-Creation-Date: 2023-09-08\n"
-"PO-Revision-Date: 2023-09-08\n"
+"POT-Creation-Date: 2023-09-27\n"
+"PO-Revision-Date: 2023-09-27\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
@@ -322,8 +322,8 @@ msgstr "Добавить выделенные объекты в библиоте
 msgid "Rename asset"
 msgstr "Переименовать ассет"
 
-msgid "Remove asset from library"
-msgstr "Удалить ассет из библиотеки"
+msgid "Remove from library"
+msgstr "Удалить из библиотеки"
 
 msgid "Replace current asset with selected objects"
 msgstr "Заменить текущий ассет выделенными объектами"
@@ -361,11 +361,11 @@ msgstr "Удалить переопределения с выделенных о
 msgid "Add new material to the list"
 msgstr "Добавить новый материал в список"
 
-msgid "Display material density in the list"
+msgid "Show material density"
 msgstr "Отображать в списке плотность материала"
 
-msgid "Display material composition in the list"
-msgstr "Отображать в списке состав материала"
+msgid "Show material composition"
+msgstr "Показать состав материала"
 
 msgid "Material name"
 msgstr "Название материала"
@@ -418,8 +418,8 @@ msgstr "Добавить новый элемент в список"
 msgid "Remove selected item"
 msgstr "Удалить выбранный элемент"
 
-msgid "Remove all list items"
-msgstr "Удалить все элементы списка"
+msgid "Remove all items"
+msgstr "Удалить все элементы"
 
 msgid "Move selected item up/down in the list"
 msgstr "Переместить выбранный элемент вверх/вниз по списку"
@@ -454,20 +454,17 @@ msgstr "Формат размера кольца"
 msgid "Create microprong cutter between selected gems"
 msgstr "Создать выборку микрокрапана между выделенными камнями"
 
-msgid "Save material list to file"
-msgstr "Сохранить список материалов в файл"
+msgid "Add materials list to library"
+msgstr "Добавить список материалов в библиотеку"
 
-msgid "Save material list as existing file"
-msgstr "Сохранить список материалов в существующий файл"
+msgid "Replace materials list"
+msgstr "Заменить список материалов"
 
-msgid "Remove file"
-msgstr "Удалить файл"
+msgid "Import materials list"
+msgstr "Импортировать список материалов"
 
-msgid "Import materials from file"
-msgstr "Импортировать материалы из файла"
-
-msgid "Import materials from default list when new scene is created"
-msgstr "Список материалов по умолчанию импортируется при создании новой сцены"
+msgid "Set materials list imported by default"
+msgstr "Указать список материалов импортируемый по умолчанию"
 
 msgid "Include viewport preview image in report"
 msgstr "Включить изображение вьюпорта в отчёт"

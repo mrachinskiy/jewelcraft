@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.15\n"
-"POT-Creation-Date: 2023-09-08\n"
+"POT-Creation-Date: 2023-09-27\n"
 "PO-Revision-Date: 2022-07-01\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -322,7 +322,7 @@ msgstr "Añadir objetos seleccionados a la biblioteca de activos"
 msgid "Rename asset"
 msgstr "Renombrar activo"
 
-msgid "Remove asset from library"
+msgid "Remove from library"
 msgstr "Eliminar activo de biblioteca"
 
 msgid "Replace current asset with selected objects"
@@ -361,10 +361,10 @@ msgstr "Eliminar propiedades de anulación del control de los objetos selecciona
 msgid "Add new material to the list"
 msgstr "Añadir nuevo material a la lista"
 
-msgid "Display material density in the list"
+msgid "Show material density"
 msgstr "Mostrar la densidad del material en la lista"
 
-msgid "Display material composition in the list"
+msgid "Show material composition"
 msgstr "Mostrar la composición del material en la lista"
 
 msgid "Material name"
@@ -418,7 +418,7 @@ msgstr "Añadir un nuevo elemento a la lista"
 msgid "Remove selected item"
 msgstr "Eliminar elemento seleccionado"
 
-msgid "Remove all list items"
+msgid "Remove all items"
 msgstr "Eliminar todos los elementos de la lista"
 
 msgid "Move selected item up/down in the list"
@@ -454,20 +454,17 @@ msgstr "Formato tamaño anillo"
 msgid "Create microprong cutter between selected gems"
 msgstr "Crear cortador de micro-clavijas entre las gemas seleccionadas"
 
-msgid "Save material list to file"
-msgstr "Guardar lista de materiales a archivo"
+msgid "Add materials list to library"
+msgstr ""
 
-msgid "Save material list as existing file"
-msgstr "Guardar lista de materiales como archivo existente"
+msgid "Replace materials list"
+msgstr ""
 
-msgid "Remove file"
-msgstr "Eliminar archivo"
+msgid "Import materials list"
+msgstr ""
 
-msgid "Import materials from file"
-msgstr "Importar materiales desde archivo"
-
-msgid "Import materials from default list when new scene is created"
-msgstr "Importar materiales de la lista predeterminada cuando se crea una nueva escena"
+msgid "Set materials list imported by default"
+msgstr ""
 
 msgid "Include viewport preview image in report"
 msgstr ""
