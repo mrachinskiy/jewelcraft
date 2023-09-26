@@ -11,11 +11,11 @@ Features:
 * Translated to multiple languages:
   * ![100%](https://progress-bar.dev/100) English
   * ![100%](https://progress-bar.dev/100) Russian
-  * ![98%](https://progress-bar.dev/98) Traditional Chinese
-  * ![97%](https://progress-bar.dev/97) Spanish
-  * ![93%](https://progress-bar.dev/93) Arabic
+  * ![96%](https://progress-bar.dev/96) Traditional Chinese
+  * ![94%](https://progress-bar.dev/94) Spanish
+  * ![91%](https://progress-bar.dev/91) Arabic
   * ![79%](https://progress-bar.dev/79) Italian
-  * ![71%](https://progress-bar.dev/71) French
+  * ![70%](https://progress-bar.dev/70) French
   * ![56%](https://progress-bar.dev/56) Simplified Chinese
   * Your language is missing or incomplete? [Contribute translation](#translations).
 

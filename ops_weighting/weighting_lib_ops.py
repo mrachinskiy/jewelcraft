@@ -8,13 +8,13 @@ from .. import var
 from ..lib import data, dynamic_list, pathutils
 
 
-class WM_OT_weighting_list_save(Operator):
-    bl_label = "Save to File"
-    bl_description = "Save material list to file"
-    bl_idname = "wm.jewelcraft_weighting_list_save"
+class WM_OT_weighting_list_add(Operator):
+    bl_label = "Add"
+    bl_description = "Add materials list to library"
+    bl_idname = "wm.jewelcraft_weighting_list_add"
     bl_options = {"INTERNAL"}
 
-    list_name: StringProperty(name="File Name", options={"SKIP_SAVE"})
+    list_name: StringProperty(name="Name", options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
@@ -47,10 +47,10 @@ class WM_OT_weighting_list_save(Operator):
         return wm.invoke_props_dialog(self)
 
 
-class WM_OT_weighting_list_save_as(Operator):
-    bl_label = "Save As"
-    bl_description = "Save material list as existing file"
-    bl_idname = "wm.jewelcraft_weighting_list_save_as"
+class WM_OT_weighting_list_replace(Operator):
+    bl_label = "Replace"
+    bl_description = "Replace materials list"
+    bl_idname = "wm.jewelcraft_weighting_list_replace"
     bl_options = {"INTERNAL"}
 
     list_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
@@ -68,7 +68,7 @@ class WM_OT_weighting_list_save_as(Operator):
 
 class WM_OT_weighting_list_del(Operator):
     bl_label = "Remove"
-    bl_description = "Remove file"
+    bl_description = "Remove from library"
     bl_idname = "wm.jewelcraft_weighting_list_del"
     bl_options = {"INTERNAL"}
 
@@ -87,7 +87,7 @@ class WM_OT_weighting_list_del(Operator):
 
 class WM_OT_weighting_list_import(Operator):
     bl_label = "Import"
-    bl_description = "Import materials from file"
+    bl_description = "Import materials list"
     bl_idname = "wm.jewelcraft_weighting_list_import"
     bl_options = {"INTERNAL"}
 
@@ -101,7 +101,7 @@ class WM_OT_weighting_list_import(Operator):
 
 class WM_OT_weighting_list_set_default(Operator):
     bl_label = "Set Default"
-    bl_description = "Import materials from default list when new scene is created"
+    bl_description = "Set materials list imported by default"
     bl_idname = "wm.jewelcraft_weighting_list_set_default"
     bl_options = {"INTERNAL"}
 

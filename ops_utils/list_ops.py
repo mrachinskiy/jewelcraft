@@ -26,7 +26,7 @@ class SCENE_OT_ul_del(Operator):
 
 class SCENE_OT_ul_clear(Operator):
     bl_label = "Clear List"
-    bl_description = "Remove all list items"
+    bl_description = "Remove all items"
     bl_idname = "scene.jewelcraft_ul_clear"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
@@ -92,7 +92,7 @@ class WM_OT_ul_del(Operator):
 
 class WM_OT_ul_clear(Operator):
     bl_label = "Clear List"
-    bl_description = "Remove all list items"
+    bl_description = "Remove all items"
     bl_idname = "wm.jewelcraft_ul_clear"
     bl_options = {"INTERNAL"}
 

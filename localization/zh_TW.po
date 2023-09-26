@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.15\n"
-"POT-Creation-Date: 2023-09-08\n"
+"POT-Creation-Date: 2023-09-27\n"
 "PO-Revision-Date: 2022-06-22\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -322,7 +322,7 @@ msgstr "將所選物件添加到資產庫"
 msgid "Rename asset"
 msgstr "重新命名資產"
 
-msgid "Remove asset from library"
+msgid "Remove from library"
 msgstr "由庫藏中刪除資產"
 
 msgid "Replace current asset with selected objects"
@@ -361,10 +361,10 @@ msgstr "由選取物件中刪除疊加"
 msgid "Add new material to the list"
 msgstr "在列表中添加新材料"
 
-msgid "Display material density in the list"
+msgid "Show material density"
 msgstr "在列表中顯示材料密度"
 
-msgid "Display material composition in the list"
+msgid "Show material composition"
 msgstr "在列表中顯示材料成分"
 
 msgid "Material name"
@@ -418,7 +418,7 @@ msgstr "將新項目添加到列表"
 msgid "Remove selected item"
 msgstr "移除選取的項目"
 
-msgid "Remove all list items"
+msgid "Remove all items"
 msgstr "移除列表中全部項目"
 
 msgid "Move selected item up/down in the list"
@@ -454,20 +454,17 @@ msgstr "戒圍尺寸格式"
 msgid "Create microprong cutter between selected gems"
 msgstr "在選取的寶石之間建立城堡鑲嵌切割器"
 
-msgid "Save material list to file"
-msgstr "將材料清單儲存為檔案"
+msgid "Add materials list to library"
+msgstr ""
 
-msgid "Save material list as existing file"
-msgstr "將材料保存至已有的檔案"
+msgid "Replace materials list"
+msgstr ""
 
-msgid "Remove file"
-msgstr "移除檔案"
+msgid "Import materials list"
+msgstr ""
 
-msgid "Import materials from file"
-msgstr "由檔案中匯入材料"
-
-msgid "Import materials from default list when new scene is created"
-msgstr "創立新場景時從預設列表中匯入材料"
+msgid "Set materials list imported by default"
+msgstr ""
 
 msgid "Include viewport preview image in report"
 msgstr ""

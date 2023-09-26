@@ -464,11 +464,11 @@ class SceneProperties(PropertyGroup):
     weighting_materials: PointerProperty(type=MaterialList)
     weighting_show_composition: BoolProperty(
         name="Show Composition",
-        description="Display material composition in the list",
+        description="Show material composition",
     )
     weighting_show_density: BoolProperty(
         name="Show Density",
-        description="Display material density in the list",
+        description="Show material density",
     )
     measurements: PointerProperty(type=MeasurementList)
     overlay_show_all: BoolProperty(

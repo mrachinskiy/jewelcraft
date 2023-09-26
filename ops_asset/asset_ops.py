@@ -146,7 +146,7 @@ class WM_OT_asset_replace(AssetAdd, Operator):
 
 class WM_OT_asset_remove(Operator):
     bl_label = "Remove"
-    bl_description = "Remove asset from library"
+    bl_description = "Remove from library"
     bl_idname = "wm.jewelcraft_asset_remove"
     bl_options = {"INTERNAL"}
 
