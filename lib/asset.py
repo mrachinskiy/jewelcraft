@@ -154,7 +154,10 @@ def add_material(ob: Object, name="New Material", color: Color | None = None, is
             node.inputs["Roughness"].default_value = 0.0
 
             if is_gem:
-                node.inputs["Transmission"].default_value = 1.0
+                try:  # VER >= 4.0
+                    node.inputs["Transmission Weight"].default_value = 1.0
+                except KeyError:
+                    node.inputs["Transmission"].default_value = 1.0
                 node.inputs["IOR"].default_value = 2.42
             else:
                 node.inputs["Metallic"].default_value = 1.0
