@@ -17,14 +17,9 @@ def prepare_object(self, bm, is_between: bool = True) -> Object:
     ob = bpy.data.objects.new(ob_name, me)
     asset.add_material(ob, name="Cutter", color=self.color)
 
-    if is_between:
-        rot_x = self.between_rot_x
-        rot_z = self.between_rot_z
-        loc_z = self.between_loc_z
-    else:
-        rot_x = self.side_rot_x
-        rot_z = self.side_rot_z
-        loc_z = self.side_loc_z
+    rot_x = self.rot_x
+    rot_z = self.rot_z
+    loc_z = self.between_loc_z if is_between else self.side_loc_z
 
     if rot_x:
         ob.matrix_basis @= Matrix.Rotation(rot_x, 4, "X")
