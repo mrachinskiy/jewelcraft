@@ -19,19 +19,19 @@ class OBJECT_OT_microprong_cutter_add(Operator):
     between_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
     between_z1: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
     between_z2: FloatProperty(name="Wedge", default=0.3, min=0.0, step=1, unit="LENGTH")
-
-    between_rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
-    between_rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
     between_loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
 
     side_x: FloatProperty(name="Width", default=0.5, min=0.0, step=1, unit="LENGTH")
     side_y: FloatProperty(name="Length", default=2.0, min=0.0, step=1, unit="LENGTH")
     side_z1: FloatProperty(name="Handle", default=0.5, min=0.0, step=1, unit="LENGTH")
     side_z2: FloatProperty(name="Wedge", default=0.0, step=1, unit="LENGTH")
-
-    side_rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
-    side_rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
     side_loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
+
+    channel_diameter: FloatProperty(name="Diameter", default=1.0, min=0.0, step=1, unit="LENGTH")
+    channel_loc_z: FloatProperty(name="Offset", step=1, unit="LENGTH")
+
+    rot_x: FloatProperty(name="Tilt", step=10, unit="ROTATION")
+    rot_z: FloatProperty(name="Rotation", step=10, unit="ROTATION")
 
     bevel_top: FloatProperty(
         name="Top",
@@ -63,8 +63,6 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         step=1,
     )
 
-    channel_diameter: FloatProperty(name="Diameter", default=1.0, min=0.0, step=1, unit="LENGTH")
-
     size_active: FloatProperty(options={"HIDDEN", "SKIP_SAVE"})
 
     def draw(self, context):
@@ -92,12 +90,7 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.separator()
         col.prop(self, "between_z1")
         col.prop(self, "between_z2")
-
-        col = layout.column(align=True)
-        col.enabled = self.use_between and self.is_ob_multiple
-        col.label(text="Transforms")
-        col.prop(self, "between_rot_x")
-        col.prop(self, "between_rot_z")
+        col.separator()
         col.prop(self, "between_loc_z")
 
         layout.separator()
@@ -113,6 +106,8 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.separator()
         col.prop(self, "side_z1")
         col.prop(self, "side_z2")
+        col.separator()
+        col.prop(self, "side_loc_z")
 
         col = layout.column(align=True)
         col.enabled = self.use_side
@@ -123,16 +118,10 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.separator()
         col.prop(self, "bevel_segments")
 
-        col = layout.column(align=True)
-        col.enabled = self.use_side
-        col.label(text="Transforms")
-        col.prop(self, "side_rot_x")
-        col.prop(self, "side_rot_z")
-        col.prop(self, "side_loc_z")
-
         layout.separator()
 
         row = layout.row()
+        row.enabled = self.is_ob_multiple
         row.use_property_split = False
         row.prop(self, "use_channel")
 
@@ -145,6 +134,16 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col = layout.column(align=True)
         col.enabled = self.use_channel and self.is_ob_multiple
         col.prop(self, "channel_diameter")
+        col.separator()
+        col.prop(self, "channel_loc_z")
+
+        layout.separator()
+
+        col = layout.column(align=True)
+        col.enabled = self.use_side
+        col.label(text="Transforms")
+        col.prop(self, "rot_x")
+        col.prop(self, "rot_z")
 
     def execute(self, context):
         if self.use_side:
@@ -245,7 +244,8 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         if not self.is_cyclic:
             md["Input_6"] = start / 100
             md["Input_7"] = end / 100
-        md["Input_8"] = -0.01
+        md["Input_8"] = self.channel_loc_z - 0.01
 
         md.id_data.location = curve.location
+        md.id_data.rotation_euler = curve.rotation_euler
         asset.add_material(md.id_data, name="Cutter", color=self.color)
