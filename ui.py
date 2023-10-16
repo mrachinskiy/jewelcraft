@@ -128,7 +128,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.separator()
         layout.operator("object.jewelcraft_mirror", icon_value=icon_menu("MIRROR"))
         layout.operator("object.jewelcraft_radial_instance", icon_value=icon_menu("RADIAL"))
-        layout.operator("object.jewelcraft_make_instance_face", icon_value=icon_menu("INSTANCE_FACE"))
+        layout.operator("object.jewelcraft_instance_face", icon_value=icon_menu("INSTANCE_FACE"))
         layout.operator("object.jewelcraft_resize", icon_value=icon_menu("RESIZE"))
         layout.operator("object.jewelcraft_lattice_project", icon_value=icon_menu("LATTICE_PROJECT"))
         layout.operator("object.jewelcraft_lattice_profile", icon_value=icon_menu("LATTICE_PROFILE"))
@@ -510,7 +510,7 @@ class VIEW3D_PT_jewelcraft_object(SidebarSetup, Panel):
         row = col.row(align=True)
         row.operator("object.jewelcraft_mirror", icon_value=icon("MIRROR"))
         row.operator("object.jewelcraft_radial_instance", text="Radial", text_ctxt="*", icon_value=icon("RADIAL"))
-        col.operator("object.jewelcraft_make_instance_face", icon_value=icon("INSTANCE_FACE"))
+        col.operator("object.jewelcraft_instance_face", icon_value=icon("INSTANCE_FACE"))
 
         layout.operator("object.jewelcraft_resize", icon_value=icon("RESIZE"))
 

@@ -120,7 +120,7 @@ classes = (
     ops_object.OBJECT_OT_move_over_under,
     ops_object.OBJECT_OT_mirror,
     ops_object.OBJECT_OT_radial_instance,
-    ops_object.OBJECT_OT_make_instance_face,
+    ops_object.OBJECT_OT_instance_face,
     ops_object.OBJECT_OT_lattice_project,
     ops_object.OBJECT_OT_lattice_profile,
     ops_object.OBJECT_OT_resize,

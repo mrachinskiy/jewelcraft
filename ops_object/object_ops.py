@@ -323,10 +323,10 @@ class OBJECT_OT_radial_instance(Operator):
         return wm.invoke_props_popup(self, event)
 
 
-class OBJECT_OT_make_instance_face(Operator):
-    bl_label = "Make Instance Face"
+class OBJECT_OT_instance_face(Operator):
+    bl_label = "Instance Face"
     bl_description = "Create instance face for selected objects"
-    bl_idname = "object.jewelcraft_make_instance_face"
+    bl_idname = "object.jewelcraft_instance_face"
     bl_options = {"REGISTER", "UNDO"}
 
     use_coll_move: BoolProperty(name="Move to Collection", default=True, options={"SKIP_SAVE"})
