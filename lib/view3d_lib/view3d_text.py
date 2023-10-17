@@ -15,7 +15,7 @@ TYPE_DEP_OFF = 6
 
 def padding_init(x=20, y=10) -> tuple[int, int]:
     for region in bpy.context.area.regions:
-        if region.type == "HEADER":
+        if region.type in {"HEADER", "TOOL_HEADER"}:
             y += region.height
         elif region.type == "TOOLS":
             x += region.width
