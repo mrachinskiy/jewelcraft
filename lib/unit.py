@@ -5,16 +5,15 @@ import bpy
 from mathutils import Vector
 
 
-WARN_NONE = 1
-WARN_SCALE = 2
-WARN_SYSTEM = 3
+WARN_SCALE = 1
+WARN_SYSTEM = 2
 
 
 def _eq(a: float, b: float) -> bool:
     return abs(a - b) < 1e-7
 
 
-def check() -> int:
+def check() -> int | None:
     unit = bpy.context.scene.unit_settings
 
     if unit.system == "METRIC" and not _eq(unit.scale_length, 0.001):
@@ -22,8 +21,6 @@ def check() -> int:
 
     if unit.system == "IMPERIAL":
         return WARN_SYSTEM
-
-    return WARN_NONE
 
 
 def convert_cm3_mm3(x: float) -> float:
@@ -48,10 +45,8 @@ class Scale:
     __slots__ = (
         "scale",
         "from_scene",
-        "from_scene_vec",
         "from_scene_vol",
         "to_scene",
-        "to_scene_vec",
         "to_scene_vol",
     )
 
@@ -67,20 +62,14 @@ class Scale:
         for prop in self.__slots__[1:]:
             setattr(self, prop, self._blank)
 
-    def _from_scene(self, x: float) -> float:
+    def _from_scene(self, x: float | Vector) -> float | Vector:
         return x * 1000 * self.scale
-
-    def _from_scene_vec(self, vec: Vector) -> tuple[float, ...]:
-        return tuple(x * 1000 * self.scale for x in vec)
 
     def _from_scene_vol(self, x: float) -> float:
         return x * 1000 ** 3 * self.scale ** 3
 
-    def _to_scene(self, x: float) -> float:
+    def _to_scene(self, x: float | Vector) -> float | Vector:
         return x / 1000 / self.scale
-
-    def _to_scene_vec(self, vec: Vector) -> tuple[float, ...]:
-        return tuple(x / 1000 / self.scale for x in vec)
 
     def _to_scene_vol(self, x: float) -> float:
         return x / 1000 ** 3 / self.scale ** 3

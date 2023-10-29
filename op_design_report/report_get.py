@@ -51,7 +51,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
         # Gem
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in Scale.from_scene_vec(ob.dimensions))
+        size = tuple(round(x, 2) for x in Scale.from_scene(ob.dimensions))
 
         # Warnings
         Warn.overlap(dup)
@@ -89,7 +89,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
 
         if item.datablock_type == "OBJECT":
             obs = (item.object,)
-            dim = Scale.from_scene_vec(item.object.dimensions)
+            dim = Scale.from_scene(item.object.dimensions)
         else:
             obs = [
                 ob for ob in item.collection.all_objects
@@ -98,7 +98,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
             if not obs:
                 continue
             BBox = asset.ObjectsBoundBox(obs)
-            dim = Scale.from_scene_vec(BBox.dimensions)
+            dim = Scale.from_scene(BBox.dimensions)
 
         if item.type == "WEIGHT":
             density = unit.convert_cm3_mm3(item.material_density)

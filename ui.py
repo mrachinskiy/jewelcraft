@@ -286,7 +286,7 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
 
     @classmethod
     def poll(cls, context):
-        return unit.check() is not unit.WARN_NONE
+        return unit.check() is not None
 
     def draw_header(self, context):
         self.layout.alert = True
