@@ -59,8 +59,7 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
 
     depsgraph = context.evaluated_depsgraph_get()
     Scale = unit.Scale()
-    from_scene_scale = Scale.from_scene
-    from_scene_vec = Scale.from_scene_vec
+    from_scene = Scale.from_scene
     mat_sca = Matrix.Diagonal((1.003, 1.003, 1.003)).to_4x4()
     color_var = Color((0.85, 0.35, 0.35))
     gems = set()
@@ -98,7 +97,7 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
     for dup, ob, _ in iter_gems(depsgraph):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in from_scene_vec(ob.dimensions))
+        size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
         gems.add((stone, cut, size))
 
     # Sort and assign colors
@@ -145,14 +144,14 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
             show = _ob_.select_get()
 
             if is_overlay and not show and is_gem:
-                show = from_scene_scale((loc1 - loc2).length - (rad1 + rad2)) < 0.7
+                show = from_scene((loc1 - loc2).length - (rad1 + rad2)) < 0.7
 
             if not show:
                 continue
 
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in from_scene_vec(ob.dimensions))
+        size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
         size, color = gem_map[(stone, cut, size)]
 
         ob_eval = ob.evaluated_get(depsgraph)
