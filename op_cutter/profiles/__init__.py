@@ -2,19 +2,18 @@
 # Copyright 2015-2023 Mikhail Rachinskiy
 
 from ...lib import gemlib
-from ._types import SectionSize
-from . import (
-    _fantasy,
-    _rectangle,
-    _round,
-    _triangle,
-)
+from . import _fantasy, _rectangle, _round, _triangle
 
 
-sections: dict[int, type[_round.Section]] = {
-    gemlib.SHAPE_FANTASY: _fantasy.Section,
-    gemlib.SHAPE_RECTANGLE: _rectangle.Section,
-    gemlib.SHAPE_SQUARE: _rectangle.Section,
-    gemlib.SHAPE_ROUND: _round.Section,
-    gemlib.SHAPE_TRIANGLE: _triangle.Section,
-}
+def get(op):
+    match op.shape:
+        case gemlib.SHAPE_FANTASY:
+            return _fantasy.Section(op)
+        case gemlib.SHAPE_RECTANGLE:
+            return _rectangle.Section(op)
+        case gemlib.SHAPE_SQUARE:
+            return _rectangle.Section(op)
+        case gemlib.SHAPE_ROUND:
+            return _round.Section(op)
+        case gemlib.SHAPE_TRIANGLE:
+            return _triangle.Section(op)

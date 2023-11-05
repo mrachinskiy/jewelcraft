@@ -1,11 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
-from math import pi, tau, sin, cos
+from math import cos, pi, sin, tau
 
 from bmesh.types import BMesh, BMVert
-
-from ._types import SectionSize
+from mathutils import Vector
 
 
 def _get_oval(detalization: int) -> list[tuple[float, float, float]]:
@@ -100,9 +99,7 @@ def _get_heart(detalization: int, mul_1: float, mul_2: float, mul_3: float) -> l
 
 
 class Section:
-    __slots__ = (
-        "coords",
-    )
+    __slots__ = ("coords",)
 
     def __init__(self, operator) -> None:
         detalization = operator.detalization
@@ -110,26 +107,29 @@ class Section:
         mul_2 = operator.mul_2
         mul_3 = operator.mul_3
 
-        if operator.cut == "MARQUISE":
-            self.coords = _get_marquise(detalization, mul_1, mul_2)
-        elif operator.cut == "PEAR":
-            self.coords = _get_pear(detalization, mul_1, mul_2)
-        elif operator.cut == "HEART":
-            self.coords = _get_heart(detalization, mul_1, mul_2, mul_3)
-        else:
-            self.coords = _get_oval(detalization)
+        match operator.cut:
+            case "MARQUISE":
+                self.coords = _get_marquise(detalization, mul_1, mul_2)
+            case "PEAR":
+                self.coords = _get_pear(detalization, mul_1, mul_2)
+            case "HEART":
+                self.coords = _get_heart(detalization, mul_1, mul_2, mul_3)
+            case _:
+                self.coords = _get_oval(detalization)
 
-    def add(self, bm: BMesh, size: SectionSize, co_fmt=lambda a, b: b) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: Vector, offset: tuple = (0.0, 0.0, 0.0), co_fmt=lambda a, b: b) -> tuple[list[BMVert], list[BMVert]]:
         vs1 = []
         vs2 = []
         app1 = vs1.append
         app2 = vs2.append
+        sx, sy, sz, sw = size
+        _x, _y, _z = offset
 
         for x, y, z in self.coords:
-            app1(bm.verts.new((x * size.x, y * size.y, size.z1)))
-            app2(bm.verts.new((x * size.x, y * size.y, co_fmt(z, size.z2))))
+            app1(bm.verts.new((x * sx, y * sy + _y, sz)))
+            app2(bm.verts.new((x * sx, y * sy + _y, co_fmt(z, sw))))
 
         return vs1, vs2
 
-    def add_preserve_z2(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
-        return self.add(bm, size, lambda a, b: a - b)
+    def add_preserve_z(self, bm: BMesh, size: Vector) -> tuple[list[BMVert], list[BMVert]]:
+        return self.add(bm, size, co_fmt=lambda a, b: a - b)

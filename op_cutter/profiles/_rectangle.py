@@ -3,9 +3,9 @@
 
 import bmesh
 from bmesh.types import BMesh, BMVert
+from mathutils import Vector
 
-from ...lib import mesh, gemlib
-from ._types import SectionSize
+from ...lib import gemlib, mesh
 
 
 def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
@@ -17,7 +17,7 @@ def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     ]
 
 
-def _add_rect_bevel(self, bm: BMesh, size: SectionSize) -> list[BMVert]:
+def _add_rect_bevel(self, bm: BMesh, size: Vector) -> list[BMVert]:
     if not self.bv_width:
         return _add_rect(bm, *size.xyz)
 
@@ -48,15 +48,15 @@ class Section:
         self.bv_segments = operator.bevel_corners_segments
         self.bv_profile = operator.bevel_corners_profile
 
-    def add(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: Vector, offset=None) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_rect_bevel(self, bm, size)
-        s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
+        s2 = [bm.verts.new((*v.co.xy, size.w)) for v in s1]
         return s1, s2
 
     @staticmethod
-    def add_seat_rect(bm: BMesh, girdle_verts: list[BMVert], Girdle: SectionSize, Hole: SectionSize) -> None:
+    def add_seat_rect(bm: BMesh, girdle_verts: list[BMVert], Girdle: Vector, Hole: Vector) -> None:
         scale_y = Hole.y / (Girdle.y or Hole.y)
-        vs = [bm.verts.new((v.co.x, v.co.y * scale_y, Hole.z1)) for v in girdle_verts]
+        vs = [bm.verts.new((v.co.x, v.co.y * scale_y, Hole.z)) for v in girdle_verts]
         es = mesh.connect_verts(bm, vs)
         mesh.bridge_verts(bm, girdle_verts, vs)
 
