@@ -1,11 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
-from math import tau, sin, cos
+from math import cos, sin, tau
 
 from bmesh.types import BMesh, BMVert
-
-from ._types import SectionSize
+from mathutils import Vector
 
 
 class Section:
@@ -16,7 +15,7 @@ class Section:
     def __init__(self, operator) -> None:
         self.detalization = operator.detalization
 
-    def add(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: Vector, offset=None) -> tuple[list[BMVert], list[BMVert]]:
         angle = tau / self.detalization
         vs1 = []
         vs2 = []
@@ -27,7 +26,7 @@ class Section:
             x = sin(i * angle) * size.y
             y = cos(i * angle) * size.y
 
-            app1(bm.verts.new((-x, y, size.z1)))
-            app2(bm.verts.new((-x, y, size.z2)))
+            app1(bm.verts.new((-x, y, size.z)))
+            app2(bm.verts.new((-x, y, size.w)))
 
         return vs1, vs2

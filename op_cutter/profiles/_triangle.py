@@ -5,9 +5,9 @@ from collections.abc import Iterator
 
 import bmesh
 from bmesh.types import BMesh, BMVert
+from mathutils import Vector
 
 from ...lib import mesh
-from ._types import SectionSize
 
 
 def _add_tri(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
@@ -18,7 +18,7 @@ def _add_tri(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     ]
 
 
-def _add_tri_bevel(self, bm: BMesh, size: SectionSize) -> list[BMVert]:
+def _add_tri_bevel(self, bm: BMesh, size: Vector) -> list[BMVert]:
     if not (self.bv_width or self.curve_factor):
         return _add_tri(bm, *size.xyz)
 
@@ -39,7 +39,7 @@ def _add_tri_bevel(self, bm: BMesh, size: SectionSize) -> list[BMVert]:
     if f.normal.z < 0.0:
         f.normal_flip()
 
-    verts = [bm.verts.new((*v.co.xy, size.z1)) for v in f.verts]
+    verts = [bm.verts.new((*v.co.xy, size.z)) for v in f.verts]
     bm_temp.free()
 
     return verts
@@ -83,7 +83,7 @@ class Section:
         self.curve_factor = operator.curve_profile_factor
         self.curve_segments = operator.curve_profile_segments
 
-    def add(self, bm: BMesh, size: SectionSize) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: Vector, offset=None) -> tuple[list[BMVert], list[BMVert]]:
         s1 = _add_tri_bevel(self, bm, size)
-        s2 = [bm.verts.new((*v.co.xy, size.z2)) for v in s1]
+        s2 = [bm.verts.new((*v.co.xy, size.w)) for v in s1]
         return s1, s2
