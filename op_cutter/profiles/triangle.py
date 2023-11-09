@@ -18,33 +18,6 @@ def _add_tri(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     ]
 
 
-def _add_tri_bevel(self, bm: BMesh, size: Vector) -> list[BMVert]:
-    if not (self.bv_width or self.curve_factor):
-        return _add_tri(bm, *size.xyz)
-
-    bm_temp = bmesh.new()
-    vs = _add_tri(bm_temp, size.x, size.y, 0.0)
-    es = mesh.connect_verts(bm_temp, vs)
-
-    if self.bv_width:
-        bv = bmesh.ops.bevel(bm_temp, geom=vs, affect="VERTICES", clamp_overlap=True, offset=self.bv_width, offset_type=self.bv_type, segments=self.bv_segments, profile=self.bv_profile)
-        es = tuple(set(bm_temp.edges) - set(bv["edges"]))
-
-    if self.curve_factor:
-        bm_temp.normal_update()
-        bmesh.ops.subdivide_edges(bm_temp, edges=es, smooth=self.curve_factor, smooth_falloff="LINEAR", cuts=self.curve_segments)
-
-    f = bm_temp.faces.new(_edge_loop_walk(bm_temp.verts))
-    f.normal_update()
-    if f.normal.z < 0.0:
-        f.normal_flip()
-
-    verts = [bm.verts.new((*v.co.xy, size.z)) for v in f.verts]
-    bm_temp.free()
-
-    return verts
-
-
 def _edge_loop_walk(verts: list[BMVert]) -> Iterator[BMVert]:
     v0 = v = next(iter(verts))
     e = v.link_edges[1]
@@ -84,6 +57,32 @@ class Section:
         self.curve_segments = operator.curve_profile_segments
 
     def add(self, bm: BMesh, size: Vector, offset=None) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_tri_bevel(self, bm, size)
+        s1 = self._add_tri_bevel(bm, size)
         s2 = [bm.verts.new((*v.co.xy, size.w)) for v in s1]
         return s1, s2
+
+    def _add_tri_bevel(self, bm: BMesh, size: Vector) -> list[BMVert]:
+        if not (self.bv_width or self.curve_factor):
+            return _add_tri(bm, *size.xyz)
+
+        bm_temp = bmesh.new()
+        vs = _add_tri(bm_temp, size.x, size.y, 0.0)
+        es = mesh.connect_verts(bm_temp, vs)
+
+        if self.bv_width:
+            bv = bmesh.ops.bevel(bm_temp, geom=vs, affect="VERTICES", clamp_overlap=True, offset=self.bv_width, offset_type=self.bv_type, segments=self.bv_segments, profile=self.bv_profile)
+            es = tuple(set(bm_temp.edges) - set(bv["edges"]))
+
+        if self.curve_factor:
+            bm_temp.normal_update()
+            bmesh.ops.subdivide_edges(bm_temp, edges=es, smooth=self.curve_factor, smooth_falloff="LINEAR", cuts=self.curve_segments)
+
+        f = bm_temp.faces.new(_edge_loop_walk(bm_temp.verts))
+        f.normal_update()
+        if f.normal.z < 0.0:
+            f.normal_flip()
+
+        verts = [bm.verts.new((*v.co.xy, size.z)) for v in f.verts]
+        bm_temp.free()
+
+        return verts

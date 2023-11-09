@@ -67,7 +67,7 @@ def get(self):
 
     # Girdle
     if self.cut == "HEART":
-        parts += Section.add_preserve_z(bm, Girdle)
+        parts += Section.add_z_fmt(bm, Girdle)
     else:
         parts += Section.add(bm, Girdle)
     bm.faces.new(parts[0])

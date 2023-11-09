@@ -117,7 +117,7 @@ class Section:
             case _:
                 self.coords = _get_oval(detalization)
 
-    def add(self, bm: BMesh, size: Vector, offset: tuple = (0.0, 0.0, 0.0), co_fmt=lambda a, b: b) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: Vector, offset: tuple = (0.0, 0.0, 0.0), z_fmt=lambda a, b: b) -> tuple[list[BMVert], list[BMVert]]:
         vs1 = []
         vs2 = []
         app1 = vs1.append
@@ -127,9 +127,9 @@ class Section:
 
         for x, y, z in self.coords:
             app1(bm.verts.new((x * sx, y * sy + _y, sz)))
-            app2(bm.verts.new((x * sx, y * sy + _y, co_fmt(z, sw))))
+            app2(bm.verts.new((x * sx, y * sy + _y, z_fmt(z, sw))))
 
         return vs1, vs2
 
-    def add_preserve_z(self, bm: BMesh, size: Vector) -> tuple[list[BMVert], list[BMVert]]:
-        return self.add(bm, size, co_fmt=lambda a, b: a - b)
+    def add_z_fmt(self, bm: BMesh, size: Vector) -> tuple[list[BMVert], list[BMVert]]:
+        return self.add(bm, size, z_fmt=lambda a, b: a - b)
