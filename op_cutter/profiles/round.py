@@ -8,9 +8,7 @@ from mathutils import Vector
 
 
 class Section:
-    __slots__ = (
-        "detalization",
-    )
+    __slots__ = ("detalization",)
 
     def __init__(self, operator) -> None:
         self.detalization = operator.detalization

@@ -17,25 +17,13 @@ def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
     ]
 
 
-def _add_rect_bevel(self, bm: BMesh, size: Vector) -> list[BMVert]:
-    if not self.bv_width:
-        return _add_rect(bm, *size.xyz)
-
-    bm_temp = bmesh.new()
-    vs = _add_rect(bm_temp, *size.xyz)
-    bm_temp.faces.new(vs)
-
-    bmesh.ops.bevel(bm_temp, geom=vs, affect="VERTICES", clamp_overlap=True, offset=self.bv_width, offset_type=self.bv_type, segments=self.bv_segments, profile=self.bv_profile)
-
-    f = next(iter(bm_temp.faces))
-    verts = [bm.verts.new(v.co) for v in f.verts]
-    bm_temp.free()
-
-    return verts
-
-
 class Section:
-    __slots__ = "bv_width", "bv_type", "bv_segments", "bv_profile"
+    __slots__ = (
+        "bv_type",
+        "bv_width",
+        "bv_segments",
+        "bv_profile",
+    )
 
     def __init__(self, operator) -> None:
         if operator.shape is gemlib.SHAPE_RECTANGLE:
@@ -49,7 +37,7 @@ class Section:
         self.bv_profile = operator.bevel_corners_profile
 
     def add(self, bm: BMesh, size: Vector, offset=None) -> tuple[list[BMVert], list[BMVert]]:
-        s1 = _add_rect_bevel(self, bm, size)
+        s1 = self._add_rect_bevel(bm, size)
         s2 = [bm.verts.new((*v.co.xy, size.w)) for v in s1]
         return s1, s2
 
@@ -74,3 +62,19 @@ class Section:
 
         bmesh.ops.collapse(bm, edges=es1)
         bmesh.ops.collapse(bm, edges=es2)
+
+    def _add_rect_bevel(self, bm: BMesh, size: Vector) -> list[BMVert]:
+        if not self.bv_width:
+            return _add_rect(bm, *size.xyz)
+
+        bm_temp = bmesh.new()
+        vs = _add_rect(bm_temp, *size.xyz)
+        bm_temp.faces.new(vs)
+
+        bmesh.ops.bevel(bm_temp, geom=vs, affect="VERTICES", clamp_overlap=True, offset=self.bv_width, offset_type=self.bv_type, segments=self.bv_segments, profile=self.bv_profile)
+
+        f = next(iter(bm_temp.faces))
+        verts = [bm.verts.new(v.co) for v in f.verts]
+        bm_temp.free()
+
+        return verts
