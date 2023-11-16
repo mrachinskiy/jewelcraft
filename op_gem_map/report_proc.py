@@ -3,7 +3,7 @@
 
 from mathutils import Color
 
-from ..lib import gettext, gemlib
+from ..lib import gemlib, gettext
 
 
 def _to_int(x: float) -> int | float:
@@ -12,8 +12,7 @@ def _to_int(x: float) -> int | float:
     return x
 
 
-def data_process(ReportData, lang):
-    view_data = {}
+def data_process(ReportData, lang: str) -> tuple[str, tuple[int]]:
     table_data = []
     _table_tmp = []
     col_stone = 0
@@ -55,18 +54,14 @@ def data_process(ReportData, lang):
             trait = None
 
         if trait is gemlib.TRAIT_XY_SYMMETRY:
-            size_raw_fmt = str(l)
             size_fmt = f"{l} {_mm}"
         elif trait is gemlib.TRAIT_X_SIZE:
-            size_raw_fmt = f"{w}×{l}"
             size_fmt = f"{w} × {l} {_mm}"
         else:
-            size_raw_fmt = f"{l}×{w}"
             size_fmt = f"{l} × {w} {_mm}"
 
         qty_fmt = f"{qty} {_pcs}"
 
-        view_data[(stone, cut, size)] = (size_raw_fmt, color)
         _table_tmp.append((stone_fmt, cut_fmt, size_fmt, qty_fmt, color))
 
         # Columns width
@@ -80,4 +75,4 @@ def data_process(ReportData, lang):
         row = f"{cut:{col_cut}}   {size:{col_size}}   {stone:{col_stone}}   {qty}"
         table_data.append((row, color))
 
-    return view_data, table_data
+    return table_data

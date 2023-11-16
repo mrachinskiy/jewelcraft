@@ -234,7 +234,7 @@ class OBJECT_OT_gem_recover(Operator):
 
     def modal(self, context, event):
         if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
-            bpy.types.SpaceView3D.draw_handler_remove(self.handler, "WINDOW")
+            bpy.types.SpaceView3D.draw_handler_remove(self.handler_axis, "WINDOW")
             bpy.types.SpaceView3D.draw_handler_remove(self.handler_text, "WINDOW")
             context.workspace.status_text_set(None)
             context.region.tag_redraw()
@@ -465,36 +465,31 @@ class OBJECT_OT_gem_recover(Operator):
 
         # Onscreen
 
-        self.padding_x, self.padding_y = view3d_lib.padding_init()
-
-        view3d_lib.options_init(
-            self,
-            (
-                (_("In Front"), "(X)", "axis_in_front", view3d_lib.TYPE_BOOL),
-                (_("Size"), "(-/=)", "axis_size", view3d_lib.TYPE_NUM),
-                (_("Width"), "([/])", "axis_width", view3d_lib.TYPE_NUM),
-                ("", "", None, None),
-                (_("Orientation"), "(←/→)", "rot_var", view3d_lib.TYPE_NUM),
-                (_("Center"), "(↓/↑)", "xy_loc", view3d_lib.TYPE_ENUM),
-                ("", "", None, None),
-                (_("Align Y"), "(Y)", "y_align", view3d_lib.TYPE_BOOL),
-                ("", "", "y_align", view3d_lib.TYPE_DEP_ON),
-                (_("Snap to Edges"), "(E)", "snap_to_edge", view3d_lib.TYPE_BOOL),
-                (_("Direction"), "(Ctrl ←/→)", "y_var", view3d_lib.TYPE_NUM),
-            ),
+        view_options = (
+            (_("In Front"), "(X)", "axis_in_front", view3d_lib.TYPE_BOOL),
+            (_("Size"), "(-/=)", "axis_size", view3d_lib.TYPE_INT),
+            (_("Width"), "([/])", "axis_width", view3d_lib.TYPE_INT),
+            ("", "", None, None),
+            (_("Orientation"), "(←/→)", "rot_var", view3d_lib.TYPE_INT),
+            (_("Center"), "(↓/↑)", "xy_loc", view3d_lib.TYPE_ENUM),
+            ("", "", None, None),
+            (_("Align Y"), "(Y)", "y_align", view3d_lib.TYPE_BOOL),
+            ("", "", "y_align", view3d_lib.TYPE_DEP_ON),
+            (_("Snap to Edges"), "(E)", "snap_to_edge", view3d_lib.TYPE_BOOL),
+            (_("Direction"), "(Ctrl ←/→)", "y_var", view3d_lib.TYPE_INT),
         )
 
         # Draw handlers
 
-        self.handler = bpy.types.SpaceView3D.draw_handler_add(
+        self.handler_axis = bpy.types.SpaceView3D.draw_handler_add(
             view3d_lib.draw_axis,
             (self, context),
             "WINDOW",
             "POST_VIEW",
         )
         self.handler_text = bpy.types.SpaceView3D.draw_handler_add(
-            view3d_lib.options_display,
-            (self, context, self.padding_x, self.padding_y),
+            view3d_lib.draw_options,
+            (self, view_options, *view3d_lib.get_xy()),
             "WINDOW",
             "POST_PIXEL",
         )

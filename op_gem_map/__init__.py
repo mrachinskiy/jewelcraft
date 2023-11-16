@@ -85,25 +85,19 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         self.region_3d = context.space_data.region_3d
         self.is_rendering = False
 
-        # 3D View
+        # 3D View Options
         # ----------------------------
 
-        self.view_padding_left, self.view_padding_top = view3d_lib.padding_init()
-        self.view_margin = 40
-
-        view3d_lib.options_init(
-            self,
-            (
-                (_("Limit by Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
-                (_("Viewport Background"), "(B)", "use_background", view3d_lib.TYPE_BOOL),
-                (_("Save to Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
-            ),
+        self.view_options = (
+            (_("Limit by Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
+            (_("Viewport Background"), "(B)", "use_background", view3d_lib.TYPE_BOOL),
+            (_("Save to Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
         )
 
         # Gem report
         # ----------------------------
 
-        self.view_data, self.table_data = report_proc.data_process(ReportData, self.report_lang)
+        self.table_data = report_proc.data_process(ReportData, self.report_lang)
 
         # Warnings
         # ----------------------------
