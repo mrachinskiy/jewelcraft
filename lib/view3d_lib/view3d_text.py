@@ -1,46 +1,48 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
-import bpy
 import blf
-
+import bpy
 
 TYPE_BOOL = 1
-TYPE_NUM = 2
+TYPE_INT = 2
 TYPE_PROC = 3
 TYPE_ENUM = 4
 TYPE_DEP_ON = 5
 TYPE_DEP_OFF = 6
 
 
-def padding_init(x=20, y=10) -> tuple[int, int]:
+def get_xy() -> tuple[int, int]:
+    overlay = bpy.context.space_data.overlay
+    prefs = bpy.context.preferences
+    view = prefs.view
+    ui_scale = prefs.view.ui_scale
+    fontscale = prefs.ui_styles[0].widget_label.points * ui_scale / 11  # 11 is the default font size
+
+    x = round(20 * ui_scale)
+    y = round(10 * ui_scale)
+
     for region in bpy.context.area.regions:
         if region.type in {"HEADER", "TOOL_HEADER"}:
             y += region.height
         elif region.type == "TOOLS":
             x += region.width
 
-    view = bpy.context.preferences.view
-    overlay = bpy.context.space_data.overlay
+    _y = 0
 
     if overlay.show_text and (view.show_view_name or view.show_object_info):
-        y += 60
+        _y += 60
     if overlay.show_stats:
-        y += 140
+        _y += 140
 
+    y += round(_y * fontscale)
     y = bpy.context.region.height - y
 
     return x, y
 
 
-def options_init(self, values: tuple[tuple[str, str, str, int], ...]) -> None:
-    self.option_list = values
-    self.option_col_1_max = max(self.option_list, key=lambda x: len(x[0]))[0]
-    self.option_col_2_max = max(self.option_list, key=lambda x: len(x[1]))[1]
-
-
-def options_display(self, context, x: int, y: int) -> None:
-    prefs = context.preferences
+def draw_options(props, options: tuple[tuple[str, str, str, int]], x: int, y: int) -> None:
+    prefs = bpy.context.preferences
 
     color_text = prefs.themes[0].view_3d.space.text_hi
     color_grey = (0.67, 0.67, 0.67, 1.0)
@@ -50,17 +52,22 @@ def options_display(self, context, x: int, y: int) -> None:
     color_blue = (0.5, 0.6, 1.0, 1.0)
 
     fontid = 1
-    fontsize = round(prefs.ui_styles[0].widget_label.points * prefs.view.ui_scale * 1.333)
+    fontscale = prefs.ui_styles[0].widget_label.points * prefs.view.ui_scale / 11  # 11 is the default font size
+    fontsize = round(fontscale * 15)
 
     blf.size(fontid, fontsize)
 
-    font_w_1, font_h = blf.dimensions(fontid, self.option_col_1_max)
-    font_w_2, _ = blf.dimensions(fontid, self.option_col_2_max)
-    font_row_height = round(font_h * 1.5)
+    col_max = (
+        max((x[0] for x in options), key=len),
+        max((x[1] for x in options), key=len),
+    )
+    w_col1, h_font = blf.dimensions(fontid, col_max[0])
+    w_col2, _ = blf.dimensions(fontid, col_max[1])
+    lineheight = round(h_font * 1.5)
 
     layout_enabled = True
 
-    for option, hotkey, prop, type_ in self.option_list:
+    for option, hotkey, prop, type_ in options:
 
         if type_ is TYPE_DEP_OFF:
             layout_enabled = True
@@ -70,67 +77,67 @@ def options_display(self, context, x: int, y: int) -> None:
             continue
 
         if type_ is TYPE_DEP_ON:
-            layout_enabled = getattr(self, prop)
+            layout_enabled = getattr(props, prop)
             continue
 
-        y -= font_row_height
-        x_ofst = x
+        y -= lineheight
+        _x = x
 
         blf.position(fontid, x, y, 0.0)
         blf.color(fontid, *color_text, 1.0)
         blf.draw(fontid, option)
 
         if hotkey:
-            x_ofst += font_w_1 + 20
-            blf.position(fontid, x_ofst, y, 0.0)
+            _x += w_col1 + 20
+            blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_grey)
             blf.draw(fontid, hotkey)
 
         if type_ is TYPE_BOOL:
-            x_ofst += font_w_2 + 10
-            blf.position(fontid, x_ofst, y, 0.0)
+            _x += w_col2 + 10
+            blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
             blf.draw(fontid, ":")
 
-            x_ofst += 20
-            blf.position(fontid, x_ofst, y, 0.0)
-            if getattr(self, prop):
+            _x += 20
+            blf.position(fontid, _x, y, 0.0)
+            if getattr(props, prop):
                 blf.color(fontid, *color_green)
                 blf.draw(fontid, "ON")
             else:
                 blf.color(fontid, *color_red)
                 blf.draw(fontid, "OFF")
 
-        elif type_ is TYPE_NUM:
-            x_ofst += font_w_2 + 10
-            blf.position(fontid, x_ofst, y, 0.0)
+        elif type_ is TYPE_INT:
+            _x += w_col2 + 10
+            blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
             blf.draw(fontid, ":")
 
-            x_ofst += 20
-            blf.position(fontid, x_ofst, y, 0.0)
+            _x += 20
+            blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_blue)
-            blf.draw(fontid, str(round(getattr(self, prop), 1)))
+            blf.draw(fontid, str(round(getattr(props, prop), 1)))
 
         elif type_ is TYPE_ENUM:
-            x_ofst += font_w_2 + 10
-            blf.position(fontid, x_ofst, y, 0.0)
+            _x += w_col2 + 10
+            blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
             blf.draw(fontid, ":")
 
-            x_ofst += 20
-            blf.position(fontid, x_ofst, y, 0.0)
+            _x += 20
+            blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
-            blf.draw(fontid, getattr(self, f"{prop}_enum")[getattr(self, prop)])
+            blf.draw(fontid, getattr(props, f"{prop}_enum")[getattr(props, prop)])
 
         elif type_ is TYPE_PROC:
-            if getattr(self, prop):
-                x_ofst += font_w_2 + 10
-                blf.position(fontid, x_ofst, y, 0.0)
+            if getattr(props, prop):
+                _x += w_col2 + 10
+                blf.position(fontid, _x, y, 0.0)
                 blf.color(fontid, *color_text, 1.0)
                 blf.draw(fontid, ":")
 
-                x_ofst += 20
-                blf.position(fontid, x_ofst, y, 0.0)
+                _x += 20
+                blf.position(fontid, _x, y, 0.0)
                 blf.color(fontid, *color_yellow)
                 blf.draw(fontid, "PROCESSING...")

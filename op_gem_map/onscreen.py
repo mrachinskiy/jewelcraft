@@ -28,20 +28,20 @@ def handler_del():
 
 
 def _draw(self, context):
-    x = self.view_padding_left
-    y = self.view_padding_top
+    separator = 40
+    x, y = view3d_lib.get_xy()
 
     # Onscreen text
     # -----------------------------
 
     y = gem_table(self, x, y)
-    y -= self.view_margin
+    y -= separator
 
     if self.show_warn:
         y = warning(self, x, y)
-        y -= self.view_margin
+        y -= separator
 
-    view3d_lib.options_display(self, context, x, y)
+    view3d_lib.draw_options(self, self.view_options, x, y)
 
     # Reset state
     # ----------------------------
