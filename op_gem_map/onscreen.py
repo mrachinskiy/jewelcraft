@@ -12,11 +12,11 @@ Color = tuple[float, float, float]
 _handler = None
 
 
-def handler_add(self, context):
+def handler_add(self, context, layout):
     global _handler
 
     if _handler is None:
-        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context), "WINDOW", "POST_PIXEL")
+        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context, layout), "WINDOW", "POST_PIXEL")
 
 
 def handler_del():
@@ -27,7 +27,7 @@ def handler_del():
         _handler = None
 
 
-def _draw(self, context):
+def _draw(self, context, layout):
     separator = 40
     x, y = view3d_lib.get_xy()
 
@@ -41,7 +41,7 @@ def _draw(self, context):
         y = warning(self, x, y)
         y -= separator
 
-    view3d_lib.draw_options(self, self.view_options, x, y)
+    view3d_lib.draw_options(self, layout, x, y)
 
     # Reset state
     # ----------------------------

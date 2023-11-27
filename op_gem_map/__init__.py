@@ -88,11 +88,10 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         # 3D View Options
         # ----------------------------
 
-        self.view_options = (
-            (_("Limit by Selection"), "(S)", "use_select", view3d_lib.TYPE_BOOL),
-            (_("Viewport Background"), "(B)", "use_background", view3d_lib.TYPE_BOOL),
-            (_("Save to Image"), "(F12)", "is_rendering", view3d_lib.TYPE_PROC),
-        )
+        lay = view3d_lib.Layout()
+        lay.bool(_("Limit by Selection"), "(S)", "use_select")
+        lay.bool(_("Viewport Background"), "(B)", "use_background")
+        lay.proc(_("Save to Image"), "(F12)", "is_rendering")
 
         # Gem report
         # ----------------------------
@@ -112,7 +111,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
 
         context.window_manager.jewelcraft.show_gem_map = False
         overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select)
-        onscreen.handler_add(self, context)
+        onscreen.handler_add(self, context, lay)
 
         context.window_manager.modal_handler_add(self)
         context.workspace.status_text_set("ESC/↵/␣: Exit")

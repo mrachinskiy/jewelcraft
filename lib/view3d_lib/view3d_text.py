@@ -1,15 +1,69 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright 2015-2023 Mikhail Rachinskiy
 
+from collections.abc import Iterator
+from typing import NamedTuple
+
 import blf
 import bpy
 
-TYPE_BOOL = 1
-TYPE_INT = 2
-TYPE_PROC = 3
-TYPE_ENUM = 4
-TYPE_DEP_ON = 5
-TYPE_DEP_OFF = 6
+_TYPE_BOOL = 1
+_TYPE_INT = 2
+_TYPE_PROC = 3
+_TYPE_ENUM = 4
+
+
+class _Prop(NamedTuple):
+    type: int
+    name: str
+    key: str
+    attr: str
+    items: tuple[str]
+
+
+class Layout:
+    __slots__ = "children", "enabled_by", "col_max"
+    children: "list[Layout | _Prop]"
+    enabled_by: str
+    col_max: list[str]
+
+    def __init__(self) -> None:
+        self.children = []
+        self.enabled_by = ""
+        self.col_max = ["", ""]
+
+    def get_col_max(self) -> list[int]:
+        for child in self.children:
+            if child.__class__ is Layout:
+                self.col_max[0] = max(self.col_max[0], child.col_max[0], key=len)
+                self.col_max[1] = max(self.col_max[1], child.col_max[1], key=len)
+
+        return self.col_max
+
+    def layout(self) -> "Layout":
+        lay = Layout()
+        self.children.append(lay)
+        return lay
+
+    def _prop(self, type: int, name: str, key: str, attr: str, items: tuple[str] = None) -> None:
+        self.children.append(_Prop(type, name, key, attr, items))
+        self.col_max[0] = max(self.col_max[0], name, key=len)
+        self.col_max[1] = max(self.col_max[1], key, key=len)
+
+    def separator(self) -> None:
+        self.children.append(_Prop(None, None, None, None, None))
+
+    def bool(self, name: str, key: str, attr: str) -> None:
+        self._prop(_TYPE_BOOL, name, key, attr)
+
+    def int(self, name: str, key: str, attr: str) -> None:
+        self._prop(_TYPE_INT, name, key, attr)
+
+    def proc(self, name: str, key: str, attr: str) -> None:
+        self._prop(_TYPE_PROC, name, key, attr)
+
+    def enum(self, name: str, key: str, attr: str, items: tuple[str]) -> None:
+        self._prop(_TYPE_ENUM, name, key, attr, items)
 
 
 def get_xy() -> tuple[int, int]:
@@ -41,7 +95,19 @@ def get_xy() -> tuple[int, int]:
     return x, y
 
 
-def draw_options(props, options: tuple[tuple[str, str, str, int]], x: int, y: int) -> None:
+def _get_props(layout: Layout, data) -> Iterator[_Prop]:
+    for child in layout.children:
+        if child.__class__ is _Prop:
+            yield child
+            continue
+
+        if child.enabled_by and not getattr(data, child.enabled_by):
+            continue
+
+        yield from _get_props(child, data)
+
+
+def draw_options(data, layout: Layout, x: int, y: int) -> None:
     prefs = bpy.context.preferences
 
     color_text = prefs.themes[0].view_3d.space.text_hi
@@ -57,43 +123,30 @@ def draw_options(props, options: tuple[tuple[str, str, str, int]], x: int, y: in
 
     blf.size(fontid, fontsize)
 
-    col_max = (
-        max((x[0] for x in options), key=len),
-        max((x[1] for x in options), key=len),
-    )
-    w_col1, h_font = blf.dimensions(fontid, col_max[0])
+    col_max = layout.get_col_max()
+    w_col1, _ = blf.dimensions(fontid, col_max[0])
     w_col2, _ = blf.dimensions(fontid, col_max[1])
-    lineheight = round(h_font * 1.5)
+    _, h_font = blf.dimensions(fontid, "M")
+    lineheight = round(h_font * 1.8)
 
-    layout_enabled = True
-
-    for option, hotkey, prop, type_ in options:
-
-        if type_ is TYPE_DEP_OFF:
-            layout_enabled = True
-            continue
-
-        if not layout_enabled:
-            continue
-
-        if type_ is TYPE_DEP_ON:
-            layout_enabled = getattr(props, prop)
-            continue
-
+    for prop in _get_props(layout, data):
         y -= lineheight
         _x = x
 
+        if prop.type is None:
+            continue
+
         blf.position(fontid, x, y, 0.0)
         blf.color(fontid, *color_text, 1.0)
-        blf.draw(fontid, option)
+        blf.draw(fontid, prop.name)
 
-        if hotkey:
+        if prop.key:
             _x += w_col1 + 20
             blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_grey)
-            blf.draw(fontid, hotkey)
+            blf.draw(fontid, prop.key)
 
-        if type_ is TYPE_BOOL:
+        if prop.type is _TYPE_BOOL:
             _x += w_col2 + 10
             blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
@@ -101,14 +154,14 @@ def draw_options(props, options: tuple[tuple[str, str, str, int]], x: int, y: in
 
             _x += 20
             blf.position(fontid, _x, y, 0.0)
-            if getattr(props, prop):
+            if getattr(data, prop.attr):
                 blf.color(fontid, *color_green)
                 blf.draw(fontid, "ON")
             else:
                 blf.color(fontid, *color_red)
                 blf.draw(fontid, "OFF")
 
-        elif type_ is TYPE_INT:
+        elif prop.type is _TYPE_INT:
             _x += w_col2 + 10
             blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
@@ -117,9 +170,9 @@ def draw_options(props, options: tuple[tuple[str, str, str, int]], x: int, y: in
             _x += 20
             blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_blue)
-            blf.draw(fontid, str(round(getattr(props, prop), 1)))
+            blf.draw(fontid, str(round(getattr(data, prop.attr), 1)))
 
-        elif type_ is TYPE_ENUM:
+        elif prop.type is _TYPE_ENUM:
             _x += w_col2 + 10
             blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
@@ -128,10 +181,10 @@ def draw_options(props, options: tuple[tuple[str, str, str, int]], x: int, y: in
             _x += 20
             blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_text, 1.0)
-            blf.draw(fontid, getattr(props, f"{prop}_enum")[getattr(props, prop)])
+            blf.draw(fontid, prop.items[getattr(data, prop.attr)])
 
-        elif type_ is TYPE_PROC:
-            if getattr(props, prop):
+        elif prop.type is _TYPE_PROC:
+            if getattr(data, prop.attr):
                 _x += w_col2 + 10
                 blf.position(fontid, _x, y, 0.0)
                 blf.color(fontid, *color_text, 1.0)
