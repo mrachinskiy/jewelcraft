@@ -459,25 +459,26 @@ class OBJECT_OT_gem_recover(Operator):
         self.rot_var = 1
         self.y_var = 1
         self.xy_loc = 0
-        self.xy_loc_enum = (_("Median"), _("Bounds"), _("Culet"))
 
         self.modal_pass(context)
 
         # Onscreen
 
-        view_options = (
-            (_("In Front"), "(X)", "axis_in_front", view3d_lib.TYPE_BOOL),
-            (_("Size"), "(-/=)", "axis_size", view3d_lib.TYPE_INT),
-            (_("Width"), "([/])", "axis_width", view3d_lib.TYPE_INT),
-            ("", "", None, None),
-            (_("Orientation"), "(←/→)", "rot_var", view3d_lib.TYPE_INT),
-            (_("Center"), "(↓/↑)", "xy_loc", view3d_lib.TYPE_ENUM),
-            ("", "", None, None),
-            (_("Align Y"), "(Y)", "y_align", view3d_lib.TYPE_BOOL),
-            ("", "", "y_align", view3d_lib.TYPE_DEP_ON),
-            (_("Snap to Edges"), "(E)", "snap_to_edge", view3d_lib.TYPE_BOOL),
-            (_("Direction"), "(Ctrl ←/→)", "y_var", view3d_lib.TYPE_INT),
-        )
+        lay = view3d_lib.Layout()
+
+        lay.bool(_("In Front"), "(X)", "axis_in_front")
+        lay.int(_("Size"), "(-/=)", "axis_size")
+        lay.int(_("Width"), "([/])", "axis_width")
+        lay.separator()
+        lay.int(_("Orientation"), "(←/→)", "rot_var")
+        lay.enum(_("Center"), "(↓/↑)", "xy_loc", (_("Median"), _("Bounds"), _("Culet")))
+        lay.separator()
+        lay.bool(_("Align Y"), "(Y)", "y_align")
+
+        sub = lay.layout()
+        sub.enabled_by = "y_align"
+        sub.bool(_("Snap to Edges"), "(E)", "snap_to_edge")
+        sub.int(_("Direction"), "(Ctrl ←/→)", "y_var")
 
         # Draw handlers
 
@@ -489,7 +490,7 @@ class OBJECT_OT_gem_recover(Operator):
         )
         self.handler_text = bpy.types.SpaceView3D.draw_handler_add(
             view3d_lib.draw_options,
-            (self, view_options, *view3d_lib.get_xy()),
+            (self, lay, *view3d_lib.get_xy()),
             "WINDOW",
             "POST_PIXEL",
         )
