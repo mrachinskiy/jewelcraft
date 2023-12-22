@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.15\n"
 "POT-Creation-Date: 2023-09-27\n"
-"PO-Revision-Date: 2021-08-17\n"
+"PO-Revision-Date: 2023-12-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
-"Language: zh_CN\n"
+"Language: zh_HANS\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,7 +17,7 @@ msgid "Show Asset Name"
 msgstr "显示资产名称"
 
 msgid "Design Report"
-msgstr ""
+msgstr "设计报告"
 
 msgid "Report Language"
 msgstr "报告语言"
@@ -38,7 +38,7 @@ msgid "Weighting"
 msgstr "重量评估"
 
 msgid "Hide Built-in Material Lists"
-msgstr ""
+msgstr "隐藏内置材质列表"
 
 msgid "Prongs"
 msgstr "起钉"
@@ -80,19 +80,19 @@ msgid "Limit by Selection"
 msgstr "按选择限制"
 
 msgid "Viewport Background"
-msgstr ""
+msgstr "视图背景"
 
 msgid "Save to Image"
 msgstr "保存到图像"
 
 msgid "Additional Entries"
-msgstr ""
+msgstr "其他条目"
 
 msgid "Gem Map"
 msgstr "宝石地图"
 
 msgid "Gem Map Overlay"
-msgstr ""
+msgstr "宝石贴图叠加"
 
 msgid "Gem Table"
 msgstr "宝石表"
@@ -104,22 +104,22 @@ msgid "Weight"
 msgstr "重量"
 
 msgid "Preview Resolution"
-msgstr ""
+msgstr "解析率"
 
 msgid "Preview Scale"
-msgstr ""
+msgstr "预览比例"
 
 msgid "Category is empty"
-msgstr ""
+msgstr "类别为空"
 
 msgid "Popover Width"
-msgstr ""
+msgstr "弹出窗口宽度"
 
 msgid "Snap to Edges"
-msgstr ""
+msgstr "捕捉到边"
 
 msgid "Spacing Overlay"
-msgstr ""
+msgstr "间距覆盖"
 
 msgid "Asset Name"
 msgstr "资产名称"
@@ -215,28 +215,28 @@ msgid "Distribution (%)"
 msgstr "散开"
 
 msgid "Only ID"
-msgstr ""
+msgstr "仅ID"
 
 msgid "Force Edit"
-msgstr ""
+msgstr "强制编辑"
 
 msgid "Zero dimensions"
-msgstr ""
+msgstr "零外形尺寸"
 
 msgid "Action completed"
-msgstr ""
+msgstr "动作完成"
 
 msgid "No corresponding size"
-msgstr ""
+msgstr "无相应的大小"
 
 msgid "Wedge"
-msgstr ""
+msgstr "插入"
 
 msgid "Keep Z Direction"
-msgstr ""
+msgstr "保持Z方向"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
-msgstr ""
+msgstr "使Z轴上的变换与原始对象一致（不影响宝石）"
 
 msgid "Add gemstone to the scene"
 msgstr "向场景添加宝石"
@@ -245,16 +245,16 @@ msgid "Edit selected gems"
 msgstr "编辑选中的宝石"
 
 msgid "Round diamonds only"
-msgstr ""
+msgstr "仅圆形钻石"
 
 msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
-msgstr ""
+msgstr "强制编辑选定的网格对象，可用于从非宝石对象中制作宝石"
 
 msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr ""
+msgstr "仅编辑宝石标识符，不影响对象数据和材质"
 
 msgid "Save to file in project folder"
-msgstr ""
+msgstr "保存到项目文件夹中的文件"
 
 msgid "Use user preferences language setting"
 msgstr "使用语言用户首选项设置"
@@ -263,7 +263,7 @@ msgid "Select gems by trait"
 msgstr "按特征选择宝石"
 
 msgid "Distribute selected object along active curve\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "沿活动曲线散射选定对象\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr "沿活动曲线散射选定对象\n(快捷方式:使用工具时按住Ctrl避免属性重置)"
 
 msgid "Redistribute selected objects along curve"
 msgstr "沿曲线重新分布选定对象"
@@ -293,19 +293,19 @@ msgid "Project selected objects onto active object using Lattice"
 msgstr "使用晶格将选定对象投影到活动对象上"
 
 msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
-msgstr ""
+msgstr "使用“晶格”变形活动对象轮廓，也可在“编辑模式”下使用选定顶点"
 
 msgid "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr ""
+msgstr "为所选宝石创建尖头\n(快捷键:使用工具时按住Ctrl键，避免属性复位)"
 
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr ""
+msgstr "为所选宝石创建切割\n(快捷键:使用工具时按住Ctrl键，避免属性复位)"
 
 msgid "Curve start position"
-msgstr ""
+msgstr "曲线起始位置"
 
 msgid "Density g/cm³"
-msgstr ""
+msgstr "密度 g/cm³"
 
 msgid "Create category"
 msgstr "创建类别"
@@ -338,145 +338,145 @@ msgid "Asset category"
 msgstr "资产类别"
 
 msgid "Custom library folder path"
-msgstr ""
+msgstr "自定义库文件夹路径"
 
 msgid "Show asset name in sidebar"
-msgstr ""
+msgstr "在侧边栏中显示资产名称"
 
 msgid "Show distance to nearby gems"
-msgstr ""
+msgstr "显示与附近宝石的距离"
 
 msgid "Use object defined overlay settings"
-msgstr ""
+msgstr "使用对象定义的覆盖设置"
 
 msgid "Draw overlay in front of objects"
-msgstr ""
+msgstr "在对象前面绘制覆盖"
 
 msgid "Override overlay settings for selected objects"
-msgstr ""
+msgstr "覆盖选定对象的覆盖设置"
 
 msgid "Remove overrides from selected objects"
-msgstr ""
+msgstr "从选定对象中删除覆盖"
 
 msgid "Add new material to the list"
-msgstr ""
+msgstr "将新材质添加到列表中"
 
 msgid "Show material density"
-msgstr ""
+msgstr "显示材质密度"
 
 msgid "Show material composition"
-msgstr ""
+msgstr "显示材质组成"
 
 msgid "Material name"
-msgstr ""
+msgstr "材质名称"
 
 msgid "Material composition"
-msgstr ""
+msgstr "材质组成"
 
 msgid "Use one-dimensional lattice for even deformation"
-msgstr ""
+msgstr "使用一维晶格进行均匀变形"
 
 msgid "Use two-dimensional lattice for proportional deformation"
-msgstr ""
+msgstr "使用二维晶格进行比例变形"
 
 msgid "Scale selected objects to given size"
-msgstr ""
+msgstr "将选定对象缩放到给定大小"
 
 msgid "Move each object individually"
-msgstr ""
+msgstr "单独移动每个对象"
 
 msgid "Enable material for weighting display"
-msgstr ""
+msgstr "启用用于加权显示的材质"
 
 msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
-msgstr ""
+msgstr "将导入的资源作为选定对象的父级 (快捷方式：使用该工具时按住Alt键)"
 
 msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
-msgstr ""
+msgstr "选择彼此距离小于0.1mm或重叠的宝石"
 
 msgid "Show spacing guide for all visible gems"
-msgstr ""
+msgstr "显示所有可见宝石的间距引导"
 
 msgid "Show for all visible gems"
-msgstr ""
+msgstr "显示所有可见宝石"
 
 msgid "Set optimal unit settings for jewelry modelling"
-msgstr ""
+msgstr "为珠宝造型设置最佳单元设置"
 
 msgid "Compose gem table and map it to gems in the scene"
-msgstr ""
+msgstr "制作宝石表并将其映射到场景中的宝石"
 
 msgid "Present summary information about the design, including gems, sizes and weight"
-msgstr ""
+msgstr "提供有关设计的摘要信息，包括宝石、尺寸和重量"
 
 msgid "Add a new measurement"
-msgstr ""
+msgstr "添加新的度量值"
 
 msgid "Add new item to the list"
-msgstr ""
+msgstr "将新项目添加到列表"
 
 msgid "Remove selected item"
-msgstr ""
+msgstr "删除所选项目"
 
 msgid "Remove all items"
-msgstr ""
+msgstr "删除所有项目"
 
 msgid "Move selected item up/down in the list"
-msgstr ""
+msgstr "在列表中向上/向下移动所选项目"
 
 msgid "Select material"
-msgstr ""
+msgstr "选择材质"
 
 msgid "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo"
-msgstr ""
+msgstr "按径向顺序创建选定对象的集合实例\n在现有集合实例上使用以重做"
 
 msgid "Asset preview image size when creating new assets"
-msgstr ""
+msgstr "创建新资产时的资产预览图像大小"
 
 msgid "Asset preview scale in sidebar"
-msgstr ""
+msgstr "侧边栏中的资产预览比例"
 
 msgid "Filter by name"
-msgstr ""
+msgstr "按名称过滤"
 
 msgid "Add to favorites"
-msgstr ""
+msgstr "添加到收藏夹"
 
 msgid "Remove from favorites"
-msgstr ""
+msgstr "从收藏夹中删除"
 
 msgid "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool"
-msgstr ""
+msgstr "分离松散、中心原点和固定方向（可以从STL文件中恢复宝石）.\n注：宝石ID可以使用编辑宝石工具添加"
 
 msgid "Ring size format"
-msgstr ""
+msgstr "环形尺寸格式"
 
 msgid "Create microprong cutter between selected gems"
-msgstr ""
+msgstr "在选定的宝石之间创建微尖切割"
 
 msgid "Add materials list to library"
-msgstr ""
+msgstr "将材质列表添加到库"
 
 msgid "Replace materials list"
-msgstr ""
+msgstr "替换材质列表"
 
 msgid "Import materials list"
-msgstr ""
+msgstr "导入材质列表"
 
 msgid "Set materials list imported by default"
-msgstr ""
+msgstr "设置默认导入的材质列表"
 
 msgid "Include viewport preview image in report"
-msgstr ""
+msgstr "在报告中包括视口预览图像"
 
 msgid "Include metadata in report"
-msgstr ""
+msgstr "在报表中包括元数据"
 
 msgid "WARNING"
 msgstr "警告"
 
 msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
-msgstr ""
+msgstr "未知宝石ID，标记宝石不计算克拉数 (*)"
 
 msgid "Curve Length"
 msgstr "曲线长度"
@@ -503,10 +503,10 @@ msgid "Name must be specified"
 msgstr "必须指定名称"
 
 msgid "Collection must be specified"
-msgstr ""
+msgstr "必须指定集合"
 
 msgid "Operator already running"
-msgstr ""
+msgstr "操作已在运行"
 
 msgid "Overlapping gems"
 msgstr "重叠宝石"
@@ -575,13 +575,13 @@ msgid "Square"
 msgstr "正方形"
 
 msgid "Asscher"
-msgstr ""
+msgstr "上丁方形"
 
 msgid "Radiant"
-msgstr ""
+msgstr "光芒四射"
 
 msgid "Flanders"
-msgstr ""
+msgstr "佛兰德斯(Flanders)"
 
 msgid "Octagon"
 msgstr "八角形"
@@ -590,10 +590,10 @@ msgid "Heart"
 msgstr "心形"
 
 msgid "Trillion"
-msgstr ""
+msgstr "兆(Trillion)"
 
 msgid "Trilliant"
-msgstr ""
+msgstr "三角形切割"
 
 msgid "Triangle"
 msgstr "三角形"
@@ -653,91 +653,91 @@ msgid "Zircon"
 msgstr "锆石"
 
 msgid "Yellow Gold 24K"
-msgstr ""
+msgstr "黄金24K"
 
 msgid "Yellow Gold 22K"
-msgstr ""
+msgstr "黄金22K"
 
 msgid "Yellow Gold 18K"
-msgstr ""
+msgstr "黄金18K"
 
 msgid "Yellow Gold 14K"
-msgstr ""
+msgstr "黄金14K"
 
 msgid "Yellow Gold 10K"
-msgstr ""
+msgstr "黄金10K"
 
 msgid "White Gold 18K Pd"
-msgstr ""
+msgstr "白金18K钯"
 
 msgid "White Gold 18K Ni"
-msgstr ""
+msgstr "白金18K镍"
 
 msgid "White Gold 14K Pd"
-msgstr ""
+msgstr "白金14K钯"
 
 msgid "White Gold 14K Ni"
-msgstr ""
+msgstr "白金14K镍"
 
 msgid "White Gold 10K"
-msgstr ""
+msgstr "白金10K"
 
 msgid "Rose Gold 18K"
-msgstr ""
+msgstr "玫瑰金18K"
 
 msgid "Rose Gold 14K"
-msgstr ""
+msgstr "玫瑰金14K"
 
 msgid "Rose Gold 10K"
-msgstr ""
+msgstr "玫瑰金10K"
 
 msgid "Yellow Gold 999"
-msgstr ""
+msgstr "黄金999"
 
 msgid "Yellow Gold 958"
-msgstr ""
+msgstr "黄金958"
 
 msgid "Yellow Gold 750"
-msgstr ""
+msgstr "黄金750"
 
 msgid "Yellow Gold 585"
-msgstr ""
+msgstr "黄金585"
 
 msgid "Yellow Gold 375"
-msgstr ""
+msgstr "黄金375"
 
 msgid "White Gold 750 Pd"
-msgstr ""
+msgstr "白金750钯"
 
 msgid "White Gold 750 Ni"
-msgstr ""
+msgstr "白金750镍"
 
 msgid "White Gold 585 Pd"
-msgstr ""
+msgstr "白金585钯"
 
 msgid "White Gold 585 Ni"
-msgstr ""
+msgstr "白金585镍"
 
 msgid "Red Gold 585"
-msgstr ""
+msgstr "红金585"
 
 msgid "Red Gold 375"
-msgstr ""
+msgstr "红金375"
 
 msgid "Platinum 950"
-msgstr ""
+msgstr "铂金950"
 
 msgid "Platinum 900"
-msgstr ""
+msgstr "铂金900"
 
 msgid "Palladium 950"
-msgstr ""
+msgstr "铂金950"
 
 msgid "Silver 925"
 msgstr "925银"
 
 msgid "Silver Sterling"
-msgstr ""
+msgstr "标准纯银"
 
 msgid "Brass"
 msgstr "黄铜"
@@ -746,7 +746,7 @@ msgid "Bronze"
 msgstr "青铜"
 
 msgid "Steel Stainless"
-msgstr ""
+msgstr "不锈钢"
 
 msgid "Titanium"
 msgstr "钛"
@@ -758,13 +758,13 @@ msgid "mm³"
 msgstr "mm³"
 
 msgid "g"
-msgstr ""
+msgstr "克"
 
 msgid "ct"
-msgstr ""
+msgstr "克拉"
 
 msgid "pcs"
-msgstr ""
+msgstr "件"
 
 msgctxt "Jewelry"
 msgid "Cut"
@@ -788,15 +788,15 @@ msgstr "开孔器"
 
 msgctxt "Jewelry"
 msgid "Base"
-msgstr "基础"
+msgstr "基本"
 
 msgctxt "Jewelry"
 msgid "Precious"
-msgstr ""
+msgstr "贵重的"
 
 msgctxt "Jewelry"
 msgid "Precious ГОСТ 30649-99"
-msgstr ""
+msgstr "贵重的 ГОСТ 30649-99"
 
 msgctxt "Operator"
 msgid "Add Gem"
@@ -804,7 +804,7 @@ msgstr "添加宝石"
 
 msgctxt "Operator"
 msgid "Recover Gem"
-msgstr ""
+msgstr "恢复宝石"
 
 msgctxt "Operator"
 msgid "Distribute on Curve"
@@ -816,11 +816,11 @@ msgstr "起钉工具"
 
 msgctxt "Operator"
 msgid "Lattice Project"
-msgstr ""
+msgstr "晶格项目"
 
 msgctxt "Operator"
 msgid "Lattice Profile"
-msgstr ""
+msgstr "晶格轮廓"
 
 msgctxt "Operator"
 msgid "Size Curve"
@@ -836,7 +836,7 @@ msgstr "测量曲线长度"
 
 msgctxt "Operator"
 msgid "Design Report"
-msgstr ""
+msgstr "设计报告"
 
 msgctxt "Operator"
 msgid "Import Asset"
@@ -892,32 +892,32 @@ msgstr "添加新度量值"
 
 msgctxt "Operator"
 msgid "Add to Library"
-msgstr ""
+msgstr "添加到库"
 
 msgctxt "Operator"
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 msgctxt "Operator"
 msgid "Calculate"
-msgstr ""
+msgstr "计算"
 
 msgctxt "Operator"
 msgid "Microprong Cutter"
-msgstr ""
+msgstr "微孔切割机"
 
 msgctxt "Operator"
 msgid "Similar"
-msgstr ""
+msgstr "类似"
 
 msgctxt "Operator"
 msgid "Save to File"
-msgstr ""
+msgstr "保存到文件"
 
 msgctxt "Operator"
 msgid "Import"
-msgstr ""
+msgstr "导入"
 
 msgctxt "Operator"
 msgid "Set Default"
-msgstr ""
+msgstr "设为默认值"
