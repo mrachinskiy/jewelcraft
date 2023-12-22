@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.15\n"
 "POT-Creation-Date: 2023-09-27\n"
-"PO-Revision-Date: 2022-06-22\n"
+"PO-Revision-Date: 2023-12-20\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
-"Language: zh_TW\n"
+"Language: zh_HANT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -38,7 +38,7 @@ msgid "Weighting"
 msgstr "評估重量"
 
 msgid "Hide Built-in Material Lists"
-msgstr "隱藏內建的材料列表"
+msgstr "隱藏內建的材質列表"
 
 msgid "Prongs"
 msgstr "鑲釘"
@@ -50,7 +50,7 @@ msgid "Library Folder"
 msgstr "庫藏檔案資料夾"
 
 msgid "Overrides"
-msgstr "使用自訂覆蓋"
+msgstr "使用自訂的覆蓋顯示"
 
 msgid "Line Width"
 msgstr "線寬"
@@ -86,13 +86,13 @@ msgid "Save to Image"
 msgstr "保存到影像"
 
 msgid "Additional Entries"
-msgstr ""
+msgstr "額外條目"
 
 msgid "Gem Map"
-msgstr "寶石對映"
+msgstr "寶石貼圖"
 
 msgid "Gem Map Overlay"
-msgstr ""
+msgstr "寶石貼圖覆蓋顯示"
 
 msgid "Gem Table"
 msgstr "寶石列表"
@@ -251,7 +251,7 @@ msgid "Force edit selected mesh objects, can be used to make gems from non-gem o
 msgstr "強制編輯選定的網格物件，可用於從非寶石物件製作寶石"
 
 msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr "僅編輯寶石標示符號，不影響物件數據和材料"
+msgstr "僅編輯寶石標示符號，不影響物件數據和材質"
 
 msgid "Save to file in project folder"
 msgstr "保存在項目資料夾"
@@ -269,7 +269,7 @@ msgid "Redistribute selected objects along curve"
 msgstr "沿曲線重新分布選取的物件"
 
 msgid "Display weight and volume for selected mesh objects"
-msgstr "顯示所選網格物件的權重和體積"
+msgstr "顯示所選網格物件的重量和體積"
 
 msgid "Create instance face for selected objects"
 msgstr "為選取的物件建立實例面"
@@ -359,19 +359,19 @@ msgid "Remove overrides from selected objects"
 msgstr "由選取物件中刪除疊加"
 
 msgid "Add new material to the list"
-msgstr "在列表中添加新材料"
+msgstr "在列表中添加新材質"
 
 msgid "Show material density"
-msgstr "在列表中顯示材料密度"
+msgstr "在列表中顯示材質密度"
 
 msgid "Show material composition"
-msgstr "在列表中顯示材料成分"
+msgstr "在列表中顯示材質成分"
 
 msgid "Material name"
-msgstr "材料名稱"
+msgstr "材質名稱"
 
 msgid "Material composition"
-msgstr "材料成分"
+msgstr "材質成分"
 
 msgid "Use one-dimensional lattice for even deformation"
 msgstr "使用一維晶格實現均勻變形"
@@ -386,7 +386,7 @@ msgid "Move each object individually"
 msgstr "單獨移動個別物件"
 
 msgid "Enable material for weighting display"
-msgstr "啟用加權顯示材料"
+msgstr "啟用加權顯示材質"
 
 msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
 msgstr "匯入父代的資產到選取的物件（快捷方式：使用這工具時按住ALT）"
@@ -398,13 +398,13 @@ msgid "Show spacing guide for all visible gems"
 msgstr "顯示所有可見寶石的間距指示"
 
 msgid "Show for all visible gems"
-msgstr ""
+msgstr "顯示所有可見的寶石"
 
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "為珠寶建模設定最佳尺寸單位設定"
 
 msgid "Compose gem table and map it to gems in the scene"
-msgstr "編寫寶石表並將其對映到場景中的寶石"
+msgstr "編寫寶石表並將其貼圖到場景中的寶石"
 
 msgid "Present summary information about the design, including gems, sizes and weight"
 msgstr "提供有關設計的摘要資訊，包括寶石、尺寸和重量"
@@ -425,7 +425,7 @@ msgid "Move selected item up/down in the list"
 msgstr "在列表中上/下移動項目"
 
 msgid "Select material"
-msgstr "選取材料"
+msgstr "選取材質"
 
 msgid "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo"
 msgstr "以放射狀順序建立選定物件的集合實例。\n在現有集合實例上使用以重做"
@@ -455,22 +455,22 @@ msgid "Create microprong cutter between selected gems"
 msgstr "在選取的寶石之間建立城堡鑲嵌切割器"
 
 msgid "Add materials list to library"
-msgstr ""
+msgstr "將材質清單新增至庫藏中"
 
 msgid "Replace materials list"
-msgstr ""
+msgstr "置換材質單"
 
 msgid "Import materials list"
-msgstr ""
+msgstr "匯入材質清單"
 
 msgid "Set materials list imported by default"
-msgstr ""
+msgstr "指定預設導入的材質清單"
 
 msgid "Include viewport preview image in report"
-msgstr ""
+msgstr "在報表中包含視口預覽圖片"
 
 msgid "Include metadata in report"
-msgstr ""
+msgstr "在報表中包含材質"
 
 msgid "WARNING"
 msgstr "警告"
@@ -506,7 +506,7 @@ msgid "Collection must be specified"
 msgstr "必須指定集合"
 
 msgid "Operator already running"
-msgstr ""
+msgstr "工作已經執行"
 
 msgid "Overlapping gems"
 msgstr "寶石重疊"
@@ -545,7 +545,7 @@ msgid "Carats"
 msgstr "克拉"
 
 msgid "Materials"
-msgstr "材料費"
+msgstr "材質費"
 
 msgid "Notes"
 msgstr "附註"
@@ -872,7 +872,7 @@ msgstr "清除列表"
 
 msgctxt "Operator"
 msgid "Add New Material"
-msgstr "添加新材料"
+msgstr "添加新材質"
 
 msgctxt "Operator"
 msgid "Overlapping"
@@ -884,7 +884,7 @@ msgstr "設定最佳尺寸單位"
 
 msgctxt "Operator"
 msgid "Gem Map"
-msgstr "建立寶石對映"
+msgstr "建立寶石貼圖"
 
 msgctxt "Operator"
 msgid "Add New Measurement"
