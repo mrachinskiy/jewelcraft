@@ -11,19 +11,19 @@ Features:
 * Translated to multiple languages:
   * ![100%](https://progress-bar.dev/100) English
   * ![100%](https://progress-bar.dev/100) Russian
-  * ![96%](https://progress-bar.dev/96) Traditional Chinese
+  * ![100%](https://progress-bar.dev/100) Simplified Chinese
+  * ![100%](https://progress-bar.dev/100) Traditional Chinese
   * ![94%](https://progress-bar.dev/94) Spanish
   * ![91%](https://progress-bar.dev/91) Arabic
   * ![79%](https://progress-bar.dev/79) Italian
   * ![70%](https://progress-bar.dev/70) French
-  * ![56%](https://progress-bar.dev/56) Simplified Chinese
   * Your language is missing or incomplete? [Contribute translation](#translations).
 
 
 How to install
 ==========================
 
-1. Download [JewelCraft 2.15][download_latest]<sup>1</sup>
+1. Download [JewelCraft 2.15.1][download_latest]<sup>1</sup>
 2. Make sure you have Blender 3.5 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
@@ -36,7 +36,7 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.15][download_latest]<sup>1</sup>
+1. Загрузите [JewelCraft 2.15.1][download_latest]<sup>1</sup>
 2. Убедитесь, что у вас установлен Blender 3.5 или новее.
 3. Откройте `Preferences` → `Add-ons`
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
@@ -70,6 +70,6 @@ Contributing
 * After translation is done submit it back through [issues][submit_translation].
 
 
-[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.15.0-blender3.5.0/jewelcraft-2_15_0.zip
+[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.15.1-blender3.5.0/jewelcraft-2_15_1.zip
 [report_bug]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
 [submit_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
