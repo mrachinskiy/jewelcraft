@@ -1,7 +1,7 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
-from math import pi, tau, sin, cos
+from math import cos, pi, sin, tau
 
 import bmesh
 from bmesh.types import BMesh, BMVert

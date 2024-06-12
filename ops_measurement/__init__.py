@@ -1,10 +1,10 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 import bpy
-from bpy.types import Operator, UILayout
-from bpy.props import BoolProperty, StringProperty, EnumProperty
 from bpy.app.translations import pgettext_iface as _
+from bpy.props import BoolProperty, EnumProperty, StringProperty
+from bpy.types import Operator, UILayout
 
 from ..lib import dynamic_list
 

@@ -1,18 +1,18 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 from pathlib import Path
 
 import bpy
+from bpy.props import BoolProperty, IntProperty, StringProperty
 from bpy.types import Operator
-from bpy.props import BoolProperty, StringProperty, IntProperty
 
-from .. import var, preferences
+from .. import preferences, var
 
 
 def _render_preview_base64(resolution: int):
-    import tempfile
     import base64
+    import tempfile
     from ..lib import asset
 
     temp_filepath = Path(tempfile.gettempdir()) / "design_report_temp.png"
@@ -86,7 +86,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
     def execute(self, context):
         import webbrowser
         from ..lib import gettext
-        from . import report_get, report_fmt, html_doc
+        from . import html_doc, report_fmt, report_get
 
         Report = report_get.data_collect(show_warnings=self.show_warnings, show_metadata=self.use_metadata)
 

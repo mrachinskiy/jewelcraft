@@ -1,12 +1,12 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 from collections.abc import Iterable
 
-import bpy
-from bpy.types import Object
 import bmesh
-from bmesh.types import BMesh, BMVert, BMEdge, BMFace
+import bpy
+from bmesh.types import BMEdge, BMesh, BMFace, BMVert
+from bpy.types import Object
 from mathutils import Matrix
 
 from .iterutils import pairwise_cyclic, quadwise_cyclic

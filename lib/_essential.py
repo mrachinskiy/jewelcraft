@@ -1,9 +1,8 @@
+# SPDX-FileCopyrightText: 2021-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2021-2022 Mikhail Rachinskiy
 
-# v1.1.1
+# v1.1.2
 
-from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
@@ -28,15 +27,13 @@ def reload_recursive(path: Path, mods: dict[str, Any]) -> None:
             reload_recursive(child, mods)
 
 
-def check(*args: Any) -> None:
+def check(*args: Path | str) -> None:
     for arg in args:
 
-        if isinstance(arg, Path) and not arg.exists():
-            msg = "READ INSTALLATION GUIDE"
-            error = FileNotFoundError(f"\n\n!!! {msg} !!! {msg} !!! {msg} !!!\n")
-            raise error
+        if isinstance(arg, Path):
+            if not arg.exists():
+                raise FileNotFoundError("Incorrect package, follow installation guide")
 
-        if isinstance(arg, tuple) and arg > bpy.app.version:
-            ver = "{}.{}".format(*arg)
-            error = RuntimeError(f"\n\n!!! BLENDER {ver} IS REQUIRED !!!\n")
-            raise error
+        elif isinstance(arg, str):
+            if tuple([int(x) for x in arg.split(".")]) > bpy.app.version:
+                raise RuntimeError(f"Blender {arg} is required")

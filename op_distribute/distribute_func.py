@@ -1,5 +1,5 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 import operator
 from collections.abc import Iterator
@@ -8,7 +8,7 @@ import bpy
 from bpy.types import Constraint, Object
 from mathutils import Matrix, Vector
 
-from ..lib import mesh, asset, iterutils
+from ..lib import asset, iterutils, mesh
 
 
 def _eq(a: float, b: float) -> bool:
