@@ -1,9 +1,9 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 import bpy
-from bpy.types import Operator
 from bpy.props import StringProperty
+from bpy.types import Operator
 
 from .. import var
 

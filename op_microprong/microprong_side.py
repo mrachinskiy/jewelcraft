@@ -1,9 +1,9 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 import bmesh
 
-from ..lib import mesh, iterutils
+from ..lib import iterutils, mesh
 from . import microprong_lib
 
 

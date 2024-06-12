@@ -1,7 +1,7 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
-from bpy.types import Panel, Menu, UIList
+from bpy.types import Menu, Panel, UIList
 
 from . import mod_update
 from .lib import dynamic_list, pathutils, unit

@@ -1,6 +1,7 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
+import tomllib
 from pathlib import Path
 
 
@@ -30,3 +31,7 @@ ASSET_LIBS_FILEPATH = CONFIG_DIR / "libraries.json"
 ASSET_FAVS_FILEPATH = CONFIG_DIR / "favorites.json"
 WEIGHTING_LIB_USER_DIR = CONFIG_DIR / "Weighting Library"
 REPORT_METADATA_USER_FILEPATH = CONFIG_DIR / "report_metadata.json"
+
+
+with open(ADDON_DIR / "blender_manifest.toml", "rb") as f:
+    MANIFEST = tomllib.load(f)

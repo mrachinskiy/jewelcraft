@@ -1,49 +1,23 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
-
-bl_info = {
-    "name": "JewelCraft",
-    "author": "Mikhail Rachinskiy",
-    "version": (2, 15, 1),
-    "blender": (3, 5, 0),
-    "location": "3D View > Sidebar",
-    "description": "Jewelry design toolkit.",
-    "doc_url": "https://github.com/mrachinskiy/jewelcraft#readme",
-    "tracker_url": "https://github.com/mrachinskiy/jewelcraft/issues",
-    "category": "Object",
-}
 
 
 if "bpy" in locals():
     _essential.reload_recursive(var.ADDON_DIR, locals())
 else:
-    import bpy
-    from bpy.props import PointerProperty
-
     from . import var
     from .lib import _essential
 
-    _essential.check(var.ICONS_DIR, bl_info["blender"])
+    _essential.check(var.ICONS_DIR, var.MANIFEST["blender_version_min"])
 
-    from . import (
-        ui,
-        preferences,
-        localization,
-        mod_update,
-        op_cutter,
-        op_gem_map,
-        op_microprong,
-        op_design_report,
-        op_prongs,
-        op_distribute,
-        ops_asset,
-        ops_gem,
-        ops_measurement,
-        ops_object,
-        ops_utils,
-        ops_weighting,
-    )
-    from .lib import on_load, previewlib, data
+    import bpy
+    from bpy.props import PointerProperty
+
+    from . import (localization, mod_update, op_cutter, op_design_report,
+                   op_distribute, op_gem_map, op_microprong, op_prongs,
+                   ops_asset, ops_gem, ops_measurement, ops_object, ops_utils,
+                   ops_weighting, preferences, ui)
+    from .lib import data, on_load, previewlib
 
 
 classes = (
@@ -167,18 +141,15 @@ def register():
 
     on_load.handler_add()
 
-    # mod_update
-    # ---------------------------
-
-    mod_update.init(
-        addon_version=bl_info["version"],
-        repo_url="mrachinskiy/jewelcraft",
-    )
-
     # Translations
     # ---------------------------
 
     bpy.app.translations.register(__name__, localization.DICTIONARY)
+
+    # mod_update
+    # ---------------------------
+
+    mod_update.init(repo_url="mrachinskiy/jewelcraft")
 
     # Versioning
     # ---------------------------
@@ -215,6 +186,9 @@ def unregister():
     # ---------------------------
 
     previewlib.clear_previews()
+
+    # Other
+    # ---------------------------
 
     preferences._folder_cache.clear()
 

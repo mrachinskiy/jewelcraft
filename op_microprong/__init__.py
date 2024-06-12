@@ -1,8 +1,8 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
-from bpy.types import Operator, Object
-from bpy.props import FloatProperty, IntProperty, BoolProperty
+from bpy.props import BoolProperty, FloatProperty, IntProperty
+from bpy.types import Object, Operator
 
 
 class OBJECT_OT_microprong_cutter_add(Operator):

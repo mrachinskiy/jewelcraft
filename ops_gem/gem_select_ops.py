@@ -1,9 +1,9 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
-from bpy.props import EnumProperty, FloatProperty, BoolProperty
-from bpy.types import Operator
 from bpy.app.translations import pgettext_tip as _
+from bpy.props import BoolProperty, EnumProperty, FloatProperty
+from bpy.types import Operator
 
 from ..lib import dynamic_list
 

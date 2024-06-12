@@ -1,9 +1,9 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
-from bpy.types import Operator
-from bpy.props import StringProperty, FloatProperty
 from bpy.app.translations import pgettext_iface as _
+from bpy.props import FloatProperty, StringProperty
+from bpy.types import Operator
 
 
 class WM_OT_ul_material_add(Operator):
@@ -67,7 +67,7 @@ class OBJECT_OT_weight_display(Operator):
     bl_idname = "object.jewelcraft_weight_display"
 
     def execute(self, context):
-        from ..lib import unit, mesh, ui_lib
+        from ..lib import mesh, ui_lib, unit
 
         obs = [
             ob for ob in context.selected_objects

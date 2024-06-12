@@ -1,22 +1,15 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 from pathlib import Path
 
 import bpy
-from bpy.types import PropertyGroup, AddonPreferences, Object, Collection
-from bpy.props import (
-    EnumProperty,
-    BoolProperty,
-    FloatProperty,
-    StringProperty,
-    PointerProperty,
-    IntProperty,
-    FloatVectorProperty,
-    CollectionProperty,
-)
+from bpy.props import (BoolProperty, CollectionProperty, EnumProperty,
+                       FloatProperty, FloatVectorProperty, IntProperty,
+                       PointerProperty, StringProperty)
+from bpy.types import AddonPreferences, Collection, Object, PropertyGroup
 
-from . import ui, var, mod_update
+from . import mod_update, ui, var
 from .lib import data, dynamic_list, pathutils
 
 

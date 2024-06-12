@@ -1,10 +1,10 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 from math import radians
 
-from bpy.types import Operator
 from bpy.props import BoolProperty, FloatProperty, IntProperty
+from bpy.types import Operator
 
 from .. import var
 

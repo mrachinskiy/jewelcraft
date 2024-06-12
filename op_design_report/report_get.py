@@ -1,5 +1,5 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 import collections
 from collections.abc import Iterator
@@ -7,7 +7,7 @@ from pathlib import Path
 
 import bpy
 
-from ..lib import unit, mesh, asset
+from ..lib import asset, mesh, unit
 from . import report_warn
 
 

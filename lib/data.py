@@ -1,9 +1,9 @@
+# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright 2015-2023 Mikhail Rachinskiy
 
 import json
-from pathlib import Path
 from collections.abc import Callable
+from pathlib import Path
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
