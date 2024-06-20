@@ -183,6 +183,7 @@ class MeasurementCollection(PropertyGroup):
             ("UK", "Britain", ""),
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
+            ("HK", "Hong Kong", ""),
         ),
     )
     axis: EnumProperty(

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.15\n"
-"POT-Creation-Date: 2023-09-27\n"
+"Project-Id-Version: JewelCraft 2.16\n"
+"POT-Creation-Date: 2024-06-20\n"
 "PO-Revision-Date: 2023-12-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -207,6 +207,9 @@ msgstr "瑞士"
 
 msgid "Japan"
 msgstr "日本"
+
+msgid "Hong Kong"
+msgstr "香港"
 
 msgid "Circumference"
 msgstr "周长"

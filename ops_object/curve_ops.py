@@ -73,6 +73,7 @@ class CURVE_OT_size_curve_add(Operator):
             ("UK", "Britain", ""),
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
+            ("HK", "Hong Kong", ""),
         ),
         update=set_ring_size,
     )
@@ -82,7 +83,7 @@ class CURVE_OT_size_curve_add(Operator):
         default=4.5,
         min=0.0,
         step=50,
-        precision=1,
+        precision=2,
         update=upd_size,
     )
     size_ch: FloatProperty(
@@ -98,6 +99,13 @@ class CURVE_OT_size_curve_add(Operator):
         default=8,
         min=1,
         max=27,
+        update=upd_size,
+    )
+    size_hk: IntProperty(
+        name="Size",
+        default=10,
+        min=5,
+        max=30,
         update=upd_size,
     )
     size_uk: EnumProperty(

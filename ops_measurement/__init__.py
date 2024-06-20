@@ -42,6 +42,7 @@ class WM_OT_ul_measurements_add(Operator):
             ("UK", "Britain", ""),
             ("CH", "Swiss", ""),
             ("JP", "Japan", ""),
+            ("HK", "Hong Kong", ""),
         ),
         options={"SKIP_SAVE"},
     )
