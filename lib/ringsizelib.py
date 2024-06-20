@@ -40,6 +40,35 @@ JP_TO_US_SIZE_MAP = {
     27: 13,
 }
 
+HK_TO_US_SIZE_MAP = {
+    5: 2.75,
+    6: 3,
+    7: 3.5,
+    8: 3.75,
+    9: 4.25,
+    10: 4.75,
+    11: 5.25,
+    12: 5.5,
+    13: 6,
+    14: 6.5,
+    15: 7,
+    16: 7.5,
+    17: 7.75,
+    18: 8.25,
+    19: 8.75,
+    20: 9,
+    21: 9.5,
+    22: 10,
+    23: 10.25,
+    24: 10.75,
+    25: 11.25,
+    26: 11.5,
+    27: 12,
+    28: 12.5,
+    29: 12.75,
+    30: 13.25,
+}
+
 
 def _to_int(x: float) -> int | float:
     if x.is_integer():
@@ -48,7 +77,7 @@ def _to_int(x: float) -> int | float:
 
 
 def _eq(a: float, b: float) -> bool:
-    return abs(a - b) < 0.2
+    return abs(a - b) < 0.12  # ~0.1 mm in diameter
 
 
 def to_size(cir: float, fmt: str) -> int | float | tuple[int, bool] | None:
@@ -57,15 +86,19 @@ def to_size(cir: float, fmt: str) -> int | float | tuple[int, bool] | None:
         if size >= 0.0:
             return size
 
-    elif fmt in {"US", "JP"}:
+    elif fmt in {"US", "JP", "HK"}:
         size = round((cir - US_BASE_CIR) / US_STEP_CIR, 2)
         if size >= 0.0:
             if fmt == "US":
                 return size
-
-            for size_jp, size_us in JP_TO_US_SIZE_MAP.items():
-                if _eq(size, size_us):
-                    return size_jp
+            elif fmt == "JP":
+                for size_jp, size_us in JP_TO_US_SIZE_MAP.items():
+                    if _eq(size, size_us):
+                        return size_jp
+            elif fmt == "HK":
+                for size_hk, size_us in HK_TO_US_SIZE_MAP.items():
+                    if _eq(size, size_us):
+                        return size_hk
 
     elif fmt == "UK":
         import string
@@ -81,9 +114,8 @@ def to_size(cir: float, fmt: str) -> int | float | tuple[int, bool] | None:
 
 def to_size_fmt(cir: float, fmt: str) -> int | float | str | None:
     size = to_size(cir, fmt)
-
     if size is None:
-        return size
+        return
 
     if fmt in {"CH", "US"}:
         return _to_int(size)
@@ -106,7 +138,9 @@ def to_cir(size: int | float, fmt: str) -> float:
     if fmt == "UK":
         return UK_BASE_CIR + UK_STEP_CIR * size
 
-    # US\JP
+    # US\JP\HK
     if fmt == "JP":
         size = JP_TO_US_SIZE_MAP[size]
+    elif fmt == "HK":
+        size = HK_TO_US_SIZE_MAP[size]
     return US_BASE_CIR + US_STEP_CIR * size
