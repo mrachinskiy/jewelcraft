@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from bpy.types import Menu, Panel, UIList
+from bpy.types import Menu, Panel, UIList, UILayout, PropertyGroup
 
 from .lib import dynamic_list, pathutils, unit
 from .lib.previewlib import icon, icon_menu
@@ -411,7 +411,7 @@ class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
             layout.separator()
 
         if not wm_props.asset_libs.values():
-            layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").active_tab = "ASSET_MANAGER"
+            layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").show = "prefs_show_asset_manager"
             return
 
         show_favs = wm_props.asset_show_favs
@@ -682,25 +682,33 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
 # ---------------------------
 
 
+def _prop_panel(layout: UILayout, data: PropertyGroup, prop: str) -> UILayout | None:
+    enabled = getattr(data, prop)
+
+    row = layout.row()
+    row.use_property_split = False
+    row.alignment = "LEFT"
+    row.prop(data, prop, icon="DOWNARROW_HLT" if enabled else "RIGHTARROW", emboss=False)
+
+    if enabled:
+        row = layout.row()
+        row.separator()
+        row.separator()
+        return row.column()
+
+
 def prefs_ui(self, context):
     wm_props = context.window_manager.jewelcraft
-    active_tab = wm_props.prefs_active_tab
 
     layout = self.layout
     layout.use_property_split = True
     layout.use_property_decorate = False
 
-    split = layout.split(factor=0.25)
-    col = split.column()
-    col.use_property_split = False
-    col.scale_y = 1.3
-    col.prop(wm_props, "prefs_active_tab", expand=True)
+    main = layout.column()
 
-    box = split.box()
-
-    if active_tab == "ASSET_MANAGER":
-        box.label(text="Libraries")
-        col = box.column()
+    if (panel := _prop_panel(main, wm_props, "prefs_show_asset_manager")):
+        panel.label(text="Libraries")
+        col = panel.column()
         row = col.row()
 
         col = row.column()
@@ -723,31 +731,36 @@ def prefs_ui(self, context):
         op.move_up = True
         col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "asset_libs"
 
-        box.label(text="Assets")
-        col = box.column()
+        panel.separator()
+
+        panel.label(text="Assets")
+        col = panel.column()
         col.prop(self, "asset_preview_resolution")
 
-        box.label(text="Interface")
-        col = box.column()
+        panel.separator()
+
+        panel.label(text="Interface")
+        col = panel.column()
         col.prop(self, "asset_popover_width")
         col.prop(self, "asset_ui_preview_scale")
         col.prop(self, "asset_show_name")
 
-    elif active_tab == "DESIGN_REPORT":
-        box.prop(self, "report_lang")
+    if (panel := _prop_panel(main, wm_props, "prefs_show_design_report")):
+        panel.prop(self, "report_lang")
 
-        box.label(text="Design Report")
-        row = box.row(heading="Preview")
+        row = panel.row(heading="Preview")
         row.prop(self, "report_use_preview", text="")
         sub = row.row()
         sub.enabled = self.report_use_preview
         sub.prop(self, "report_preview_resolution", text="")
 
-        row = box.row()
+        panel.separator()
+
+        row = panel.row()
         row.use_property_split = False
         row.prop(self, "report_use_metadata", text="Metadata")
 
-        col = box.column()
+        col = panel.column()
         col.active = self.report_use_metadata
         row = col.row()
 
@@ -771,24 +784,26 @@ def prefs_ui(self, context):
         op.move_up = True
         col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "report_metadata"
 
-        box.label(text="Gem Map Font Size")
-        col = box.column()
+        panel.separator()
+
+        panel.label(text="Gem Map Font Size")
+        col = panel.column()
         col.prop(self, "gem_map_fontsize_table")
         col.prop(self, "gem_map_fontsize_gem_size")
 
-    elif active_tab == "WEIGHTING":
-        col = box.column()
+    if (panel := _prop_panel(main, wm_props, "prefs_show_weighting")):
+        col = panel.column()
         col.prop(self, "weighting_hide_builtin_lists")
         col.prop(self, "weighting_lib_path")
 
-    elif active_tab == "THEMES":
-        box.label(text="Spacing Overlay")
-        col = box.column()
+    if (panel := _prop_panel(main, wm_props, "prefs_show_themes")):
+        panel.label(text="Spacing Overlay")
+        col = panel.column()
         col.prop(self, "overlay_color")
         col.prop(self, "overlay_linewidth")
         col.prop(self, "overlay_fontsize_distance")
 
-        box.label(text="Materials")
-        col = box.column()
+        panel.label(text="Materials")
+        col = panel.column()
         col.prop(self, "color_prongs")
         col.prop(self, "color_cutter")
