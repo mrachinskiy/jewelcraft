@@ -13,10 +13,10 @@ else:
     import bpy
     from bpy.props import PointerProperty
 
-    from . import (localization, mod_update, op_cutter, op_design_report,
-                   op_distribute, op_gem_map, op_microprong, op_prongs,
-                   ops_asset, ops_gem, ops_measurement, ops_object, ops_utils,
-                   ops_weighting, preferences, ui)
+    from . import (localization, op_cutter, op_design_report, op_distribute,
+                   op_gem_map, op_microprong, op_prongs, ops_asset, ops_gem,
+                   ops_measurement, ops_object, ops_utils, ops_weighting,
+                   preferences, ui)
     from .lib import data, on_load, previewlib
 
 
@@ -47,7 +47,6 @@ classes = (
     ui.VIEW3D_MT_jewelcraft_weighting_mats,
     ui.VIEW3D_PT_jewelcraft_asset_libs,
     ui.VIEW3D_PT_jewelcraft_weighting_lib,
-    ui.VIEW3D_PT_jewelcraft_update,
     ui.VIEW3D_PT_jewelcraft_warning,
     ui.VIEW3D_PT_jewelcraft_gems,
     ui.VIEW3D_PT_jewelcraft_spacing_overlay,
@@ -117,7 +116,6 @@ classes = (
     ops_weighting.WM_OT_weighting_ui_refresh,
     ops_weighting.WM_OT_weighting_list_set_default,
     ops_weighting.WM_OT_weighting_list_import,
-    *mod_update.ops,
 )
 
 
@@ -145,11 +143,6 @@ def register():
     # ---------------------------
 
     bpy.app.translations.register(__name__, localization.DICTIONARY)
-
-    # mod_update
-    # ---------------------------
-
-    mod_update.init(repo_url="mrachinskiy/jewelcraft")
 
     # Versioning
     # ---------------------------

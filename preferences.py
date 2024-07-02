@@ -9,7 +9,7 @@ from bpy.props import (BoolProperty, CollectionProperty, EnumProperty,
                        PointerProperty, StringProperty)
 from bpy.types import AddonPreferences, Collection, Object, PropertyGroup
 
-from . import mod_update, ui, var
+from . import ui, var
 from .lib import data, dynamic_list, pathutils
 
 
@@ -283,7 +283,7 @@ class ReportLangEnum:
 # ------------------------------------------
 
 
-class Preferences(ReportLangEnum, mod_update.Preferences, AddonPreferences):
+class Preferences(ReportLangEnum, AddonPreferences):
     bl_idname = __package__
 
     # Asset
@@ -419,7 +419,6 @@ class WmProperties(PropertyGroup):
             ("DESIGN_REPORT", "Design Report", ""),
             ("WEIGHTING", "Weighting", ""),
             ("THEMES", "Themes", ""),
-            ("UPDATES", "Updates", ""),
         ),
     )
     show_spacing: BoolProperty(
