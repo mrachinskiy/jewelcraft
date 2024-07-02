@@ -23,7 +23,17 @@ Features:
 How to install
 ==========================
 
-1. Download [JewelCraft 2.15.1][download_latest]<sup>1</sup>
+### For Blender 4.2 or newer
+
+### [Drag and Drop this link into Blender][download_latest]
+
+<sub>Or download and drag zip file into Blender<sup>1</sup></sub>
+
+---
+
+### For Blender 4.1 or older
+
+1. Download [JewelCraft 2.15.1][v2_15_1]<sup>1</sup>
 2. Make sure you have Blender 3.5 or newer.
 3. Open `Preferences` → `Add-ons` category.
 4. Use `Install` to install add-on from downloaded zip archive.<sup>2</sup>
@@ -36,7 +46,17 @@ How to install
 Установка
 ==========================
 
-1. Загрузите [JewelCraft 2.15.1][download_latest]<sup>1</sup>
+### Для Blender 4.2 или новее
+
+### [Перетащите эту ссылку в Blender][download_latest]
+
+<sub>Или скачайте и перетащите zip-файл в Blender<sup>1</sup></sub>
+
+---
+
+### Для Blender 4.1 или старше
+
+1. Загрузите [JewelCraft 2.15.1][v2_15_1]<sup>1</sup>
 2. Убедитесь, что у вас установлен Blender 3.5 или новее.
 3. Откройте `Preferences` → `Add-ons`
 4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.<sup>2</sup>
@@ -70,6 +90,7 @@ Contributing
 * After translation is done submit it back through [issues][submit_translation].
 
 
-[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.15.1-blender3.5.0/jewelcraft-2_15_1.zip
+[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.16.0-blender4.2.0/jewelcraft-2_16_0.zip?repository=https://mrachinskiy.github.io/api/v1/extensions.json&blender_version_min=4.2.0
+[v2_15_1]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.15.1-blender3.5.0/jewelcraft-2_15_1.zip
 [report_bug]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
 [submit_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
