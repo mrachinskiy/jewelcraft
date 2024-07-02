@@ -14,19 +14,16 @@ class WM_OT_goto_prefs(Operator):
     bl_idname = "wm.jewelcraft_goto_prefs"
     bl_options = {"INTERNAL"}
 
-    active_tab: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
+    show: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        prefs = context.preferences
         wm = context.window_manager
 
-        prefs.active_section = "ADDONS"
-        wm.addon_support = {"OFFICIAL", "COMMUNITY"}
-        wm.addon_filter = "All"
-        wm.addon_search = "JewelCraft"
-        wm.jewelcraft.prefs_active_tab = self.active_tab
+        for pref in dir(wm.jewelcraft):
+            if pref.startswith("prefs_"):
+                setattr(wm.jewelcraft, pref, False)
 
-        bpy.ops.screen.userpref_show("INVOKE_DEFAULT")
+        setattr(wm.jewelcraft, self.show, True)
+
         bpy.ops.preferences.addon_show(module=var.ADDON_ID)
-
         return {"FINISHED"}

@@ -413,14 +413,10 @@ class Preferences(ReportLangEnum, AddonPreferences):
 
 
 class WmProperties(PropertyGroup):
-    prefs_active_tab: EnumProperty(
-        items=(
-            ("ASSET_MANAGER", "Asset Manager", ""),
-            ("DESIGN_REPORT", "Design Report", ""),
-            ("WEIGHTING", "Weighting", ""),
-            ("THEMES", "Themes", ""),
-        ),
-    )
+    prefs_show_asset_manager: BoolProperty(name="Asset Manager")
+    prefs_show_design_report: BoolProperty(name="Design Report")
+    prefs_show_weighting: BoolProperty(name="Weighting")
+    prefs_show_themes: BoolProperty(name="Themes")
     show_spacing: BoolProperty(
         name="Spacing Overlay",
         description="Show distance to nearby gems",
