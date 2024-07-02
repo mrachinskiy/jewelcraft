@@ -3,7 +3,6 @@
 
 from bpy.types import Menu, Panel, UIList
 
-from . import mod_update
 from .lib import dynamic_list, pathutils, unit
 from .lib.previewlib import icon, icon_menu
 
@@ -275,10 +274,6 @@ class SidebarSetup:
     bl_category = "JewelCraft"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-
-
-class VIEW3D_PT_jewelcraft_update(mod_update.Sidebar, SidebarSetup, Panel):
-    bl_label = "Update"
 
 
 class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
@@ -797,6 +792,3 @@ def prefs_ui(self, context):
         col = box.column()
         col.prop(self, "color_prongs")
         col.prop(self, "color_cutter")
-
-    elif active_tab == "UPDATES":
-        mod_update.prefs_ui(self, box)
