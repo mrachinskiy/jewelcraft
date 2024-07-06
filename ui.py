@@ -692,8 +692,7 @@ def _prop_panel(layout: UILayout, data: PropertyGroup, prop: str) -> UILayout | 
 
     if enabled:
         row = layout.row()
-        row.separator()
-        row.separator()
+        row.separator(factor=3.5)
         return row.column()
 
 
