@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.16\n"
-"POT-Creation-Date: 2024-06-20\n"
+"POT-Creation-Date: 2024-07-08\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: émilien\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -430,7 +430,7 @@ msgstr "Déplacer les objets sélectionnés dans la liste vers le haut ou vers l
 msgid "Select material"
 msgstr "Sélectionner la matière"
 
-msgid "Create collection instances of selected objects in radial order.\nUse on existing collection instances to redo"
+msgid "Create collection instances of selected objects in radial order"
 msgstr ""
 
 msgid "Asset preview image size when creating new assets"

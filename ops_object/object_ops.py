@@ -223,10 +223,7 @@ class OBJECT_OT_mirror(Operator):
 
 class OBJECT_OT_radial_instance(Operator):
     bl_label = "Radial Instance"
-    bl_description = (
-        "Create collection instances of selected objects in radial order.\n"
-        "Use on existing collection instances to redo"
-    )
+    bl_description = "Create collection instances of selected objects in radial order"
     bl_idname = "object.jewelcraft_radial_instance"
     bl_options = {"REGISTER", "UNDO"}
 
