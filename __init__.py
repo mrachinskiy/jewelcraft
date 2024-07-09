@@ -8,7 +8,7 @@ else:
     from . import var
     from .lib import _essential
 
-    _essential.check(var.ICONS_DIR, var.MANIFEST["blender_version_min"])
+    _essential.check(var.ICONS_DIR)
 
     import bpy
     from bpy.props import PointerProperty
