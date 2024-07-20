@@ -1,6 +1,6 @@
 schema_version = "1.0.0"
 id = "jewelcraft"
-version = "2.16.0"
+version = "2.16.1"
 name = "JewelCraft"
 tagline = "Jewelry design toolkit"
 maintainer = "Mikhail Rachinskiy"
