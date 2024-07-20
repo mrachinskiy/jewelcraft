@@ -47,8 +47,12 @@ def _flatten(iterable: list) -> Iterator[float]:
             yield item.size
 
 
-def _hash(iterable: list) -> int:
-    return hash(tuple(tuple(item.values()) for item in iterable))
+def _hash(items: list) -> int:
+    l = []
+    for item in items:
+        l += item.values()
+
+    return hash(tuple(l))
 
 
 def _deform_redstr(ob: Object, rot_x: float, rot_z: float, loc_z: float) -> None:
@@ -117,6 +121,7 @@ def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> list[t
 
 
 def execute(self, context):
+    context.view_layer.update()
 
     # Set objects
     # ---------------------------
