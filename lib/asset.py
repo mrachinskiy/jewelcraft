@@ -142,32 +142,31 @@ def add_material(ob: Object, name="New Material", color: Color | None = None, is
         mat = bpy.data.materials.new(name)
         mat.diffuse_color = color
 
-        if bpy.context.scene.render.engine in {"CYCLES", "BLENDER_EEVEE"}:
-            mat.use_nodes = True
-            nodes = mat.node_tree.nodes
+        mat.use_nodes = True
+        nodes = mat.node_tree.nodes
 
-            for node in nodes:
-                nodes.remove(node)
+        for node in nodes:
+            nodes.remove(node)
 
-            node = nodes.new("ShaderNodeBsdfPrincipled")
-            node.inputs["Base Color"].default_value = color
-            node.inputs["Roughness"].default_value = 0.0
+        node = nodes.new("ShaderNodeBsdfPrincipled")
+        node.inputs["Base Color"].default_value = color
+        node.inputs["Roughness"].default_value = 0.0
 
-            if is_gem:
-                try:  # VER >= 4.0
-                    node.inputs["Transmission Weight"].default_value = 1.0
-                except KeyError:
-                    node.inputs["Transmission"].default_value = 1.0
-                node.inputs["IOR"].default_value = 2.42
-            else:
-                node.inputs["Metallic"].default_value = 1.0
+        if is_gem:
+            try:  # VER >= 4.0
+                node.inputs["Transmission Weight"].default_value = 1.0
+            except KeyError:
+                node.inputs["Transmission"].default_value = 1.0
+            node.inputs["IOR"].default_value = 2.42
+        else:
+            node.inputs["Metallic"].default_value = 1.0
 
-            node.location = (0.0, 0.0)
+        node.location = (0.0, 0.0)
 
-            node_out = nodes.new("ShaderNodeOutputMaterial")
-            node_out.location = (400.0, 0.0)
+        node_out = nodes.new("ShaderNodeOutputMaterial")
+        node_out.location = (400.0, 0.0)
 
-            mat.node_tree.links.new(node.outputs["BSDF"], node_out.inputs["Surface"])
+        mat.node_tree.links.new(node.outputs["BSDF"], node_out.inputs["Surface"])
 
     if ob.material_slots:
         ob.material_slots[0].material = mat
