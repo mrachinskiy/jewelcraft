@@ -135,7 +135,7 @@ def color_rnd() -> Color:
     return random.choice(seq), random.choice(seq), random.choice(seq), 1.0
 
 
-def add_material(ob: Object, name="New Material", color: Color | None = None, is_gem=False) -> None:
+def add_material(ob: Object, name="Material", color: Color | None = None, is_gem=False) -> None:
     mat = bpy.data.materials.get(name)
 
     if not mat:
@@ -149,24 +149,21 @@ def add_material(ob: Object, name="New Material", color: Color | None = None, is
             nodes.remove(node)
 
         node = nodes.new("ShaderNodeBsdfPrincipled")
-        node.inputs["Base Color"].default_value = color
-        node.inputs["Roughness"].default_value = 0.0
+        node.inputs[0].default_value = color
+        node.inputs[2].default_value = 0.0  # Roughness
 
         if is_gem:
-            try:  # VER >= 4.0
-                node.inputs["Transmission Weight"].default_value = 1.0
-            except KeyError:
-                node.inputs["Transmission"].default_value = 1.0
-            node.inputs["IOR"].default_value = 2.42
+            node.inputs[17].default_value = 1.0  # Transmission Weight
+            node.inputs[3].default_value = 2.42  # IOR
         else:
-            node.inputs["Metallic"].default_value = 1.0
+            node.inputs[1].default_value = 1.0  # Metallic
 
         node.location = (0.0, 0.0)
 
         node_out = nodes.new("ShaderNodeOutputMaterial")
         node_out.location = (400.0, 0.0)
 
-        mat.node_tree.links.new(node.outputs["BSDF"], node_out.inputs["Surface"])
+        mat.node_tree.links.new(node.outputs[0], node_out.inputs[0])
 
     if ob.material_slots:
         ob.material_slots[0].material = mat
