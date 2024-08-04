@@ -12,21 +12,36 @@ from . import report_warn
 
 
 class _Data:
-    __slots__ = ("preview", "gems", "materials", "notes", "warnings", "metadata")
+    __slots__ = "warnings", "metadata", "gems", "materials", "notes"
 
     def __init__(self):
-        self.preview = None
+        self.warnings = []
+        self.metadata = []
         self.gems = collections.defaultdict(int)
         self.materials = []
         self.notes = []
-        self.warnings = []
-        self.metadata = []
 
     def is_empty(self):
         for prop in self.__slots__:
             if getattr(self, prop):
                 return False
         return True
+
+    def as_dict(self):
+        d = {}
+
+        for prop in self.__slots__:
+            if not (value := getattr(self, prop)):
+                continue
+
+            if prop == "gems":
+                d[prop] = [x._asdict() for x in value]
+            elif prop == "warnings":
+                d[prop] = value
+            else:
+                d[prop] = {k: v for k, v in value}
+
+        return d
 
 
 def _iter_metadata() -> Iterator[tuple[str, str]]:

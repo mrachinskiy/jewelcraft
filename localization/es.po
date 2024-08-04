@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.16\n"
-"POT-Creation-Date: 2024-07-08\n"
+"Project-Id-Version: JewelCraft 2.16.2\n"
+"POT-Creation-Date: 2024-08-04\n"
 "PO-Revision-Date: 2022-07-01\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -467,6 +467,9 @@ msgid "Import materials list"
 msgstr ""
 
 msgid "Set materials list imported by default"
+msgstr ""
+
+msgid "In addition to HTML, save report in JSON format"
 msgstr ""
 
 msgid "Include viewport preview image in report"

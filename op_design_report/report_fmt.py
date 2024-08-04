@@ -3,8 +3,18 @@
 
 from collections.abc import Callable
 from math import pi
+from typing import NamedTuple
 
 from ..lib import gemlib, ringsizelib
+
+
+class _Gem(NamedTuple):
+    stone: str
+    cut: str
+    size: float
+    ct: float
+    qty: int
+    ct_sum: float
 
 
 def data_format(Report, _: Callable[[str], str]) -> None:
@@ -40,7 +50,7 @@ def data_format(Report, _: Callable[[str], str]) -> None:
             else:
                 sizef = f"{l} × {w}"
 
-            gems_fmt.append((stonef, cutf, sizef, ct, qty, total_ct))
+            gems_fmt.append(_Gem(stonef, cutf, sizef, ct, qty, total_ct))
 
         Report.gems = gems_fmt
 

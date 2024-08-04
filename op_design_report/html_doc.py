@@ -7,11 +7,11 @@ from .. import var
 from ..lib import htmlutils
 
 
-def make(Report, filename: str, _: Callable[[str], str]) -> str:
+def make(Report, preview: str | None, filename: str, _: Callable[[str], str]) -> str:
     Doc = htmlutils.Document(var.HTML_DESIGN_REPORT_DIR)
 
-    if Report.preview:
-        Doc.write_img(Report.preview)
+    if preview:
+        Doc.write_img(preview)
 
     if Report.metadata:
         Doc.write_list(Report.metadata)
