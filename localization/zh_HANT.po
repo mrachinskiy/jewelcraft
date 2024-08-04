@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.16\n"
-"POT-Creation-Date: 2024-07-08\n"
+"Project-Id-Version: JewelCraft 2.16.2\n"
+"POT-Creation-Date: 2024-08-04\n"
 "PO-Revision-Date: 2023-12-20\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -468,6 +468,9 @@ msgstr "匯入材質清單"
 
 msgid "Set materials list imported by default"
 msgstr "指定預設導入的材質清單"
+
+msgid "In addition to HTML, save report in JSON format"
+msgstr ""
 
 msgid "Include viewport preview image in report"
 msgstr "在報表中包含視口預覽圖片"

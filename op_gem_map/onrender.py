@@ -42,6 +42,7 @@ def _text_color(use_background: bool) -> tuple[float, float, float]:
 
         elif shading.background_type == "WORLD":
             bgc = _srgb_to_linear(bpy.context.scene.world.color)
+
         elif shading.background_type == "VIEWPORT":
             bgc = _srgb_to_linear(shading.background_color)
 

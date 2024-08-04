@@ -334,6 +334,10 @@ class Preferences(ReportLangEnum, AddonPreferences):
     # Design Report
     # ------------------------
 
+    use_json: BoolProperty(
+        name="JSON",
+        description="In addition to HTML, save report in JSON format",
+    )
     report_use_preview: BoolProperty(
         name="Preview",
         description="Include viewport preview image in report",

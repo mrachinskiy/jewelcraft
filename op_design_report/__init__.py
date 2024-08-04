@@ -10,7 +10,7 @@ from bpy.types import Operator
 from .. import preferences, var
 
 
-def _render_preview_base64(resolution: int):
+def _render_preview_base64(resolution: int) -> str:
     import base64
     import tempfile
     from ..lib import asset
@@ -42,6 +42,10 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
     bl_description = "Present summary information about the design, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_design_report"
 
+    use_json: BoolProperty(
+        name="JSON",
+        description="In addition to HTML, save report in JSON format",
+    )
     use_preview: BoolProperty(
         name="Preview",
         description="Include viewport preview image in report",
@@ -72,6 +76,9 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
+        col = layout.column(heading="Format")
+        col.prop(self, "use_json")
+
         layout.prop(self, "report_lang")
 
         row = layout.row(heading="Preview")
@@ -97,14 +104,20 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         _gettext = gettext.GetText(self.report_lang).gettext
         report_fmt.data_format(Report, _gettext)
 
+        preview = None
         if self.use_preview:
-            Report.preview = _render_preview_base64(self.preview_resolution)
+            preview = _render_preview_base64(self.preview_resolution)
 
-        doc = html_doc.make(Report, self.filename, _gettext)
+        doc = html_doc.make(Report, preview, self.filename, _gettext)
 
         with open(self.filepath, "w", encoding="utf-8") as file:
             file.write(doc)
             webbrowser.open(f"file://{self.filepath}")
+
+        if self.use_json:
+            import json
+            with open(Path(self.filepath).with_suffix(".json"), "w", encoding="utf-8") as file:
+                json.dump(Report.as_dict(), file, indent=4, ensure_ascii=False)
 
         return {"FINISHED"}
 
@@ -116,6 +129,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
             self.use_preview = prefs.report_use_preview
             self.preview_resolution = prefs.report_preview_resolution
             self.use_metadata = prefs.report_use_metadata
+            self.use_json = prefs.use_json
 
         if bpy.data.is_saved:
             blend_path = Path(bpy.data.filepath)
