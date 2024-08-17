@@ -17,9 +17,7 @@ class VIEW3D_UL_jewelcraft_material_list(UIList):
         props = context.scene.jewelcraft
         mainrow = layout.row(align=True)
 
-        row = mainrow.row(align=True)
-        row.scale_x = 0.8
-        row.prop(item, "enabled", text="")
+        mainrow.prop(item, "enabled", text="")
 
         row = mainrow.row(align=True)
         row.active = item.enabled
