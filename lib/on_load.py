@@ -19,6 +19,7 @@ def handler_del():
 @persistent
 def _execute(dummy):
     _load_weighting_mats()
+    data.gem_colors_deserialize()
     data.asset_libs_deserialize()
     data.report_metadata_deserialize()
 

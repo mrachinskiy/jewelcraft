@@ -33,7 +33,6 @@ def _draw(self, context, layout):
 
     # Onscreen text
     # -----------------------------
-
     y = gem_table(self, x, y)
     y -= separator
 
@@ -42,11 +41,6 @@ def _draw(self, context, layout):
         y -= separator
 
     view3d_lib.draw_options(self, layout, x, y)
-
-    # Reset state
-    # ----------------------------
-
-    gpu.state.blend_set("NONE")
 
 
 def gem_table(self, x: int, y: int, color: Color | None = None) -> int:
@@ -66,7 +60,7 @@ def gem_table(self, x: int, y: int, color: Color | None = None) -> int:
     y += font_baseline
     indices = ((0, 1, 2), (0, 2, 3))
 
-    for row, icon_color in self.table_data:
+    for row, icon_color, mat_color in self.table_data:
         y -= font_row_height
 
         points = (
@@ -76,6 +70,10 @@ def gem_table(self, x: int, y: int, color: Color | None = None) -> int:
             (x,             y + icon_size),
         )
 
+        if self.use_mat_color:
+            icon_color = mat_color
+
+        gpu.state.blend_set("ALPHA")
         shader.bind()
         shader.uniform_float("color", icon_color)
         batch_font = batch_for_shader(shader, "TRIS", {"pos": points}, indices=indices)
@@ -84,6 +82,7 @@ def gem_table(self, x: int, y: int, color: Color | None = None) -> int:
         blf.position(fontid, x + font_row_height, y + font_baseline, 0.0)
         blf.draw(fontid, row)
 
+    gpu.state.blend_set("NONE")
     return y
 
 

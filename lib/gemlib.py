@@ -10,7 +10,7 @@ from . import unit
 class Stone(NamedTuple):
     name: str
     density: float
-    color: tuple[float, float, float, float] | None = None
+    color: str
 
 
 class Cut(NamedTuple):
@@ -24,10 +24,6 @@ class Cut(NamedTuple):
 DENSITY_CORUNDUM = 4.1
 DENSITY_BERYL = 2.76
 DENSITY_QUARTZ = 2.65
-
-COLOR_WHITE = (1.0, 1.0, 1.0, 1.0)
-COLOR_RED = (0.57, 0.011, 0.005, 1.0)
-COLOR_BLUE = (0.004, 0.019, 0.214, 1.0)
 
 SHAPE_ROUND = 1
 SHAPE_SQUARE = 2
@@ -44,24 +40,24 @@ TRAIT_XY_SYMMETRY = 1
 TRAIT_X_SIZE = 2
 
 STONES = {
-    "DIAMOND": Stone("Diamond", 3.53, COLOR_WHITE),
-    "ALEXANDRITE": Stone("Alexandrite", 3.73, (0.153, 0.0705, 0.595, 1.0)),
-    "AMETHYST": Stone("Amethyst", DENSITY_QUARTZ, (0.415, 0.041, 0.523, 1.0)),
-    "AQUAMARINE": Stone("Aquamarine", DENSITY_BERYL, (0.0, 0.748, 1.0, 1.0)),
-    "CITRINE": Stone("Citrine", DENSITY_QUARTZ, (1.0, 0.355, 0.0, 1.0)),
-    "CUBIC_ZIRCONIA": Stone("Cubic Zirconia", 5.9, COLOR_WHITE),
-    "EMERALD": Stone("Emerald", DENSITY_BERYL, (0.062, 0.748, 0.057, 1.0)),
-    "GARNET": Stone("Garnet", 4.3, (0.319, 0.0, 0.0, 1.0)),
-    "MORGANITE": Stone("Morganite", DENSITY_BERYL, (0.41, 0.21, 0.09, 1.0)),
-    "PERIDOT": Stone("Peridot", 3.34, (0.201, 0.748, 0.026, 1.0)),
-    "QUARTZ": Stone("Quartz", DENSITY_QUARTZ),
-    "RUBY": Stone("Ruby", DENSITY_CORUNDUM, COLOR_RED),
-    "SAPPHIRE": Stone("Sapphire", DENSITY_CORUNDUM, COLOR_BLUE),
-    "SPINEL": Stone("Spinel", 3.8, COLOR_RED),
-    "TANZANITE": Stone("Tanzanite", 3.38, COLOR_BLUE),
-    "TOPAZ": Stone("Topaz", 3.57),
-    "TOURMALINE": Stone("Tourmaline", 3.22),
-    "ZIRCON": Stone("Zircon", 4.73),
+    "DIAMOND": Stone("Diamond", 3.53, "Colorless"),
+    "ALEXANDRITE": Stone("Alexandrite", 3.73, "Reddish Purple"),
+    "AMETHYST": Stone("Amethyst", DENSITY_QUARTZ, "Purple"),
+    "AQUAMARINE": Stone("Aquamarine", DENSITY_BERYL, "Greenish Blue"),
+    "CITRINE": Stone("Citrine", DENSITY_QUARTZ, "Yellow"),
+    "CUBIC_ZIRCONIA": Stone("Cubic Zirconia", 5.9, "Colorless"),
+    "EMERALD": Stone("Emerald", DENSITY_BERYL, "Green"),
+    "GARNET": Stone("Garnet", 4.3, "Red"),
+    "MORGANITE": Stone("Morganite", DENSITY_BERYL, "Pink"),
+    "PERIDOT": Stone("Peridot", 3.34, "Yellowish Green"),
+    "QUARTZ": Stone("Quartz", DENSITY_QUARTZ, "Pink"),
+    "RUBY": Stone("Ruby", DENSITY_CORUNDUM, "Red"),
+    "SAPPHIRE": Stone("Sapphire", DENSITY_CORUNDUM, "Blue"),
+    "SPINEL": Stone("Spinel", 3.8, "Reddish Purple"),
+    "TANZANITE": Stone("Tanzanite", 3.38, "Violetish Blue"),
+    "TOPAZ": Stone("Topaz", 3.57, "Greenish Blue"),
+    "TOURMALINE": Stone("Tourmaline", 3.22, "Bluish Green"),
+    "ZIRCON": Stone("Zircon", 4.73, "Greenish Blue"),
 }
 
 CUTS = {

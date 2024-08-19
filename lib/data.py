@@ -19,7 +19,7 @@ def ul_serialize(ul, filepath: Path) -> None:
         json.dump(data, file, indent=4, ensure_ascii=False)
 
 
-def ul_deserialize(ul, filepath: Path, fmt: Callable = lambda k, v: v) -> None:
+def ul_deserialize(ul, filepath: Path, fmt: Callable = lambda k, v: v, is_builtin=False) -> None:
     with open(filepath, "r", encoding="utf-8") as file:
         data = json.load(file)
 
@@ -27,8 +27,36 @@ def ul_deserialize(ul, filepath: Path, fmt: Callable = lambda k, v: v) -> None:
             item = ul.add()
             for k, v in data_item.items():
                 item[k] = fmt(k, v)
+            if is_builtin:
+                item["builtin"] = True
 
-        ul.index = 0
+        ul["index"] = 0
+
+
+def gem_colors_serialize() -> None:
+    if not var.CONFIG_DIR.exists():
+        var.CONFIG_DIR.mkdir(parents=True)
+
+    ul_serialize(
+        bpy.context.window_manager.jewelcraft.gem_colors,
+        var.COLORS_FILEPATH,
+    )
+
+
+def gem_colors_deserialize() -> None:
+
+    def _hex_to_rgb(k, v):
+        from . import colorlib
+        if k == "color":
+            return colorlib.hex_to_rgb(v)
+        return v
+
+    colors = bpy.context.window_manager.jewelcraft.gem_colors
+    colors.clear()
+    ul_deserialize(colors, var.GEM_ASSET_DIR / "colors.json", fmt=_hex_to_rgb, is_builtin=True)
+
+    if var.COLORS_FILEPATH.exists():
+        ul_deserialize(colors, var.COLORS_FILEPATH, fmt=_hex_to_rgb)
 
 
 def asset_libs_serialize() -> None:

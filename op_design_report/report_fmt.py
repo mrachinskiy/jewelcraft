@@ -11,6 +11,7 @@ from ..lib import gemlib, ringsizelib
 class _Gem(NamedTuple):
     stone: str
     cut: str
+    color: str
     size: float
     ct: float
     qty: int
@@ -25,7 +26,7 @@ def data_format(Report, _: Callable[[str], str]) -> None:
 
         gems_fmt = []
 
-        for (stone, cut, size), qty in sorted(
+        for (stone, cut, size, color), qty in sorted(
             Report.gems.items(),
             key=lambda x: (x[0][0], x[0][1], -x[0][2][1], -x[0][2][0]),
         ):
@@ -50,7 +51,7 @@ def data_format(Report, _: Callable[[str], str]) -> None:
             else:
                 sizef = f"{l} × {w}"
 
-            gems_fmt.append(_Gem(stonef, cutf, sizef, ct, qty, total_ct))
+            gems_fmt.append(_Gem(stonef, cutf, _(color), sizef, ct, qty, total_ct))
 
         Report.gems = gems_fmt
 

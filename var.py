@@ -26,6 +26,7 @@ WEIGHTING_LIB_BUILTIN_DIR = ADDON_DIR / "assets" / "weighting"
 HTML_DESIGN_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
 REPORT_METADATA_BUILTIN_FILEPATH = ADDON_DIR / "assets" / "templates" / "report_metadata.json"
 
+COLORS_FILEPATH = CONFIG_DIR / "gem_colors.json"
 ASSET_LIBS_FILEPATH = CONFIG_DIR / "libraries.json"
 ASSET_FAVS_FILEPATH = CONFIG_DIR / "favorites.json"
 WEIGHTING_LIB_USER_DIR = CONFIG_DIR / "Weighting Library"

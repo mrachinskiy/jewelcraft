@@ -11,6 +11,21 @@ from .lib.previewlib import icon, icon_menu
 # ---------------------------
 
 
+class VIEW3D_UL_jewelcraft_gem_colors(UIList):
+
+    def draw_item(self, context, layout: UILayout, data, item, icon, active_data, active_propname):
+        split = layout.split(factor=0.25)
+
+        split.prop(item, "color", text="")
+
+        if item.builtin:
+            split.label(text=item.name)
+        else:
+            row = split.row()
+            row.alert = not item.name
+            row.prop(item, "name", text="", emboss=False)
+
+
 class VIEW3D_UL_jewelcraft_material_list(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
@@ -386,6 +401,7 @@ class VIEW3D_PT_jewelcraft_gem_map_overlay(SidebarSetup, Panel):
         col.active = wm_props.show_gem_map
         col.prop(props, "overlay_gem_map_show_all")
         col.prop(props, "overlay_gem_map_show_in_front")
+        col.prop(props, "overlay_gem_map_use_material_color")
         col.prop(props, "overlay_gem_map_opacity")
 
 
@@ -702,6 +718,32 @@ def prefs_ui(self, context):
     layout.use_property_decorate = False
 
     main = layout.column()
+
+    if (panel := _prop_panel(main, wm_props, "prefs_show_gems")):
+        col = panel.column()
+        row = col.row()
+
+        col = row.column()
+        col.template_list(
+            "VIEW3D_UL_jewelcraft_gem_colors",
+            "",
+            wm_props.gem_colors,
+            "coll",
+            wm_props.gem_colors,
+            "index",
+            rows=16,
+        )
+
+        col = row.column(align=True)
+        col.operator("wm.jewelcraft_ul_add", text="", icon="ADD").prop = "gem_colors"
+        sub = col.column(align=True)
+        sub.enabled = not wm_props.gem_colors.active_item().builtin
+        sub.operator("wm.jewelcraft_ul_del", text="", icon="REMOVE").prop = "gem_colors"
+        sub.separator()
+        op = sub.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_UP")
+        op.prop = "gem_colors"
+        op.move_up = True
+        sub.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "gem_colors"
 
     if (panel := _prop_panel(main, wm_props, "prefs_show_asset_manager")):
         panel.label(text="Libraries")
