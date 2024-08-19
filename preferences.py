@@ -142,6 +142,13 @@ class MaterialCollection(PropertyGroup):
     composition: StringProperty(default="Unknown")
     density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
 
+    def serialize(self):
+        return {
+            "name": self.name,
+            "composition": self.composition,
+            "density": round(self.density, 2),
+        }
+
 
 class MaterialListCollection(PropertyGroup):
     name: StringProperty(name="Click to rename", update=upd_material_list_rename)
@@ -206,10 +213,16 @@ class Metadata(PropertyGroup):
     name: StringProperty(default="...", update=data.report_metadata_serialize)
     value: StringProperty(default="...", update=data.report_metadata_serialize)
 
+    def serialize(self):
+        return dict(self)
+
 
 class AssetLibCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
+
+    def serialize(self):
+        return dict(self)
 
 
 class SizeCollection(PropertyGroup):
