@@ -12,17 +12,8 @@ from .. import var
 from . import pathutils
 
 
-def _translate_item_name(k, v):
-    if k == "name":
-        return _(v)
-    return v
-
-
-def ul_serialize(ul, filepath: Path, keys: tuple[str], fmt: Callable = lambda k, v: v) -> None:
-    data = [
-        {k: fmt(k, getattr(item, k)) for k in keys}
-        for item in ul.values()
-    ]
+def ul_serialize(ul, filepath: Path) -> None:
+    data = [item.serialize() for item in ul.values() if hasattr(item, "builtin") and not item.builtin]
 
     with open(filepath, "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
@@ -47,7 +38,6 @@ def asset_libs_serialize() -> None:
     ul_serialize(
         bpy.context.window_manager.jewelcraft.asset_libs,
         var.ASSET_LIBS_FILEPATH,
-        ("name", "path"),
     )
 
 
@@ -65,7 +55,6 @@ def report_metadata_serialize(self=None, context=None) -> None:
     ul_serialize(
         bpy.context.window_manager.jewelcraft.report_metadata,
         var.REPORT_METADATA_USER_FILEPATH,
-        ("name", "value"),
     )
 
 
@@ -80,16 +69,13 @@ def report_metadata_deserialize() -> None:
     ul_deserialize(ul, filepath)
 
 
-def weighting_list_serialize(filepath: Path) -> None:
-    ul_serialize(
-        bpy.context.scene.jewelcraft.weighting_materials,
-        filepath,
-        ("name", "composition", "density"),
-        lambda k, v: round(v, 2) if k == "density" else v,
-    )
-
-
 def weighting_list_deserialize(name: str) -> None:
+
+    def _translate_item_name(k, v):
+        if k == "name":
+            return _(v)
+        return v
+
     mats = bpy.context.scene.jewelcraft.weighting_materials
 
     if name.startswith("BUILTIN/"):
