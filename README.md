@@ -9,14 +9,14 @@ Features:
 * Generate color-coded gem map. [[▸]](https://youtu.be/aQ__ec0BAbE)
 * Present summary information about your design. [[▸]](https://youtu.be/6UxJAw_t5R0)
 * Translated to multiple languages:
-  * ![100%](https://progress-bar.dev/100) English
-  * ![100%](https://progress-bar.dev/100) Russian
-  * ![100%](https://progress-bar.dev/100) Simplified Chinese
-  * ![100%](https://progress-bar.dev/100) Traditional Chinese
-  * ![94%](https://progress-bar.dev/94) Spanish
-  * ![91%](https://progress-bar.dev/91) Arabic
-  * ![79%](https://progress-bar.dev/79) Italian
-  * ![70%](https://progress-bar.dev/70) French
+  * ![100%](https://geps.dev/progress/100) English
+  * ![100%](https://geps.dev/progress/100) Russian
+  * ![94%](https://geps.dev/progress/94) Simplified Chinese
+  * ![94%](https://geps.dev/progress/94) Traditional Chinese
+  * ![89%](https://geps.dev/progress/89) Spanish
+  * ![85%](https://geps.dev/progress/85) Arabic
+  * ![74%](https://geps.dev/progress/74) Italian
+  * ![66%](https://geps.dev/progress/66) French
   * Your language is missing or incomplete? [Contribute translation](#translations).
 
 
