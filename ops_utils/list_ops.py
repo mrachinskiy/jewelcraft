@@ -55,8 +55,10 @@ class SCENE_OT_ul_move(Operator):
 # ---------------------------
 
 
-def _serialize(prop):
-    if prop == "asset_libs":
+def _serialize(prop: str) -> None:
+    if prop == "gem_colors":
+        data.gem_colors_serialize()
+    elif prop == "asset_libs":
         data.asset_libs_serialize()
     elif prop == "report_metadata":
         data.report_metadata_serialize()

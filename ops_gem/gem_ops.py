@@ -11,9 +11,22 @@ from .. import var
 from ..lib import dynamic_list, unit
 
 
-def upd_set_weight(self, context):
+def upd_colors(self, context):
+    from ..lib import gemlib
+
+    color_name = gemlib.STONES[self.stone].color
+
+    wm_props = context.window_manager.jewelcraft
+    color = wm_props.gem_colors.set_active_by_name(color_name)
+    wm_props["gem_color"] = color
+    wm_props["gem_color_name"] = _(color_name)
+
+
+def upd_set_weight_and_color(self, context):
     if self.stone == "DIAMOND" and self.cut == "ROUND":
         self["weight"] = unit.convert_mm_ct(unit.Scale().from_scene(self.size))
+
+    upd_colors(self, context)
 
 
 def upd_weight(self, context):
@@ -26,8 +39,8 @@ class OBJECT_OT_gem_add(Operator):
     bl_idname = "object.jewelcraft_gem_add"
     bl_options = {"REGISTER", "UNDO"}
 
-    cut: EnumProperty(name="Cut", items=dynamic_list.cuts, update=upd_set_weight)
-    stone: EnumProperty(name="Stone", items=dynamic_list.stones, update=upd_set_weight)
+    cut: EnumProperty(name="Cut", items=dynamic_list.cuts, update=upd_set_weight_and_color)
+    stone: EnumProperty(name="Stone", items=dynamic_list.stones, update=upd_set_weight_and_color)
     size: FloatProperty(
         name="Size",
         default=1.0,
@@ -35,7 +48,7 @@ class OBJECT_OT_gem_add(Operator):
         step=5,
         precision=2,
         unit="LENGTH",
-        update=upd_set_weight,
+        update=upd_set_weight_and_color,
     )
     weight: FloatProperty(
         name="Carats",
@@ -46,17 +59,44 @@ class OBJECT_OT_gem_add(Operator):
         precision=3,
         update=upd_weight,
     )
+    show_colors: BoolProperty(name="Show colors list", options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
 
+        wm_props = context.window_manager.jewelcraft
+
         layout.prop(self, "size")
         col = layout.column()
         col.enabled = self.stone == "DIAMOND" and self.cut == "ROUND"
         col.prop(self, "weight")
         layout.prop(self, "stone")
+
+        split = layout.split(factor=0.4, align=True)
+        row = split.row()
+        row.alignment = "RIGHT"
+        row.label(text="Color")
+        split_01 = split.split(factor=0.1, align=True)
+        split_01.prop(wm_props, "gem_color", text="")
+        split_09 = split_01.split(factor=0.9, align=True)
+        split_09.prop(wm_props, "gem_color_name", text="")
+        split_09.prop(self, "show_colors", text="", icon="DOWNARROW_HLT")
+
+        if self.show_colors:
+            split = layout.split(factor=0.4)
+            split.row()
+            split.template_list(
+                "VIEW3D_UL_jewelcraft_gem_colors",
+                "",
+                wm_props.gem_colors,
+                "coll",
+                wm_props.gem_colors,
+                "index",
+                rows=8,
+            )
+
         split = layout.split(factor=0.4)
         row = split.row()
         row.alignment = "RIGHT"
@@ -67,11 +107,10 @@ class OBJECT_OT_gem_add(Operator):
         from ..lib import asset, gemlib
         from . import gem_ratio
 
+        wm_props = context.window_manager.jewelcraft
         scene = context.scene
         view_layer = context.view_layer
         cut_name = gemlib.CUTS[self.cut].name
-        stone_name = gemlib.STONES[self.stone].name
-        color = gemlib.STONES[self.stone].color or self.color
 
         for ob in context.selected_objects:
             ob.select_set(False)
@@ -86,7 +125,7 @@ class OBJECT_OT_gem_add(Operator):
         ob["gem"] = {"cut": self.cut, "stone": self.stone}
 
         gem_ratio.validate(ob, self.cut, self.size)
-        asset.add_material(ob, name=stone_name, color=color, is_gem=True)
+        asset.add_material(ob, name=wm_props.gem_color_name, color=(*wm_props.gem_color, 1.0), is_gem=True)
 
         if context.mode == "EDIT_MESH":
             asset.ob_copy_to_faces(ob)
@@ -97,10 +136,7 @@ class OBJECT_OT_gem_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        from ..lib import asset
-
-        self.color = asset.color_rnd()
-
+        upd_colors(self, context)
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
 
@@ -112,7 +148,7 @@ class OBJECT_OT_gem_edit(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     cut: EnumProperty(name="Cut", items=dynamic_list.cuts, options={"SKIP_SAVE"})
-    stone: EnumProperty(name="Stone", items=dynamic_list.stones, options={"SKIP_SAVE"})
+    stone: EnumProperty(name="Stone", items=dynamic_list.stones, update=upd_colors, options={"SKIP_SAVE"})
     use_id_only: BoolProperty(
         name="Only ID",
         description="Only edit gem identifiers, not affecting object data and materials",
@@ -123,11 +159,14 @@ class OBJECT_OT_gem_edit(Operator):
         description="Force edit selected mesh objects, can be used to make gems from non-gem objects",
         options={"SKIP_SAVE"},
     )
+    show_colors: BoolProperty(name="Show colors list", options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
+
+        wm_props = context.window_manager.jewelcraft
 
         layout.prop(self, "stone")
         split = layout.split(factor=0.4)
@@ -136,7 +175,28 @@ class OBJECT_OT_gem_edit(Operator):
         row.label(text="Cut", text_ctxt="Jewelry")
         split.template_icon_view(self, "cut", show_labels=True)
 
-        layout.separator()
+        split = layout.split(factor=0.4, align=True)
+        row = split.row()
+        row.alignment = "RIGHT"
+        row.label(text="Color")
+        split_01 = split.split(factor=0.1, align=True)
+        split_01.prop(wm_props, "gem_color", text="")
+        split_09 = split_01.split(factor=0.9, align=True)
+        split_09.prop(wm_props, "gem_color_name", text="")
+        split_09.prop(self, "show_colors", text="", icon="DOWNARROW_HLT")
+
+        if self.show_colors:
+            split = layout.split(factor=0.4)
+            split.row()
+            split.template_list(
+                "VIEW3D_UL_jewelcraft_gem_colors",
+                "",
+                wm_props.gem_colors,
+                "coll",
+                wm_props.gem_colors,
+                "index",
+                rows=8,
+            )
 
         layout.prop(self, "use_id_only")
         layout.prop(self, "use_force")
@@ -144,10 +204,10 @@ class OBJECT_OT_gem_edit(Operator):
     def execute(self, context):
         from ..lib import asset, gemlib
 
+        wm_props = context.window_manager.jewelcraft
+
         obs = context.selected_objects
         cut_name = gemlib.CUTS[self.cut].name
-        stone_name = gemlib.STONES[self.stone].name
-        color = gemlib.STONES[self.stone].color or self.color
 
         imported = asset.asset_import(var.GEM_ASSET_FILEPATH, me_name=cut_name)
         me = imported.meshes[0]
@@ -163,7 +223,6 @@ class OBJECT_OT_gem_edit(Operator):
                     ob["gem"] = {}
 
                 if self.use_force or ob["gem"]["cut"] != self.cut:
-
                     ob["gem"]["cut"] = self.cut
 
                     if not self.use_id_only:
@@ -180,34 +239,33 @@ class OBJECT_OT_gem_edit(Operator):
                             ob.data.materials.append(mat)
 
                 if self.use_force or ob["gem"]["stone"] != self.stone:
-
                     ob["gem"]["stone"] = self.stone
 
-                    if not self.use_id_only:
-
-                        if ob.data.users > 1:
-                            ob.data = ob.data.copy()
-
-                        asset.add_material(ob, name=stone_name, color=color, is_gem=True)
+                if not self.use_id_only:
+                    if ob.data.users > 1 and (not ob.material_slots or ob.material_slots[0].name != wm_props.gem_color_name):
+                        ob.data = ob.data.copy()
+                    asset.add_material(ob, name=wm_props.gem_color_name, color=(*wm_props.gem_color, 1.0), is_gem=True)
 
         bpy.data.meshes.remove(me)
 
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        from ..lib import asset
-
         if not context.selected_objects:
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
         ob = context.object
+        wm_props = context.window_manager.jewelcraft
 
         if ob is not None and "gem" in ob:
             self.cut = ob["gem"]["cut"]
             self.stone = ob["gem"]["stone"]
 
-        self.color = asset.color_rnd()
+        if ob.material_slots and (mat := ob.material_slots[0].material):
+            wm_props["gem_color"] = mat.diffuse_color[:3]
+            wm_props["gem_color_name"] = mat.name
+            wm_props.gem_colors.set_active_by_name(mat.name)
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)

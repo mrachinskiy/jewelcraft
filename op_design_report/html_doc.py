@@ -23,6 +23,7 @@ def make(Report, preview: str | None, filename: str, _: Callable[[str], str]) ->
         header = (
             _("Gem"),
             _("Cut"),
+            _("Color"),
             _("Size (mm)"),
             _("Carats"),
             _("Qty"),
@@ -31,8 +32,8 @@ def make(Report, preview: str | None, filename: str, _: Callable[[str], str]) ->
         body = Report.gems
         footer = (
             _("Total"),
-            sum(x[4] for x in Report.gems),
-            round(sum(x[5] for x in Report.gems), 3),
+            sum(x.qty for x in Report.gems),
+            round(sum(x.ct for x in Report.gems), 3),
         )
         if Report.warnings:
             Doc.write_warning(_("WARNING"), (_(x) for x in Report.warnings))

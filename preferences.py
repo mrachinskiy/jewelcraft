@@ -4,6 +4,7 @@
 from pathlib import Path
 
 import bpy
+from bpy.app.translations import pgettext_iface as _
 from bpy.props import (BoolProperty, CollectionProperty, EnumProperty,
                        FloatProperty, FloatVectorProperty, IntProperty,
                        PointerProperty, StringProperty)
@@ -15,6 +16,34 @@ from .lib import data, dynamic_list, pathutils
 
 # Update callbacks
 # ------------------------------------------
+
+
+_upd_lock = False
+
+
+def _serialize_colors_interval():
+    global _upd_lock
+
+    data.gem_colors_serialize()
+    _upd_lock = False
+
+
+def upd_serialize_colors(self, context):
+    global _upd_lock
+
+    if self.builtin:
+        return
+
+    if not _upd_lock:
+        bpy.app.timers.register(_serialize_colors_interval, first_interval=2)
+        _upd_lock = True
+
+
+def upd_color_name(self, context=None):
+    wm_props = context.window_manager.jewelcraft
+    color = wm_props.gem_colors.active_item()
+    wm_props["gem_color"] = color.color
+    wm_props["gem_color_name"] = _(color.name)
 
 
 _folder_cache = {}
@@ -136,6 +165,28 @@ class ListProperty:
 # Collection properties
 
 
+class GemColorCollection(PropertyGroup):
+    name: StringProperty(name="Click to rename", default="Colorless", update=upd_serialize_colors)
+    color: FloatVectorProperty(
+        name="Color",
+        default=(1.0, 1.0, 1.0),
+        size=3,
+        min=0.0,
+        max=1.0,
+        subtype="COLOR",
+        update=upd_serialize_colors,
+    )
+    builtin: BoolProperty()
+
+    def serialize(self) -> dict[str, str]:
+        from .lib import colorlib
+
+        return {
+            "name": self.name,
+            "color": colorlib.rbg_to_hex(self.color),
+        }
+
+
 class MaterialCollection(PropertyGroup):
     enabled: BoolProperty(description="Enable material for weighting display", default=True)
     name: StringProperty(default="Untitled")
@@ -231,6 +282,17 @@ class SizeCollection(PropertyGroup):
 
 
 # List properties
+
+
+class GemColorList(ListProperty, PropertyGroup):
+    index: IntProperty(update=upd_color_name)
+    coll: CollectionProperty(type=GemColorCollection)
+
+    def set_active_by_name(self, name: str) -> tuple[int, int, int]:
+        for i, item in enumerate(self.coll):
+            if item.name == name:
+                self["index"] = i
+                return item.color
 
 
 class MaterialList(ListProperty, PropertyGroup):
@@ -430,10 +492,21 @@ class Preferences(ReportLangEnum, AddonPreferences):
 
 
 class WmProperties(PropertyGroup):
+    prefs_show_gems: BoolProperty(name="Gem Colors")
     prefs_show_asset_manager: BoolProperty(name="Asset Manager")
     prefs_show_design_report: BoolProperty(name="Design Report")
     prefs_show_weighting: BoolProperty(name="Weighting")
     prefs_show_themes: BoolProperty(name="Themes")
+    gem_colors: PointerProperty(type=GemColorList)
+    gem_color: FloatVectorProperty(
+        name="Color",
+        default=(1.0, 1.0, 1.0),
+        size=3,
+        min=0.0,
+        max=1.0,
+        subtype="COLOR",
+    )
+    gem_color_name: StringProperty(name="Color Name")
     show_spacing: BoolProperty(
         name="Spacing Overlay",
         description="Show distance to nearby gems",
@@ -505,6 +578,10 @@ class SceneProperties(PropertyGroup):
     overlay_gem_map_show_in_front: BoolProperty(
         name="In Front",
         description="Draw overlay in front of objects",
+    )
+    overlay_gem_map_use_material_color: BoolProperty(
+        name="Material Color",
+        description="Use gem material color for gem map",
     )
     overlay_gem_map_opacity: FloatProperty(
         name="Opacity",

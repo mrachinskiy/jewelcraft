@@ -14,18 +14,19 @@ from mathutils import Color, Matrix
 from ... import var
 from .. import gemlib, unit
 from ..asset import gem_transform, iter_gems
+from ..colorlib import linear_to_srgb, luma
 
 _handler = None
 _handler_font = None
 _font_loc = []
 
 
-def handler_add(self, context, is_overlay: bool = True, use_select: bool = False):
+def handler_add(self, context, is_overlay=True, use_select=False, use_mat_color=False):
     global _handler
     global _handler_font
 
     if _handler is None:
-        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context, is_overlay, use_select), "WINDOW", "POST_VIEW")
+        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context, is_overlay, use_select, use_mat_color), "WINDOW", "POST_VIEW")
         _handler_font = bpy.types.SpaceView3D.draw_handler_add(_draw_font, (self, context), "WINDOW", "POST_PIXEL")
 
 
@@ -54,7 +55,7 @@ def _to_int(x: float) -> int | float:
     return x
 
 
-def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
+def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False) -> None:
     global _font_loc
 
     depsgraph = context.evaluated_depsgraph_get()
@@ -62,14 +63,17 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
     from_scene = Scale.from_scene
     mat_sca = Matrix.Diagonal((1.003, 1.003, 1.003)).to_4x4()
     color_var = Color((0.85, 0.35, 0.35))
+    white = (1.0, 1.0, 1.0, 1.0)
+    black = (0.0, 0.0, 0.0, 1.0)
     gems = set()
     gem_map = {}
 
     if is_overlay:
         props = context.scene.jewelcraft
         show_all = props.overlay_gem_map_show_all
-        opacity = props.overlay_gem_map_opacity
         in_front = props.overlay_gem_map_show_in_front
+        use_mat_color = props.overlay_gem_map_use_material_color
+        opacity = props.overlay_gem_map_opacity
     else:
         show_all = not use_select
         opacity = 1.0
@@ -98,7 +102,8 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
         size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
-        gems.add((stone, cut, size))
+        color = ob.material_slots[0].name if ob.material_slots else ""
+        gems.add((stone, cut, size, color))
 
     # Sort and assign colors
     # -----------------------------------
@@ -108,12 +113,23 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
         # Color
         # ---------------------------
 
-        color = (*color_var, opacity)
-        color_var.h += 0.15
+        if use_mat_color:
 
-        if color_var.h == 0.0:
-            color_var.s += 0.1
-            color_var.v -= 0.15
+            if gem[3]:
+                color = (*[linear_to_srgb(x) for x in bpy.data.materials[gem[3]].diffuse_color[:3]], opacity)
+            else:
+                color = (1.0, 1.0, 1.0, 0.0)
+
+        else:
+
+            color = (*color_var, opacity)
+            color_var.h += 0.15
+
+            if color_var.h == 0.0:
+                color_var.s += 0.1
+                color_var.v -= 0.15
+
+        color_font = white if luma(color) < 0.4 else black
 
         # Size
         # ---------------------------
@@ -132,7 +148,7 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
         else:
             size = f"{l}×{w}"
 
-        gem_map[gem] = size, color
+        gem_map[gem] = size, color, color_font
 
     # Display
     # -----------------------------------
@@ -152,7 +168,8 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
         size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
-        size, color = gem_map[(stone, cut, size)]
+        color_name = ob.material_slots[0].name if ob.material_slots else ""
+        size, color, font_color = gem_map[(stone, cut, size, color_name)]
 
         ob_eval = ob.evaluated_get(depsgraph)
         me = ob_eval.to_mesh()
@@ -171,7 +188,7 @@ def _draw(self, context, is_overlay: bool = True, use_select: bool = False):
         batch = batch_for_shader(shader, "TRIS", {"pos": points}, indices=indices)
         batch.draw(shader)
 
-        _font_loc.append((size, loc2.to_tuple()))
+        _font_loc.append((size, loc2.to_tuple(), font_color))
 
     gpu.state.blend_set("NONE")
     gpu.state.depth_test_set("NONE")
@@ -189,9 +206,9 @@ def _draw_font(self, context, to_2d: Callable = location_3d_to_region_2d):
     prefs = context.preferences.addons[var.ADDON_ID].preferences
     fontid = 0
     blf.size(fontid, prefs.gem_map_fontsize_gem_size)
-    blf.color(fontid, 0.0, 0.0, 0.0, 1.0)
 
-    for text, loc in _font_loc:
+    for text, loc, color in _font_loc:
+        blf.color(fontid, *color)
         dim_x, dim_y = blf.dimensions(fontid, text)
         pos_x, pos_y = to_2d(region, region_3d, loc)
         blf.position(fontid, pos_x - dim_x // 2, pos_y - dim_y // 2, 0.0)

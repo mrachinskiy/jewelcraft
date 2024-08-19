@@ -67,12 +67,13 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
         size = tuple(round(x, 2) for x in Scale.from_scene(ob.dimensions))
+        color = ob.material_slots[0].name if ob.material_slots else ""
 
         # Warnings
         Warn.overlap(dup)
         stone, cut = Warn.validate_id(stone, cut)
 
-        Report.gems[(stone, cut, size)] += 1
+        Report.gems[(stone, cut, size, color)] += 1
 
     if show_warnings:
         Warn.report(Report.warnings)

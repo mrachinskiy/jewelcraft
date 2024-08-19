@@ -37,7 +37,7 @@ class WM_OT_weighting_list_add(Operator):
         if not lib_path.exists():
             lib_path.mkdir(parents=True)
 
-        data.weighting_list_serialize(list_path)
+        data.ul_serialize(context.scene.jewelcraft.weighting_materials, list_path)
         dynamic_list.weighting_lib_refresh()
 
         return {"FINISHED"}
@@ -58,7 +58,7 @@ class WM_OT_weighting_list_replace(Operator):
     def execute(self, context):
         list_path = pathutils.get_weighting_list_filepath(self.list_name)
         if list_path.exists():
-            data.weighting_list_serialize(list_path)
+            data.ul_serialize(context.scene.jewelcraft.weighting_materials, list_path)
         return {"FINISHED"}
 
     def invoke(self, context, event):

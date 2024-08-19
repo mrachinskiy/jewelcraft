@@ -15,6 +15,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
     bl_idname = "view3d.jewelcraft_gem_map"
 
     use_select: BoolProperty()
+    use_mat_color: BoolProperty()
     use_background: BoolProperty()
     use_save: BoolProperty(
         name="Save to File",
@@ -53,7 +54,14 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
             elif event.type == "S" and event.value == "PRESS":
                 self.use_select = not self.use_select
                 overlays.gem_map.handler_del()
-                overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select)
+                overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select, use_mat_color=self.use_mat_color)
+                self.region.tag_redraw()
+                return {"RUNNING_MODAL"}
+
+            elif event.type == "M" and event.value == "PRESS":
+                self.use_mat_color = not self.use_mat_color
+                overlays.gem_map.handler_del()
+                overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select, use_mat_color=self.use_mat_color)
                 self.region.tag_redraw()
                 return {"RUNNING_MODAL"}
 
@@ -90,6 +98,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
 
         lay = view3d_lib.Layout()
         lay.bool(_("Limit by Selection"), "(S)", "use_select")
+        lay.bool(_("Material Color"), "(M)", "use_mat_color")
         lay.bool(_("Viewport Background"), "(B)", "use_background")
         lay.proc(_("Save to Image"), "(F12)", "is_rendering")
 
@@ -110,7 +119,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         # ----------------------------
 
         context.window_manager.jewelcraft.show_gem_map = False
-        overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select)
+        overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select, use_mat_color=self.use_mat_color)
         onscreen.handler_add(self, context, lay)
 
         context.window_manager.modal_handler_add(self)

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.16.2\n"
-"POT-Creation-Date: 2024-08-04\n"
+"Project-Id-Version: JewelCraft 2.17.0\n"
+"POT-Creation-Date: 2024-08-19\n"
 "PO-Revision-Date: 2022-07-01\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -9,6 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Gem Colors"
+msgstr ""
 
 msgid "Asset Manager"
 msgstr "Gestor de Activos"
@@ -69,6 +72,9 @@ msgstr "Alertas"
 
 msgid "Show All"
 msgstr "Mostrar Todo"
+
+msgid "Material Color"
+msgstr ""
 
 msgid "Scene scale is not optimal"
 msgstr "La escala de la escena no es óptima."
@@ -250,6 +256,9 @@ msgstr "Editar gemas seleccionadas"
 msgid "Round diamonds only"
 msgstr "Solo diamantes redondos"
 
+msgid "Show colors list"
+msgstr ""
+
 msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
 msgstr "Forzar la edición de objetos malla seleccionados, se puede usar para hacer gemas a partir de objetos que no son gemas"
 
@@ -401,6 +410,9 @@ msgid "Show spacing guide for all visible gems"
 msgstr "Mostrar guía de espaciado para todas las gemas visibles"
 
 msgid "Show for all visible gems"
+msgstr ""
+
+msgid "Use gem material color for gem map"
 msgstr ""
 
 msgid "Set optimal unit settings for jewelry modelling"
@@ -771,6 +783,45 @@ msgstr "K"
 
 msgid "pcs"
 msgstr "piezas"
+
+msgid "Color"
+msgstr ""
+
+msgid "Colorless"
+msgstr ""
+
+msgid "Yellow"
+msgstr ""
+
+msgid "Yellowish Green"
+msgstr ""
+
+msgid "Green"
+msgstr ""
+
+msgid "Bluish Green"
+msgstr ""
+
+msgid "Greenish Blue"
+msgstr ""
+
+msgid "Purple"
+msgstr ""
+
+msgid "Reddish Purple"
+msgstr ""
+
+msgid "Red"
+msgstr ""
+
+msgid "Blue"
+msgstr ""
+
+msgid "Violetish Blue"
+msgstr ""
+
+msgid "Pink"
+msgstr ""
 
 msgctxt "Jewelry"
 msgid "Cut"
