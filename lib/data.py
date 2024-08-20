@@ -52,6 +52,10 @@ def gem_colors_deserialize() -> None:
         return v
 
     colors = bpy.context.window_manager.jewelcraft.gem_colors
+
+    if colors.coll:
+        return
+
     colors.clear()
     ul_deserialize(colors, var.GEM_ASSET_DIR / "colors.json", fmt=_hex_to_rgb, is_builtin=True)
 
@@ -69,9 +73,13 @@ def asset_libs_serialize() -> None:
     )
 
 
-def asset_libs_deserialize() -> None:
+def asset_libs_deserialize(is_on_load=False) -> None:
     if var.ASSET_LIBS_FILEPATH.exists():
         libs = bpy.context.window_manager.jewelcraft.asset_libs
+
+        if is_on_load and libs.coll:
+            return
+
         libs.clear()
         ul_deserialize(libs, var.ASSET_LIBS_FILEPATH)
 
@@ -93,6 +101,10 @@ def report_metadata_deserialize() -> None:
         filepath = var.REPORT_METADATA_BUILTIN_FILEPATH
 
     ul = bpy.context.window_manager.jewelcraft.report_metadata
+
+    if ul.coll:
+        return
+
     ul.clear()
     ul_deserialize(ul, filepath)
 

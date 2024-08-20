@@ -20,7 +20,7 @@ def handler_del():
 def _execute(dummy):
     _load_weighting_mats()
     data.gem_colors_deserialize()
-    data.asset_libs_deserialize()
+    data.asset_libs_deserialize(is_on_load=True)
     data.report_metadata_deserialize()
 
 
