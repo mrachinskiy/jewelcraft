@@ -5,7 +5,6 @@ import bpy
 from bpy.app.handlers import persistent
 
 from .. import var
-from . import data
 
 
 def handler_add():
@@ -19,9 +18,10 @@ def handler_del():
 @persistent
 def _execute(dummy):
     _load_weighting_mats()
-    data.gem_colors_deserialize()
-    data.asset_libs_deserialize(is_on_load=True)
-    data.report_metadata_deserialize()
+    wm_props = bpy.context.window_manager.jewelcraft
+    wm_props.gem_colors.deserialize()
+    wm_props.asset_libs.deserialize(is_on_load=True)
+    wm_props.report_metadata.deserialize()
 
 
 def _load_weighting_mats():
@@ -33,8 +33,8 @@ def _load_weighting_mats():
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
 
     try:
-        data.weighting_list_deserialize(prefs.weighting_default_list)
+        materials.deserialize(prefs.weighting_default_list)
     except FileNotFoundError:
         prefs.property_unset("weighting_default_list")
         bpy.context.preferences.is_dirty = True
-        data.weighting_list_deserialize(prefs.weighting_default_list)
+        materials.deserialize(prefs.weighting_default_list)

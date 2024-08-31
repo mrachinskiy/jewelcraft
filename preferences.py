@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from collections.abc import Callable
 from pathlib import Path
 
 import bpy
@@ -11,7 +12,7 @@ from bpy.props import (BoolProperty, CollectionProperty, EnumProperty,
 from bpy.types import AddonPreferences, Collection, Object, PropertyGroup
 
 from . import ui, var
-from .lib import data, dynamic_list, pathutils
+from .lib import dynamic_list
 
 
 # Update callbacks
@@ -24,7 +25,7 @@ _upd_lock = False
 def _serialize_colors_interval():
     global _upd_lock
 
-    data.gem_colors_serialize()
+    bpy.context.window_manager.jewelcraft.gem_colors.serialize()
     _upd_lock = False
 
 
@@ -44,6 +45,10 @@ def upd_color_name(self, context=None):
     color = wm_props.gem_colors.active_item()
     wm_props["gem_color"] = color.color
     wm_props["gem_color_name"] = _(color.name)
+
+
+def upd_serialize_metadata(self, context):
+    context.window_manager.jewelcraft.report_metadata.serialize()
 
 
 _folder_cache = {}
@@ -73,7 +78,7 @@ def upd_folder_list(self, context):
 
 def upd_folder_list_serialize(self, context):
     upd_folder_list(self, context)
-    data.asset_libs_serialize()
+    bpy.context.window_manager.jewelcraft.asset_libs.serialize()
 
 
 def upd_lib_name(self, context):
@@ -105,8 +110,10 @@ def upd_material_list_rename(self, context):
     if self.name == self.name_orig:
         return
 
-    path = pathutils.get_weighting_list_filepath(self.name_orig)
-    path_new = pathutils.get_weighting_list_filepath(self.name)
+    lib_path = context.scene.jewelcraft.weighting_materials.serialize_path()
+
+    path = lib_path / f"{self.name_orig}.json"
+    path_new = lib_path / f"{self.name}.json"
 
     if not path.exists():
         dynamic_list.weighting_lib_refresh()
@@ -161,6 +168,37 @@ class ListProperty:
     def length(self):
         return len(self.coll)
 
+    def serialize(self, filepath: Path | None = None) -> None:
+        import json
+
+        data = [item.asdict() for item in self.values() if not getattr(item, "builtin", False)]
+
+        if not filepath:
+            filepath = self.serialize_path(ensure=True)
+
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(filepath, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=4, ensure_ascii=False)
+
+    def _deserialize(self, filepath: Path, fmt: Callable = lambda k, v: v, is_builtin=False) -> None:
+        import json
+
+        with open(filepath, "r", encoding="utf-8") as file:
+            data = json.load(file)
+
+            for data_item in data:
+                item = self.add()
+                for k, v in data_item.items():
+                    item[k] = fmt(k, v)
+                if is_builtin:
+                    item["builtin"] = True
+
+            self["index"] = 0
+
+    def serialize_path(self) -> Path:
+        ...
+
 
 # Collection properties
 
@@ -178,7 +216,7 @@ class GemColorCollection(PropertyGroup):
     )
     builtin: BoolProperty()
 
-    def serialize(self) -> dict[str, str]:
+    def asdict(self) -> dict[str, str]:
         from .lib import colorlib
 
         return {
@@ -193,7 +231,7 @@ class MaterialCollection(PropertyGroup):
     composition: StringProperty(default="Unknown")
     density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
 
-    def serialize(self):
+    def asdict(self) -> dict[str, str | float]:
         return {
             "name": self.name,
             "composition": self.composition,
@@ -261,10 +299,10 @@ class MeasurementCollection(PropertyGroup):
 
 
 class Metadata(PropertyGroup):
-    name: StringProperty(default="...", update=data.report_metadata_serialize)
-    value: StringProperty(default="...", update=data.report_metadata_serialize)
+    name: StringProperty(default="...", update=upd_serialize_metadata)
+    value: StringProperty(default="...", update=upd_serialize_metadata)
 
-    def serialize(self):
+    def asdict(self) -> dict[str, str]:
         return dict(self)
 
 
@@ -272,7 +310,7 @@ class AssetLibCollection(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
 
-    def serialize(self):
+    def asdict(self) -> dict[str, str]:
         return dict(self)
 
 
@@ -294,9 +332,48 @@ class GemColorList(ListProperty, PropertyGroup):
                 self["index"] = i
                 return item.color
 
+    def deserialize(self) -> None:
+        if self.coll:
+            return
+
+        def _hex_to_rgb(k, v):
+            from .lib import colorlib
+            if k == "color":
+                return colorlib.hex_to_rgb(v)
+            return v
+
+        self.clear()
+        self._deserialize(var.GEM_ASSET_DIR / "colors.json", fmt=_hex_to_rgb, is_builtin=True)
+
+        if (filepath := self.serialize_path()).exists():
+            self._deserialize(filepath, fmt=_hex_to_rgb)
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "gem_colors.json"
+
 
 class MaterialList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=MaterialCollection)
+
+    def deserialize(self, name: str) -> None:
+
+        def _translate_item_name(k, v):
+            if k == "name":
+                return _(v)
+            return v
+
+        if name.startswith("BUILTIN/"):
+            filepath = var.WEIGHTING_LISTS_DIR / (name[len("BUILTIN/"):] + ".json")
+            self._deserialize(filepath, fmt=_translate_item_name)
+        else:
+            lib_path = bpy.context.scene.jewelcraft.weighting_materials.serialize_path()
+            filepath = lib_path / f"{name}.json"
+            self._deserialize(filepath)
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "Weighting Library"
 
 
 class MeasurementList(ListProperty, PropertyGroup):
@@ -306,10 +383,41 @@ class MeasurementList(ListProperty, PropertyGroup):
 class MetadataList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=Metadata)
 
+    def deserialize(self) -> None:
+        if self.coll:
+            return
+
+        if not (filepath := self.serialize_path()).exists():
+            filepath = var.METADATA_FILEPATH
+
+        self.clear()
+        self._deserialize(filepath)
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "report_metadata.json"
+
 
 class AssetLibList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_folder_list)
     coll: CollectionProperty(type=AssetLibCollection)
+
+    def path(self) -> Path:
+        return Path(self.active_item().path)
+
+    def deserialize(self, is_on_load=False) -> None:
+        filepath = self.serialize_path()
+
+        if is_on_load and self.coll:
+            return
+
+        if filepath.exists():
+            self.clear()
+            self._deserialize(filepath)
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "libraries.json"
 
 
 class SizeList(ListProperty, PropertyGroup):
@@ -361,6 +469,16 @@ class ReportLangEnum:
 class Preferences(ReportLangEnum, AddonPreferences):
     bl_idname = __package__
 
+    # Config
+    # ------------------------
+
+    config_dir: StringProperty(
+        name="Configuration",
+        description="Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar",
+        default=str(var.CONFIG_DIR),
+        subtype="DIR_PATH",
+    )
+
     # Asset
     # ------------------------
 
@@ -392,18 +510,6 @@ class Preferences(ReportLangEnum, AddonPreferences):
     # Weighting
     # ------------------------
 
-    weighting_hide_builtin_lists: BoolProperty(
-        name="Hide Built-in Material Lists",
-        description="Hide built-in material lists from library",
-        update=dynamic_list.weighting_lib_refresh,
-    )
-    weighting_lib_path: StringProperty(
-        name="Library Folder",
-        description="Custom library folder path",
-        default=str(var.WEIGHTING_LIB_USER_DIR),
-        subtype="DIR_PATH",
-        update=dynamic_list.weighting_lib_refresh,
-    )
     weighting_default_list: StringProperty(default="BUILTIN/Precious")
 
     # Design Report
@@ -486,16 +592,19 @@ class Preferences(ReportLangEnum, AddonPreferences):
     def draw(self, context):
         ui.prefs_ui(self, context)
 
+    def asset_favs_filepath(self) -> Path:
+        return Path(self.config_dir) / "favorites.json"
+
 
 # Window manager properties
 # ------------------------------------------
 
 
 class WmProperties(PropertyGroup):
+    prefs_show_general: BoolProperty(name="General")
     prefs_show_gems: BoolProperty(name="Gem Colors")
     prefs_show_asset_manager: BoolProperty(name="Asset Manager")
     prefs_show_design_report: BoolProperty(name="Design Report")
-    prefs_show_weighting: BoolProperty(name="Weighting")
     prefs_show_themes: BoolProperty(name="Themes")
     gem_colors: PointerProperty(type=GemColorList)
     gem_color: FloatVectorProperty(

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-19\n"
+"POT-Creation-Date: 2024-08-31\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: De Palo Domenico\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -9,6 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Configuration"
+msgstr ""
 
 msgid "Gem Colors"
 msgstr ""
@@ -40,17 +43,11 @@ msgstr "Gioielleria"
 msgid "Weighting"
 msgstr "Stima del Peso"
 
-msgid "Hide Built-in Material Lists"
-msgstr ""
-
 msgid "Prongs"
 msgstr "Griffe"
 
 msgid "Cutter"
 msgstr "Fresa"
-
-msgid "Library Folder"
-msgstr "Percorso Cartella Libreria"
 
 msgid "Overrides"
 msgstr "Usa sovrascrittura"
@@ -196,9 +193,6 @@ msgstr "Padre della Selezione"
 msgid "Use 3D Cursor"
 msgstr "Usa cursore 3D"
 
-msgid "Collection Name"
-msgstr "Nome raccolta"
-
 msgid "Ring Size"
 msgstr "Misura anello"
 
@@ -242,6 +236,9 @@ msgid "Wedge"
 msgstr ""
 
 msgid "Keep Z Direction"
+msgstr ""
+
+msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr ""
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
@@ -348,9 +345,6 @@ msgstr "Importa risorsa selezionata"
 
 msgid "Asset category"
 msgstr "Categoría risorsa"
-
-msgid "Custom library folder path"
-msgstr "Percorso della cartella della libreria personalizzata"
 
 msgid "Show asset name in sidebar"
 msgstr ""

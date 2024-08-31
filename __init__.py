@@ -17,7 +17,7 @@ else:
                    op_gem_map, op_microprong, op_prongs, ops_asset, ops_gem,
                    ops_measurement, ops_object, ops_utils, ops_weighting,
                    preferences, ui)
-    from .lib import data, on_load, previewlib
+    from .lib import on_load, previewlib
 
 
 classes = (
@@ -146,11 +146,6 @@ def register():
     # ---------------------------
 
     bpy.app.translations.register(__name__, localization.DICTIONARY)
-
-    # Versioning
-    # ---------------------------
-
-    data.versioning_asset_favs()
 
 
 def unregister():

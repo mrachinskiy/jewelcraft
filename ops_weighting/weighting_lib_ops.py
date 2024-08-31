@@ -5,7 +5,7 @@ from bpy.props import StringProperty
 from bpy.types import Operator
 
 from .. import var
-from ..lib import data, dynamic_list, pathutils
+from ..lib import dynamic_list
 
 
 class WM_OT_weighting_list_add(Operator):
@@ -31,13 +31,12 @@ class WM_OT_weighting_list_add(Operator):
             self.report({"ERROR"}, "Name must be specified")
             return {"CANCELLED"}
 
-        lib_path = pathutils.get_weighting_lib_path()
-        list_path = pathutils.get_weighting_list_filepath(self.list_name)
+        mats = context.scene.jewelcraft.weighting_materials
 
-        if not lib_path.exists():
-            lib_path.mkdir(parents=True)
+        lib_path = mats.serialize_path()
+        list_path = lib_path / f"{self.list_name}.json"
 
-        data.ul_serialize(context.scene.jewelcraft.weighting_materials, list_path)
+        mats.serialize(list_path)
         dynamic_list.weighting_lib_refresh()
 
         return {"FINISHED"}
@@ -56,9 +55,14 @@ class WM_OT_weighting_list_replace(Operator):
     list_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        list_path = pathutils.get_weighting_list_filepath(self.list_name)
+        mats = context.scene.jewelcraft.weighting_materials
+
+        lib_path = mats.serialize_path()
+        list_path = lib_path / f"{self.list_name}.json"
+
         if list_path.exists():
-            data.ul_serialize(context.scene.jewelcraft.weighting_materials, list_path)
+            mats.serialize(list_path)
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -75,7 +79,8 @@ class WM_OT_weighting_list_del(Operator):
     list_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        list_path = pathutils.get_weighting_list_filepath(self.list_name)
+        lib_path = context.scene.jewelcraft.weighting_materials.serialize_path()
+        list_path = lib_path / f"{self.list_name}.json"
         list_path.unlink(missing_ok=True)
         dynamic_list.weighting_lib_refresh()
         return {"FINISHED"}
@@ -94,7 +99,7 @@ class WM_OT_weighting_list_import(Operator):
     load_id: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        data.weighting_list_deserialize(self.load_id)
+        context.scene.jewelcraft.weighting_materials.deserialize(self.load_id)
         context.area.tag_redraw()
         return {"FINISHED"}
 

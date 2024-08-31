@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-19\n"
+"POT-Creation-Date: 2024-08-31\n"
 "PO-Revision-Date: 2022-07-01\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -9,6 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Configuration"
+msgstr ""
 
 msgid "Gem Colors"
 msgstr ""
@@ -40,17 +43,11 @@ msgstr "Joyería"
 msgid "Weighting"
 msgstr "Evaluación del Peso"
 
-msgid "Hide Built-in Material Lists"
-msgstr "Ocultar Conjuntos Predeterminados"
-
 msgid "Prongs"
 msgstr "Dientes"
 
 msgid "Cutter"
 msgstr "Cortador"
-
-msgid "Library Folder"
-msgstr "Ruta a Carpeta Biblioteca"
 
 msgid "Overrides"
 msgstr "Usar Anulaciones"
@@ -196,9 +193,6 @@ msgstr "Padre a Seleccionado"
 msgid "Use 3D Cursor"
 msgstr "Usar Cursor 3D"
 
-msgid "Collection Name"
-msgstr "Nombre de Colección"
-
 msgid "Ring Size"
 msgstr "Tamaño de Anillo"
 
@@ -243,6 +237,9 @@ msgstr "Cuña"
 
 msgid "Keep Z Direction"
 msgstr "Conservar Dirección Z"
+
+msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
+msgstr ""
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "Hace que las transformaciones en el eje Z sean consistentes con el objeto original (no afecta a las gemas)"
@@ -348,9 +345,6 @@ msgstr "Importar activo seleccionado"
 
 msgid "Asset category"
 msgstr "Categoría de activo"
-
-msgid "Custom library folder path"
-msgstr "Ruta de la carpeta de la biblioteca personalizada"
 
 msgid "Show asset name in sidebar"
 msgstr "Mostrar nombre de activos en la barra de herramientas"

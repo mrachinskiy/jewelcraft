@@ -3,7 +3,7 @@
 
 from bpy.types import Menu, Panel, UIList, UILayout, PropertyGroup
 
-from .lib import dynamic_list, pathutils, unit
+from .lib import dynamic_list, unit
 from .lib.previewlib import icon, icon_menu
 
 
@@ -237,7 +237,7 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
 
     def draw(self, context):
         lib = context.window_manager.jewelcraft.weighting_lists
-        lib_path = str(pathutils.get_weighting_lib_path())
+        lib_path = context.scene.jewelcraft.weighting_materials.serialize_path()
 
         if not lib:
             dynamic_list.weighting_lib()
@@ -252,7 +252,7 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
         sub.alignment = "RIGHT"
         sub.scale_x = 1.1
         sub.operator("wm.jewelcraft_weighting_ui_refresh", text="", icon="FILE_REFRESH")
-        sub.operator("wm.path_open", text="", icon="FILE_FOLDER").filepath = lib_path
+        sub.operator("wm.path_open", text="", icon="FILE_FOLDER").filepath = str(lib_path)
 
         layout.separator()
 
@@ -460,7 +460,7 @@ class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
         if show_favs:
             assets = dynamic_list.favorites()
         else:
-            assets = dynamic_list.assets(pathutils.get_asset_lib_path(), wm_props.asset_folder)
+            assets = dynamic_list.assets(wm_props.asset_libs.path(), wm_props.asset_folder)
 
         if not assets:
             flow.box().label(text="Category is empty")
@@ -719,6 +719,9 @@ def prefs_ui(self, context):
 
     main = layout.column()
 
+    if (panel := _prop_panel(main, wm_props, "prefs_show_general")):
+        panel.prop(self, "config_dir")
+
     if (panel := _prop_panel(main, wm_props, "prefs_show_gems")):
         col = panel.column()
         row = col.row()
@@ -832,11 +835,6 @@ def prefs_ui(self, context):
         col = panel.column()
         col.prop(self, "gem_map_fontsize_table")
         col.prop(self, "gem_map_fontsize_gem_size")
-
-    if (panel := _prop_panel(main, wm_props, "prefs_show_weighting")):
-        col = panel.column()
-        col.prop(self, "weighting_hide_builtin_lists")
-        col.prop(self, "weighting_lib_path")
 
     if (panel := _prop_panel(main, wm_props, "prefs_show_themes")):
         panel.label(text="Spacing Overlay")

@@ -8,7 +8,7 @@ from bpy.props import BoolProperty, EnumProperty, StringProperty
 from bpy.types import Operator
 
 from .. import var
-from ..lib import dynamic_list, pathutils
+from ..lib import dynamic_list
 
 
 def _asset_menu_lock():
@@ -84,7 +84,7 @@ class AssetAdd:
 
         if self.is_add:
             wm_props = context.window_manager.jewelcraft
-            filepath = pathutils.get_asset_lib_path() / wm_props.asset_folder / (self.asset_name + ".blend")
+            filepath = wm_props.asset_libs.path() / wm_props.asset_folder / (self.asset_name + ".blend")
         else:
             filepath = Path(self.filepath)
 
@@ -345,10 +345,13 @@ class Favorite:
     def execute(self, context):
         import json
 
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        favs_filepath = prefs.asset_favs_filepath()
+
         # Deserialize
 
-        if var.ASSET_FAVS_FILEPATH.exists():
-            with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
+        if favs_filepath.exists():
+            with open(favs_filepath, "r", encoding="utf-8") as file:
                 data = json.load(file)
         else:
             data = []
@@ -363,10 +366,9 @@ class Favorite:
 
         # Serialize
 
-        if not var.CONFIG_DIR.exists():
-            var.CONFIG_DIR.mkdir(parents=True)
+        favs_filepath.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(var.ASSET_FAVS_FILEPATH, "w", encoding="utf-8") as file:
+        with open(favs_filepath, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
         dynamic_list.assets_refresh(favs=True)
