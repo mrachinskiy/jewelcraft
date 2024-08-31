@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-19\n"
+"POT-Creation-Date: 2024-08-31\n"
 "PO-Revision-Date: 2023-12-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -9,6 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Configuration"
+msgstr ""
 
 msgid "Gem Colors"
 msgstr ""
@@ -40,17 +43,11 @@ msgstr "珠宝"
 msgid "Weighting"
 msgstr "重量评估"
 
-msgid "Hide Built-in Material Lists"
-msgstr "隐藏内置材质列表"
-
 msgid "Prongs"
 msgstr "起钉"
 
 msgid "Cutter"
 msgstr "开孔器"
-
-msgid "Library Folder"
-msgstr "库文件夹的路径"
 
 msgid "Overrides"
 msgstr "使用自定义覆盖"
@@ -196,9 +193,6 @@ msgstr "选择父级"
 msgid "Use 3D Cursor"
 msgstr "使用三维光标"
 
-msgid "Collection Name"
-msgstr "集合名称"
-
 msgid "Ring Size"
 msgstr "戒指尺寸"
 
@@ -243,6 +237,9 @@ msgstr "插入"
 
 msgid "Keep Z Direction"
 msgstr "保持Z方向"
+
+msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
+msgstr ""
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "使Z轴上的变换与原始对象一致（不影响宝石）"
@@ -348,9 +345,6 @@ msgstr "导入所选资产"
 
 msgid "Asset category"
 msgstr "资产类别"
-
-msgid "Custom library folder path"
-msgstr "自定义库文件夹路径"
 
 msgid "Show asset name in sidebar"
 msgstr "在侧边栏中显示资产名称"

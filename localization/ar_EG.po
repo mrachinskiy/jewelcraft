@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-19\n"
+"POT-Creation-Date: 2024-08-31\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: Ahmed Hamad\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -9,6 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Configuration"
+msgstr ""
 
 msgid "Gem Colors"
 msgstr ""
@@ -40,17 +43,11 @@ msgstr "التزيين"
 msgid "Weighting"
 msgstr "الأوزان"
 
-msgid "Hide Built-in Material Lists"
-msgstr "قم باخفاء قائمة المواد الافتراضية"
-
 msgid "Prongs"
 msgstr "الدعامات"
 
 msgid "Cutter"
 msgstr "أداة القطع"
-
-msgid "Library Folder"
-msgstr "مجلد المكتبة"
 
 msgid "Overrides"
 msgstr "بدائل"
@@ -196,9 +193,6 @@ msgstr "أنسب الأبوية للعنصر المختار"
 msgid "Use 3D Cursor"
 msgstr "استخدم المؤشر ثلاثي الابعاد"
 
-msgid "Collection Name"
-msgstr "اسم التجميعة"
-
 msgid "Ring Size"
 msgstr "مقاس الخاتم"
 
@@ -242,6 +236,9 @@ msgid "Wedge"
 msgstr ""
 
 msgid "Keep Z Direction"
+msgstr ""
+
+msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr ""
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
@@ -348,9 +345,6 @@ msgstr "قم باستيراد العنصر المختار"
 
 msgid "Asset category"
 msgstr "فئة العناصر"
-
-msgid "Custom library folder path"
-msgstr "مسار مجلد المكتبة"
 
 msgid "Show asset name in sidebar"
 msgstr "أظهر اسم العنصر في الشريط الجانبي"

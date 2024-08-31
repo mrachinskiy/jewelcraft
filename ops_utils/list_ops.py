@@ -1,10 +1,9 @@
 # SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import bpy
 from bpy.props import BoolProperty, StringProperty
 from bpy.types import Operator
-
-from ..lib import data
 
 
 # Scene
@@ -56,12 +55,9 @@ class SCENE_OT_ul_move(Operator):
 
 
 def _serialize(prop: str) -> None:
-    if prop == "gem_colors":
-        data.gem_colors_serialize()
-    elif prop == "asset_libs":
-        data.asset_libs_serialize()
-    elif prop == "report_metadata":
-        data.report_metadata_serialize()
+    wm_props = bpy.context.window_manager.jewelcraft
+    ul = getattr(wm_props, prop)
+    ul.serialize()
 
 
 class WM_OT_ul_add(Operator):

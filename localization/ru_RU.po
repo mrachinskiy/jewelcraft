@@ -1,14 +1,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-19\n"
-"PO-Revision-Date: 2024-08-19\n"
+"POT-Creation-Date: 2024-08-31\n"
+"PO-Revision-Date: 2024-08-31\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Configuration"
+msgstr "Конфигурация"
 
 msgid "Gem Colors"
 msgstr "Цвета камней"
@@ -40,17 +43,11 @@ msgstr "Вставки"
 msgid "Weighting"
 msgstr "Оценка веса"
 
-msgid "Hide Built-in Material Lists"
-msgstr "Скрыть встроенные списки материалов"
-
 msgid "Prongs"
 msgstr "Крапана"
 
 msgid "Cutter"
 msgstr "Выборка"
-
-msgid "Library Folder"
-msgstr "Каталог библиотеки"
 
 msgid "Overrides"
 msgstr "Переопределения"
@@ -196,9 +193,6 @@ msgstr "Привязать к выделению"
 msgid "Use 3D Cursor"
 msgstr "Использовать 3D курсор"
 
-msgid "Collection Name"
-msgstr "Имя коллекции"
-
 msgid "Ring Size"
 msgstr "Размер кольца"
 
@@ -243,6 +237,9 @@ msgstr "Клин"
 
 msgid "Keep Z Direction"
 msgstr "Сохранять направление Z"
+
+msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
+msgstr "Директория для таких настроек как избранные ассеты, цвета драгоценных камней и подобные"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "Приводит трансформации по оси Z в соответствии исходному объекту (не влияет на камни)"
@@ -348,9 +345,6 @@ msgstr "Импортировать выбранный ассет"
 
 msgid "Asset category"
 msgstr "Категория ассетов"
-
-msgid "Custom library folder path"
-msgstr "Путь к пользовательскому каталогу библиотеки"
 
 msgid "Show asset name in sidebar"
 msgstr "Показывать название ассета в боковой панели"

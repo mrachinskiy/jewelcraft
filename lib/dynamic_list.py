@@ -8,7 +8,7 @@ import bpy
 from bpy.app.translations import pgettext_iface as _
 
 from .. import var
-from . import pathutils, previewlib
+from . import previewlib
 
 
 EnumItems3 = tuple[tuple[str, str, str], ...]
@@ -83,14 +83,13 @@ def weighting_lib() -> None:
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     lib = bpy.context.window_manager.jewelcraft.weighting_lists
 
-    if not prefs.weighting_hide_builtin_lists:
-        for child in var.WEIGHTING_LIB_BUILTIN_DIR.iterdir():
-            if child.is_file() and child.suffix == ".json":
-                item = lib.add()
-                item["name"] = child.stem
-                item.builtin = True
+    for child in var.WEIGHTING_LISTS_DIR.iterdir():
+        if child.is_file() and child.suffix == ".json":
+            item = lib.add()
+            item["name"] = child.stem
+            item.builtin = True
 
-    lib_path = pathutils.get_weighting_lib_path()
+    lib_path = bpy.context.scene.jewelcraft.weighting_materials.serialize_path()
 
     if lib_path.exists():
         for child in lib_path.iterdir():
@@ -141,7 +140,7 @@ def asset_folders_refresh() -> None:
 
 @lru_cache(maxsize=1)
 def _asset_folders() -> EnumItems3:
-    folder = pathutils.get_asset_lib_path()
+    folder = bpy.context.window_manager.jewelcraft.asset_libs.path()
 
     if not folder.exists():
         return ()
@@ -174,7 +173,10 @@ def assets(lib_path: Path, category: str) -> AssetItems:
 
 @lru_cache(maxsize=1)
 def favorites() -> AssetItems:
-    if not var.ASSET_FAVS_FILEPATH.exists():
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+    favs_filepath = prefs.asset_favs_filepath()
+
+    if not favs_filepath.exists():
         return ()
 
     import json
@@ -182,7 +184,7 @@ def favorites() -> AssetItems:
     list_ = []
     app = list_.append
 
-    with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
+    with open(favs_filepath, "r", encoding="utf-8") as file:
         for filepath in json.load(file):
             app((filepath, Path(filepath).stem, previewlib.asset_img(filepath), True))
 
@@ -191,12 +193,15 @@ def favorites() -> AssetItems:
 
 @lru_cache(maxsize=1)
 def _favs_deserialize() -> frozenset[str]:
-    if not var.ASSET_FAVS_FILEPATH.exists():
+    prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+    favs_filepath = prefs.asset_favs_filepath()
+
+    if not favs_filepath.exists():
         return ()
 
     import json
 
-    with open(var.ASSET_FAVS_FILEPATH, "r", encoding="utf-8") as file:
+    with open(favs_filepath, "r", encoding="utf-8") as file:
         return frozenset(json.load(file))
 
 

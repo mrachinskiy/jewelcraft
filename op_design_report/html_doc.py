@@ -8,7 +8,7 @@ from ..lib import htmlutils
 
 
 def make(Report, preview: str | None, filename: str, _: Callable[[str], str]) -> str:
-    Doc = htmlutils.Document(var.HTML_DESIGN_REPORT_DIR)
+    Doc = htmlutils.Document(var.HTML_REPORT_DIR)
 
     if preview:
         Doc.write_img(preview)

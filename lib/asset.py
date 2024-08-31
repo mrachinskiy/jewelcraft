@@ -269,9 +269,7 @@ def asset_import_batch(filepath: str) -> BlendData:
 
 
 def asset_export(data_blocks: set[ID], filepath: Path) -> None:
-    if not filepath.parent.exists():
-        filepath.parent.mkdir(parents=True)
-
+    filepath.parent.mkdir(parents=True, exist_ok=True)
     bpy.data.libraries.write(str(filepath), data_blocks, compress=True)
 
 

@@ -23,17 +23,11 @@ if not CONFIG_DIR.exists():
 ICONS_DIR = ADDON_DIR / "assets" / "icons"
 GEM_ASSET_DIR = ADDON_DIR / "assets" / "gems"
 GEM_ASSET_FILEPATH = GEM_ASSET_DIR / "gems.blend"
-WEIGHTING_LIB_BUILTIN_DIR = ADDON_DIR / "assets" / "weighting"
-HTML_DESIGN_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
-REPORT_METADATA_BUILTIN_FILEPATH = ADDON_DIR / "assets" / "templates" / "report_metadata.json"
+WEIGHTING_LISTS_DIR = ADDON_DIR / "assets" / "weighting"
+HTML_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
+METADATA_FILEPATH = ADDON_DIR / "assets" / "templates" / "report_metadata.json"
 
 if bpy.app.version >= (4, 2, 0):
     NODES_ASSET_FILEPATH = ADDON_DIR / "assets" / "nodes_4_2.blend"
 else:
     NODES_ASSET_FILEPATH = ADDON_DIR / "assets" / "nodes_4_1.blend"
-
-COLORS_FILEPATH = CONFIG_DIR / "gem_colors.json"
-ASSET_LIBS_FILEPATH = CONFIG_DIR / "libraries.json"
-ASSET_FAVS_FILEPATH = CONFIG_DIR / "favorites.json"
-WEIGHTING_LIB_USER_DIR = CONFIG_DIR / "Weighting Library"
-REPORT_METADATA_USER_FILEPATH = CONFIG_DIR / "report_metadata.json"
