@@ -123,7 +123,127 @@ def upd_material_list_rename(self, context):
     self.name_orig = self.name
 
 
-# Custom properties
+# Collection properties
+# ------------------------------------------
+
+
+class GemColor(PropertyGroup):
+    name: StringProperty(name="Click to rename", default="Colorless", update=upd_serialize_colors)
+    color: FloatVectorProperty(
+        name="Color",
+        default=(1.0, 1.0, 1.0),
+        size=3,
+        min=0.0,
+        max=1.0,
+        subtype="COLOR",
+        update=upd_serialize_colors,
+    )
+    builtin: BoolProperty()
+
+    def asdict(self) -> dict[str, str]:
+        from .lib import colorlib
+
+        return {
+            "name": self.name,
+            "color": colorlib.rbg_to_hex(self.color),
+        }
+
+
+class WeightingMaterial(PropertyGroup):
+    enabled: BoolProperty(description="Enable material for weighting display", default=True)
+    name: StringProperty(default="Untitled")
+    composition: StringProperty(default="Unknown")
+    density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
+
+    def asdict(self) -> dict[str, str | float]:
+        return {
+            "name": self.name,
+            "composition": self.composition,
+            "density": round(self.density, 2),
+        }
+
+
+class WeightingListItem(PropertyGroup):
+    name: StringProperty(name="Click to rename", update=upd_material_list_rename)
+    name_orig: StringProperty()
+    default: BoolProperty()
+    builtin: BoolProperty()
+
+    @property
+    def load_id(self):
+        if self.builtin:
+            return "BUILTIN/" + self.name
+        return self.name
+
+
+class Measurement(PropertyGroup):
+    name: StringProperty(name="Name", default="Untitled")
+    collection: PointerProperty(name="Collection", type=Collection)
+    object: PointerProperty(name="Object", type=Object)
+    type: EnumProperty(
+        items=(
+            ("RING_SIZE", "", ""),
+            ("WEIGHT", "", ""),
+            ("DIMENSIONS", "", ""),
+            ("METADATA", "", ""),
+        ),
+    )
+    datablock_type: EnumProperty(
+        items=(
+            ("OBJECT", "", ""),
+            ("COLLECTION", "", ""),
+        ),
+    )
+    ring_size: EnumProperty(
+        name="Format",
+        items=(
+            ("DIA", "Diameter", ""),
+            ("CIR", "Circumference", ""),
+            ("US", "USA", ""),
+            ("UK", "Britain", ""),
+            ("CH", "Swiss", ""),
+            ("JP", "Japan", ""),
+            ("HK", "Hong Kong", ""),
+        ),
+    )
+    axis: EnumProperty(
+        name="Axis",
+        items=(
+            ("0", "X", ""),
+            ("1", "Y", ""),
+            ("2", "Z", ""),
+        ),
+    )
+    x: BoolProperty(name="X")
+    y: BoolProperty(name="Y")
+    z: BoolProperty(name="Z")
+    material_name: StringProperty()
+    material_density: FloatProperty()
+    value: StringProperty()
+
+
+class Metadata(PropertyGroup):
+    name: StringProperty(default="...", update=upd_serialize_metadata)
+    value: StringProperty(default="...", update=upd_serialize_metadata)
+
+    def asdict(self) -> dict[str, str]:
+        return dict(self)
+
+
+class AssetLib(PropertyGroup):
+    name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
+    path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
+
+    def asdict(self) -> dict[str, str]:
+        return dict(self)
+
+
+class SizeItem(PropertyGroup):
+    size: FloatProperty(name="Size", default=1.0, min=0.0001, step=10, unit="LENGTH")
+    qty: IntProperty(name="Qty", default=1, min=1)
+
+
+# List properties
 # ------------------------------------------
 
 
@@ -200,131 +320,9 @@ class ListProperty:
         ...
 
 
-# Collection properties
-
-
-class GemColorCollection(PropertyGroup):
-    name: StringProperty(name="Click to rename", default="Colorless", update=upd_serialize_colors)
-    color: FloatVectorProperty(
-        name="Color",
-        default=(1.0, 1.0, 1.0),
-        size=3,
-        min=0.0,
-        max=1.0,
-        subtype="COLOR",
-        update=upd_serialize_colors,
-    )
-    builtin: BoolProperty()
-
-    def asdict(self) -> dict[str, str]:
-        from .lib import colorlib
-
-        return {
-            "name": self.name,
-            "color": colorlib.rbg_to_hex(self.color),
-        }
-
-
-class MaterialCollection(PropertyGroup):
-    enabled: BoolProperty(description="Enable material for weighting display", default=True)
-    name: StringProperty(default="Untitled")
-    composition: StringProperty(default="Unknown")
-    density: FloatProperty(description="Density g/cm³", default=0.01, min=0.01, step=1, precision=2)
-
-    def asdict(self) -> dict[str, str | float]:
-        return {
-            "name": self.name,
-            "composition": self.composition,
-            "density": round(self.density, 2),
-        }
-
-
-class MaterialListCollection(PropertyGroup):
-    name: StringProperty(name="Click to rename", update=upd_material_list_rename)
-    name_orig: StringProperty()
-    default: BoolProperty()
-    builtin: BoolProperty()
-
-    @property
-    def load_id(self):
-        if self.builtin:
-            return "BUILTIN/" + self.name
-        return self.name
-
-
-class MeasurementCollection(PropertyGroup):
-    name: StringProperty(name="Name", default="Untitled")
-    collection: PointerProperty(name="Collection", type=Collection)
-    object: PointerProperty(name="Object", type=Object)
-    type: EnumProperty(
-        items=(
-            ("RING_SIZE", "", ""),
-            ("WEIGHT", "", ""),
-            ("DIMENSIONS", "", ""),
-            ("METADATA", "", ""),
-        ),
-    )
-    datablock_type: EnumProperty(
-        items=(
-            ("OBJECT", "", ""),
-            ("COLLECTION", "", ""),
-        ),
-    )
-    ring_size: EnumProperty(
-        name="Format",
-        items=(
-            ("DIA", "Diameter", ""),
-            ("CIR", "Circumference", ""),
-            ("US", "USA", ""),
-            ("UK", "Britain", ""),
-            ("CH", "Swiss", ""),
-            ("JP", "Japan", ""),
-            ("HK", "Hong Kong", ""),
-        ),
-    )
-    axis: EnumProperty(
-        name="Axis",
-        items=(
-            ("0", "X", ""),
-            ("1", "Y", ""),
-            ("2", "Z", ""),
-        ),
-    )
-    x: BoolProperty(name="X")
-    y: BoolProperty(name="Y")
-    z: BoolProperty(name="Z")
-    material_name: StringProperty()
-    material_density: FloatProperty()
-    value: StringProperty()
-
-
-class Metadata(PropertyGroup):
-    name: StringProperty(default="...", update=upd_serialize_metadata)
-    value: StringProperty(default="...", update=upd_serialize_metadata)
-
-    def asdict(self) -> dict[str, str]:
-        return dict(self)
-
-
-class AssetLibCollection(PropertyGroup):
-    name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
-    path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
-
-    def asdict(self) -> dict[str, str]:
-        return dict(self)
-
-
-class SizeCollection(PropertyGroup):
-    size: FloatProperty(name="Size", default=1.0, min=0.0001, step=10, unit="LENGTH")
-    qty: IntProperty(name="Qty", default=1, min=1)
-
-
-# List properties
-
-
-class GemColorList(ListProperty, PropertyGroup):
+class GemColorsList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_color_name)
-    coll: CollectionProperty(type=GemColorCollection)
+    coll: CollectionProperty(type=GemColor)
 
     def set_active_by_name(self, name: str) -> tuple[int, int, int]:
         for i, item in enumerate(self.coll):
@@ -353,8 +351,8 @@ class GemColorList(ListProperty, PropertyGroup):
         return Path(prefs.config_dir) / "gem_colors.json"
 
 
-class MaterialList(ListProperty, PropertyGroup):
-    coll: CollectionProperty(type=MaterialCollection)
+class WeightingMaterialsList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=WeightingMaterial)
 
     def deserialize(self, name: str) -> None:
 
@@ -376,8 +374,8 @@ class MaterialList(ListProperty, PropertyGroup):
         return Path(prefs.config_dir) / "Weighting Library"
 
 
-class MeasurementList(ListProperty, PropertyGroup):
-    coll: CollectionProperty(type=MeasurementCollection)
+class MeasurementsList(ListProperty, PropertyGroup):
+    coll: CollectionProperty(type=Measurement)
 
 
 class MetadataList(ListProperty, PropertyGroup):
@@ -398,9 +396,9 @@ class MetadataList(ListProperty, PropertyGroup):
         return Path(prefs.config_dir) / "report_metadata.json"
 
 
-class AssetLibList(ListProperty, PropertyGroup):
+class AssetLibsList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_folder_list)
-    coll: CollectionProperty(type=AssetLibCollection)
+    coll: CollectionProperty(type=AssetLib)
 
     def path(self) -> Path:
         return Path(self.active_item().path)
@@ -421,7 +419,7 @@ class AssetLibList(ListProperty, PropertyGroup):
 
 
 class SizeList(ListProperty, PropertyGroup):
-    coll: CollectionProperty(type=SizeCollection)
+    coll: CollectionProperty(type=SizeItem)
 
     def add(self):
         item = self.coll.add()
@@ -443,6 +441,7 @@ class SizeList(ListProperty, PropertyGroup):
 
 
 # Common properties
+# ------------------------------------------
 
 
 class ReportLangEnum:
@@ -606,7 +605,7 @@ class WmProperties(PropertyGroup):
     prefs_show_asset_manager: BoolProperty(name="Asset Manager")
     prefs_show_design_report: BoolProperty(name="Design Report")
     prefs_show_themes: BoolProperty(name="Themes")
-    gem_colors: PointerProperty(type=GemColorList)
+    gem_colors: PointerProperty(type=GemColorsList)
     gem_color: FloatVectorProperty(
         name="Color",
         default=(1.0, 1.0, 1.0),
@@ -636,10 +635,10 @@ class WmProperties(PropertyGroup):
         name="Filter",
         description="Filter by name",
     )
-    weighting_lists: CollectionProperty(type=MaterialListCollection)
+    weighting_lists: CollectionProperty(type=WeightingListItem)
     asset_menu_ui_lock: BoolProperty()
     asset_show_favs: BoolProperty(name="Favorites")
-    asset_libs: PointerProperty(type=AssetLibList)
+    asset_libs: PointerProperty(type=AssetLibsList)
     sizes: PointerProperty(type=SizeList)
     report_metadata: PointerProperty(type=MetadataList)
 
@@ -649,7 +648,7 @@ class WmProperties(PropertyGroup):
 
 
 class SceneProperties(PropertyGroup):
-    weighting_materials: PointerProperty(type=MaterialList)
+    weighting_materials: PointerProperty(type=WeightingMaterialsList)
     weighting_show_composition: BoolProperty(
         name="Show Composition",
         description="Show material composition",
@@ -658,7 +657,7 @@ class SceneProperties(PropertyGroup):
         name="Show Density",
         description="Show material density",
     )
-    measurements: PointerProperty(type=MeasurementList)
+    measurements: PointerProperty(type=MeasurementsList)
     overlay_show_all: BoolProperty(
         name="Show All",
         description="Show spacing guide for all visible gems",
