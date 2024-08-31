@@ -166,7 +166,9 @@ class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
         layout = self.layout
         layout.operator_context = "INVOKE_DEFAULT"
         layout.operator("object.jewelcraft_gem_select_by_trait", text="Size", text_ctxt="*").filter_size = True
-        layout.operator("object.jewelcraft_gem_select_by_trait", text="Stone", text_ctxt="*").filter_stone = True
+        op = layout.operator("object.jewelcraft_gem_select_by_trait", text="Stone", text_ctxt="*")
+        op.filter_stone = True
+        op.filter_color = True
         layout.operator("object.jewelcraft_gem_select_by_trait", text="Cut", text_ctxt="Jewelry").filter_cut = True
         layout.separator()
         layout.operator("object.jewelcraft_gem_select_by_trait", text="Similar").filter_similar = True
