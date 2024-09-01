@@ -293,7 +293,7 @@ class ListProperty:
         data = [item.asdict() for item in self.values() if not getattr(item, "builtin", False)]
 
         if not filepath:
-            filepath = self.serialize_path(ensure=True)
+            filepath = self.serialize_path()
 
         filepath.parent.mkdir(parents=True, exist_ok=True)
 
