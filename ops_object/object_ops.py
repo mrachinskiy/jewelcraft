@@ -292,7 +292,7 @@ class OBJECT_OT_radial_instance(Operator):
         md["Input_2"] = coll_obs
         md["Input_3"] = self.count
         md["Input_4"] = self.use_include_original
-        if abs(self.angle - tau) > 1e-05:  # blender/blender#112646
+        if abs(self.angle - tau) > 1e-05:  # HACK #112646
             md["Input_5"] = self.angle
 
         if bpy.app.version >= (4, 2, 0):
