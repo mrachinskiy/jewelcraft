@@ -32,10 +32,7 @@ class WM_OT_weighting_list_add(Operator):
             return {"CANCELLED"}
 
         mats = context.scene.jewelcraft.weighting_materials
-
-        lib_path = mats.serialize_path()
-        list_path = lib_path / f"{self.list_name}.json"
-
+        list_path = mats.serialize_path(self.list_name)
         mats.serialize(list_path)
         dynamic_list.weighting_lib_refresh()
 
@@ -56,9 +53,7 @@ class WM_OT_weighting_list_replace(Operator):
 
     def execute(self, context):
         mats = context.scene.jewelcraft.weighting_materials
-
-        lib_path = mats.serialize_path()
-        list_path = lib_path / f"{self.list_name}.json"
+        list_path = mats.serialize_path(self.list_name)
 
         if list_path.exists():
             mats.serialize(list_path)
@@ -79,8 +74,7 @@ class WM_OT_weighting_list_del(Operator):
     list_name: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        lib_path = context.scene.jewelcraft.weighting_materials.serialize_path()
-        list_path = lib_path / f"{self.list_name}.json"
+        list_path = context.scene.jewelcraft.weighting_materials.serialize_path(self.list_name)
         list_path.unlink(missing_ok=True)
         dynamic_list.weighting_lib_refresh()
         return {"FINISHED"}
