@@ -110,10 +110,9 @@ def upd_material_list_rename(self, context):
     if self.name == self.name_orig:
         return
 
-    lib_path = context.scene.jewelcraft.weighting_materials.serialize_path()
-
-    path = lib_path / f"{self.name_orig}.json"
-    path_new = lib_path / f"{self.name}.json"
+    weighting_list_path = context.scene.jewelcraft.weighting_materials.serialize_path
+    path = weighting_list_path(self.name_orig)
+    path_new = weighting_list_path(self.name)
 
     if not path.exists():
         dynamic_list.weighting_lib_refresh()
@@ -365,13 +364,15 @@ class WeightingMaterialsList(ListProperty, PropertyGroup):
             filepath = var.WEIGHTING_LISTS_DIR / (name[len("BUILTIN/"):] + ".json")
             self._deserialize(filepath, fmt=_translate_item_name)
         else:
-            lib_path = bpy.context.scene.jewelcraft.weighting_materials.serialize_path()
-            filepath = lib_path / f"{name}.json"
+            filepath = bpy.context.scene.jewelcraft.weighting_materials.serialize_path(name)
             self._deserialize(filepath)
 
-    def serialize_path(self) -> Path:
+    def serialize_path(self, name: str = "") -> Path:
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        return Path(prefs.config_dir) / "Weighting Library"
+        path = Path(prefs.config_dir) / "Weighting Library"
+        if name:
+            return path / f"{name}.json"
+        return path
 
 
 class MeasurementsList(ListProperty, PropertyGroup):
