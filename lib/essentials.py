@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2021-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# v1.1.2
+# v1.2.0
 
 from pathlib import Path
 from typing import Any
@@ -37,3 +37,26 @@ def check(*args: Path | str) -> None:
         elif isinstance(arg, str):
             if tuple([int(x) for x in arg.split(".")]) > bpy.app.version:
                 raise RuntimeError(f"Blender {arg} is required")
+
+
+def get_classes(modules: tuple[Any]) -> tuple[type]:
+    bases = {
+        bpy.types.AddonPreferences,
+        bpy.types.Menu,
+        bpy.types.Operator,
+        bpy.types.Panel,
+        bpy.types.PropertyGroup,
+        bpy.types.UIList,
+    }
+
+    classes = []
+
+    for module in modules:
+        for cls in module.__dict__.values():
+            if isinstance(cls, type):
+                for base in cls.__bases__:
+                    if base in bases:
+                        classes.append(cls)
+                        break
+
+    return tuple(classes)
