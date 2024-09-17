@@ -300,6 +300,8 @@ class OBJECT_OT_move_over_under(Operator):
     def execute(self, context):
         from ..lib import asset
 
+        context.view_layer.update()
+
         if not self.individual or context.mode == "EDIT_MESH":
 
             ob = context.edit_object or context.object
@@ -307,7 +309,6 @@ class OBJECT_OT_move_over_under(Operator):
             if not ob:
                 return {"CANCELLED"}
 
-            context.view_layer.update()
             curve, bbox = asset.mod_curve_off(ob, ob.matrix_world)
 
             if self.under:
