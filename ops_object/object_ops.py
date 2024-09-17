@@ -106,6 +106,8 @@ class OBJECT_OT_mirror(Operator):
                 pivot = asset.pivot_add(coll_obs.name)
                 md["Input_6"] = pivot
         else:
+            context.view_layer.update()
+
             obs = []
             for ob in context.selected_objects:
                 ob.select_set(False)
