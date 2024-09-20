@@ -13,7 +13,7 @@ def tag_row(values: tuple, tag_name: str = "td") -> str:
 
 
 class Document:
-    __slots__ = ("template", "sections", "contents")
+    __slots__ = "template", "sections", "contents"
 
     def __init__(self, template_path: Path) -> None:
         self.template = {}
@@ -27,28 +27,27 @@ class Document:
 
     def write_warning(self, title: str, warns: list[str]) -> None:
         self.contents.append(
-            self.template["warning"].format(title, "".join(tag(x, "li") for x in warns))
+            self.template["warning"].format(title, "\n        ".join(tag(x, "li") for x in warns))
         )
 
     def write_table(self, header: tuple, body: list[tuple], footer: tuple) -> None:
         header = tag_row(header, "th")
-        body = "".join(tag_row(x) for x in body)
-
+        body = "\n        ".join(tag_row(x) for x in body)
         self.contents.append(self.template["table"].format(header, body, *footer))
 
     def write_list(self, values: list[tuple]) -> None:
-        self.contents.append(self.template["list"].format("".join(tag_row(x) for x in values)))
+        self.contents.append(self.template["list"].format("\n        ".join(tag_row(x) for x in values)))
 
     def write_img(self, img: str) -> None:
         self.contents.append(self.template["img"].format(img))
 
     def write_section(self, title: str) -> None:
-        self.sections.append(self.template["section"].format(title, "".join(self.contents)))
+        self.sections.append(self.template["section"].format(title, "".join(self.contents).strip()))
         self.contents.clear()
 
     def write_section_meta(self) -> None:
-        self.sections.append(self.template["section_meta"].format("".join(self.contents)))
+        self.sections.append(self.template["section_meta"].format("".join(self.contents).strip()))
         self.contents.clear()
 
     def make(self, title: str) -> str:
-        return self.template["document"].format(title, self.template["styles"], "".join(self.sections))
+        return self.template["document"].format(title, self.template["styles"], "\n".join(self.sections).strip())
