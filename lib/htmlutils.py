@@ -12,6 +12,10 @@ def tag_row(values: tuple, tag_name: str = "td") -> str:
     return tag("".join(tag(v, tag_name) for v in values), "tr")
 
 
+def _minify(s: str) -> str:
+    return s.replace("    ", "").replace("\n", "")
+
+
 class Document:
     __slots__ = "template", "sections", "contents"
 
@@ -50,4 +54,4 @@ class Document:
         self.contents.clear()
 
     def make(self, title: str) -> str:
-        return self.template["document"].format(title, self.template["styles"], "\n".join(self.sections).strip())
+        return self.template["document"].format(title, _minify(self.template["styles"]), "\n".join(self.sections).strip())
