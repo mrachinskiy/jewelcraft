@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import bpy
 from bpy.props import BoolProperty, StringProperty
 from bpy.types import Operator
 
@@ -54,12 +53,6 @@ class SCENE_OT_ul_move(Operator):
 # ---------------------------
 
 
-def _serialize(prop: str) -> None:
-    wm_props = bpy.context.window_manager.jewelcraft
-    ul = getattr(wm_props, prop)
-    ul.serialize()
-
-
 class WM_OT_ul_add(Operator):
     bl_label = "Add Item"
     bl_description = "Add new item to the list"
@@ -69,8 +62,9 @@ class WM_OT_ul_add(Operator):
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        getattr(context.window_manager.jewelcraft, self.prop).add()
-        _serialize(self.prop)
+        ul = getattr(context.window_manager.jewelcraft, self.prop)
+        ul.add()
+        ul.serialize()
         return {"FINISHED"}
 
 
@@ -83,8 +77,9 @@ class WM_OT_ul_del(Operator):
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        getattr(context.window_manager.jewelcraft, self.prop).remove()
-        _serialize(self.prop)
+        ul = getattr(context.window_manager.jewelcraft, self.prop)
+        ul.remove()
+        ul.serialize()
         return {"FINISHED"}
 
 
@@ -97,8 +92,9 @@ class WM_OT_ul_clear(Operator):
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        getattr(context.window_manager.jewelcraft, self.prop).clear()
-        _serialize(self.prop)
+        ul = getattr(context.window_manager.jewelcraft, self.prop)
+        ul.clear()
+        ul.serialize()
         return {"FINISHED"}
 
 
@@ -112,6 +108,7 @@ class WM_OT_ul_move(Operator):
     move_up: BoolProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        getattr(context.window_manager.jewelcraft, self.prop).move(self.move_up)
-        _serialize(self.prop)
+        ul = getattr(context.window_manager.jewelcraft, self.prop)
+        ul.move(self.move_up)
+        ul.serialize()
         return {"FINISHED"}
