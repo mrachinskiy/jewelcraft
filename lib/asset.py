@@ -149,14 +149,15 @@ def add_material(ob: Object, name="Material", color: Color | None = None, is_gem
             nodes.remove(node)
 
         node = nodes.new("ShaderNodeBsdfPrincipled")
-        node.inputs[0].default_value = color
-        node.inputs[2].default_value = 0.0  # Roughness
+        node.inputs["Base Color"].default_value = color
+        node.inputs["Roughness"].default_value = 0.0
 
         if is_gem:
-            node.inputs[17].default_value = 1.0  # Transmission Weight
-            node.inputs[3].default_value = 2.42  # IOR
+            # NOTE VER < 4.0
+            (node.inputs.get("Transmission Weight") or node.inputs.get("Transmission")).default_value = 1.0
+            node.inputs["IOR"].default_value = 2.42
         else:
-            node.inputs[1].default_value = 1.0  # Metallic
+            node.inputs["Metallic"].default_value = 1.0
 
         node.location = (0.0, 0.0)
 
