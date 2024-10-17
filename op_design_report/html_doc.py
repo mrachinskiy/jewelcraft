@@ -33,7 +33,7 @@ def make(Report, preview: str | None, filename: str, _: Callable[[str], str]) ->
         footer = (
             _("Total"),
             sum(x.qty for x in Report.gems),
-            round(sum(x.ct for x in Report.gems), 3),
+            round(sum(x.ct_sum for x in Report.gems), 3),
         )
         if Report.warnings:
             Doc.write_warning(_("WARNING"), (_(x) for x in Report.warnings))
