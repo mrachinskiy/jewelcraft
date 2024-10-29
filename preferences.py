@@ -440,6 +440,9 @@ class SizeList(ListProperty, PropertyGroup):
 
         return item
 
+    def serialize(self) -> None:
+        return
+
 
 # Common properties
 # ------------------------------------------
