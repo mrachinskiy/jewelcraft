@@ -66,12 +66,21 @@ class Layout:
         self._prop(_TYPE_ENUM, name, key, attr, items)
 
 
+def _get_font_scale(prefs: bpy.types.Preferences) -> float:
+    if bpy.app.version < (4, 3, 0):
+        font_size = prefs.ui_styles[0].widget_label.points
+    else:
+        font_size = prefs.ui_styles[0].widget.points
+
+    return font_size * prefs.view.ui_scale / 11  # 11 is the default font size
+
+
 def get_xy() -> tuple[int, int]:
     overlay = bpy.context.space_data.overlay
     prefs = bpy.context.preferences
     view = prefs.view
     ui_scale = prefs.view.ui_scale
-    fontscale = prefs.ui_styles[0].widget_label.points * ui_scale / 11  # 11 is the default font size
+    fontscale = _get_font_scale(prefs)
 
     x = round(20 * ui_scale)
     y = round(10 * ui_scale)
@@ -118,7 +127,7 @@ def draw_options(data, layout: Layout, x: int, y: int) -> None:
     color_blue = (0.5, 0.6, 1.0, 1.0)
 
     fontid = 1
-    fontscale = prefs.ui_styles[0].widget_label.points * prefs.view.ui_scale / 11  # 11 is the default font size
+    fontscale = _get_font_scale(prefs)
     fontsize = round(fontscale * 15)
 
     blf.size(fontid, fontsize)
