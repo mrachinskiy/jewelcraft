@@ -11,10 +11,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Configuration"
-msgstr ""
+msgstr "組態"
 
 msgid "Gem Colors"
-msgstr ""
+msgstr "寶石顏色"
 
 msgid "Asset Manager"
 msgstr "資產管理器"
@@ -71,7 +71,7 @@ msgid "Show All"
 msgstr "顯示全部"
 
 msgid "Material Color"
-msgstr ""
+msgstr "材質顏色"
 
 msgid "Scene scale is not optimal"
 msgstr "當前尺寸單位非最佳場景比例"
@@ -239,7 +239,7 @@ msgid "Keep Z Direction"
 msgstr "保存 Z 軸方向"
 
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
-msgstr ""
+msgstr "某些附加元件偏好設定的設定資料夾，例如資產收藏夾、寶石顏色等類似資料夾"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "使 Z 軸上的變換與原始物件一致（不影響寶石）"
@@ -254,7 +254,7 @@ msgid "Round diamonds only"
 msgstr "僅圓形鑽石"
 
 msgid "Show colors list"
-msgstr ""
+msgstr "顯示顏色清單"
 
 msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
 msgstr "強制編輯選定的網格物件，可用於從非寶石物件製作寶石"
@@ -407,7 +407,7 @@ msgid "Show for all visible gems"
 msgstr "顯示所有可見的寶石"
 
 msgid "Use gem material color for gem map"
-msgstr ""
+msgstr "使用寶石材質顏色和寶石貼圖"
 
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "為珠寶建模設定最佳尺寸單位設定"
@@ -476,7 +476,7 @@ msgid "Set materials list imported by default"
 msgstr "指定預設導入的材質清單"
 
 msgid "In addition to HTML, save report in JSON format"
-msgstr ""
+msgstr "除了 HTML 格式之外，也可使用 JSON 格式儲存報表"
 
 msgid "Include viewport preview image in report"
 msgstr "在報表中包含視口預覽圖片"
@@ -527,7 +527,7 @@ msgid "{} overlaps found"
 msgstr "{} 發現重疊"
 
 msgid "Optimal unit settings are in use"
-msgstr "正在使用最佳單位設定"
+msgstr "已在使用最佳單位設定"
 
 msgid "Volume"
 msgstr "體積"
@@ -557,7 +557,7 @@ msgid "Carats"
 msgstr "克拉"
 
 msgid "Materials"
-msgstr "材質費"
+msgstr "材質費用"
 
 msgid "Notes"
 msgstr "附註"
@@ -779,43 +779,43 @@ msgid "pcs"
 msgstr "件"
 
 msgid "Color"
-msgstr ""
+msgstr "顏色"
 
 msgid "Colorless"
-msgstr ""
+msgstr "無色"
 
 msgid "Yellow"
-msgstr ""
+msgstr "黃色"
 
 msgid "Yellowish Green"
-msgstr ""
+msgstr "黃綠色"
 
 msgid "Green"
-msgstr ""
+msgstr "綠色"
 
 msgid "Bluish Green"
-msgstr ""
+msgstr "藍綠色"
 
 msgid "Greenish Blue"
-msgstr ""
+msgstr "綠藍色"
 
 msgid "Purple"
-msgstr ""
+msgstr "紫色"
 
 msgid "Reddish Purple"
-msgstr ""
+msgstr "紅紫色"
 
 msgid "Red"
-msgstr ""
+msgstr "紅色"
 
 msgid "Blue"
-msgstr ""
+msgstr "藍色"
 
 msgid "Violetish Blue"
-msgstr ""
+msgstr "紫藍色"
 
 msgid "Pink"
-msgstr ""
+msgstr "粉色"
 
 msgctxt "Jewelry"
 msgid "Cut"
