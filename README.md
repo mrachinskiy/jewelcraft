@@ -11,8 +11,8 @@ Features:
 * Translated to multiple languages:
   * ![100%](https://geps.dev/progress/100) English
   * ![100%](https://geps.dev/progress/100) Russian
+  * ![100%](https://geps.dev/progress/100) Traditional Chinese
   * ![93%](https://geps.dev/progress/93) Simplified Chinese
-  * ![93%](https://geps.dev/progress/93) Traditional Chinese
   * ![89%](https://geps.dev/progress/88) Spanish
   * ![85%](https://geps.dev/progress/85) Arabic
   * ![74%](https://geps.dev/progress/74) Italian
