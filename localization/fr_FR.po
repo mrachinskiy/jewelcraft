@@ -2,19 +2,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.17.0\n"
 "POT-Creation-Date: 2024-08-31\n"
-"PO-Revision-Date: 2021-10-12\n"
+"PO-Revision-Date: 2025-01-15 12:42+0100\n"
 "Last-Translator: émilien\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
 
 msgid "Configuration"
 msgstr ""
 
 msgid "Gem Colors"
-msgstr ""
+msgstr "Couleur de la pierre précieuse"
 
 msgid "Asset Manager"
 msgstr "Navigateur de ressources"
@@ -23,7 +24,7 @@ msgid "Show Asset Name"
 msgstr "Affiche le nom de la Ressource"
 
 msgid "Design Report"
-msgstr ""
+msgstr "Rapport de Conception"
 
 msgid "Report Language"
 msgstr "Langue du rapport"
@@ -71,7 +72,7 @@ msgid "Show All"
 msgstr "Tout montrer"
 
 msgid "Material Color"
-msgstr ""
+msgstr "Couleur du matériau"
 
 msgid "Scene scale is not optimal"
 msgstr "L'échelle de la scène n'est pas optimal"
@@ -83,13 +84,13 @@ msgid "Limit by Selection"
 msgstr "Limiter à la sélection"
 
 msgid "Viewport Background"
-msgstr ""
+msgstr "Arrière-plan de la Fenêtre de Visualisation"
 
 msgid "Save to Image"
 msgstr "Enregistrer au format image"
 
 msgid "Additional Entries"
-msgstr ""
+msgstr "Entrées supplémentaires"
 
 msgid "Gem Map"
 msgstr "Plan d'empierrage"
@@ -98,7 +99,7 @@ msgid "Gem Map Overlay"
 msgstr ""
 
 msgid "Gem Table"
-msgstr "Tableau des pierres"
+msgstr "Liste des pierres"
 
 msgid "Gem Size"
 msgstr "Dimension des pierres"
@@ -107,10 +108,10 @@ msgid "Weight"
 msgstr "Poids"
 
 msgid "Preview Resolution"
-msgstr ""
+msgstr "Résolution de la prévisualisation"
 
 msgid "Preview Scale"
-msgstr ""
+msgstr "Echelle de la prévisualisation"
 
 msgid "Category is empty"
 msgstr ""
@@ -119,7 +120,7 @@ msgid "Popover Width"
 msgstr ""
 
 msgid "Snap to Edges"
-msgstr ""
+msgstr "Accrochage aux arêtes"
 
 msgid "Spacing Overlay"
 msgstr ""
@@ -227,10 +228,10 @@ msgid "Zero dimensions"
 msgstr ""
 
 msgid "Action completed"
-msgstr ""
+msgstr "Action terminée"
 
 msgid "No corresponding size"
-msgstr ""
+msgstr "Pas de taille correspondante"
 
 msgid "Wedge"
 msgstr ""
@@ -239,10 +240,10 @@ msgid "Keep Z Direction"
 msgstr ""
 
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
-msgstr ""
+msgstr "Dossier de configuration pour certaines préférences de l'add-on, comme les favoris de ressources, les couleurs de gemmes et autres similaires"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
-msgstr ""
+msgstr "Rend les transformations sur l'axe Z cohérentes avec l'objet d'origine (n'affecte pas les gemmes)"
 
 msgid "Add gemstone to the scene"
 msgstr "Ajouter une pierre précieuse à la scène"
@@ -251,19 +252,19 @@ msgid "Edit selected gems"
 msgstr "Editer les pierres sélectionnées"
 
 msgid "Round diamonds only"
-msgstr ""
+msgstr "Diamants ronds uniquement"
 
 msgid "Show colors list"
-msgstr ""
+msgstr "Afficher la liste des couleurs"
 
 msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
-msgstr ""
+msgstr "Forcer l'édition des objets maillés sélectionnés, peut être utilisé pour créer des gemmes à partir d'objets non-gemmes"
 
 msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr ""
+msgstr "Modifier uniquement les identifiants des gemmes, sans affecter les données et les matériaux des objets"
 
 msgid "Save to file in project folder"
-msgstr ""
+msgstr "Enregistrer dans le dossier du projet"
 
 msgid "Use user preferences language setting"
 msgstr "Utiliser les paramètres de langue des préférences utilisateur"
@@ -271,8 +272,12 @@ msgstr "Utiliser les paramètres de langue des préférences utilisateur"
 msgid "Select gems by trait"
 msgstr "Sélectionnez des pierres par trait"
 
-msgid "Distribute selected object along active curve\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "Distribuer l'objet sélectionné le long de la courbe active\n(Shortcut: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
+msgid ""
+"Distribute selected object along active curve\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"Distribuer l'objet sélectionné le long de la courbe active\n"
+"(Shortcut: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
 
 msgid "Redistribute selected objects along curve"
 msgstr "Redistribuer les objets sélectionnés le long de la courbe"
@@ -304,14 +309,22 @@ msgstr "Projeter des objets sélectionnés sur un objet actif à l'aide de Latti
 msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
 msgstr "Déformer le profil d'objet actif avec Lattice, fonctionne également en mode édition avec les sommets sélectionnés"
 
-msgid "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "Créer des grains pour les pierres sélectionnées\n(Shortcut: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
+msgid ""
+"Create prongs for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"Créer des grains pour les pierres sélectionnées\n"
+"(Raccourci: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
 
-msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "Créer une coupe pour les pierres sélectionnées\n(Shortcut: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
+msgid ""
+"Create cutter for selected gems\n"
+"(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr ""
+"Créer une coupe pour les pierres sélectionnées\n"
+"(Raccourci: maintenez la touche Ctrl pour éviter la remise à zéro des paramètres)"
 
 msgid "Curve start position"
-msgstr ""
+msgstr "Position de départ de la courbe"
 
 msgid "Density g/cm³"
 msgstr "Densité g/cm³"
@@ -347,10 +360,10 @@ msgid "Asset category"
 msgstr "Catégorie de la ressource"
 
 msgid "Show asset name in sidebar"
-msgstr ""
+msgstr "Afficher le nom de la ressource dans la barre latérale"
 
 msgid "Show distance to nearby gems"
-msgstr ""
+msgstr "Afficher la distance vis à vis des gemmes à proximité"
 
 msgid "Use object defined overlay settings"
 msgstr "Utiliser les substitutions de widget définis pour l'objet"
@@ -392,7 +405,7 @@ msgid "Move each object individually"
 msgstr "Déplacer chaque objet individuellement"
 
 msgid "Enable material for weighting display"
-msgstr ""
+msgstr "Activer le matériau pour l'affichage pondéré"
 
 msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
 msgstr "Aparenter la ressource importée pour les objets sélectionnés (Raccourci: presser la touche Alt en utilisant l'outil)"
@@ -404,7 +417,7 @@ msgid "Show spacing guide for all visible gems"
 msgstr "Afficher les zones d'espacement pour toutes les pierres visibles"
 
 msgid "Show for all visible gems"
-msgstr ""
+msgstr "Afficher pour toutes les gemmes visibles"
 
 msgid "Use gem material color for gem map"
 msgstr ""
@@ -416,13 +429,13 @@ msgid "Compose gem table and map it to gems in the scene"
 msgstr "Composer un tableau de pierres et l'appliquer sur les pierres dans la scène"
 
 msgid "Present summary information about the design, including gems, sizes and weight"
-msgstr ""
+msgstr "Présenter un résumé des informations sur le dessin, y compris les gemmes, les tailles et le poids"
 
 msgid "Add a new measurement"
 msgstr "Ajouter une nouvelle mesure"
 
 msgid "Add new item to the list"
-msgstr ""
+msgstr "Ajouter un nouvel élément à la liste"
 
 msgid "Remove selected item"
 msgstr "Retirer l'objet sélectionné"
@@ -437,52 +450,56 @@ msgid "Select material"
 msgstr "Sélectionner la matière"
 
 msgid "Create collection instances of selected objects in radial order"
-msgstr ""
+msgstr "Créer des instances de collection des objets sélectionnés dans un ordre radial"
 
 msgid "Asset preview image size when creating new assets"
-msgstr ""
+msgstr "Taille de l'image de prévisualisation de la ressource lors de la création de nouveaux actifs"
 
 msgid "Asset preview scale in sidebar"
-msgstr ""
+msgstr "Échelle de la prévisualisation de la ressource dans la barre latérale"
 
 msgid "Filter by name"
-msgstr ""
+msgstr "Filtrer par nom"
 
 msgid "Add to favorites"
-msgstr ""
+msgstr "Ajouter aux favoris"
 
 msgid "Remove from favorites"
-msgstr ""
+msgstr "Retirer des favoris"
 
-msgid "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool"
+msgid ""
+"Separate loose, center origin and fix orientation (can recover gems from STL file).\n"
+"NOTE: gem ID can be added with Edit Gem tool"
 msgstr ""
+"Séparer les éléments détachés, centrer l'origine et corriger l'orientation (peut récupérer des pierres précieuses à partir d'un fichier STL)\n"
+"l'ID de la pierre précieuse peut être ajouté avec l'outil d'édition de gemme"
 
 msgid "Ring size format"
-msgstr ""
+msgstr "Format de taille de bague"
 
 msgid "Create microprong cutter between selected gems"
 msgstr ""
 
 msgid "Add materials list to library"
-msgstr ""
+msgstr "Ajouter une liste de matériaux à la bibliothèque"
 
 msgid "Replace materials list"
-msgstr ""
+msgstr "Remplacer la liste de matériaux"
 
 msgid "Import materials list"
-msgstr ""
+msgstr "Importer une liste de matériaux"
 
 msgid "Set materials list imported by default"
-msgstr ""
+msgstr "Définir la liste de matériaux importée par défaut"
 
 msgid "In addition to HTML, save report in JSON format"
-msgstr ""
+msgstr "En plus du format HTML, enregistrer le rapport au format JSON"
 
 msgid "Include viewport preview image in report"
-msgstr ""
+msgstr "Inclure l'image de prévisualisation de la fenêtre de visualisation dans le rapport"
 
 msgid "Include metadata in report"
-msgstr ""
+msgstr "Inclure les métadonnées dans le rapport"
 
 msgid "WARNING"
 msgstr "AVERTISSEMENT"
@@ -518,7 +535,7 @@ msgid "Collection must be specified"
 msgstr "La Collection doit être spécifiée"
 
 msgid "Operator already running"
-msgstr ""
+msgstr "Opération déjà en cours d'exécution"
 
 msgid "Overlapping gems"
 msgstr "Pierres en superposition"
@@ -548,7 +565,7 @@ msgid "Qty"
 msgstr "Qté"
 
 msgid "Sum (ct)"
-msgstr ""
+msgstr "Somme (ct)"
 
 msgid "Total"
 msgstr ""
@@ -779,43 +796,43 @@ msgid "pcs"
 msgstr ""
 
 msgid "Color"
-msgstr ""
+msgstr "Couleur"
 
 msgid "Colorless"
-msgstr ""
+msgstr "Sans couleur"
 
 msgid "Yellow"
-msgstr ""
+msgstr "Jaune"
 
 msgid "Yellowish Green"
-msgstr ""
+msgstr "Vert jaunâtre"
 
 msgid "Green"
-msgstr ""
+msgstr "Vert"
 
 msgid "Bluish Green"
-msgstr ""
+msgstr "Vert bleuté"
 
 msgid "Greenish Blue"
-msgstr ""
+msgstr "Bleu verdâtre"
 
 msgid "Purple"
-msgstr ""
+msgstr "Violet"
 
 msgid "Reddish Purple"
-msgstr ""
+msgstr "Violet rougeâtre"
 
 msgid "Red"
-msgstr ""
+msgstr "Rouge"
 
 msgid "Blue"
-msgstr ""
+msgstr "Bleu"
 
 msgid "Violetish Blue"
-msgstr ""
+msgstr "Bleu violacé"
 
 msgid "Pink"
-msgstr ""
+msgstr "Rose"
 
 msgctxt "Jewelry"
 msgid "Cut"
@@ -855,7 +872,7 @@ msgstr "Ajouter une pierre"
 
 msgctxt "Operator"
 msgid "Recover Gem"
-msgstr ""
+msgstr "Retrouver la pierre précieuse"
 
 msgctxt "Operator"
 msgid "Distribute on Curve"
@@ -887,7 +904,7 @@ msgstr "Longueur de la courbe"
 
 msgctxt "Operator"
 msgid "Design Report"
-msgstr ""
+msgstr "Rapport de conception"
 
 msgctxt "Operator"
 msgid "Import Asset"
@@ -943,15 +960,15 @@ msgstr "Ajouter une nouvelle mesure"
 
 msgctxt "Operator"
 msgid "Add to Library"
-msgstr ""
+msgstr "Ajouter à la bibliothèque"
 
 msgctxt "Operator"
 msgid "All"
-msgstr ""
+msgstr "Tout"
 
 msgctxt "Operator"
 msgid "Calculate"
-msgstr ""
+msgstr "Calculer"
 
 msgctxt "Operator"
 msgid "Microprong Cutter"
@@ -959,15 +976,15 @@ msgstr ""
 
 msgctxt "Operator"
 msgid "Similar"
-msgstr ""
+msgstr "Similaire"
 
 msgctxt "Operator"
 msgid "Save to File"
-msgstr ""
+msgstr "Enregistrer"
 
 msgctxt "Operator"
 msgid "Import"
-msgstr ""
+msgstr "Importer"
 
 msgctxt "Operator"
 msgid "Set Default"
