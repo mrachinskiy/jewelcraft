@@ -14,9 +14,9 @@ Features:
   * ![100%](https://geps.dev/progress/100) Traditional Chinese
   * ![93%](https://geps.dev/progress/93) Simplified Chinese
   * ![89%](https://geps.dev/progress/88) Spanish
+  * ![86%](https://geps.dev/progress/86) French
   * ![85%](https://geps.dev/progress/85) Arabic
   * ![74%](https://geps.dev/progress/74) Italian
-  * ![66%](https://geps.dev/progress/66) French
   * Your language is missing or incomplete? [Contribute translation](#translations).
 
 
