@@ -155,7 +155,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.separator()
         layout.operator("wm.jewelcraft_design_report", text="Design Report")
         layout.operator("view3d.jewelcraft_gem_map")
-        layout.operator("wm.call_panel", text="Measurement", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_measurement"
+        layout.operator("wm.call_panel", text="Additional Entries", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_measurement"
 
 
 class VIEW3D_MT_jewelcraft_select_gem_by(Menu):
@@ -639,7 +639,7 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
         layout.use_property_decorate = False
 
         if self.is_popover:
-            layout.label(text="Measurement")
+            layout.label(text="Additional Entries")
             layout.separator()
 
         row = layout.row()
