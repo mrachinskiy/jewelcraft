@@ -11,14 +11,7 @@ ADDON_DIR = Path(__file__).parent
 CONFIG_DIR = ADDON_DIR / ".config"
 
 if not CONFIG_DIR.exists():
-    import sys
-
-    if sys.platform == "win32":
-        CONFIG_DIR = Path.home() / "AppData" / "Roaming" / "Blender Foundation" / "Blender" / "JewelCraft"
-    elif sys.platform == "darwin":
-        CONFIG_DIR = Path.home() / "Library" / "Application Support" / "Blender" / "JewelCraft"
-    else:
-        CONFIG_DIR = Path.home() / ".config" / "blender" / "JewelCraft"
+    CONFIG_DIR = Path(bpy.utils.resource_path("USER")).parent / "JewelCraft"
 
 ICONS_DIR = ADDON_DIR / "assets" / "icons"
 GEM_ASSET_DIR = ADDON_DIR / "assets" / "gems"
