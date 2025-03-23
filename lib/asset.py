@@ -159,12 +159,12 @@ def add_material(ob: Object, name="Material", color: Color | None = None, is_gem
         else:
             node.inputs["Metallic"].default_value = 1.0
 
-        node.location = (0.0, 0.0)
+        node.location = 0.0, 0.0
 
         node_out = nodes.new("ShaderNodeOutputMaterial")
-        node_out.location = (400.0, 0.0)
+        node_out.location = 400.0, 0.0
 
-        mat.node_tree.links.new(node.outputs[0], node_out.inputs[0])
+        mat.node_tree.links.new(node.outputs["BSDF"], node_out.inputs["Surface"])
 
     if ob.material_slots:
         ob.material_slots[0].material = mat
