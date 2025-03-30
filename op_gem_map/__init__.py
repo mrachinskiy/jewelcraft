@@ -6,7 +6,6 @@ from bpy.props import BoolProperty
 from bpy.types import Operator
 
 from .. import preferences, var
-from ..lib import overlays
 
 
 class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
@@ -41,6 +40,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
             self.is_rendering = False
 
         elif self.is_mouse_inbound(event):
+            from ..lib import overlays
 
             if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
                 from . import onscreen
@@ -78,7 +78,7 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         return {"PASS_THROUGH"}
 
     def execute(self, context):
-        from ..lib import view3d_lib
+        from ..lib import overlays, view3d_lib
         from ..op_design_report import report_get
         from . import onscreen, report_proc
 
