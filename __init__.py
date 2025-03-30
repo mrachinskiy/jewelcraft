@@ -1,6 +1,18 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+bl_info = {
+    "name": "JewelCraft",
+    "author": "Mikhail Rachinskiy",
+    "version": (2, 17, 4),
+    "blender": (3, 5, 0),
+    "location": "3D View > Sidebar",
+    "description": "Jewelry design toolkit.",
+    "doc_url": "https://github.com/mrachinskiy/jewelcraft#readme",
+    "tracker_url": "https://github.com/mrachinskiy/jewelcraft/issues",
+    "category": "Object",
+}
+
 
 if "bpy" in locals():
     essentials.reload_recursive(var.ADDON_DIR, locals())
