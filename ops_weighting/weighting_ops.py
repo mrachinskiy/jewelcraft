@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2015-2024 Mikhail Rachinskiy
+# SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from bpy.app.translations import pgettext_iface as _
