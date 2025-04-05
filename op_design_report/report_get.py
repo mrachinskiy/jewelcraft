@@ -22,9 +22,8 @@ class _Data:
         self.notes = []
 
     def is_empty(self):
-        for prop in self.__slots__:
-            if getattr(self, prop):
-                return False
+        if any((self.gems, self.materials, self.notes)):
+            return False
         return True
 
     def as_dict(self):
