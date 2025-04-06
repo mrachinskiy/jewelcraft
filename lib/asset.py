@@ -211,6 +211,7 @@ def gn_setup(ng_name: str, prefix: str, set_active: bool = False) -> Modifier:
 
     md = gn.modifiers.new(ng_name, "NODES")
     md.node_group = ng
+    md.show_group_selector = False
 
     return md
 
@@ -228,6 +229,7 @@ def gn_setup_coll(ng_name: str, obs: list[Object], coll_name: str | None = None)
         move_to_coll(obs, coll)
 
     md = gn_setup(ng_name, coll.name, set_active=True)
+    md.show_group_selector = False
 
     return md, coll
 
