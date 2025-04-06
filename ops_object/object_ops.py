@@ -294,15 +294,8 @@ class OBJECT_OT_radial_instance(Operator):
         md["Input_2"] = coll_obs
         md["Input_3"] = self.count
         md["Input_4"] = self.use_include_original
-        if abs(self.angle - tau) > 1e-05:  # HACK #112646
-            md["Input_5"] = self.angle
-
-        if bpy.app.version >= (4, 2, 0):
-            md["Socket_0"] = int(self.axis)
-        else:
-            md["Input_6"] = self.axis == "0"
-            md["Input_7"] = self.axis == "1"
-            md["Input_8"] = self.axis == "2"
+        md["Input_5"] = self.angle
+        md["Socket_0"] = int(self.axis)
 
         if self.pivot == "OBJECT":
             pivot = asset.pivot_add(coll_obs.name)

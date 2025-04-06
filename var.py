@@ -19,8 +19,4 @@ GEM_ASSET_FILEPATH = GEM_ASSET_DIR / "gems.blend"
 WEIGHTING_LISTS_DIR = ADDON_DIR / "assets" / "weighting"
 HTML_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
 METADATA_FILEPATH = ADDON_DIR / "assets" / "templates" / "report_metadata.json"
-
-if bpy.app.version >= (4, 2, 0):
-    NODES_ASSET_FILEPATH = ADDON_DIR / "assets" / "nodes_4_2.blend"
-else:
-    NODES_ASSET_FILEPATH = ADDON_DIR / "assets" / "nodes_4_1.blend"
+NODES_ASSET_FILEPATH = ADDON_DIR / "assets" / "nodes_4_2.blend"
