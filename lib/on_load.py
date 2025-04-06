@@ -17,6 +17,8 @@ def handler_del():
 
 @persistent
 def _execute(dummy):
+    var.config_naming_versioning()
+
     _load_weighting_mats()
     wm_props = bpy.context.window_manager.jewelcraft
     wm_props.gem_colors.deserialize()

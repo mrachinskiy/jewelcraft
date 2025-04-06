@@ -40,6 +40,8 @@ classes = essentials.get_classes(
 
 
 def register():
+    var.config_dir_versioning()
+
     for cls in classes:
         if cls is ui.VIEW3D_PT_jewelcraft_assets:
             prefs = bpy.context.preferences.addons[__package__].preferences
