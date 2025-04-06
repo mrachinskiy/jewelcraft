@@ -790,9 +790,7 @@ def prefs_ui(self, context):
         col.prop(self, "asset_show_name")
 
     if (panel := _prop_panel(main, wm_props, "prefs_show_design_report")):
-        col = panel.column(heading="Format")
-        col.prop(self, "use_json")
-
+        panel.prop(self, "file_format")
         panel.prop(self, "report_lang")
 
         row = panel.row(heading="Preview")

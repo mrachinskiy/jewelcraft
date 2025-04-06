@@ -518,9 +518,12 @@ class Preferences(ReportLangEnum, AddonPreferences):
     # Design Report
     # ------------------------
 
-    use_json: BoolProperty(
-        name="JSON",
-        description="In addition to HTML, save report in JSON format",
+    file_format: EnumProperty(
+        name="Format",
+        items=(
+            ("HTML", "HTML", ""),
+            ("JSON", "JSON", ""),
+        ),
     )
     report_use_preview: BoolProperty(
         name="Preview",
