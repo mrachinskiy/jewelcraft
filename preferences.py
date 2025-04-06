@@ -369,7 +369,7 @@ class WeightingMaterialsList(ListProperty, PropertyGroup):
 
     def serialize_path(self, name: str = "") -> Path:
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        path = Path(prefs.config_dir) / "Weighting Library"
+        path = Path(prefs.config_dir) / "weighting_library"
         if name:
             return path / f"{name}.json"
         return path
@@ -416,7 +416,7 @@ class AssetLibsList(ListProperty, PropertyGroup):
 
     def serialize_path(self) -> Path:
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        return Path(prefs.config_dir) / "libraries.json"
+        return Path(prefs.config_dir) / "asset_libraries.json"
 
 
 class SizeList(ListProperty, PropertyGroup):
@@ -478,7 +478,7 @@ class Preferences(ReportLangEnum, AddonPreferences):
     config_dir: StringProperty(
         name="Configuration",
         description="Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar",
-        default=str(var.CONFIG_DIR),
+        default=bpy.utils.extension_path_user(var.ADDON_ID),
         subtype="DIR_PATH",
     )
 
@@ -599,7 +599,7 @@ class Preferences(ReportLangEnum, AddonPreferences):
         ui.prefs_ui(self, context)
 
     def asset_favs_filepath(self) -> Path:
-        return Path(self.config_dir) / "favorites.json"
+        return Path(self.config_dir) / "asset_favorites.json"
 
 
 # Window manager properties
