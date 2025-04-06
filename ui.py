@@ -831,17 +831,17 @@ def prefs_ui(self, context):
 
         panel.separator()
 
-        panel.label(text="Gem Map Font Size")
-        col = panel.column()
-        col.prop(self, "gem_map_fontsize_table")
-        col.prop(self, "gem_map_fontsize_gem_size")
-
     if (panel := _prop_panel(main, wm_props, "prefs_show_themes")):
         panel.label(text="Spacing Overlay")
         col = panel.column()
         col.prop(self, "overlay_color")
         col.prop(self, "overlay_linewidth")
         col.prop(self, "overlay_fontsize_distance")
+
+        panel.label(text="Gem Map Font Size")
+        col = panel.column()
+        col.prop(self, "gem_map_fontsize_table")
+        col.prop(self, "gem_map_fontsize_gem_size")
 
         panel.label(text="Materials")
         col = panel.column()
