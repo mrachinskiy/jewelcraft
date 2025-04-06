@@ -4,7 +4,7 @@
 from pathlib import Path
 
 import bpy
-from bpy.props import BoolProperty, IntProperty, StringProperty
+from bpy.props import BoolProperty, EnumProperty, IntProperty, StringProperty
 from bpy.types import Operator
 
 from .. import preferences, var
@@ -42,9 +42,12 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
     bl_description = "Present summary information about the design, including gems, sizes and weight"
     bl_idname = "wm.jewelcraft_design_report"
 
-    use_json: BoolProperty(
-        name="JSON",
-        description="In addition to HTML, save report in JSON format",
+    file_format: EnumProperty(
+        name="Format",
+        items=(
+            ("HTML", "HTML", ""),
+            ("JSON", "JSON", ""),
+        ),
     )
     use_preview: BoolProperty(
         name="Preview",
@@ -76,9 +79,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        col = layout.column(heading="Format")
-        col.prop(self, "use_json")
-
+        layout.prop(self, "file_format")
         layout.prop(self, "report_lang")
 
         row = layout.row(heading="Preview")
@@ -104,21 +105,23 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         _gettext = gettext.GetText(self.report_lang).gettext
         report_fmt.data_format(Report, _gettext)
 
-        preview = None
-        if self.use_preview:
-            preview = _render_preview_base64(self.preview_resolution)
+        self.filepath = str(Path(self.filepath).with_suffix(f".{self.file_format.lower()}"))
 
-        doc = html_doc.make(Report, preview, self.filename, _gettext)
+        if self.file_format == "HTML":
+            preview = None
+            if self.use_preview:
+                preview = _render_preview_base64(self.preview_resolution)
 
-        with open(self.filepath, "w", encoding="utf-8") as file:
-            file.write(doc)
-            webbrowser.open(f"file://{self.filepath}")
+            doc = html_doc.make(Report, preview, self.filename, _gettext)
 
-        if self.use_json:
+            with open(self.filepath, "w", encoding="utf-8") as file:
+                file.write(doc)
+        else:
             import json
-            with open(Path(self.filepath).with_suffix(".json"), "w", encoding="utf-8") as file:
+            with open(self.filepath, "w", encoding="utf-8") as file:
                 json.dump(Report.as_dict(), file, indent=4, ensure_ascii=False)
 
+        webbrowser.open(f"file://{self.filepath}")
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -129,15 +132,15 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
             self.use_preview = prefs.report_use_preview
             self.preview_resolution = prefs.report_preview_resolution
             self.use_metadata = prefs.report_use_metadata
-            self.use_json = prefs.use_json
+            self.file_format = prefs.file_format
 
         if bpy.data.is_saved:
             blend_path = Path(bpy.data.filepath)
             self.filename = blend_path.stem + " Report"
-            self.filepath = str(blend_path.parent / (self.filename + ".html"))
+            self.filepath = str(blend_path.parent / f"{self.filename}.{self.file_format.lower()}")
         else:
             self.filename = "Design Report"
-            self.filepath = str(Path.home() / "Design Report.html")
+            self.filepath = str(Path.home() / f"Design Report.{self.file_format.lower()}")
 
         if event.ctrl or not bpy.data.is_saved:
             wm = context.window_manager
