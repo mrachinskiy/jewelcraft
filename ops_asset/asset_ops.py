@@ -316,7 +316,7 @@ class WM_OT_asset_menu(Operator):
 
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
-    # VER >= 4.3
+    # VER
     icon_rename = "GREASEPENCIL" if bpy.app.version >= (4, 3, 0) else "OUTLINER_DATA_GP_LAYER"
 
     def execute(self, context):
