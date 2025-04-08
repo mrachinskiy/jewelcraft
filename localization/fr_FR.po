@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-31\n"
+"Project-Id-Version: JewelCraft 2.18.0\n"
+"POT-Creation-Date: 2025-04-05\n"
 "PO-Revision-Date: 2025-01-15\n"
 "Last-Translator: jrbr43\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -238,6 +238,9 @@ msgstr ""
 msgid "Keep Z Direction"
 msgstr ""
 
+msgid "Open add-on preferences window"
+msgstr ""
+
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr "Dossier de configuration pour certaines préférences de l'add-on, comme les favoris de ressources, les couleurs de gemmes et autres similaires"
 
@@ -421,6 +424,9 @@ msgstr "Présenter un résumé des informations sur le dessin, y compris les gem
 msgid "Add a new measurement"
 msgstr "Ajouter une nouvelle mesure"
 
+msgid "Target type"
+msgstr ""
+
 msgid "Add new item to the list"
 msgstr "Ajouter un nouvel élément à la liste"
 
@@ -475,9 +481,6 @@ msgstr "Importer une liste de matériaux"
 msgid "Set materials list imported by default"
 msgstr "Définir la liste de matériaux importée par défaut"
 
-msgid "In addition to HTML, save report in JSON format"
-msgstr "En plus du format HTML, enregistrer le rapport au format JSON"
-
 msgid "Include viewport preview image in report"
 msgstr "Inclure l'image de prévisualisation de la fenêtre de visualisation dans le rapport"
 
@@ -519,6 +522,9 @@ msgstr "La Collection doit être spécifiée"
 
 msgid "Operator already running"
 msgstr "Opération déjà en cours d'exécution"
+
+msgid "No gems in the scene"
+msgstr ""
 
 msgid "Overlapping gems"
 msgstr "Pierres en superposition"
@@ -866,6 +872,10 @@ msgid "Prongs"
 msgstr "Grains"
 
 msgctxt "Operator"
+msgid "Instance Face"
+msgstr ""
+
+msgctxt "Operator"
 msgid "Lattice Project"
 msgstr "Projection de treillis"
 
@@ -940,6 +950,10 @@ msgstr "Plan d'empierrage"
 msgctxt "Operator"
 msgid "Add New Measurement"
 msgstr "Ajouter une nouvelle mesure"
+
+msgctxt "Operator"
+msgid "Set Library Folder"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Add to Library"
