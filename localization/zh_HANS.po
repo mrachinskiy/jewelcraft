@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-31\n"
+"Project-Id-Version: JewelCraft 2.18.0\n"
+"POT-Creation-Date: 2025-04-05\n"
 "PO-Revision-Date: 2023-12-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -238,6 +238,9 @@ msgstr "插入"
 msgid "Keep Z Direction"
 msgstr "保持Z方向"
 
+msgid "Open add-on preferences window"
+msgstr ""
+
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr ""
 
@@ -421,6 +424,9 @@ msgstr "提供有关设计的摘要信息，包括宝石、尺寸和重量"
 msgid "Add a new measurement"
 msgstr "添加新的度量值"
 
+msgid "Target type"
+msgstr ""
+
 msgid "Add new item to the list"
 msgstr "将新项目添加到列表"
 
@@ -475,9 +481,6 @@ msgstr "导入材质列表"
 msgid "Set materials list imported by default"
 msgstr "设置默认导入的材质列表"
 
-msgid "In addition to HTML, save report in JSON format"
-msgstr ""
-
 msgid "Include viewport preview image in report"
 msgstr "在报告中包括视口预览图像"
 
@@ -519,6 +522,9 @@ msgstr "必须指定集合"
 
 msgid "Operator already running"
 msgstr "操作已在运行"
+
+msgid "No gems in the scene"
+msgstr ""
 
 msgid "Overlapping gems"
 msgstr "重叠宝石"
@@ -866,6 +872,10 @@ msgid "Prongs"
 msgstr "起钉工具"
 
 msgctxt "Operator"
+msgid "Instance Face"
+msgstr ""
+
+msgctxt "Operator"
 msgid "Lattice Project"
 msgstr "晶格项目"
 
@@ -940,6 +950,10 @@ msgstr "宝石地图"
 msgctxt "Operator"
 msgid "Add New Measurement"
 msgstr "添加新度量值"
+
+msgctxt "Operator"
+msgid "Set Library Folder"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Add to Library"

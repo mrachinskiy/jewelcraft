@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-31\n"
+"Project-Id-Version: JewelCraft 2.18.0\n"
+"POT-Creation-Date: 2025-04-05\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: Ahmed Hamad\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -238,6 +238,9 @@ msgstr ""
 msgid "Keep Z Direction"
 msgstr ""
 
+msgid "Open add-on preferences window"
+msgstr ""
+
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr ""
 
@@ -421,6 +424,9 @@ msgstr "قم بتقديم معلومات ملخصة عن التصميم تشمل
 msgid "Add a new measurement"
 msgstr "أضف قياس جديد"
 
+msgid "Target type"
+msgstr ""
+
 msgid "Add new item to the list"
 msgstr "أضف عنصر جديد الي القائمة"
 
@@ -475,9 +481,6 @@ msgstr ""
 msgid "Set materials list imported by default"
 msgstr ""
 
-msgid "In addition to HTML, save report in JSON format"
-msgstr ""
-
 msgid "Include viewport preview image in report"
 msgstr ""
 
@@ -518,6 +521,9 @@ msgid "Collection must be specified"
 msgstr "التجميعة يجب تحديدها"
 
 msgid "Operator already running"
+msgstr ""
+
+msgid "No gems in the scene"
 msgstr ""
 
 msgid "Overlapping gems"
@@ -866,6 +872,10 @@ msgid "Prongs"
 msgstr "الدعامات"
 
 msgctxt "Operator"
+msgid "Instance Face"
+msgstr ""
+
+msgctxt "Operator"
 msgid "Lattice Project"
 msgstr "اسقاط الشبكية"
 
@@ -940,6 +950,10 @@ msgstr "خريطة الأحجار"
 msgctxt "Operator"
 msgid "Add New Measurement"
 msgstr "اضافة قياس جديد"
+
+msgctxt "Operator"
+msgid "Set Library Folder"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Add to Library"

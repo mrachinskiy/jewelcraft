@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-31\n"
-"PO-Revision-Date: 2024-08-31\n"
+"Project-Id-Version: JewelCraft 2.18.0\n"
+"POT-Creation-Date: 2025-04-05\n"
+"PO-Revision-Date: 2025-04-05\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
@@ -238,6 +238,9 @@ msgstr "Клин"
 msgid "Keep Z Direction"
 msgstr "Сохранять направление Z"
 
+msgid "Open add-on preferences window"
+msgstr "Открыть окно настроек дополнения"
+
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr "Директория для таких настроек как избранные ассеты, цвета драгоценных камней и подобные"
 
@@ -421,6 +424,9 @@ msgstr "Предоставить суммарную информацию об и
 msgid "Add a new measurement"
 msgstr "Добавить новый замер"
 
+msgid "Target type"
+msgstr "Тип цели"
+
 msgid "Add new item to the list"
 msgstr "Добавить новый элемент в список"
 
@@ -475,9 +481,6 @@ msgstr "Импортировать список материалов"
 msgid "Set materials list imported by default"
 msgstr "Указать список материалов импортируемый по умолчанию"
 
-msgid "In addition to HTML, save report in JSON format"
-msgstr "В дополнение к HTML сохраните отчет в формате JSON"
-
 msgid "Include viewport preview image in report"
 msgstr "Включить изображение вьюпорта в отчёт"
 
@@ -519,6 +522,9 @@ msgstr "Коллекция должна быть указана"
 
 msgid "Operator already running"
 msgstr "Оператор уже запущен"
+
+msgid "No gems in the scene"
+msgstr "В сцене нет камней"
 
 msgid "Overlapping gems"
 msgstr "Пересекающиеся камни"
@@ -866,6 +872,10 @@ msgid "Prongs"
 msgstr "Крапана"
 
 msgctxt "Operator"
+msgid "Instance Face"
+msgstr "Грань-экземпляр"
+
+msgctxt "Operator"
 msgid "Lattice Project"
 msgstr "Lattice проекция"
 
@@ -940,6 +950,10 @@ msgstr "Карта вставок"
 msgctxt "Operator"
 msgid "Add New Measurement"
 msgstr "Добавить новый замер"
+
+msgctxt "Operator"
+msgid "Set Library Folder"
+msgstr "Настроить директорию библиотеки"
 
 msgctxt "Operator"
 msgid "Add to Library"

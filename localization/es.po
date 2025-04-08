@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-31\n"
+"Project-Id-Version: JewelCraft 2.18.0\n"
+"POT-Creation-Date: 2025-04-05\n"
 "PO-Revision-Date: 2022-07-01\n"
 "Last-Translator: Óscar Hernández\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -11,10 +11,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
 
 msgid "Gem Colors"
-msgstr ""
+msgstr "Colores de Gema"
 
 msgid "Asset Manager"
 msgstr "Gestor de Activos"
@@ -71,7 +71,7 @@ msgid "Show All"
 msgstr "Mostrar Todo"
 
 msgid "Material Color"
-msgstr ""
+msgstr "Color de Material"
 
 msgid "Scene scale is not optimal"
 msgstr "La escala de la escena no es óptima."
@@ -89,13 +89,13 @@ msgid "Save to Image"
 msgstr "Guardar a Imagen"
 
 msgid "Additional Entries"
-msgstr ""
+msgstr "Entradas Adicionales"
 
 msgid "Gem Map"
 msgstr "Mapa de Gemas"
 
 msgid "Gem Map Overlay"
-msgstr ""
+msgstr "Superposición Mapa de Gema"
 
 msgid "Gem Table"
 msgstr "Tabla de Gemas"
@@ -158,7 +158,7 @@ msgid "Hole"
 msgstr "Agujero"
 
 msgid "Culet"
-msgstr ""
+msgstr "Culet"
 
 msgid "Handle"
 msgstr "Asa"
@@ -238,8 +238,11 @@ msgstr "Cuña"
 msgid "Keep Z Direction"
 msgstr "Conservar Dirección Z"
 
+msgid "Open add-on preferences window"
+msgstr "Abrir ventana de preferencias del complemento"
+
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
-msgstr ""
+msgstr "Carpeta de configuración para ciertas preferencias del agregado, como favoritos de activos, colores de gemas y similares"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "Hace que las transformaciones en el eje Z sean consistentes con el objeto original (no afecta a las gemas)"
@@ -254,7 +257,7 @@ msgid "Round diamonds only"
 msgstr "Solo diamantes redondos"
 
 msgid "Show colors list"
-msgstr ""
+msgstr "Mostrar lista de colores"
 
 msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
 msgstr "Forzar la edición de objetos malla seleccionados, se puede usar para hacer gemas a partir de objetos que no son gemas"
@@ -281,7 +284,7 @@ msgid "Display weight and volume for selected mesh objects"
 msgstr "Mostrar peso y volumen para objetos de malla seleccionados"
 
 msgid "Create instance face for selected objects"
-msgstr "Crear instance face para objetos seleccionados"
+msgstr "Crear cara de instancia para objetos seleccionados"
 
 msgid "Create size curve"
 msgstr "Crear curva de tamaño"
@@ -404,10 +407,10 @@ msgid "Show spacing guide for all visible gems"
 msgstr "Mostrar guía de espaciado para todas las gemas visibles"
 
 msgid "Show for all visible gems"
-msgstr ""
+msgstr "Mostrar para todas las gemas visibles"
 
 msgid "Use gem material color for gem map"
-msgstr ""
+msgstr "Usar color de material de gema para mapa de gema"
 
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "Ajustar la configuración de unidad óptima para el modelado de joyas"
@@ -420,6 +423,9 @@ msgstr "Presentar información resumida sobre el diseño, incluidas gemas, tama�
 
 msgid "Add a new measurement"
 msgstr "Añadir una nueva medida"
+
+msgid "Target type"
+msgstr "Tipo de Objetivo"
 
 msgid "Add new item to the list"
 msgstr "Añadir un nuevo elemento a la lista"
@@ -464,25 +470,22 @@ msgid "Create microprong cutter between selected gems"
 msgstr "Crear cortador de micro-clavijas entre las gemas seleccionadas"
 
 msgid "Add materials list to library"
-msgstr ""
+msgstr "Añadir lista de materiales a biblioteca"
 
 msgid "Replace materials list"
-msgstr ""
+msgstr "Reemplazar lista de materiales"
 
 msgid "Import materials list"
-msgstr ""
+msgstr "Importar lista de materiales"
 
 msgid "Set materials list imported by default"
-msgstr ""
-
-msgid "In addition to HTML, save report in JSON format"
-msgstr ""
+msgstr "Ajustar lista de materiales importada a predeterminada"
 
 msgid "Include viewport preview image in report"
-msgstr ""
+msgstr "Incluir imagen de previsualización en el informe"
 
 msgid "Include metadata in report"
-msgstr ""
+msgstr "Incluir metadatos en el informe"
 
 msgid "WARNING"
 msgstr "ADVERTENCIA"
@@ -518,7 +521,10 @@ msgid "Collection must be specified"
 msgstr "Se debe especificar colección"
 
 msgid "Operator already running"
-msgstr ""
+msgstr "Operador ya ejecutándose"
+
+msgid "No gems in the scene"
+msgstr "No hay gemas en la escena"
 
 msgid "Overlapping gems"
 msgstr "Gemas superpuestas"
@@ -548,10 +554,10 @@ msgid "Qty"
 msgstr "Cantidad"
 
 msgid "Sum (ct)"
-msgstr ""
+msgstr "Suma (ct)"
 
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 msgid "Carats"
 msgstr "Quilates"
@@ -596,7 +602,7 @@ msgid "Flanders"
 msgstr "Flanders"
 
 msgid "Octagon"
-msgstr "Octágono"
+msgstr "Octógono"
 
 msgid "Heart"
 msgstr "Corazón"
@@ -779,43 +785,43 @@ msgid "pcs"
 msgstr "piezas"
 
 msgid "Color"
-msgstr ""
+msgstr "Color"
 
 msgid "Colorless"
-msgstr ""
+msgstr "Incoloro"
 
 msgid "Yellow"
-msgstr ""
+msgstr "Amarillo"
 
 msgid "Yellowish Green"
-msgstr ""
+msgstr "Verde Amarillento"
 
 msgid "Green"
-msgstr ""
+msgstr "Verde"
 
 msgid "Bluish Green"
-msgstr ""
+msgstr "Verde Azulado"
 
 msgid "Greenish Blue"
-msgstr ""
+msgstr "Azul Verdoso"
 
 msgid "Purple"
-msgstr ""
+msgstr "Púrpura"
 
 msgid "Reddish Purple"
-msgstr ""
+msgstr "Púrpura Rojizo"
 
 msgid "Red"
-msgstr ""
+msgstr "Rojo"
 
 msgid "Blue"
-msgstr ""
+msgstr "Azul"
 
 msgid "Violetish Blue"
-msgstr ""
+msgstr "Azul Violáceo"
 
 msgid "Pink"
-msgstr ""
+msgstr "Rosa"
 
 msgctxt "Jewelry"
 msgid "Cut"
@@ -827,7 +833,7 @@ msgstr "Diamante"
 
 msgctxt "Jewelry"
 msgid "Round"
-msgstr "Redonda"
+msgstr "Redondo"
 
 msgctxt "Jewelry"
 msgid "Spacing"
@@ -839,7 +845,7 @@ msgstr "Cortador"
 
 msgctxt "Jewelry"
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 msgctxt "Jewelry"
 msgid "Precious"
@@ -864,6 +870,10 @@ msgstr "Dispersor de Curva"
 msgctxt "Operator"
 msgid "Prongs"
 msgstr "Clavijas"
+
+msgctxt "Operator"
+msgid "Instance Face"
+msgstr "Cara de Instancia"
 
 msgctxt "Operator"
 msgid "Lattice Project"
@@ -942,6 +952,10 @@ msgid "Add New Measurement"
 msgstr "Añadir Nueva Medida"
 
 msgctxt "Operator"
+msgid "Set Library Folder"
+msgstr "Ajustar Carpeta de Biblioteca"
+
+msgctxt "Operator"
 msgid "Add to Library"
 msgstr "Añadir a Biblioteca"
 
@@ -959,7 +973,7 @@ msgstr "Cortador de Micro-Clavijas"
 
 msgctxt "Operator"
 msgid "Similar"
-msgstr ""
+msgstr "Similar"
 
 msgctxt "Operator"
 msgid "Save to File"

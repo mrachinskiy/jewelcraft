@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.17.0\n"
-"POT-Creation-Date: 2024-08-31\n"
+"Project-Id-Version: JewelCraft 2.18.0\n"
+"POT-Creation-Date: 2025-04-05\n"
 "PO-Revision-Date: 2024-12-31\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -238,6 +238,9 @@ msgstr "楔子"
 msgid "Keep Z Direction"
 msgstr "保存 Z 軸方向"
 
+msgid "Open add-on preferences window"
+msgstr ""
+
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr "某些附加元件偏好設定的設定資料夾，例如資產收藏夾、寶石顏色等類似資料夾"
 
@@ -421,6 +424,9 @@ msgstr "提供有關設計的摘要資訊，包括寶石、尺寸和重量"
 msgid "Add a new measurement"
 msgstr "添加新的測量"
 
+msgid "Target type"
+msgstr ""
+
 msgid "Add new item to the list"
 msgstr "將新項目添加到列表"
 
@@ -475,9 +481,6 @@ msgstr "匯入材質清單"
 msgid "Set materials list imported by default"
 msgstr "指定預設導入的材質清單"
 
-msgid "In addition to HTML, save report in JSON format"
-msgstr "除了 HTML 格式之外，也可使用 JSON 格式儲存報表"
-
 msgid "Include viewport preview image in report"
 msgstr "在報表中包含視口預覽圖片"
 
@@ -519,6 +522,9 @@ msgstr "必須指定集合"
 
 msgid "Operator already running"
 msgstr "工作已經執行"
+
+msgid "No gems in the scene"
+msgstr ""
 
 msgid "Overlapping gems"
 msgstr "寶石重疊"
@@ -866,6 +872,10 @@ msgid "Prongs"
 msgstr "爪鑲工具"
 
 msgctxt "Operator"
+msgid "Instance Face"
+msgstr ""
+
+msgctxt "Operator"
 msgid "Lattice Project"
 msgstr "晶格投影"
 
@@ -940,6 +950,10 @@ msgstr "建立寶石貼圖"
 msgctxt "Operator"
 msgid "Add New Measurement"
 msgstr "添加新的測量"
+
+msgctxt "Operator"
+msgid "Set Library Folder"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Add to Library"
