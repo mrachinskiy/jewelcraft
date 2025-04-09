@@ -13,18 +13,11 @@ else:
     import bpy
     from bpy.props import PointerProperty
 
-    from . import (localization, op_cutter, op_design_report, op_distribute,
-                   op_gem_map, op_microprong, op_prongs, ops_asset, ops_gem,
-                   ops_measurement, ops_object, ops_utils, ops_weighting,
-                   preferences, ui)
+    from . import localization, operators, preferences, ui
     from .lib import on_load, previewlib
 
 
-classes = essentials.get_classes(
-    (op_cutter, op_design_report, op_distribute, op_gem_map, op_microprong,
-     op_prongs, ops_asset, ops_gem, ops_measurement, ops_object, ops_utils,
-     ops_weighting, preferences, ui)
-)
+classes = essentials.get_classes((operators, preferences, ui))
 
 
 def register():
