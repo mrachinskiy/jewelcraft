@@ -131,12 +131,6 @@ def gem_overlap(data: list[LocRadMat], threshold: float, first_match=False) -> s
 # ------------------------------------
 
 
-def color_rnd() -> Color:
-    import random
-    seq = (0.0, 0.5, 1.0)
-    return random.choice(seq), random.choice(seq), random.choice(seq), 1.0
-
-
 def add_material(ob: Object, name="Material", color: Color | None = None, is_gem=False) -> None:
     mat = bpy.data.materials.get(name)
 
