@@ -3,7 +3,6 @@
 
 from math import pi, tau
 
-import bmesh
 import bpy
 from bpy.app.translations import pgettext_iface as _
 from bpy.props import BoolProperty, EnumProperty, FloatProperty, IntProperty, StringProperty
@@ -542,7 +541,7 @@ class OBJECT_OT_lattice_project(Operator):
             return {"CANCELLED"}
 
         obs.remove(context.object)
-        self.BBox = asset.ObjectsBoundBox(obs)
+        self.BBox = asset.BoundBox(obs)
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
@@ -696,7 +695,7 @@ class OBJECT_OT_lattice_profile(Operator):
         if not context.object:
             return {"CANCELLED"}
 
-        self.BBox = asset.ObjectsBoundBox((context.object,))
+        self.BBox = asset.BoundBox((context.object,))
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
@@ -801,6 +800,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
+        import bmesh
         from ..lib import asset, mesh
 
         if context.mode == "EDIT_MESH":
@@ -823,19 +823,22 @@ class OBJECT_OT_stretch_along_curve(Operator):
                         else:
                             v.co.x = -length_halved
                 bm.normal_update()
-                bmesh.update_edit_mesh(me)
+                bmesh.update_edit_mesh(me, destructive=False)
 
         else:
 
             for ob in context.selected_objects:
-                curve, bbox = asset.mod_curve_off(ob, ob.matrix_world)
+                if ob.type != "MESH":
+                    continue
+
+                curve = asset.mod_curve_off(ob)
+                BBox = asset.BoundBox((ob,))
 
                 if not curve:
                     continue
 
                 length = mesh.est_curve_length(curve)
-                dim = max(x[0] for x in bbox) - min(x[0] for x in bbox)
-                ob.scale.x = length / dim * ob.scale.x
+                ob.scale.x = length / BBox.dimensions.x * ob.scale.x
 
         return {"FINISHED"}
 
@@ -846,52 +849,71 @@ class OBJECT_OT_move_over_under(Operator):
     bl_idname = "object.jewelcraft_move_over_under"
     bl_options = {"REGISTER", "UNDO"}
 
-    under: BoolProperty(name="Under", options={"SKIP_SAVE"})
+    position: EnumProperty(
+        name="Position",
+        items=(
+            ("OVER", "Over", ""),
+            ("UNDER", "Under", ""),
+        ),
+        options={"SKIP_SAVE"},
+    )
     individual: BoolProperty(name="Individual", description="Move each object individually")
 
     def execute(self, context):
+        import bmesh
         from ..lib import asset
 
         context.view_layer.update()
 
-        if not self.individual or context.mode == "EDIT_MESH":
-
-            ob = context.edit_object or context.object
-
-            if not ob:
-                return {"CANCELLED"}
-
-            curve, bbox = asset.mod_curve_off(ob, ob.matrix_world)
-
-            if self.under:
-                z_object = max(x[2] for x in bbox)
-            else:
-                z_object = min(x[2] for x in bbox)
-
-            if curve:
-                z_pivot = curve.matrix_world.translation[2]
-            else:
-                z_pivot = 0.0
-
-            vec = (0.0, 0.0, z_pivot - z_object)
-
-            bpy.ops.transform.translate(value=vec)
-
-        else:
+        if self.individual:
 
             for ob in context.selected_objects:
-                curve, bbox = asset.mod_curve_off(ob, ob.matrix_local)
+                if ob.type != "MESH":
+                    continue
 
-                if self.under:
-                    z_object = max(x[2] for x in bbox)
+                curve = asset.mod_curve_off(ob)
+                BBox = asset.BoundBox((ob,))
+
+                if self.position == "UNDER":
+                    z_object = BBox.max.z
                 else:
-                    z_object = min(x[2] for x in bbox)
+                    z_object = BBox.min.z
 
                 if curve:
                     z_pivot = curve.location.z
                 else:
                     z_pivot = 0.0
 
-                ob.location.z += z_pivot - z_object
+                z_offset = z_pivot - z_object
+
+                if context.mode == "OBJECT":
+                    ob.location.z += z_offset
+                else:
+                    bm = bmesh.from_edit_mesh(ob.data)
+                    for v in bm.verts:
+                        if v.select:
+                            v.co.z += z_offset
+                    bm.normal_update()
+                    bmesh.update_edit_mesh(ob.data, destructive=False)
+
+        else:
+
+            if not (ob := context.edit_object or context.object):
+                return {"CANCELLED"}
+
+            curve = asset.mod_curve_off(ob)
+            BBox = asset.BoundBox((ob,))
+
+            if self.position == "UNDER":
+                z_object = BBox.max.z
+            else:
+                z_object = BBox.min.z
+
+            if curve:
+                z_pivot = curve.matrix_world.translation.z
+            else:
+                z_pivot = 0.0
+
+            bpy.ops.transform.translate(value=(0.0, 0.0, z_pivot - z_object))
 
         return {"FINISHED"}
