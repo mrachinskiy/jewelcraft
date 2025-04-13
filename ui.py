@@ -148,7 +148,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.operator("curve.jewelcraft_size_curve_add", icon_value=icon_menu("SIZE_CURVE"))
         layout.operator("object.jewelcraft_stretch_along_curve", icon_value=icon_menu("STRETCH"))
         layout.operator("object.jewelcraft_move_over_under", text="Move Over", icon_value=icon_menu("OVER"))
-        layout.operator("object.jewelcraft_move_over_under", text="Move Under", icon_value=icon_menu("UNDER")).under = True
+        layout.operator("object.jewelcraft_move_over_under", text="Move Under", icon_value=icon_menu("UNDER")).position = "UNDER"
         layout.operator("curve.jewelcraft_length_display", icon_value=icon_menu("CURVE_LENGTH"))
         layout.separator()
         layout.operator("wm.call_panel", text="Weighting", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_weighting"
@@ -553,7 +553,7 @@ class VIEW3D_PT_jewelcraft_curve(SidebarSetup, Panel):
         row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=icon("STRETCH"))
         sub = row.row(align=True)
         sub.operator("object.jewelcraft_move_over_under", text="", icon_value=icon("OVER"))
-        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=icon("UNDER")).under = True
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=icon("UNDER")).position = "UNDER"
 
         layout.operator("curve.jewelcraft_length_display", icon_value=icon("CURVE_LENGTH"))
 
@@ -569,7 +569,7 @@ class VIEW3D_PT_jewelcraft_curve_editmesh(SidebarSetup, Panel):
         row.operator("object.jewelcraft_stretch_along_curve", text="Stretch", icon_value=icon("STRETCH"))
         sub = row.row(align=True)
         sub.operator("object.jewelcraft_move_over_under", text="", icon_value=icon("OVER"))
-        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=icon("UNDER")).under = True
+        sub.operator("object.jewelcraft_move_over_under", text="", icon_value=icon("UNDER")).position = "UNDER"
 
 
 class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):

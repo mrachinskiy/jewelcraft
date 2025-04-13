@@ -112,7 +112,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
             ]
             if not obs:
                 continue
-            BBox = asset.ObjectsBoundBox(obs)
+            BBox = asset.BoundBox(obs)
             dim = Scale.from_scene(BBox.dimensions)
 
         if item.type == "WEIGHT":

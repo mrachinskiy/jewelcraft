@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 
 import bpy
@@ -15,7 +15,6 @@ from . import mesh, unit
 
 LocRadMat = tuple[Vector, float, Matrix]
 Color = tuple[float, float, float, float]
-BoundBox = list[Vector]
 
 
 # Gem
@@ -478,41 +477,43 @@ def apply_scale(ob: Object) -> None:
     ob.scale = (1.0, 1.0, 1.0)
 
 
-def mod_curve_off(ob: Object, mat: Matrix = None) -> tuple[Object | None, BoundBox]:
+def mod_curve_off(ob: Object) -> Object | None:
+    """Temporarily disable curve modifier until next depsgraph update.
+
+    :return: Curve object
+    """
+
     curve = None
 
     for mod in ob.modifiers:
         if mod.type == "CURVE" and mod.object:
-
             if mod.show_viewport:
                 mod.show_viewport = False
                 bpy.context.view_layer.update()
                 mod.show_viewport = True
-
             curve = mod.object
             break
 
-    if mat is None:
-        return curve
-
-    return curve, [mat @ Vector(x) for x in ob.bound_box]
+    return curve
 
 
-class ObjectsBoundBox:
+class BoundBox:
     __slots__ = "min", "max", "location", "dimensions"
 
-    def __init__(self, obs: list[Object]) -> None:
-        bbox = [[ob.matrix_world @ Vector(x) for x in ob.bound_box] for ob in obs]
+    def __init__(self, obs: Iterable[Object]) -> None:
+        bbox = []
+        for ob in obs:
+            bbox += [ob.matrix_world @ Vector(p) for p in ob.bound_box]
 
         self.min = Vector((
-            min(x[0] for x in bbox),
-            min(x[1] for x in bbox),
-            min(x[2] for x in bbox),
+            min(p.x for p in bbox),
+            min(p.y for p in bbox),
+            min(p.z for p in bbox),
         ))
         self.max = Vector((
-            max(x[0] for x in bbox),
-            max(x[1] for x in bbox),
-            max(x[2] for x in bbox),
+            max(p.x for p in bbox),
+            max(p.y for p in bbox),
+            max(p.z for p in bbox),
         ))
         self.location = (self.max + self.min) / 2
         self.dimensions = self.max - self.min
