@@ -23,6 +23,8 @@ BoundBox = list[Vector]
 
 
 def iter_gems(depsgraph: Depsgraph) -> Iterator[tuple[DepsgraphObjectInstance, Object, Object]]:
+    """:return: [instance, original, instancer]"""
+
     for dup in depsgraph.object_instances:
         if dup.is_instance:
             ob = dup.instance_object.original
@@ -506,10 +508,7 @@ class ObjectsBoundBox:
     __slots__ = "min", "max", "location", "dimensions"
 
     def __init__(self, obs: list[Object]) -> None:
-        bbox = []
-
-        for ob in obs:
-            bbox += [ob.matrix_world @ Vector(x) for x in ob.bound_box]
+        bbox = [[ob.matrix_world @ Vector(x) for x in ob.bound_box] for ob in obs]
 
         self.min = Vector((
             min(x[0] for x in bbox),
