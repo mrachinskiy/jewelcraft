@@ -6,6 +6,23 @@ from bpy.props import StringProperty
 from bpy.types import Operator
 
 from ... import var
+from ...lib import updatelib
+
+
+class WM_OT_repo_enable_autoupdates(Operator):
+    bl_label = "Enable and Save"
+    bl_description = "Enable check for updates on startup and save preferences"
+    bl_idname = "wm.jewelcraft_repo_enable_autoupdates"
+    bl_options = {"INTERNAL"}
+
+    def execute(self, context):
+        repo = context.preferences.extensions.repos[updatelib.repo_name]
+        repo.use_sync_on_startup = True
+        bpy.ops.wm.save_userpref()
+
+        self.report({"INFO"}, "Check for updates on startup is enabled for {} repository".format(updatelib.repo_name))
+
+        return {"FINISHED"}
 
 
 class SCENE_OT_scene_units_set(Operator):
