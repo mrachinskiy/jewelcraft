@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.18.0\n"
-"POT-Creation-Date: 2025-04-05\n"
-"PO-Revision-Date: 2025-04-05\n"
+"POT-Creation-Date: 2025-04-17\n"
+"PO-Revision-Date: 2025-04-17\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
@@ -72,6 +72,9 @@ msgstr "Показать все"
 
 msgid "Material Color"
 msgstr "Цвет материала"
+
+msgid "Updates check is disabled"
+msgstr "Проверка обновлений отключена"
 
 msgid "Scene scale is not optimal"
 msgstr "Масштаб сцены не оптимален"
@@ -412,6 +415,9 @@ msgstr "Показывать для всех видимых камней"
 msgid "Use gem material color for gem map"
 msgstr "Использовать цвет материала камня для карты камней"
 
+msgid "Enable check for updates on startup and save preferences"
+msgstr "Включить проверку обновлений при запуске и сохранить настройки"
+
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "Задать оптимальные настройки единиц измерения для моделирования ювелирных изделий"
 
@@ -531,6 +537,9 @@ msgstr "Пересекающиеся камни"
 
 msgid "{} overlaps found"
 msgstr "{} пересечений обнаружено"
+
+msgid "Check for updates on startup is enabled for {} repository"
+msgstr "Проверка обновлений при запуске включена для репозитория {}"
 
 msgid "Optimal unit settings are in use"
 msgstr "Используются оптимальные настройки единиц измерения"
@@ -938,6 +947,10 @@ msgstr "Добавить новый материал"
 msgctxt "Operator"
 msgid "Overlapping"
 msgstr "Пересекающиеся"
+
+msgctxt "Operator"
+msgid "Enable and Save"
+msgstr "Включить и сохранить"
 
 msgctxt "Operator"
 msgid "Set Units"

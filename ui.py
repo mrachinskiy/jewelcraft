@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from bpy.types import Menu, Panel, UIList, UILayout, PropertyGroup
+from bpy.types import Menu, Panel, PropertyGroup, UILayout, UIList
 
-from .lib import dynamic_list, unit
+from .lib import dynamic_list, unit, updatelib
 from .lib.previewlib import icon, icon_menu
 
 
@@ -296,29 +296,36 @@ class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
 
     @classmethod
     def poll(cls, context):
-        return unit.check() is not None
-
-    def draw_header(self, context):
-        self.layout.alert = True
-        self.layout.label(icon="ERROR")
+        return unit.check() is not None or updatelib.check()
 
     def draw(self, context):
         layout = self.layout
 
-        row = layout.row()
-        row.alignment = "CENTER"
+        if updatelib.check():
+            heading, panel = layout.panel("autoupdate")
+            heading.alert = True
+            heading.label(text="Updates check is disabled", icon="ERROR")
 
-        warning = unit.check()
+            if panel:
+                row = panel.row()
+                row.alignment = "CENTER"
+                row.scale_y = 1.5
+                row.operator("wm.jewelcraft_repo_enable_autoupdates")
 
-        if warning is unit.WARN_SCALE:
-            row.label(text="Scene scale is not optimal")
-        elif warning is unit.WARN_SYSTEM:
-            row.label(text="Unsupported unit system")
+        if (warning := unit.check()) is not None:
+            heading, panel = layout.panel("unit")
+            heading.alert = True
 
-        row = layout.row()
-        row.alignment = "CENTER"
-        row.scale_y = 1.5
-        row.operator("scene.jewelcraft_scene_units_set")
+            if warning is unit.WARN_SCALE:
+                heading.label(text="Scene scale is not optimal", icon="ERROR")
+            elif warning is unit.WARN_SYSTEM:
+                heading.label(text="Unsupported unit system", icon="ERROR")
+
+            if panel:
+                row = panel.row()
+                row.alignment = "CENTER"
+                row.scale_y = 1.5
+                row.operator("scene.jewelcraft_scene_units_set")
 
 
 class VIEW3D_PT_jewelcraft_gems(SidebarSetup, Panel):

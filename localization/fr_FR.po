@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.18.0\n"
-"POT-Creation-Date: 2025-04-05\n"
+"POT-Creation-Date: 2025-04-17\n"
 "PO-Revision-Date: 2025-01-15\n"
 "Last-Translator: jrbr43\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -72,6 +72,9 @@ msgstr "Tout montrer"
 
 msgid "Material Color"
 msgstr "Couleur du matériau"
+
+msgid "Updates check is disabled"
+msgstr ""
 
 msgid "Scene scale is not optimal"
 msgstr "L'échelle de la scène n'est pas optimal"
@@ -412,6 +415,9 @@ msgstr "Afficher pour toutes les gemmes visibles"
 msgid "Use gem material color for gem map"
 msgstr ""
 
+msgid "Enable check for updates on startup and save preferences"
+msgstr ""
+
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "Définir les unités optimales pour la modélisation en Joaillerie"
 
@@ -531,6 +537,9 @@ msgstr "Pierres en superposition"
 
 msgid "{} overlaps found"
 msgstr "{} superpositions trouvées"
+
+msgid "Check for updates on startup is enabled for {} repository"
+msgstr ""
 
 msgid "Optimal unit settings are in use"
 msgstr "Les unités optimales sont définies"
@@ -938,6 +947,10 @@ msgstr "Ajouter un nouveau matériau"
 msgctxt "Operator"
 msgid "Overlapping"
 msgstr "Superposition"
+
+msgctxt "Operator"
+msgid "Enable and Save"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Set Units"

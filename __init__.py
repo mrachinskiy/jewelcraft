@@ -8,7 +8,7 @@ else:
     from . import var
     from .lib import essentials
 
-    essentials.check(var.ICONS_DIR)
+    essentials.check_integrity(var.ICONS_DIR)
 
     import bpy
     from bpy.props import PointerProperty
