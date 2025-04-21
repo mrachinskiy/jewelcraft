@@ -119,7 +119,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         else:
             import json
             with open(self.filepath, "w", encoding="utf-8") as file:
-                json.dump(Report.as_dict(), file, indent=4, ensure_ascii=False)
+                json.dump(Report.asdict(), file, indent=4, ensure_ascii=False)
 
         webbrowser.open(f"file://{self.filepath}")
         return {"FINISHED"}
