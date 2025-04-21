@@ -15,7 +15,6 @@ def _render_preview_base64(resolution: int) -> str:
     import tempfile
     from ...lib import asset
 
-    temp_filepath = Path(tempfile.gettempdir()) / "design_report_temp.png"
     w = bpy.context.region.width
     h = bpy.context.region.height
 
@@ -24,15 +23,11 @@ def _render_preview_base64(resolution: int) -> str:
     else:
         w = round(w * (resolution / h))
 
-    asset.render_preview(w, resolution, temp_filepath, compression=100)
-
-    with open(temp_filepath, "rb") as f:
-        image_string = base64.b64encode(f.read()).decode("utf-8")
-
-    # Cleanup
-    # ----------------------------
-
-    temp_filepath.unlink(missing_ok=True)
+    with tempfile.TemporaryDirectory() as tempdir:
+        filepath = Path(tempdir) / "design_report_temp.png"
+        asset.render_preview(w, resolution, filepath, compression=100)
+        with open(filepath, "rb") as f:
+            image_string = base64.b64encode(f.read()).decode("utf-8")
 
     return image_string
 
@@ -105,15 +100,14 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         _gettext = gettext.GetText(self.report_lang).gettext
         report_fmt.data_format(Report, _gettext)
 
-        self.filepath = str(Path(self.filepath).with_suffix(f".{self.file_format.lower()}"))
+        self.filepath = str(Path(self.filepath).with_suffix("." + self.file_format.lower()))
 
         if self.file_format == "HTML":
             preview = None
             if self.use_preview:
                 preview = _render_preview_base64(self.preview_resolution)
 
-            doc = html_doc.make(Report, preview, self.filename, _gettext)
-
+            doc = html_doc.make(Report, preview, Path(self.filepath).stem, _gettext)
             with open(self.filepath, "w", encoding="utf-8") as file:
                 file.write(doc)
         else:
@@ -121,7 +115,9 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
             with open(self.filepath, "w", encoding="utf-8") as file:
                 json.dump(Report.asdict(), file, indent=4, ensure_ascii=False)
 
-        webbrowser.open(f"file://{self.filepath}")
+        if not bpy.app.background:
+            webbrowser.open(f"file://{self.filepath}")
+
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -136,10 +132,8 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
 
         if bpy.data.is_saved:
             blend_path = Path(bpy.data.filepath)
-            self.filename = blend_path.stem + " Report"
-            self.filepath = str(blend_path.parent / f"{self.filename}.{self.file_format.lower()}")
+            self.filepath = str(blend_path.parent / f"{blend_path.stem} Report.{self.file_format.lower()}")
         else:
-            self.filename = "Design Report"
             self.filepath = str(Path.home() / f"Design Report.{self.file_format.lower()}")
 
         if event.ctrl or not bpy.data.is_saved:
