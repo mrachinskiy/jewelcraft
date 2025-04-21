@@ -48,9 +48,13 @@ def _text_color(use_background: bool) -> tuple[float, float, float]:
     return (0.0, 0.0, 0.0)
 
 
-def render_map(self):
+def render_map(self) -> None:
+    with tempfile.TemporaryDirectory() as tempdir:
+        _render_map(self, tempdir)
+
+
+def _render_map(self, tempdir: str) -> None:
     image_name = "Gem Map"
-    temp_filepath = Path(tempfile.gettempdir()) / "gem_map_temp.png"
 
     render = bpy.context.scene.render
     width, height = _get_resolution(self.region, self.region_3d, render)
@@ -58,8 +62,10 @@ def render_map(self):
     x = padding
     y = height - padding
 
-    asset.render_preview(width, height, temp_filepath, compression=15, gamma=2.2, use_transparent=not self.use_background)
-    render_image = load_image(str(temp_filepath))
+    render_filepath = Path(tempdir) / "gem_map_temp.png"
+
+    asset.render_preview(width, height, render_filepath, compression=15, gamma=2.2, use_transparent=not self.use_background)
+    render_image = load_image(str(render_filepath))
 
     mat_offscreen = Matrix()
     mat_offscreen[0][0] = 2 / width
@@ -140,8 +146,6 @@ def render_map(self):
     # ----------------------------
 
     bpy.data.images.remove(render_image)
-    temp_filepath.unlink(missing_ok=True)
-
     gpu.state.blend_set("NONE")
 
     # Show in a new window
