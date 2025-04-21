@@ -26,7 +26,7 @@ class _Data:
             return False
         return True
 
-    def as_dict(self):
+    def asdict(self):
         d = {}
 
         for prop in self.__slots__:
@@ -38,7 +38,7 @@ class _Data:
             elif prop == "warnings":
                 d[prop] = value
             else:
-                d[prop] = {k: v for k, v in value}
+                d[prop] = tuple((k, v) for k, v in value)
 
         return d
 
