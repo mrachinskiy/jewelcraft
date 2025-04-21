@@ -178,14 +178,9 @@ def move_to_coll(obs: list[Object], coll: Collection) -> None:
         ob.select_set(False)
 
 
-def ob_link(ob: Object, coll: Collection | tuple[Collection]) -> None:
-    if isinstance(coll, tuple):
-        for c in coll:
-            c.objects.link(ob)
-    else:
-        coll.objects.link(ob)
-
-    if (sd := bpy.context.space_data).local_view:
+def ob_link(ob: Object, coll: Collection) -> None:
+    coll.objects.link(ob)
+    if (sd := bpy.context.space_data) and sd.local_view:
         ob.local_view_set(sd, True)
 
 
@@ -241,15 +236,11 @@ def pivot_add(prefix: str) -> Object:
 
 
 def asset_import(filepath: Path, ob_name=False, me_name=False, ng_name=False) -> BlendData:
-
     with bpy.data.libraries.load(str(filepath)) as (data_from, data_to):
-
         if ob_name:
             data_to.objects = [ob_name]
-
         if me_name:
             data_to.meshes = [me_name]
-
         if ng_name:
             data_to.node_groups = [ng_name]
 
@@ -257,7 +248,6 @@ def asset_import(filepath: Path, ob_name=False, me_name=False, ng_name=False) ->
 
 
 def asset_import_batch(filepath: str) -> BlendData:
-
     with bpy.data.libraries.load(filepath) as (data_from, data_to):
         data_to.objects = data_from.objects
         data_to.collections = data_from.collections
@@ -397,7 +387,7 @@ def show_window(width: int, height: int, area_type: str | None = None, space_dat
 
 def bm_to_scene(bm, name="New object", color: Color | None = None) -> None:
     space_data = bpy.context.space_data
-    use_local_view = bool(space_data.local_view)
+    use_local_view = bool(space_data and space_data.local_view)
 
     bpy.context.view_layer.update()
     size = bpy.context.object.dimensions.y
@@ -428,7 +418,7 @@ def bm_to_scene(bm, name="New object", color: Color | None = None) -> None:
 def ob_copy_and_parent(ob: Object, parents: list[Object]) -> None:
     is_orig = True
     space_data = bpy.context.space_data
-    use_local_view = bool(space_data.local_view)
+    use_local_view = bool(space_data and space_data.local_view)
 
     for parent in parents:
         if is_orig:
@@ -457,7 +447,7 @@ def ob_copy_to_faces(ob: Object) -> None:
         ob.matrix_world = mats.pop()
         collection = bpy.context.collection
         space_data = bpy.context.space_data
-        use_local_view = bool(space_data.local_view)
+        use_local_view = bool(space_data and space_data.local_view)
 
         for mat in mats:
             ob_copy = ob.copy()
