@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Design Report</title>
+    <style>/* * Defaults */:root {padding: 0;margin: 0;font-family: sans-serif;font-size: 12pt;line-height: 2;color: #000;background-color: #eee;}*, *::before, *::after {box-sizing: border-box;}body {padding: 0;margin: 0;}h1 {line-height: 1;margin: 0 0 1rem 0;}h3 {line-height: 1;margin: 0 0 0.5rem 0;}ul {padding-left: 1rem;margin: 0;}table {text-align: left;border-collapse: collapse;}th, td {padding: 0;font-weight: normal;}/* * Components */.page {width: 210mm;min-height: 297mm;padding: 15mm;margin: 8mm auto 50mm;display: flex;flex-direction: column;gap: 2rem;background-color: #fff;box-shadow: 0 0 2mm rgb(0 0 0 / 15%);}.meta {display: flex;align-items: flex-start;gap: 1rem;}.meta img {width: 70mm;height: 70mm;object-fit: cover;}.meta td:first-child {font-weight: bold;}.table {width: 100%;white-space: nowrap;}.table tbody tr:nth-child(odd) {background-color: rgb(0 0 0 / 4%);}.table th,.table td {padding: 0 0.5rem;}.table th:nth-child(n+4),.table td:nth-child(n+4),.table tfoot {text-align: right;}.table th:nth-child(6),.table td:nth-child(6) {width: 8%;}.table th:nth-child(7),.table td:nth-child(7) {width: 12%;}.list td:first-child {padding-right: 1.5rem;}.warning {padding: 1rem;margin-bottom: 1rem;background-color: #ff7b7b;}/* * Overrides */@media print {:root {background-color: #fff;}.page {width: auto;min-height: auto;padding: 0;margin: 0;box-shadow: none;}}</style>
+</head>
+<body>
+
+<div class="page">
+
+<section>
+<h1>Settings</h1>
+<div class="warning">
+    <h3>WARNING</h3>
+    <ul>
+        <li>Overlapping gems</li>
+    </ul>
+</div>
+<table class="table">
+    <thead>
+        <tr><th>Gem</th><th>Cut</th><th>Color</th><th>Size (mm)</th><th>Carats</th><th>Qty</th><th>Sum (ct)</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Diamond</td><td>Round</td><td>Colorless</td><td>1.5</td><td>0.012</td><td>2</td><td>0.024</td></tr>
+        <tr><td>Diamond</td><td>Round</td><td>Colorless</td><td>1.25</td><td>0.007</td><td>4</td><td>0.028</td></tr>
+        <tr><td>Diamond</td><td>Round</td><td>Colorless</td><td>1.0</td><td>0.004</td><td>8</td><td>0.032</td></tr>
+        <tr><td>Ruby</td><td>Round</td><td>Red</td><td>5.0</td><td>0.531</td><td>1</td><td>0.531</td></tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">Total</td>
+            <td>15</td>
+            <td>0.615</td>
+        </tr>
+    </tfoot>
+</table>
+</section>
+
+<section>
+<h1>Materials</h1>
+<table class="list">
+    <tbody>
+        <tr><td>Gold</td><td>0.93 g</td></tr>
+        <tr><td>Silver</td><td>0.62 g</td></tr>
+    </tbody>
+</table>
+</section>
+
+<section>
+<h1>Notes</h1>
+<table class="list">
+    <tbody>
+        <tr><td>Ring Size (US)</td><td>4.5</td></tr>
+        <tr><td>Ring Size (DIA)</td><td>15.29 mm</td></tr>
+        <tr><td>Cube Dimensions</td><td>3.0 × 4.0 × 5.0 mm</td></tr>
+        <tr><td>Cube Dimensions</td><td>3.0 × 4.0 mm</td></tr>
+    </tbody>
+</table>
+</section>
+
+</div>
+
+</body>
+</html>
