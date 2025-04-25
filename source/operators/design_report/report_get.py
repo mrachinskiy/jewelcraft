@@ -104,7 +104,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
 
         if item.datablock_type == "OBJECT":
             obs = (item.object,)
-            dim = Scale.from_scene(item.object.dimensions)
+            dim = Scale.from_scene(asset.get_dimensions(item.object))
         else:
             obs = [
                 ob for ob in item.collection.all_objects
