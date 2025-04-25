@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.18.0\n"
 "POT-Creation-Date: 2025-04-17\n"
-"PO-Revision-Date: 2025-04-17\n"
+"PO-Revision-Date: 2025-04-23\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
@@ -284,10 +284,10 @@ msgid "Redistribute selected objects along curve"
 msgstr "Перераспределить выделенные объекты по кривой"
 
 msgid "Display weight and volume for selected mesh objects"
-msgstr "Показать вес и объём выделенных mesh объектов"
+msgstr "Показать вес и объём выделенных мэш объектов"
 
 msgid "Create instance face for selected objects"
-msgstr "Создать instance face для выделенных объектов"
+msgstr "Создать грань-экземпляр для выделенных объектов"
 
 msgid "Create size curve"
 msgstr "Создать размерную кривую"
@@ -305,13 +305,13 @@ msgid "Mirror selected objects around one or more axes, keeping object data link
 msgstr "Отразить выделенные объекты относительно одной или нескольких осей, сохраняя связь данных объекта"
 
 msgid "Project selected objects onto active object using Lattice"
-msgstr "Проецировать выделенные объекты на активный объект с помощью Lattice"
+msgstr "Проецировать выделенные объекты на активный объект с помощью решётки"
 
 msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
-msgstr "Деформировать профиль активного объекта с помощью Lattice, также работает в режиме редактирования с выделенными вершинами"
+msgstr "Деформировать профиль активного объекта с помощью решётки, также работает в режиме редактирования с выделенными вершинами"
 
 msgid "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "Создать корнера для выделенных камней\n(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)"
+msgstr "Создать крапана для выделенных камней\n(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)"
 
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
 msgstr "Создать выборку для выделенных камней\n(Горячая клавиша: удерживайте Ctrl при использовании инструмента, чтобы избежать сброса параметров)"
@@ -386,10 +386,10 @@ msgid "Material composition"
 msgstr "Состав материала"
 
 msgid "Use one-dimensional lattice for even deformation"
-msgstr "Использовать одномерный Lattice для равномерной деформации"
+msgstr "Использовать одномерную решётку для равномерной деформации"
 
 msgid "Use two-dimensional lattice for proportional deformation"
-msgstr "Использовать двумерный Lattice для пропорциональной деформации"
+msgstr "Использовать двумерную решётку для пропорциональной деформации"
 
 msgid "Scale selected objects to given size"
 msgstr "Масштабировать выделенные объекты в заданный размер"
@@ -467,7 +467,7 @@ msgid "Remove from favorites"
 msgstr "Удалить из избранного"
 
 msgid "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool"
-msgstr "Разделить несвязанные части, центрировать origin и исправить ориентацию (может восстанавливать камни из STL файла).\nПРИМЕЧАНИЕ: идентификатор камня можно добавить инструментом Edit Gem"
+msgstr "Разделить несвязанные части, центрировать ориджин и исправить ориентацию (может восстанавливать камни из STL файла).\nПРИМЕЧАНИЕ: идентификатор камня можно добавить инструментом Edit Gem"
 
 msgid "Ring size format"
 msgstr "Формат размера кольца"
@@ -509,7 +509,7 @@ msgid "At least one gem object must be selected"
 msgstr "Как минимум один объект камня должен быть выделен"
 
 msgid "At least one mesh object must be selected"
-msgstr "Как минимум один mesh объект должен быть выделен"
+msgstr "Как минимум один мэш объект должен быть выделен"
 
 msgid "Active object must be a curve"
 msgstr "Активный объект должен быть кривой"
@@ -886,11 +886,11 @@ msgstr "Грань-экземпляр"
 
 msgctxt "Operator"
 msgid "Lattice Project"
-msgstr "Lattice проекция"
+msgstr "Проекция решётки"
 
 msgctxt "Operator"
 msgid "Lattice Profile"
-msgstr "Lattice профиль"
+msgstr "Профиль решётки"
 
 msgctxt "Operator"
 msgid "Size Curve"
