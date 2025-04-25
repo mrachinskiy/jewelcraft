@@ -507,3 +507,21 @@ class BoundBox:
         ))
         self.location = (self.max + self.min) / 2
         self.dimensions = self.max - self.min
+
+
+def get_dimensions(ob: Object) -> Vector:
+    """In Blender 4.5 curve radius property affects object dimensions"""
+
+    if ob.type != "CURVE":
+        return ob. dimensions
+
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    ob_eval = ob.evaluated_get(depsgraph)
+    _ob = bpy.data.objects.new("TEMP", ob_eval.to_mesh().copy())
+
+    dim = _ob.dimensions.copy()
+
+    bpy.data.meshes.remove(_ob.data)
+    ob_eval.to_mesh_clear()
+
+    return dim
