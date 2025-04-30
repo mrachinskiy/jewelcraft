@@ -17,10 +17,6 @@ GREEN = "\033[92m"
 INVERSE = "\033[7m"
 RESET = "\033[0m"
 
-# Messages
-FAILED = RED + INVERSE + "FAILED" + RESET
-PASSED = GREEN + INVERSE + "PASSED" + RESET
-
 
 def main() -> None:
     blender_apps = []
@@ -40,13 +36,14 @@ def main() -> None:
             cmd = [blender / "blender.exe", "-b", "-P", test]
             proc = subprocess.run(cmd, capture_output=True)
             if proc.returncode:
-                print(f"{RED + blender.name} {test.stem + RESET} {FAILED}")
+                print(f"{RED + blender.name} {test.stem} {INVERSE}FAILED{RESET}")
                 print(proc.stderr.decode().strip())
                 return
             else:
-                print(f"{blender.name} {test.stem} {PASSED}")
+                print(f"{blender.name} {test.stem} {GREEN + INVERSE}PASSED{RESET}")
 
-    input(INVERSE + "END" + RESET)
+    print(INVERSE + "END" + RESET)
 
 
 main()
+input()
