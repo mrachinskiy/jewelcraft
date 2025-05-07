@@ -72,7 +72,7 @@ Contributing
 ### Did you find a bug?
 
 * Ensure the bug can be reproduced in the latest add-on version.
-* [Open new bug report][report_bug], be sure to include Blender and add-on versions, and screenshot showing the error message.
+* [Open new bug report][issues_url], be sure to include Blender and add-on versions, and screenshot showing the error message.
 
 ### Translations
 
@@ -83,13 +83,8 @@ Contributing
   * The UI convention for English language is to use Title Case formatting for property names and button titles, to know formatting convention for your language just see how Blender handles it and follow the rule.
   * Preserve empty braces `{}` in translation, they used as placeholders for additional information and will not appear in UI.
   * Look out for appropriate context, `Base` for example is used in the context of materials as `Base Metal`, which in other words means `Non-Presious Metal` and should not be translated as `Basis` or `Foundation`.
-  * If you have limited amount of time to work on translation, then make sure to prioritize in the following order:
-    * Essentials: add-on sidebar UI, gem names and cuts.
-    * Good to have: tool popups and modal UI, add-on preferences, precious alloys, error messages.
-    * The rest: tooltips and other UI messages.
-* After translation is done submit it back through [issues][submit_translation].
+* After translation is done submit it back through [issues][issues_url].
 
 
 [download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/latest/download/jewelcraft-2_17_4.zip?repository=https://mrachinskiy.github.io/api/v1/extensions.json&blender_version_min=4.2.0
-[report_bug]: https://github.com/mrachinskiy/jewelcraft/issues/new?template=bug_report.md
-[submit_translation]: https://github.com/mrachinskiy/jewelcraft/issues/new?labels=translation&template=contribute-translation.md
+[issues_url]: https://github.com/mrachinskiy/jewelcraft/issues
