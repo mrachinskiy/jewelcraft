@@ -1,0 +1,37 @@
+name: Bug report
+description: Create a report to help us improve
+labels:
+  - "bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Instructions
+
+        * Test with `File` → `Defaults` → `Load Factory Settings` to make sure other add-ons do not cause the issue.
+        * If applicable, attach blend file or screenshot to help explain your problem.
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+    validations:
+      required: true
+  - type: input
+    id: blender_ver
+    attributes:
+      label: Blender version
+    validations:
+      required: true
+  - type: input
+    id: addon_ver
+    attributes:
+      label: Add-on version
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Describe the bug"
+      placeholder: "Write a clear and concise description of what the bug is."
+    validations:
+      required: true
