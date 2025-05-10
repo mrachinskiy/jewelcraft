@@ -763,7 +763,7 @@ class OBJECT_OT_resize(Operator):
         if not context.object:
             return {"CANCELLED"}
 
-        self.dim_orig = asset.get_dimensions(context.object).to_tuple()
+        self.dim_orig = context.object.dimensions.to_tuple()
         self.pivot = context.object.matrix_world.translation.to_tuple()
         self.size = self.dim_orig[int(self.axis)]
 

@@ -491,14 +491,9 @@ class BoundBox:
     __slots__ = "min", "max", "location", "dimensions"
 
     def __init__(self, obs: Iterable[Object]) -> None:
-        depsgraph = bpy.context.evaluated_depsgraph_get()
         bbox = []
         for ob in obs:
-            if ob.type != "CURVE":
-                bbox += [ob.matrix_world @ Vector(p) for p in ob.bound_box]
-            else:
-                ob_eval = ob.evaluated_get(depsgraph)
-                bbox += [ob_eval.matrix_world @ Vector(p) for p in ob_eval.bound_box]
+            bbox += [ob.matrix_world @ Vector(p) for p in ob.bound_box]
 
         self.min = Vector((
             min(p.x for p in bbox),
@@ -512,15 +507,3 @@ class BoundBox:
         ))
         self.location = (self.max + self.min) / 2
         self.dimensions = self.max - self.min
-
-
-def get_dimensions(ob: Object) -> Vector:
-    """In Blender 4.5 curve radius property affects object dimensions"""
-
-    if ob.type != "CURVE":
-        return ob.dimensions
-
-    depsgraph = bpy.context.evaluated_depsgraph_get()
-    ob_eval = ob.evaluated_get(depsgraph)
-
-    return ob_eval.dimensions.copy()
