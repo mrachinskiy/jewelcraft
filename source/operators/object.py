@@ -703,7 +703,7 @@ class OBJECT_OT_lattice_profile(Operator):
 
 
 def upd_size(self, context):
-    self.size = context.object.dimensions[int(self.axis)]
+    self.size = self.dim_orig[int(self.axis)]
 
 
 class OBJECT_OT_resize(Operator):
@@ -711,6 +711,9 @@ class OBJECT_OT_resize(Operator):
     bl_description = "Scale selected objects to given size"
     bl_idname = "object.jewelcraft_resize"
     bl_options = {"REGISTER", "UNDO"}
+
+    dim_orig: tuple[float, float, float]
+    pivot: tuple[float, float, float]
 
     axis: EnumProperty(
         name="Axis",
@@ -755,14 +758,14 @@ class OBJECT_OT_resize(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
+        from ..lib import asset
+
         if not context.object:
             return {"CANCELLED"}
 
-        dim = context.object.dimensions
-
-        self.dim_orig = dim.to_tuple()
-        self.size = dim[int(self.axis)]
+        self.dim_orig = asset.get_dimensions(context.object).to_tuple()
         self.pivot = context.object.matrix_world.translation.to_tuple()
+        self.size = self.dim_orig[int(self.axis)]
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
