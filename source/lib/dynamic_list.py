@@ -18,10 +18,11 @@ AssetItems = tuple[tuple[str, str, int, bool], ...]
 
 
 def _iface_lang(context) -> str:
-    view = context.preferences.view
+    if hasattr(context.preferences,'view'):
+        view = context.preferences.view
 
-    if view.use_translate_interface:
-        return view.language
+        if view.use_translate_interface:
+            return view.language
 
     return "en_US"
 
