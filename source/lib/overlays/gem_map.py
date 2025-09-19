@@ -84,7 +84,7 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False)
 
     if ob is not None and (is_gem := ob.select_get() and "gem" in ob):
         loc1 = ob.matrix_world.translation
-        rad1 = max(ob.dimensions.xy) / 2
+        rad1 = max(ob.dimensions.xy) / 2.0
 
     # Shader
     # -----------------------------------
@@ -194,7 +194,7 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False)
         if loc2_2d is None or not (0 < loc2_2d.x < region.width and 0 < loc2_2d.y < region.height):
             continue
 
-        _font_loc.append((size, loc2, font_color, ob.dimensions.y))
+        _font_loc.append((size, loc2, font_color, rad2 * 2.0))
 
     gpu.state.blend_set("NONE")
     gpu.state.depth_test_set("NONE")
@@ -234,17 +234,13 @@ def _draw_font(self, context, is_overlay=True, to_2d: Callable = location_3d_to_
         ray_loc = context.scene.camera.matrix_world.translation
 
     for text, loc, color, size in _font_loc:
-
         if not show_always:
             ray_direction = (loc - ray_loc).normalized()
             hit_loc = ray_cast(depsgraph, ray_loc, ray_direction)[1]
             hit_dist = max((loc - hit_loc).length - size / 2.0, 0.0)
+            opacity = 1.0 - (hit_dist / size)
 
         if show_always or (hit_dist < size):
-
-            if not show_always:
-                opacity = 1.0 - (hit_dist / size)
-
             blf.color(fontid, *color, opacity)
             dim_x, dim_y = blf.dimensions(fontid, text)
             pos_x, pos_y = to_2d(region, region_3d, loc)

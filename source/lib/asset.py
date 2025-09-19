@@ -48,10 +48,10 @@ def gem_transform(dup: DepsgraphObjectInstance) -> LocRadMat:
             bbox[3][1] - y,
             bbox[1][2] - z,
         ))
-        rad = max(map(abs, dim.xy * sca.xy)) / 2
+        rad = max(map(abs, dim.xy * sca.xy)) / 2.0
     else:
         dim = dup.object.original.dimensions
-        rad = max(dim.xy) / 2
+        rad = max(dim.xy) / 2.0
 
     mat = Matrix.LocRotScale(loc, rot, (1.0, 1.0, 1.0))
     loc.freeze()
