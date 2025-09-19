@@ -122,7 +122,7 @@ def _render_map(self, tempdir: str) -> None:
             gpu.matrix.load_projection_matrix(Matrix())
 
             to_2d = _ViewToCamLoc(self.region, self.region_3d, render).to_2d
-            overlays.gem_map._draw_font(self, bpy.context, to_2d)
+            overlays.gem_map._draw_font(self, bpy.context, is_overlay=False, to_2d=to_2d)
             onscreen.gem_table(self, x, y, color=_text_color(self.use_background))
 
         buffer = fb.read_color(0, 0, width, height, 4, 0, "UBYTE")

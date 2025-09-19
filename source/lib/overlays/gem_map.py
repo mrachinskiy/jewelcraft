@@ -7,7 +7,7 @@ import blf
 import bpy
 import gpu
 import numpy as np
-from bpy_extras.view3d_utils import location_3d_to_region_2d
+from bpy_extras.view3d_utils import location_3d_to_region_2d, region_2d_to_origin_3d
 from gpu_extras.batch import batch_for_shader
 from mathutils import Color, Matrix
 
@@ -27,7 +27,7 @@ def handler_add(self, context, is_overlay=True, use_select=False, use_mat_color=
 
     if _handler is None:
         _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context, is_overlay, use_select, use_mat_color), "WINDOW", "POST_VIEW")
-        _handler_font = bpy.types.SpaceView3D.draw_handler_add(_draw_font, (self, context), "WINDOW", "POST_PIXEL")
+        _handler_font = bpy.types.SpaceView3D.draw_handler_add(_draw_font, (self, context, is_overlay), "WINDOW", "POST_PIXEL")
 
 
 def handler_del():
@@ -58,13 +58,14 @@ def _to_int(x: float) -> int | float:
 def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False) -> None:
     global _font_loc
 
+    region = context.region
+    region_3d = context.space_data.region_3d
     depsgraph = context.evaluated_depsgraph_get()
-    Scale = unit.Scale()
-    from_scene = Scale.from_scene
+    from_scene = unit.Scale().from_scene
     mat_sca = Matrix.Diagonal((1.003, 1.003, 1.003)).to_4x4()
     color_var = Color((0.85, 0.35, 0.35))
-    white = (1.0, 1.0, 1.0, 1.0)
-    black = (0.0, 0.0, 0.0, 1.0)
+    white = (1.0, 1.0, 1.0)
+    black = (0.0, 0.0, 0.0)
     gems = set()
     gem_map = {}
 
@@ -188,14 +189,19 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False)
         batch = batch_for_shader(shader, "TRIS", {"pos": points}, indices=indices)
         batch.draw(shader)
 
-        _font_loc.append((size, loc2.to_tuple(), font_color))
+        # Gem is in view
+        loc2_2d = location_3d_to_region_2d(region, region_3d, loc2)
+        if loc2_2d is None or not (0 < loc2_2d.x < region.width and 0 < loc2_2d.y < region.height):
+            continue
+
+        _font_loc.append((size, loc2, font_color, ob.dimensions.y))
 
     gpu.state.blend_set("NONE")
     gpu.state.depth_test_set("NONE")
     gpu.state.depth_mask_set(False)
 
 
-def _draw_font(self, context, to_2d: Callable = location_3d_to_region_2d):
+def _draw_font(self, context, is_overlay=True, to_2d: Callable = location_3d_to_region_2d):
     global _font_loc
 
     if not _font_loc:
@@ -204,14 +210,45 @@ def _draw_font(self, context, to_2d: Callable = location_3d_to_region_2d):
     region = context.region
     region_3d = context.space_data.region_3d
     prefs = context.preferences.addons[var.ADDON_ID].preferences
+    depsgraph = context.evaluated_depsgraph_get()
+    ray_cast = context.scene.ray_cast
     fontid = 0
     blf.size(fontid, prefs.gem_map_fontsize_gem_size)
+    opacity = 1.0
 
-    for text, loc, color in _font_loc:
-        blf.color(fontid, *color)
-        dim_x, dim_y = blf.dimensions(fontid, text)
-        pos_x, pos_y = to_2d(region, region_3d, loc)
-        blf.position(fontid, pos_x - dim_x // 2, pos_y - dim_y // 2, 0.0)
-        blf.draw(fontid, text)
+    if is_overlay:
+        props = context.scene.jewelcraft
+        in_front = props.overlay_gem_map_show_in_front
+        show_all = props.overlay_gem_map_show_all
+    else:
+        in_front = True
+        show_all = True
+
+    show_always = not show_all or in_front
+
+    if region_3d.view_perspective == "PERSP":
+        ray_loc = region_3d.view_matrix.inverted().translation
+    elif region_3d.view_perspective == "ORTHO":
+        ray_loc = region_2d_to_origin_3d(region, region_3d, (region.width // 2, region.height // 2))
+    elif region_3d.view_perspective == "CAMERA":
+        ray_loc = context.scene.camera.matrix_world.translation
+
+    for text, loc, color, size in _font_loc:
+
+        if not show_always:
+            ray_direction = (loc - ray_loc).normalized()
+            hit_loc = ray_cast(depsgraph, ray_loc, ray_direction)[1]
+            hit_dist = max((loc - hit_loc).length - size / 2.0, 0.0)
+
+        if show_always or (hit_dist < size):
+
+            if not show_always:
+                opacity = 1.0 - (hit_dist / size)
+
+            blf.color(fontid, *color, opacity)
+            dim_x, dim_y = blf.dimensions(fontid, text)
+            pos_x, pos_y = to_2d(region, region_3d, loc)
+            blf.position(fontid, pos_x - dim_x // 2, pos_y - dim_y // 2, 0)
+            blf.draw(fontid, text)
 
     _font_loc.clear()
