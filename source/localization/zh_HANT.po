@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.18.0\n"
-"POT-Creation-Date: 2025-04-17\n"
+"POT-Creation-Date: 2025-09-23\n"
 "PO-Revision-Date: 2024-12-31\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -74,7 +74,7 @@ msgid "Material Color"
 msgstr "材質顏色"
 
 msgid "Updates check is disabled"
-msgstr ""
+msgstr "停用更新檢查"
 
 msgid "Scene scale is not optimal"
 msgstr "當前尺寸單位非最佳場景比例"
@@ -242,7 +242,7 @@ msgid "Keep Z Direction"
 msgstr "保存 Z 軸方向"
 
 msgid "Open add-on preferences window"
-msgstr ""
+msgstr "開啟附加元件偏好設置視窗"
 
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
 msgstr "某些附加元件偏好設定的設定資料夾，例如資產收藏夾、寶石顏色等類似資料夾"
@@ -293,7 +293,7 @@ msgid "Create size curve"
 msgstr "建立戒圍曲線"
 
 msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
-msgstr "沿 X 軸上的曲線拉伸變形欲的物件，也可以在編輯模式下使用選定的頂點"
+msgstr "沿 X 軸上的曲線拉伸欲變形的物件，也可以在編輯模式下使用選定的頂點"
 
 msgid "Display curve length"
 msgstr "顯示曲線長度"
@@ -416,7 +416,7 @@ msgid "Use gem material color for gem map"
 msgstr "使用寶石材質顏色和寶石貼圖"
 
 msgid "Enable check for updates on startup and save preferences"
-msgstr ""
+msgstr "啟動時檢查更新並儲存偏好設定"
 
 msgid "Set optimal unit settings for jewelry modelling"
 msgstr "為珠寶建模設定最佳尺寸單位設定"
@@ -431,7 +431,7 @@ msgid "Add a new measurement"
 msgstr "添加新的測量"
 
 msgid "Target type"
-msgstr ""
+msgstr "目標類型"
 
 msgid "Add new item to the list"
 msgstr "將新項目添加到列表"
@@ -530,7 +530,7 @@ msgid "Operator already running"
 msgstr "工作已經執行"
 
 msgid "No gems in the scene"
-msgstr ""
+msgstr "場景中沒有寶石"
 
 msgid "Overlapping gems"
 msgstr "寶石重疊"
@@ -539,7 +539,7 @@ msgid "{} overlaps found"
 msgstr "{} 發現重疊"
 
 msgid "Check for updates on startup is enabled for {} repository"
-msgstr ""
+msgstr "已為 {} 儲存庫啟用啟動時檢查更新"
 
 msgid "Optimal unit settings are in use"
 msgstr "已在使用最佳單位設定"
