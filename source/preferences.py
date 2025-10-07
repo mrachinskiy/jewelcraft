@@ -185,6 +185,7 @@ class Measurement(PropertyGroup):
             ("WEIGHT", "", ""),
             ("DIMENSIONS", "", ""),
             ("METADATA", "", ""),
+            ("VOLUME", "", ""),
         ),
     )
     datablock_type: EnumProperty(

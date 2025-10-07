@@ -21,9 +21,10 @@ class WM_OT_ul_measurements_add(Operator):
         name="Type",
         items=(
             ("WEIGHT", "Weight", "", "FILE_3D", 0),
-            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 1),
-            ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 2),
-            ("METADATA", "Metadata", "", "DOT", 3),
+            ("VOLUME", "Volume", "", "FILE_VOLUME", 1),
+            ("RING_SIZE", "Ring Size", "", "MESH_CIRCLE", 2),
+            ("DIMENSIONS", "Dimensions", "", "SHADING_BBOX", 3),
+            ("METADATA", "Metadata", "", "DOT", 4),
         ),
     )
     datablock_type: EnumProperty(
@@ -123,6 +124,9 @@ class WM_OT_ul_measurements_add(Operator):
             item.name = mat.name
             item.material_name = mat.name
             item.material_density = mat.density
+        elif self.type == "VOLUME":
+            target_name = self.object_name if self.datablock_type == "OBJECT" else self.collection_name
+            item.name = "{} {}".format(target_name, _("Volume"))
         elif self.type == "DIMENSIONS":
             target_name = self.object_name if self.datablock_type == "OBJECT" else self.collection_name
             item.name = "{} {}".format(target_name, _("Dimensions"))

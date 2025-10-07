@@ -98,7 +98,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
             return {"CANCELLED"}
 
         _gettext = gettext.GetText(self.report_lang).gettext
-        report_fmt.data_format(Report, _gettext)
+        report_fmt.data_format(Report, _gettext, self.file_format == "HTML")
 
         self.filepath = str(Path(self.filepath).with_suffix("." + self.file_format.lower()))
 
