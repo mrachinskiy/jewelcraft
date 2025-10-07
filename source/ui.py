@@ -55,6 +55,7 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
         "WEIGHT": "FILE_3D",
         "RING_SIZE": "MESH_CIRCLE",
         "METADATA": "DOT",
+        "VOLUME": "FILE_VOLUME",
     }
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):

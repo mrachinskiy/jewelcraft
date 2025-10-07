@@ -40,12 +40,21 @@ def make(Report, preview: str | None, filename: str, _: Callable[[str], str]) ->
         Doc.write_table(header, body, footer)
         Doc.write_section(_("Settings"))
 
-    if Report.materials:
-        Doc.write_list(Report.materials)
-        Doc.write_section(_("Materials"))
+    if Report.entries:
+        mats = []
+        notes = []
 
-    if Report.notes:
-        Doc.write_list(Report.notes)
-        Doc.write_section(_("Notes"))
+        for i, k, v in Report.entries:
+            if i in {"WEIGHT", "VOLUME"}:
+                mats.append((k, v))
+                continue
+            notes.append((k, v))
+
+        if mats:
+            Doc.write_list(mats)
+            Doc.write_section(_("Materials"))
+        if notes:
+            Doc.write_list(notes)
+            Doc.write_section(_("Notes"))
 
     return Doc.make(filename)

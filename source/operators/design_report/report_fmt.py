@@ -18,8 +18,9 @@ class _Gem(NamedTuple):
     ct_sum: float
 
 
-def data_format(Report, _: Callable[[str], str]) -> None:
+def data_format(Report, _: Callable[[str], str], fmt_str: bool) -> None:
     _mm = _("mm")
+    _mm3 = _("mm³")
     _g = _("g")
 
     if Report.gems:
@@ -45,11 +46,17 @@ def data_format(Report, _: Callable[[str], str]) -> None:
                 trait = None
 
             if trait is gemlib.TRAIT_XY_SYMMETRY:
-                sizef = str(l)
+                sizef = l
             elif trait is gemlib.TRAIT_X_SIZE:
-                sizef = f"{w} × {l}"
+                if fmt_str:
+                    sizef = f"{w} × {l}"
+                else:
+                    sizef = (w, l)
             else:
-                sizef = f"{l} × {w}"
+                if fmt_str:
+                    sizef = f"{l} × {w}"
+                else:
+                    sizef = (l, w)
 
             gems_fmt.append(_Gem(stonef, cutf, _(color), sizef, ct, qty, total_ct))
 
@@ -59,41 +66,46 @@ def data_format(Report, _: Callable[[str], str]) -> None:
 
         Report.metadata = [(_(k), v) for k, v in Report.metadata]
 
-    if Report.materials:
+    if Report.entries:
 
-        mats_fmt = []
+        entries_fmt = []
 
-        for mat_name, density, vol in Report.materials:
-            weight = round(vol * density, 2)
-            weightf = f"{weight} {_g}"
+        for item_type, name, values in Report.entries:
 
-            mats_fmt.append((mat_name, weightf))
+            if item_type == "WEIGHT":
+                vol, density = values
+                value = round(vol * density, 2)
+                if fmt_str:
+                    value = f"{value} {_g}"
 
-        Report.materials = mats_fmt
+            elif item_type == "VOLUME":
+                value = round(values, 2)
+                if fmt_str:
+                    value = f"{value} {_mm3}"
 
-    if Report.notes:
-
-        notes_fmt = []
-
-        for item_type, name, values in Report.notes:
-
-            if item_type == "DIMENSIONS":
-                valuef = " × ".join([str(x) for x in values])
-                valuef += f" {_mm}"
+            elif item_type == "DIMENSIONS":
+                value = values
+                if fmt_str:
+                    value = " × ".join([str(x) for x in values])
+                    value = f"{value} {_mm}"
 
             elif item_type == "RING_SIZE":
                 dia, size_format = values
                 cir = dia * pi
 
                 if size_format == "DIA":
-                    valuef = f"{dia} {_mm}"
+                    value = dia
+                    if fmt_str:
+                        value = f"{value} {_mm}"
                 elif size_format == "CIR":
-                    valuef = f"{round(cir, 2)} {_mm}"
+                    value = round(cir, 2)
+                    if fmt_str:
+                        value = f"{value} {_mm}"
                 else:
-                    valuef = ringsizelib.to_size_fmt(cir, size_format)
-                    if valuef is None:
-                        valuef = "[NO CORRESPONDING SIZE]"
+                    value = ringsizelib.to_size_fmt(cir, size_format)
+                    if fmt_str and value is None:
+                        value = "[NO CORRESPONDING SIZE]"
 
-            notes_fmt.append((name, valuef))
+            entries_fmt.append((item_type, name, value))
 
-        Report.notes = notes_fmt
+        Report.entries = entries_fmt

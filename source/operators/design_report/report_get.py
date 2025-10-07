@@ -12,33 +12,35 @@ from . import report_warn
 
 
 class _Data:
-    __slots__ = "warnings", "metadata", "gems", "materials", "notes"
+    __slots__ = "warnings", "metadata", "gems", "entries"
 
     def __init__(self):
+        self.gems = collections.defaultdict(int)
         self.warnings = []
         self.metadata = []
-        self.gems = collections.defaultdict(int)
-        self.materials = []
-        self.notes = []
+        self.entries = []
 
     def is_empty(self):
-        if any((self.gems, self.materials, self.notes)):
+        if any((self.gems, self.entries)):
             return False
         return True
 
     def asdict(self):
-        d = {}
+        d = collections.defaultdict(list)
 
         for prop in self.__slots__:
             if not (value := getattr(self, prop)):
                 continue
 
-            if prop == "gems":
-                d[prop] = [x._asdict() for x in value]
-            elif prop == "warnings":
+            if prop == "warnings":
                 d[prop] = value
-            else:
+            elif prop == "metadata":
                 d[prop] = tuple((k, v) for k, v in value)
+            elif prop == "gems":
+                d[prop] = [x._asdict() for x in value]
+            else:
+                for i, k, v in value:
+                    d[i.lower()].append((k, v))
 
         return d
 
@@ -116,16 +118,19 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
             dim = Scale.from_scene(BBox.dimensions)
 
         if item.type == "WEIGHT":
-            density = unit.convert_cm3_mm3(item.material_density)
             vol = Scale.from_scene_vol(mesh.est_volume(obs))
-            Report.materials.append((item.name, density, vol))
+            density = unit.convert_cm3_mm3(item.material_density)
+            Report.entries.append((item.type, item.name, (vol, density)))
+        elif item.type == "VOLUME":
+            vol = Scale.from_scene_vol(mesh.est_volume(obs))
+            Report.entries.append((item.type, item.name, vol))
+        elif item.type == "RING_SIZE":
+            values = (round(dim[int(item.axis)], 2), item.ring_size)
+            Report.entries.append((item.type, item.name, values))
         elif item.type == "DIMENSIONS":
             values = tuple(round(v, 2) for k, v in zip((item.x, item.y, item.z), dim) if k)
             if not values:
                 continue
-            Report.notes.append((item.type, item.name, values))
-        elif item.type == "RING_SIZE":
-            values = (round(dim[int(item.axis)], 2), item.ring_size)
-            Report.notes.append((item.type, item.name, values))
+            Report.entries.append((item.type, item.name, values))
 
     return Report
