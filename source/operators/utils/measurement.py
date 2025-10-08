@@ -15,6 +15,8 @@ class WM_OT_ul_measurements_add(Operator):
     bl_idname = "wm.jewelcraft_ul_measurements_add"
     bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
+    meta_name: StringProperty(name="Name", options={"SKIP_SAVE"})
+    meta_value: StringProperty(name="Value", options={"SKIP_SAVE"})
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
     object_name: StringProperty(name="Object", options={"SKIP_SAVE"})
     type: EnumProperty(
@@ -76,6 +78,9 @@ class WM_OT_ul_measurements_add(Operator):
         layout.separator()
 
         if self.type == "METADATA":
+            layout.prop(self, "meta_name")
+            layout.prop(self, "meta_value")
+            layout.separator()
             return
 
         col = layout.column()
@@ -109,8 +114,9 @@ class WM_OT_ul_measurements_add(Operator):
         item.datablock_type = self.datablock_type
 
         if self.type == "METADATA":
-            item.name = "..."
-            item.value = "..."
+            item.name = self.meta_name
+            item.value = self.meta_value
+            context.area.tag_redraw()
             return {"FINISHED"}
 
         if self.datablock_type == "OBJECT" and self.object_name:
