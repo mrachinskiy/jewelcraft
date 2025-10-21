@@ -24,7 +24,6 @@ def _execute(dummy):
     wm_props = bpy.context.window_manager.jewelcraft
     wm_props.gem_colors.deserialize()
     wm_props.asset_libs.deserialize(is_on_load=True)
-    wm_props.report_metadata.deserialize()
 
 
 def _load_weighting_mats():

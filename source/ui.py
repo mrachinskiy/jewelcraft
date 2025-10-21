@@ -66,14 +66,6 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
             layout.prop(item, "value", text="", emboss=False)
 
 
-class VIEW3D_UL_jewelcraft_metadata(UIList):
-
-    def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
-        row = layout.split(factor=0.25, align=True)
-        row.prop(item, "name", text="", emboss=False)
-        row.prop(item, "value", text="", emboss=False)
-
-
 class VIEW3D_UL_jewelcraft_asset_libs(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
@@ -819,38 +811,6 @@ def prefs_ui(self, context):
         sub = row.row()
         sub.enabled = self.report_use_preview
         sub.prop(self, "report_preview_resolution", text="")
-
-        panel.separator()
-
-        row = panel.row()
-        row.use_property_split = False
-        row.prop(self, "report_use_metadata", text="Metadata")
-
-        col = panel.column()
-        col.active = self.report_use_metadata
-        row = col.row()
-
-        col = row.column()
-        col.template_list(
-            "VIEW3D_UL_jewelcraft_metadata",
-            "",
-            wm_props.report_metadata,
-            "coll",
-            wm_props.report_metadata,
-            "index",
-            rows=4,
-        )
-
-        col = row.column(align=True)
-        col.operator("wm.jewelcraft_ul_add", text="", icon="ADD").prop = "report_metadata"
-        col.operator("wm.jewelcraft_ul_del", text="", icon="REMOVE").prop = "report_metadata"
-        col.separator()
-        op = col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_UP")
-        op.prop = "report_metadata"
-        op.move_up = True
-        col.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "report_metadata"
-
-        panel.separator()
 
     if (panel := _prop_panel(main, wm_props, "prefs_show_themes")):
         panel.label(text="Spacing Overlay")
