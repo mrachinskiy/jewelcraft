@@ -7,7 +7,7 @@
             "stone": "Diamond",
             "cut": "Round",
             "color": "Colorless",
-            "size": "1.5",
+            "size": 1.5,
             "ct": 0.012,
             "qty": 2,
             "ct_sum": 0.024
@@ -16,7 +16,7 @@
             "stone": "Diamond",
             "cut": "Round",
             "color": "Colorless",
-            "size": "1.25",
+            "size": 1.25,
             "ct": 0.007,
             "qty": 4,
             "ct_sum": 0.028
@@ -25,7 +25,7 @@
             "stone": "Diamond",
             "cut": "Round",
             "color": "Colorless",
-            "size": "1.0",
+            "size": 1.0,
             "ct": 0.004,
             "qty": 8,
             "ct_sum": 0.032
@@ -34,38 +34,47 @@
             "stone": "Ruby",
             "cut": "Round",
             "color": "Red",
-            "size": "5.0",
+            "size": 5.0,
             "ct": 0.531,
             "qty": 1,
             "ct_sum": 0.531
         }
     ],
-    "materials": [
+    "weight": [
         [
             "Gold",
-            "0.93 g"
+            0.93
         ],
         [
             "Silver",
-            "0.62 g"
+            0.62
         ]
     ],
-    "notes": [
+    "ring_size": [
         [
             "Ring Size (US)",
             4.5
         ],
         [
-            "Ring Size (DIA)",
-            "15.29 mm"
+            "Ring Size (DIAMETER)",
+            15.29
+        ]
+    ],
+    "dimensions": [
+        [
+            "Cube Dimensions",
+            [
+                3.0,
+                4.0,
+                5.0
+            ]
         ],
         [
             "Cube Dimensions",
-            "3.0 × 4.0 × 5.0 mm"
-        ],
-        [
-            "Cube Dimensions",
-            "3.0 × 4.0 mm"
+            [
+                3.0,
+                4.0
+            ]
         ]
     ]
 }
