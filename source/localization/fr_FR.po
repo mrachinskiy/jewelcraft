@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.18.0\n"
-"POT-Creation-Date: 2025-04-17\n"
+"POT-Creation-Date: 2025-10-21\n"
 "PO-Revision-Date: 2025-01-15\n"
 "Last-Translator: jrbr43\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -239,6 +239,9 @@ msgid "Wedge"
 msgstr ""
 
 msgid "Keep Z Direction"
+msgstr ""
+
+msgid "Factory Settings"
 msgstr ""
 
 msgid "Open add-on preferences window"
@@ -489,9 +492,6 @@ msgstr "Définir la liste de matériaux importée par défaut"
 
 msgid "Include viewport preview image in report"
 msgstr "Inclure l'image de prévisualisation de la fenêtre de visualisation dans le rapport"
-
-msgid "Include metadata in report"
-msgstr "Inclure les métadonnées dans le rapport"
 
 msgid "WARNING"
 msgstr "AVERTISSEMENT"
@@ -943,6 +943,14 @@ msgstr "Effacer la liste"
 msgctxt "Operator"
 msgid "Add New Material"
 msgstr "Ajouter un nouveau matériau"
+
+msgctxt "Operator"
+msgid "Save As Default"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Load Default"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Overlapping"

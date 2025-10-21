@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.18.0\n"
-"POT-Creation-Date: 2025-04-17\n"
+"POT-Creation-Date: 2025-10-21\n"
 "PO-Revision-Date: 2023-12-17\n"
 "Last-Translator: Di Chen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -240,6 +240,9 @@ msgstr "插入"
 
 msgid "Keep Z Direction"
 msgstr "保持Z方向"
+
+msgid "Factory Settings"
+msgstr ""
 
 msgid "Open add-on preferences window"
 msgstr ""
@@ -489,9 +492,6 @@ msgstr "设置默认导入的材质列表"
 
 msgid "Include viewport preview image in report"
 msgstr "在报告中包括视口预览图像"
-
-msgid "Include metadata in report"
-msgstr "在报表中包括元数据"
 
 msgid "WARNING"
 msgstr "警告"
@@ -943,6 +943,14 @@ msgstr "清空列表"
 msgctxt "Operator"
 msgid "Add New Material"
 msgstr "添加新材料"
+
+msgctxt "Operator"
+msgid "Save As Default"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Load Default"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Overlapping"
