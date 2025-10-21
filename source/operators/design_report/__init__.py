@@ -54,11 +54,6 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         default=512,
         subtype="PIXEL",
     )
-    use_metadata: BoolProperty(
-        name="Metadata",
-        description="Include metadata in report",
-        default=True,
-    )
     show_warnings: BoolProperty(
         name="Warnings",
         default=True,
@@ -83,7 +78,6 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         sub.enabled = self.use_preview
         sub.prop(self, "preview_resolution", text="")
 
-        layout.prop(self, "use_metadata")
         layout.prop(self, "show_warnings")
 
     def execute(self, context):
@@ -91,7 +85,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
         from ...lib import gettext
         from . import html_doc, report_fmt, report_get
 
-        Report = report_get.data_collect(show_warnings=self.show_warnings, show_metadata=self.use_metadata)
+        Report = report_get.data_collect(show_warnings=self.show_warnings)
 
         if Report.is_empty():
             self.report({"ERROR"}, "Nothing to report")
@@ -127,7 +121,6 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
             self.report_lang = prefs.report_lang
             self.use_preview = prefs.report_use_preview
             self.preview_resolution = prefs.report_preview_resolution
-            self.use_metadata = prefs.report_use_metadata
             self.file_format = prefs.file_format
 
         if bpy.data.is_saved:

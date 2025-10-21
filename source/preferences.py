@@ -47,10 +47,6 @@ def upd_color_name(self, context=None):
     wm_props["gem_color_name"] = _(color.name)
 
 
-def upd_serialize_metadata(self, context):
-    context.window_manager.jewelcraft.report_metadata.serialize()
-
-
 _folder_cache = {}
 
 
@@ -269,14 +265,6 @@ class Measurement(PropertyGroup):
             self.axis = str("XYZ".index(axis))
 
 
-class Metadata(PropertyGroup):
-    name: StringProperty(default="...", update=upd_serialize_metadata)
-    value: StringProperty(default="...", update=upd_serialize_metadata)
-
-    def asdict(self) -> dict[str, str]:
-        return dict(self)
-
-
 class AssetLib(PropertyGroup):
     name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
     path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
@@ -447,24 +435,6 @@ class MeasurementsList(ListProperty, PropertyGroup):
         return Path(prefs.config_dir) / "report_entries.json"
 
 
-class MetadataList(ListProperty, PropertyGroup):
-    coll: CollectionProperty(type=Metadata)
-
-    def deserialize(self) -> None:
-        if self.coll:
-            return
-
-        if not (filepath := self.serialize_path()).exists():
-            filepath = var.METADATA_FILEPATH
-
-        self.clear()
-        self._deserialize(filepath)
-
-    def serialize_path(self) -> Path:
-        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        return Path(prefs.config_dir) / "report_metadata.json"
-
-
 class AssetLibsList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_folder_list)
     coll: CollectionProperty(type=AssetLib)
@@ -603,11 +573,6 @@ class Preferences(ReportLangEnum, AddonPreferences):
         default=512,
         subtype="PIXEL",
     )
-    report_use_metadata: BoolProperty(
-        name="Metadata",
-        description="Include metadata in report",
-        default=True,
-    )
     gem_map_fontsize_table: IntProperty(
         name="Gem Table",
         default=19,
@@ -715,7 +680,6 @@ class WmProperties(PropertyGroup):
     asset_show_favs: BoolProperty(name="Favorites")
     asset_libs: PointerProperty(type=AssetLibsList)
     sizes: PointerProperty(type=SizeList)
-    report_metadata: PointerProperty(type=MetadataList)
 
 
 # Scene properties

@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import collections
-from collections.abc import Iterator
 from pathlib import Path
 
 import bpy
@@ -45,15 +44,7 @@ class _Data:
         return d
 
 
-def _iter_metadata() -> Iterator[tuple[str, str]]:
-    for item in bpy.context.window_manager.jewelcraft.report_metadata.coll:
-        yield item.name, item.value
-    for item in bpy.context.scene.jewelcraft.measurements.coll:
-        if item.type == "METADATA":
-            yield item.name, item.value
-
-
-def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadata: bool = True) -> _Data:
+def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
     Report = _Data()
     Warn = report_warn.Warnings()
     Scale = unit.Scale()
@@ -82,24 +73,22 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True, show_metadat
     if gem_map:
         return Report
 
-    # Metadata
+    # Entries
     # ---------------------------
 
-    if show_metadata:
-        import datetime
-        date = datetime.date.today().isoformat()
-        filename = Path(bpy.data.filepath).stem
+    import datetime
 
-        for meta_name, meta_value in _iter_metadata():
-            meta_value = meta_value.format(FILENAME=filename, DATE=date)
-            if not meta_value or meta_value == "...":
-                continue
-            Report.metadata.append((meta_name, meta_value))
-
-    # Measurements
-    # ---------------------------
+    date = datetime.date.today().isoformat()
+    filename = Path(bpy.data.filepath).stem.replace("_", " ")
 
     for item in bpy.context.scene.jewelcraft.measurements.coll:
+
+        if item.type == "METADATA":
+            meta_value = item.value.format(FILENAME=filename, DATE=date)
+            if not meta_value:
+                continue
+            Report.metadata.append((item.name, meta_value))
+            continue
 
         if item.collection is None and item.object is None:
             continue
