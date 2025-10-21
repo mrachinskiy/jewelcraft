@@ -60,7 +60,7 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
         is_meta = item.type == "METADATA"
-        layout.alert = not is_meta and item.collection is None and item.object is None
+        layout.alert = not item.value if is_meta else item.collection is None and item.object is None
         layout.prop(item, "name", text="", emboss=False, icon=self.icons.get(item.type, "BLANK1"))
         if is_meta:
             layout.prop(item, "value", text="", emboss=False)
@@ -197,6 +197,17 @@ class VIEW3D_MT_jewelcraft_weighting_mats(Menu):
         layout.separator()
         layout.prop(props, "weighting_show_composition")
         layout.prop(props, "weighting_show_density")
+
+
+class VIEW3D_MT_jewelcraft_measurements(Menu):
+    bl_label = ""
+
+    def draw(self, context):
+        layout = self.layout
+        layout.operator("scene.jewelcraft_ul_clear", icon="X").prop = "measurements"
+        layout.separator()
+        layout.operator("wm.jewelcraft_ul_measurements_load")
+        layout.operator("wm.jewelcraft_ul_measurements_save")
 
 
 # Popovers
@@ -660,12 +671,14 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
             "coll",
             measures_list,
             "index",
-            rows=3,
+            rows=5,
         )
 
         col = row.column(align=True)
         col.operator("wm.jewelcraft_ul_measurements_add", text="", icon="ADD")
         col.operator("scene.jewelcraft_ul_del", text="", icon="REMOVE").prop = "measurements"
+        col.separator()
+        col.menu("VIEW3D_MT_jewelcraft_measurements", icon="DOWNARROW_HLT")
         col.separator()
         op = col.operator("scene.jewelcraft_ul_move", text="", icon="TRIA_UP")
         op.prop = "measurements"
@@ -699,7 +712,7 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
                 col.prop(item, "z")
             elif item.type == "RING_SIZE":
                 layout.prop(item, "ring_size")
-                layout.prop(item, "axis", expand=True)
+                layout.row().prop(item, "axis", expand=True)
 
 
 # Preferences
