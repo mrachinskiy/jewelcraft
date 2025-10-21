@@ -221,6 +221,53 @@ class Measurement(PropertyGroup):
     material_density: FloatProperty()
     value: StringProperty()
 
+    def asdict(self):
+        d = {
+            "type": self.type,
+            "name": self.name,
+        }
+
+        if self.type != "METADATA":
+            d["datablock_type"] = self.datablock_type
+
+        if self.type == "METADATA":
+            d["value"] = self.value
+        elif self.type == "WEIGHT":
+            d["value"] = round(self.material_density, 2)
+        elif self.type == "DIMENSIONS":
+            d["value"] = self.x, self.y, self.z
+        elif self.type == "RING_SIZE":
+            d["value"] = self.ring_size, "XYZ"[int(self.axis)]
+
+        return d
+
+    def fromdict(self, item):
+        d = {
+            "type": "METADATA",
+            "name": "Untitled",
+            "datablock_type": "OBJECT",
+            "value": "",
+        }
+        d |= item
+
+        self.type = d["type"]
+        self.name = d["name"]
+
+        if self.type != "METADATA":
+            self.datablock_type = d["datablock_type"]
+
+        if self.type == "METADATA":
+            self.value = d["value"]
+        elif self.type == "WEIGHT":
+            self.material_name = d["name"]
+            self.material_density = d["value"]
+        elif self.type == "DIMENSIONS":
+            self.x, self.y, self.z = d["value"]
+        elif self.type == "RING_SIZE":
+            fmt, axis = d["value"]
+            self.ring_size = fmt
+            self.axis = str("XYZ".index(axis))
+
 
 class Metadata(PropertyGroup):
     name: StringProperty(default="...", update=upd_serialize_metadata)
@@ -378,6 +425,26 @@ class WeightingMaterialsList(ListProperty, PropertyGroup):
 
 class MeasurementsList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=Measurement)
+
+    def deserialize(self, load_factory=False) -> None:
+        import json
+
+        if load_factory or not (filepath := self.serialize_path()).exists():
+            filepath = var.ENTRIES_FILEPATH
+
+        with open(filepath, "r", encoding="utf-8") as file:
+            self.clear()
+            data = json.load(file)
+
+            for data_item in data:
+                item = self.add()
+                item.fromdict(data_item)
+
+            self["index"] = 0
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "report_entries.json"
 
 
 class MetadataList(ListProperty, PropertyGroup):
