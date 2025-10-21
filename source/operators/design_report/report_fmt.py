@@ -93,11 +93,11 @@ def data_format(Report, _: Callable[[str], str], fmt_str: bool) -> None:
                 dia, size_format = values
                 cir = dia * pi
 
-                if size_format == "DIA":
+                if size_format == "DIAMETER":
                     value = dia
                     if fmt_str:
                         value = f"{value} {_mm}"
-                elif size_format == "CIR":
+                elif size_format == "CIRCUMFERENCE":
                     value = round(cir, 2)
                     if fmt_str:
                         value = f"{value} {_mm}"

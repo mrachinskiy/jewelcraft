@@ -39,8 +39,8 @@ class WM_OT_ul_measurements_add(Operator):
     ring_size: EnumProperty(
         name="Format",
         items=(
-            ("DIA", "Diameter", ""),
-            ("CIR", "Circumference", ""),
+            ("DIAMETER", "Diameter", ""),
+            ("CIRCUMFERENCE", "Circumference", ""),
             ("US", "USA", ""),
             ("UK", "Britain", ""),
             ("CH", "Swiss", ""),
