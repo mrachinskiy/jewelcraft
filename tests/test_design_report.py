@@ -55,7 +55,7 @@ def set_up() -> None:
     _entry("WEIGHT", cube, name="Gold", density=15.53)
     _entry("WEIGHT", cube, name="Silver", density=10.36)
     _entry("RING_SIZE", curve, size_format="US")
-    _entry("RING_SIZE", curve, size_format="DIA")
+    _entry("RING_SIZE", curve, size_format="DIAMETER")
     _entry("DIMENSIONS", cube, z=True)
     _entry("DIMENSIONS", cube, z=False)
 
