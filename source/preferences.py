@@ -260,9 +260,12 @@ class Measurement(PropertyGroup):
         elif self.type == "DIMENSIONS":
             self.x, self.y, self.z = d["value"]
         elif self.type == "RING_SIZE":
-            fmt, axis = d["value"]
-            self.ring_size = fmt
-            self.axis = str("XYZ".index(axis))
+            try:
+                fmt, axis = d["value"]
+                self.ring_size = fmt
+                self.axis = {"X": "0", "Y": "1", "Z": "2"}.get(axis, "0")
+            except TypeError:
+                pass
 
 
 class AssetLib(PropertyGroup):
