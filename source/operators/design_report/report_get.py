@@ -79,14 +79,26 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
     import datetime
 
     date = datetime.date.today().isoformat()
-    filename = Path(bpy.data.filepath).stem.replace("_", " ")
+    filename = Path(bpy.data.filepath).stem
+    meta_templates = {
+        "blend_name": filename,
+        "date": date,
+        # Legacy
+        "FILENAME": filename,
+        "DATE": date,
+    }
 
     for item in bpy.context.scene.jewelcraft.measurements.coll:
 
         if item.type == "METADATA":
-            meta_value = item.value.format(FILENAME=filename, DATE=date)
+            try:
+                meta_value = item.value.format(**meta_templates)
+            except KeyError:
+                meta_value = "ERROR"
+
             if not meta_value:
                 continue
+
             Report.metadata.append((item.name, meta_value))
             continue
 
