@@ -63,7 +63,7 @@ class VIEW3D_UL_jewelcraft_measurements(UIList):
         layout.alert = not item.value if is_meta else item.collection is None and item.object is None
         layout.prop(item, "name", text="", emboss=False, icon=self.icons.get(item.type, "BLANK1"))
         if is_meta:
-            layout.prop(item, "value", text="", emboss=False)
+            layout.prop(item, "value", text="", emboss=layout.alert)
 
 
 class VIEW3D_UL_jewelcraft_asset_libs(UIList):
