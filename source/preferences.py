@@ -417,8 +417,11 @@ class WeightingMaterialsList(ListProperty, PropertyGroup):
 class MeasurementsList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=Measurement)
 
-    def deserialize(self, load_factory=False) -> None:
+    def deserialize(self, is_on_load=False, load_factory=False) -> None:
         import json
+
+        if is_on_load and self.coll:
+            return
 
         if load_factory or not (filepath := self.serialize_path()).exists():
             filepath = var.ENTRIES_FILEPATH

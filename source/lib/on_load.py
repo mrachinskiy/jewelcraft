@@ -20,7 +20,7 @@ def _execute(dummy):
     var.config_naming_versioning()
 
     _load_weighting_mats()
-    bpy.context.scene.jewelcraft.measurements.deserialize()
+    bpy.context.scene.jewelcraft.measurements.deserialize(is_on_load=True)
     wm_props = bpy.context.window_manager.jewelcraft
     wm_props.gem_colors.deserialize()
     wm_props.asset_libs.deserialize(is_on_load=True)
