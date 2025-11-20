@@ -26,6 +26,12 @@ class VIEW3D_UL_jewelcraft_gem_colors(UIList):
             row.prop(item, "name", text="", emboss=False)
 
 
+class VIEW3D_UL_jewelcraft_gem_map_colors(UIList):
+
+    def draw_item(self, context, layout: UILayout, data, item, icon, active_data, active_propname):
+        layout.prop(item, "color", text="")
+
+
 class VIEW3D_UL_jewelcraft_material_list(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname):
@@ -819,7 +825,42 @@ def prefs_ui(self, context):
         col.prop(self, "overlay_linewidth")
         col.prop(self, "overlay_fontsize_distance")
 
-        panel.label(text="Gem Map Font Size")
+        panel.label(text="Gem Map Overlay")
+
+        panel.label(text="Palette")
+        col = panel.column()
+        row = col.row(align=True)
+        row.operator("wm.jewelcraft_ul_gem_map_palette_generate", text="", icon="COLOR")
+        row.separator()
+        row.operator("wm.jewelcraft_ul_add", text="", icon="ADD").prop = "gem_map_palette"
+        row.operator("wm.jewelcraft_ul_del", text="", icon="REMOVE").prop = "gem_map_palette"
+        row.separator()
+        op = row.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_LEFT")
+        op.prop = "gem_map_palette"
+        op.move_up = True
+        row.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_RIGHT").prop = "gem_map_palette"
+        row.separator()
+        row.operator("wm.jewelcraft_ul_clear", text="", icon="X").prop = "gem_map_palette"
+        row.separator()
+        row.operator("wm.jewelcraft_ul_palette_load", text="", icon="IMPORT")
+        row.operator("wm.jewelcraft_ul_palette_save", text="", icon="FILE_TICK")
+
+        row = col.row(align=True)
+        sub = col.row(align=True)
+        sub.scale_y = 0.7
+        for i, item in enumerate(wm_props.gem_map_palette.coll):
+            row.prop(item, "color", text="")
+
+            if i == wm_props.gem_map_palette.index:
+                icon = "RADIOBUT_ON"
+            else:
+                icon = "RADIOBUT_OFF"
+
+            sub.label()
+            sub.operator("wm.jewelcraft_ul_gem_map_palette_set_active", text="", icon=icon, emboss=False).index = i
+            sub.label()
+
+        panel.label(text="Font Size")
         col = panel.column()
         col.prop(self, "gem_map_fontsize_table")
         col.prop(self, "gem_map_fontsize_gem_size")

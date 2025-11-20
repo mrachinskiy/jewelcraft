@@ -144,6 +144,21 @@ class GemColor(PropertyGroup):
         }
 
 
+class PaletteColor(PropertyGroup):
+    color: FloatVectorProperty(
+        name="Color",
+        default=(1.0, 1.0, 1.0),
+        size=3,
+        min=0.0,
+        max=1.0,
+        subtype="COLOR",
+    )
+
+    def asdict(self) -> str:
+        from .lib import colorlib
+        return colorlib.rbg_to_hex(self.color)
+
+
 class WeightingMaterial(PropertyGroup):
     enabled: BoolProperty(description="Enable material for weighting display", default=True)
     name: StringProperty(default="Untitled")
@@ -387,6 +402,52 @@ class GemColorsList(ListProperty, PropertyGroup):
     def serialize_path(self) -> Path:
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
         return Path(prefs.config_dir) / "gem_colors.json"
+
+
+class PaletteList(ListProperty, PropertyGroup):
+    index: IntProperty()
+    coll: CollectionProperty(type=PaletteColor)
+
+    def iterate(self) -> tuple[float, float, float]:
+        from mathutils import Color
+
+        for item in self.coll:
+            yield item.color
+
+        for item in self.coll:
+            color = Color(item.color)
+            color.s *= 0.5
+            yield color
+
+        while True:
+            yield (1.0, 1.0, 1.0)
+
+    def serialize(self) -> None:
+        """Avoid serializing on add/remove list items"""
+        pass
+
+    def serialize_palette(self) -> None:
+        return super().serialize()
+
+    def deserialize(self) -> None:
+        self.clear()
+
+        if (filepath := self.serialize_path()).exists():
+            import json
+            from .lib import colorlib
+
+            with open(filepath, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                for data_item in data:
+                    item = self.add()
+                    item.color = colorlib.hex_to_rgb(data_item)
+            return
+
+        bpy.ops.wm.jewelcraft_ul_gem_map_palette_generate()
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "gem_map_palette.json"
 
 
 class WeightingMaterialsList(ListProperty, PropertyGroup):
@@ -647,6 +708,7 @@ class WmProperties(PropertyGroup):
     prefs_show_design_report: BoolProperty(name="Design Report")
     prefs_show_themes: BoolProperty(name="Themes")
     gem_colors: PointerProperty(type=GemColorsList)
+    gem_map_palette: PointerProperty(type=PaletteList)
     gem_color: FloatVectorProperty(
         name="Color",
         default=(1.0, 1.0, 1.0),
