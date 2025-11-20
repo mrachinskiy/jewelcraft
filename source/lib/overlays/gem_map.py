@@ -61,11 +61,9 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False)
     region = context.region
     region_3d = context.space_data.region_3d
     depsgraph = context.evaluated_depsgraph_get()
+    palette_iter = context.window_manager.jewelcraft.gem_map_palette.iterate()
     from_scene = unit.Scale().from_scene
     mat_sca = Matrix.Diagonal((1.003, 1.003, 1.003)).to_4x4()
-    color_var = Color((0.85, 0.35, 0.35))
-    white = (1.0, 1.0, 1.0)
-    black = (0.0, 0.0, 0.0)
     gems = set()
     gem_map = {}
 
@@ -115,22 +113,14 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False)
         # ---------------------------
 
         if use_mat_color:
-
             if gem[3]:
                 color = (*[linear_to_srgb(x) for x in bpy.data.materials[gem[3]].diffuse_color[:3]], opacity)
             else:
                 color = (1.0, 1.0, 1.0, 0.0)
-
         else:
+            color = (*next(palette_iter), opacity)
 
-            color = (*color_var, opacity)
-            color_var.h += 0.15
-
-            if color_var.h == 0.0:
-                color_var.s += 0.1
-                color_var.v -= 0.15
-
-        color_font = white if luma(color) < 0.4 else black
+        color_font = (1.0, 1.0, 1.0) if luma(color) < 0.4 else (0.0, 0.0, 0.0)
 
         # Size
         # ---------------------------
