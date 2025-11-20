@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.18.0\n"
-"POT-Creation-Date: 2025-10-21\n"
+"Project-Id-Version: JewelCraft 2.19.0\n"
+"POT-Creation-Date: 2025-11-20\n"
 "PO-Revision-Date: 2025-01-15\n"
 "Last-Translator: jrbr43\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -242,6 +242,21 @@ msgid "Keep Z Direction"
 msgstr ""
 
 msgid "Factory Settings"
+msgstr ""
+
+msgid "Generate color palette"
+msgstr ""
+
+msgid "Hue Range"
+msgstr ""
+
+msgid "Color Range"
+msgstr ""
+
+msgid "Palette Size"
+msgstr ""
+
+msgid "Limited"
 msgstr ""
 
 msgid "Open add-on preferences window"
@@ -1006,4 +1021,8 @@ msgstr "Importer"
 
 msgctxt "Operator"
 msgid "Set Default"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Generate Palette"
 msgstr ""
