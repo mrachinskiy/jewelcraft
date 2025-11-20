@@ -197,7 +197,7 @@ class WM_OT_ul_measurements_save(Operator):
     bl_label = "Save As Default"
     bl_description = "Save as default"
     bl_idname = "wm.jewelcraft_ul_measurements_save"
-    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
+    bl_options = {"INTERNAL"}
 
     def execute(self, context):
         context.scene.jewelcraft.measurements.serialize()
