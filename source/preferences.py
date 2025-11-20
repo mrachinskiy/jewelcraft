@@ -139,8 +139,8 @@ class GemColor(PropertyGroup):
         from .lib import colorlib
 
         return {
-            "name": self.name,
             "color": colorlib.rbg_to_hex(self.color),
+            "name": self.name,
         }
 
 
@@ -448,13 +448,8 @@ class AssetLibsList(ListProperty, PropertyGroup):
     def path(self) -> Path:
         return Path(self.active_item().path)
 
-    def deserialize(self, is_on_load=False) -> None:
-        filepath = self.serialize_path()
-
-        if is_on_load and self.coll:
-            return
-
-        if filepath.exists():
+    def deserialize(self) -> None:
+        if (filepath := self.serialize_path()).exists():
             self.clear()
             self._deserialize(filepath)
 
