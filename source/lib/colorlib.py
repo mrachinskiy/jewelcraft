@@ -4,7 +4,9 @@
 
 def hex_to_rgb(v: str | int) -> tuple[float, float, float]:
     if isinstance(v, str):
-        v = int(v[1:], base=16)
+        if v[0] == "#":
+            v = v[1:]
+        v = int(v, base=16)
 
     return (
         _srgb_to_linear((v >> 16) & 255),
@@ -15,7 +17,7 @@ def hex_to_rgb(v: str | int) -> tuple[float, float, float]:
 
 def rbg_to_hex(rgb: tuple[float, float, float]) -> str:
     r, g, b = [int(linear_to_srgb(v) * 255 + 0.5) for v in rgb]
-    return f"#{r:02X}{g:02X}{b:02X}"
+    return f"{r:02x}{g:02x}{b:02x}"
 
 
 def _srgb_to_linear(v: int) -> float:
