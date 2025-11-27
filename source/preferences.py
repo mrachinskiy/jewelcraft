@@ -354,7 +354,7 @@ class ListProperty:
         with open(filepath, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
-    def _deserialize(self, filepath: Path, fmt: Callable = lambda k, v: v, is_builtin=False) -> None:
+    def _deserialize(self, filepath: Path, fmt: Callable = lambda k, v: v, is_builtin=False, check_data: Callable = lambda x: False) -> bool:
         import json
 
         with open(filepath, "r", encoding="utf-8") as file:
@@ -368,6 +368,8 @@ class ListProperty:
                     item["builtin"] = True
 
             self["index"] = 0
+
+            return check_data(data)
 
     def serialize_path(self) -> Path:
         ...
@@ -393,11 +395,17 @@ class GemColorsList(ListProperty, PropertyGroup):
                 return colorlib.hex_to_rgb(v)
             return v
 
+        def _check_hash_sign(data):
+            for item in data:
+                return item["color"][0] == "#"
+
         self.clear()
         self._deserialize(var.GEM_ASSET_DIR / "colors.json", fmt=_hex_to_rgb, is_builtin=True)
 
         if (filepath := self.serialize_path()).exists():
-            self._deserialize(filepath, fmt=_hex_to_rgb)
+            hash_sign = self._deserialize(filepath, fmt=_hex_to_rgb, check_data=_check_hash_sign)
+            if hash_sign:  # JC VER <= 2.17 remove hash
+                self.serialize()
 
     def serialize_path(self) -> Path:
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
