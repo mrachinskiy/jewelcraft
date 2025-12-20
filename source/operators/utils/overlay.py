@@ -263,7 +263,7 @@ class WM_OT_ul_palette_save(Operator):
     bl_options = {"INTERNAL"}
 
     def execute(self, context):
-        context.window_manager.jewelcraft.gem_map_palette.serialize_palette()
+        context.window_manager.jewelcraft.gem_map_palette.serialize()
         return {"FINISHED"}
 
     def invoke(self, context, event):
