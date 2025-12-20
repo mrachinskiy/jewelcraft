@@ -819,16 +819,20 @@ def prefs_ui(self, context):
         sub.prop(self, "report_preview_resolution", text="")
 
     if (panel := _prop_panel(main, wm_props, "prefs_show_themes")):
-        panel.label(text="Spacing Overlay")
-        col = panel.column()
+        box = panel.box()
+        box.label(text="Spacing Overlay")
+        col = box.column()
         col.prop(self, "overlay_color")
         col.prop(self, "overlay_linewidth")
         col.prop(self, "overlay_fontsize_distance")
 
-        panel.label(text="Gem Map Overlay")
+        panel.separator()
 
-        panel.label(text="Palette")
-        col = panel.column()
+        box = panel.box()
+        box.label(text="Gem Map Overlay")
+
+        box.label(text="Palette")
+        col = box.column()
         row = col.row(align=True)
         row.operator("wm.jewelcraft_ul_gem_map_palette_generate", text="", icon="COLOR")
         row.separator()
@@ -849,23 +853,21 @@ def prefs_ui(self, context):
         sub = col.row(align=True)
         sub.scale_y = 0.7
         for i, item in enumerate(wm_props.gem_map_palette.coll):
+            icon = "RADIOBUT_ON" if i == wm_props.gem_map_palette.index else "RADIOBUT_OFF"
             row.prop(item, "color", text="")
-
-            if i == wm_props.gem_map_palette.index:
-                icon = "RADIOBUT_ON"
-            else:
-                icon = "RADIOBUT_OFF"
-
             sub.label()
             sub.operator("wm.jewelcraft_ul_gem_map_palette_set_active", text="", icon=icon, emboss=False).index = i
             sub.label()
 
-        panel.label(text="Font Size")
-        col = panel.column()
+        box.label(text="Font Size")
+        col = box.column()
         col.prop(self, "gem_map_fontsize_table")
         col.prop(self, "gem_map_fontsize_gem_size")
 
-        panel.label(text="Materials")
-        col = panel.column()
+        panel.separator()
+
+        box = panel.box()
+        box.label(text="Materials")
+        col = box.column()
         col.prop(self, "color_prongs")
         col.prop(self, "color_cutter")
