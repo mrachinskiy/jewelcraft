@@ -191,36 +191,3 @@ class WM_OT_ul_measurements_material_select(Operator):
         dynamic_list.weighting_materials_refresh()
         context.window_manager.invoke_search_popup(self)
         return {"FINISHED"}
-
-
-class WM_OT_ul_measurements_save(Operator):
-    bl_label = "Save As Default"
-    bl_description = "Save as default"
-    bl_idname = "wm.jewelcraft_ul_measurements_save"
-    bl_options = {"INTERNAL"}
-
-    def execute(self, context):
-        context.scene.jewelcraft.measurements.serialize()
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_props_dialog(self)
-
-
-class WM_OT_ul_measurements_load(Operator):
-    bl_label = "Load Default"
-    bl_description = "Load default"
-    bl_idname = "wm.jewelcraft_ul_measurements_load"
-    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
-
-    load_factory: BoolProperty(name="Factory Settings", options={"SKIP_SAVE"})
-
-    def execute(self, context):
-        context.scene.jewelcraft.measurements.deserialize(load_factory=self.load_factory)
-        context.area.tag_redraw()
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_props_dialog(self)

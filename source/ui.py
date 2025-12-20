@@ -204,8 +204,8 @@ class VIEW3D_MT_jewelcraft_measurements(Menu):
         layout = self.layout
         layout.operator("scene.jewelcraft_ul_clear", icon="X").prop = "measurements"
         layout.separator()
-        layout.operator("wm.jewelcraft_ul_measurements_load")
-        layout.operator("wm.jewelcraft_ul_measurements_save")
+        layout.operator("scene.jewelcraft_ul_load").prop = "measurements"
+        layout.operator("scene.jewelcraft_ul_save").prop = "measurements"
 
 
 # Popovers
@@ -846,8 +846,8 @@ def prefs_ui(self, context):
         row.separator()
         row.operator("wm.jewelcraft_ul_clear", text="", icon="X").prop = "gem_map_palette"
         row.separator()
-        row.operator("wm.jewelcraft_ul_palette_load", text="", icon="IMPORT")
-        row.operator("wm.jewelcraft_ul_palette_save", text="", icon="FILE_TICK")
+        row.operator("wm.jewelcraft_ul_load", text="", icon="IMPORT").prop = "gem_map_palette"
+        row.operator("wm.jewelcraft_ul_save", text="", icon="FILE_TICK").prop = "gem_map_palette"
 
         row = col.row(align=True)
         sub = col.row(align=True)

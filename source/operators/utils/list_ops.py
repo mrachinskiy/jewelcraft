@@ -49,6 +49,44 @@ class SCENE_OT_ul_move(Operator):
         return {"FINISHED"}
 
 
+class SCENE_OT_ul_save(Operator):
+    bl_label = "Save As Default"
+    bl_description = "Save as default"
+    bl_idname = "scene.jewelcraft_ul_save"
+    bl_options = {"INTERNAL"}
+
+    prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
+
+    def execute(self, context):
+        ul = getattr(context.scene.jewelcraft, self.prop)
+        ul.serialize()
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+
+class SCENE_OT_ul_load(Operator):
+    bl_label = "Load Default"
+    bl_description = "Load default"
+    bl_idname = "scene.jewelcraft_ul_load"
+    bl_options = {"INTERNAL"}
+
+    prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
+    load_factory: BoolProperty(name="Factory Settings", options={"SKIP_SAVE"})
+
+    def execute(self, context):
+        ul = getattr(context.scene.jewelcraft, self.prop)
+        ul.deserialize(load_factory=self.load_factory)
+        context.area.tag_redraw()
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+
 # Window manager
 # ---------------------------
 
@@ -112,3 +150,41 @@ class WM_OT_ul_move(Operator):
         ul.move(self.move_up)
         ul.serialize_on_change()
         return {"FINISHED"}
+
+
+class WM_OT_ul_save(Operator):
+    bl_label = "Save As Default"
+    bl_description = "Save as default"
+    bl_idname = "wm.jewelcraft_ul_save"
+    bl_options = {"INTERNAL"}
+
+    prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
+
+    def execute(self, context):
+        ul = getattr(context.window_manager.jewelcraft, self.prop)
+        ul.serialize()
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)
+
+
+class WM_OT_ul_load(Operator):
+    bl_label = "Load Default"
+    bl_description = "Load default"
+    bl_idname = "wm.jewelcraft_ul_load"
+    bl_options = {"INTERNAL"}
+
+    prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
+    load_factory: BoolProperty(name="Factory Settings", options={"SKIP_SAVE"})
+
+    def execute(self, context):
+        ul = getattr(context.window_manager.jewelcraft, self.prop)
+        ul.deserialize(load_factory=self.load_factory)
+        context.area.tag_redraw()
+        return {"FINISHED"}
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        return wm.invoke_props_dialog(self)

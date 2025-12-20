@@ -254,34 +254,3 @@ class WM_OT_ul_gem_map_palette_set_active(Operator):
             ul.index = self.index
 
         return {"FINISHED"}
-
-
-class WM_OT_ul_palette_save(Operator):
-    bl_label = "Save As Default"
-    bl_description = "Save as default"
-    bl_idname = "wm.jewelcraft_ul_palette_save"
-    bl_options = {"INTERNAL"}
-
-    def execute(self, context):
-        context.window_manager.jewelcraft.gem_map_palette.serialize()
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_props_dialog(self)
-
-
-class WM_OT_ul_palette_load(Operator):
-    bl_label = "Load Default"
-    bl_description = "Load default"
-    bl_idname = "wm.jewelcraft_ul_palette_load"
-    bl_options = {"INTERNAL"}
-
-    def execute(self, context):
-        context.window_manager.jewelcraft.gem_map_palette.deserialize()
-        context.area.tag_redraw()
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        return wm.invoke_props_dialog(self)
