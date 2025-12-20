@@ -64,7 +64,7 @@ class WM_OT_ul_add(Operator):
     def execute(self, context):
         ul = getattr(context.window_manager.jewelcraft, self.prop)
         ul.add()
-        ul.serialize()
+        ul.serialize_on_change()
         return {"FINISHED"}
 
 
@@ -79,7 +79,7 @@ class WM_OT_ul_del(Operator):
     def execute(self, context):
         ul = getattr(context.window_manager.jewelcraft, self.prop)
         ul.remove()
-        ul.serialize()
+        ul.serialize_on_change()
         return {"FINISHED"}
 
 
@@ -94,7 +94,7 @@ class WM_OT_ul_clear(Operator):
     def execute(self, context):
         ul = getattr(context.window_manager.jewelcraft, self.prop)
         ul.clear()
-        ul.serialize()
+        ul.serialize_on_change()
         return {"FINISHED"}
 
 
@@ -110,5 +110,5 @@ class WM_OT_ul_move(Operator):
     def execute(self, context):
         ul = getattr(context.window_manager.jewelcraft, self.prop)
         ul.move(self.move_up)
-        ul.serialize()
+        ul.serialize_on_change()
         return {"FINISHED"}

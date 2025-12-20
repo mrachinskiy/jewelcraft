@@ -354,6 +354,12 @@ class ListProperty:
         with open(filepath, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
+    def serialize_on_change(self) -> None:
+        ...
+
+    def serialize_path(self) -> Path:
+        ...
+
     def _deserialize(self, filepath: Path, fmt: Callable = lambda k, v: v, is_builtin=False, check_data: Callable = lambda x: False) -> bool:
         import json
 
@@ -371,9 +377,6 @@ class ListProperty:
 
             return check_data(data)
 
-    def serialize_path(self) -> Path:
-        ...
-
 
 class GemColorsList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_color_name)
@@ -384,6 +387,13 @@ class GemColorsList(ListProperty, PropertyGroup):
             if item.name == name:
                 self["index"] = i
                 return item.color
+
+    def serialize_on_change(self) -> None:
+        self.serialize()
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "gem_colors.json"
 
     def deserialize(self) -> None:
         if self.coll:
@@ -407,10 +417,6 @@ class GemColorsList(ListProperty, PropertyGroup):
             if hash_sign:  # JC VER <= 2.17 remove hash
                 self.serialize()
 
-    def serialize_path(self) -> Path:
-        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        return Path(prefs.config_dir) / "gem_colors.json"
-
 
 class PaletteList(ListProperty, PropertyGroup):
     index: IntProperty()
@@ -430,12 +436,9 @@ class PaletteList(ListProperty, PropertyGroup):
         while True:
             yield (1.0, 1.0, 1.0)
 
-    def serialize(self) -> None:
-        """Avoid serializing on add/remove list items"""
-        pass
-
-    def serialize_palette(self) -> None:
-        return super().serialize()
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "gem_map_palette.json"
 
     def deserialize(self) -> None:
         self.clear()
@@ -453,13 +456,16 @@ class PaletteList(ListProperty, PropertyGroup):
 
         bpy.ops.wm.jewelcraft_ul_gem_map_palette_generate()
 
-    def serialize_path(self) -> Path:
-        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        return Path(prefs.config_dir) / "gem_map_palette.json"
-
 
 class WeightingMaterialsList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=WeightingMaterial)
+
+    def serialize_path(self, name: str = "") -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        path = Path(prefs.config_dir) / "weighting_library"
+        if name:
+            return path / f"{name}.json"
+        return path
 
     def deserialize(self, name: str) -> None:
 
@@ -475,16 +481,13 @@ class WeightingMaterialsList(ListProperty, PropertyGroup):
             filepath = bpy.context.scene.jewelcraft.weighting_materials.serialize_path(name)
             self._deserialize(filepath)
 
-    def serialize_path(self, name: str = "") -> Path:
-        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        path = Path(prefs.config_dir) / "weighting_library"
-        if name:
-            return path / f"{name}.json"
-        return path
-
 
 class MeasurementsList(ListProperty, PropertyGroup):
     coll: CollectionProperty(type=Measurement)
+
+    def serialize_path(self) -> Path:
+        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
+        return Path(prefs.config_dir) / "report_entries.json"
 
     def deserialize(self, is_on_load=False, load_factory=False) -> None:
         import json
@@ -505,10 +508,6 @@ class MeasurementsList(ListProperty, PropertyGroup):
 
             self["index"] = 0
 
-    def serialize_path(self) -> Path:
-        prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
-        return Path(prefs.config_dir) / "report_entries.json"
-
 
 class AssetLibsList(ListProperty, PropertyGroup):
     index: IntProperty(update=upd_folder_list)
@@ -517,14 +516,17 @@ class AssetLibsList(ListProperty, PropertyGroup):
     def path(self) -> Path:
         return Path(self.active_item().path)
 
-    def deserialize(self) -> None:
-        if (filepath := self.serialize_path()).exists():
-            self.clear()
-            self._deserialize(filepath)
+    def serialize_on_change(self) -> None:
+        self.serialize()
 
     def serialize_path(self) -> Path:
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
         return Path(prefs.config_dir) / "asset_libraries.json"
+
+    def deserialize(self) -> None:
+        if (filepath := self.serialize_path()).exists():
+            self.clear()
+            self._deserialize(filepath)
 
 
 class SizeList(ListProperty, PropertyGroup):
@@ -547,9 +549,6 @@ class SizeList(ListProperty, PropertyGroup):
             self.index = self.length() - 1
 
         return item
-
-    def serialize(self) -> None:
-        return
 
 
 # Common properties
