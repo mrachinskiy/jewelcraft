@@ -440,10 +440,10 @@ class PaletteList(ListProperty, PropertyGroup):
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
         return Path(prefs.config_dir) / "gem_map_palette.json"
 
-    def deserialize(self) -> None:
+    def deserialize(self, load_factory=False) -> None:
         self.clear()
 
-        if (filepath := self.serialize_path()).exists():
+        if not load_factory and (filepath := self.serialize_path()).exists():
             import json
             from .lib import colorlib
 
