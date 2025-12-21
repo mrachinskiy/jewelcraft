@@ -58,8 +58,7 @@ class SCENE_OT_ul_save(Operator):
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        ul = getattr(context.scene.jewelcraft, self.prop)
-        ul.serialize()
+        getattr(context.scene.jewelcraft, self.prop).serialize()
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -71,7 +70,7 @@ class SCENE_OT_ul_load(Operator):
     bl_label = "Load Default"
     bl_description = "Load default"
     bl_idname = "scene.jewelcraft_ul_load"
-    bl_options = {"INTERNAL"}
+    bl_options = {"REGISTER", "UNDO", "INTERNAL"}
 
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
     load_factory: BoolProperty(name="Factory Settings", options={"SKIP_SAVE"})
