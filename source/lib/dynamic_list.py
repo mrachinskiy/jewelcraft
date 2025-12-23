@@ -82,30 +82,29 @@ def weighting_lib_refresh(self=None, context=None) -> None:
 def weighting_lib() -> None:
     prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
     lib = bpy.context.window_manager.jewelcraft.weighting_lists
+    lib_path = bpy.context.scene.jewelcraft.weighting_materials.serialize_path()
+    item_map = {}
 
     for child in var.WEIGHTING_LISTS_DIR.iterdir():
         if child.is_file() and child.suffix == ".json":
             item = lib.add()
             item["name"] = child.stem
             item.builtin = True
-
-    lib_path = bpy.context.scene.jewelcraft.weighting_materials.serialize_path()
+            item_map[item.load_id] = item
 
     if lib_path.exists():
         for child in lib_path.iterdir():
             if child.is_file() and child.suffix == ".json":
                 item = lib.add()
                 item["name"] = item.name_orig = child.stem
+                item_map[item.load_id] = item
 
-    if lib:
-        for item in lib:
-            if prefs.weighting_default_list == item.load_id:
-                item.default = True
-                return
-        else:
-            prefs.weighting_default_list = lib[0].load_id
-            lib[0].default = True
-            bpy.context.preferences.is_dirty = True
+    if (item := item_map.get(prefs.weighting_default_list)):
+        item.default = True
+    else:
+        prefs.property_unset("weighting_default_list")
+        bpy.context.preferences.is_dirty = True
+        item_map.get(prefs.weighting_default_list).default = True
 
 
 def weighting_materials(self, context) -> EnumItems3:
