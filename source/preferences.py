@@ -399,21 +399,21 @@ class GemColorsList(ListProperty, PropertyGroup):
         if self.coll:
             return
 
-        def _hex_to_rgb(k, v):
+        def hex_to_rgb(k: str, v: str):
             from .lib import colorlib
             if k == "color":
                 return colorlib.hex_to_rgb(v)
             return v
 
-        def _check_hash_sign(data):
+        def check_hash_sign(data: list) -> bool:
             for item in data:
                 return item["color"][0] == "#"
 
         self.clear()
-        self._deserialize(var.GEM_ASSET_DIR / "colors.json", fmt=_hex_to_rgb, is_builtin=True)
+        self._deserialize(var.GEM_ASSET_DIR / "colors.json", fmt=hex_to_rgb, is_builtin=True)
 
         if (filepath := self.serialize_path()).exists():
-            hash_sign = self._deserialize(filepath, fmt=_hex_to_rgb, check_data=_check_hash_sign)
+            hash_sign = self._deserialize(filepath, fmt=hex_to_rgb, check_data=check_hash_sign)
             if hash_sign:  # JC VER <= 2.17 remove hash
                 self.serialize()
 
@@ -469,16 +469,17 @@ class WeightingMaterialsList(ListProperty, PropertyGroup):
 
     def deserialize(self, name: str) -> None:
 
-        def _translate_item_name(k, v):
+        def translate_name(k: str, v: str) -> str:
             if k == "name":
                 return _(v)
             return v
 
         if name.startswith("BUILTIN/"):
-            filepath = var.WEIGHTING_LISTS_DIR / (name[len("BUILTIN/"):] + ".json")
-            self._deserialize(filepath, fmt=_translate_item_name)
+            name = name.split("/")[1]
+            filepath = var.WEIGHTING_LISTS_DIR / f"{name}.json"
+            self._deserialize(filepath, fmt=translate_name)
         else:
-            filepath = bpy.context.scene.jewelcraft.weighting_materials.serialize_path(name)
+            filepath = self.serialize_path(name)
             self._deserialize(filepath)
 
 
