@@ -272,8 +272,14 @@ class VIEW3D_PT_jewelcraft_weighting_lib(Panel):
             row = layout.row(align=True)
             row.emboss = "NONE"
             row.operator("wm.jewelcraft_weighting_list_set_default", text="", icon="RADIOBUT_ON" if item.default else "RADIOBUT_OFF").load_id = item.load_id
-            row.separator()
-            row.label(text=item.name, text_ctxt="Jewelry", translate=item.builtin)
+
+            if item.builtin:
+                row.separator(factor=1.7)
+                row.label(text=item.name, text_ctxt="Jewelry")
+            else:
+                sub = row.row()
+                sub.emboss = "PULLDOWN_MENU"
+                sub.prop(item, "name", text="")
 
             sub = row.row(align=True)
             sub.scale_x = 1.1
