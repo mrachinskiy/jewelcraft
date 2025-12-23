@@ -19,15 +19,17 @@ def handler_del():
 def _execute(dummy):
     var.config_naming_versioning()
 
-    _load_weighting_mats()
-    bpy.context.scene.jewelcraft.measurements.deserialize(is_on_load=True)
+    scene_props = bpy.context.scene.jewelcraft
+    scene_props.measurements.deserialize(is_on_load=True)
+    _scene_materials_deserialize()
+
     wm_props = bpy.context.window_manager.jewelcraft
     wm_props.gem_colors.deserialize()
     wm_props.gem_map_palette.deserialize()
     wm_props.asset_libs.deserialize()
 
 
-def _load_weighting_mats():
+def _scene_materials_deserialize():
     materials = bpy.context.scene.jewelcraft.weighting_materials
 
     if materials.coll:

@@ -160,8 +160,7 @@ class WM_OT_ul_save(Operator):
     prop: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
     def execute(self, context):
-        ul = getattr(context.window_manager.jewelcraft, self.prop)
-        ul.serialize()
+        getattr(context.window_manager.jewelcraft, self.prop).serialize()
         return {"FINISHED"}
 
     def invoke(self, context, event):
