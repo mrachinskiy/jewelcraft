@@ -306,6 +306,21 @@ class SidebarSetup:
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
 
+    def popover_header(self) -> None:
+        self.popover_header_prop(None, None)
+
+    def popover_header_prop(self, data, name: str) -> None:
+        if self.is_popover:
+            layout = self.layout
+
+            row = layout.row(align=True)
+            if data is not None:
+                row.prop(data, name, text="")
+            row.emboss = "NONE"  # Changes text color to white
+            row.label(text=self.bl_label)
+
+            layout.separator(type="LINE")
+
 
 class VIEW3D_PT_jewelcraft_warning(SidebarSetup, Panel):
     bl_label = "Warning"
@@ -375,13 +390,9 @@ class VIEW3D_PT_jewelcraft_spacing_overlay(SidebarSetup, Panel):
         props = context.scene.jewelcraft
         wm_props = context.window_manager.jewelcraft
 
+        self.popover_header_prop(wm_props, "show_spacing")
+
         layout = self.layout
-
-        if self.is_popover:
-            row = layout.row(align=True)
-            row.prop(wm_props, "show_spacing", text="")
-            row.label(text="Spacing Overlay")
-
         layout.use_property_split = True
         layout.use_property_decorate = False
 
@@ -412,13 +423,9 @@ class VIEW3D_PT_jewelcraft_gem_map_overlay(SidebarSetup, Panel):
         props = context.scene.jewelcraft
         wm_props = context.window_manager.jewelcraft
 
+        self.popover_header_prop(wm_props, "show_gem_map")
+
         layout = self.layout
-
-        if self.is_popover:
-            row = layout.row(align=True)
-            row.prop(wm_props, "show_gem_map", text="")
-            row.label(text="Gem Map Overlay")
-
         layout.use_property_split = True
         layout.use_property_decorate = False
 
@@ -443,11 +450,9 @@ class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
         prefs = context.preferences.addons[__package__].preferences
         wm_props = context.window_manager.jewelcraft
 
-        layout = self.layout
+        self.popover_header()
 
-        if self.is_popover:
-            layout.label(text="Assets")
-            layout.separator()
+        layout = self.layout
 
         if not wm_props.asset_libs.values():
             layout.operator("wm.jewelcraft_goto_prefs", text="Set Library Folder", icon="ASSET_MANAGER").show = "prefs_show_asset_manager"
@@ -603,11 +608,9 @@ class VIEW3D_PT_jewelcraft_weighting(SidebarSetup, Panel):
     def draw(self, context):
         material_list = context.scene.jewelcraft.weighting_materials
 
-        layout = self.layout
+        self.popover_header()
 
-        if self.is_popover:
-            layout.label(text="Weighting")
-            layout.separator()
+        layout = self.layout
 
         layout.popover(panel="VIEW3D_PT_jewelcraft_weighting_lib", icon="ASSET_MANAGER")
 
@@ -657,13 +660,11 @@ class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
     def draw(self, context):
         measures_list = context.scene.jewelcraft.measurements
 
+        self.popover_header()
+
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
-
-        if self.is_popover:
-            layout.label(text="Additional Entries")
-            layout.separator()
 
         row = layout.row()
 
