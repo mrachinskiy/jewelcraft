@@ -17,6 +17,7 @@ def handler_del():
 
 @persistent
 def _execute(dummy):
+    _scene_props_versioning()
     var.config_naming_versioning()
 
     scene_props = bpy.context.scene.jewelcraft
@@ -43,3 +44,10 @@ def _scene_materials_deserialize():
         prefs.property_unset("weighting_default_list")
         bpy.context.preferences.is_dirty = True
         materials.deserialize(prefs.weighting_default_list)
+
+
+def _scene_props_versioning():
+    if bpy.app.version < (5, 0, 0):
+        return
+    if bpy.context.scene.get("jewelcraft"):
+        del bpy.context.scene["jewelcraft"]
