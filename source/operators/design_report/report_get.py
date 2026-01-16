@@ -20,7 +20,7 @@ class _Data:
         self.entries = []
 
     def is_empty(self):
-        if any((self.gems, self.entries)):
+        if any((self.gems, self.entries, self.metadata)):
             return False
         return True
 
