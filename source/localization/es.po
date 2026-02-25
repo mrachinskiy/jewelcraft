@@ -14,19 +14,19 @@ msgid "Configuration"
 msgstr "Configuración"
 
 msgid "Gem Colors"
-msgstr "Colores de Gema"
+msgstr "Colores de gema"
 
 msgid "Asset Manager"
-msgstr "Gestor de Activos"
+msgstr "Gestor de activos"
 
 msgid "Show Asset Name"
-msgstr "Mostrar Nombre de Activo"
+msgstr "Mostrar nombre de activo"
 
 msgid "Design Report"
-msgstr "Informe de Diseño"
+msgstr "Informe de diseño"
 
 msgid "Report Language"
-msgstr "Idioma del Informe"
+msgstr "Idioma del informe"
 
 msgid "Gems"
 msgstr "Gemas"
@@ -35,13 +35,13 @@ msgid "Assets"
 msgstr "Activos"
 
 msgid "Select by Trait"
-msgstr "Seleccionar por Rasgo"
+msgstr "Seleccionar por rasgo"
 
 msgid "Jeweling"
 msgstr "Joyería"
 
 msgid "Weighting"
-msgstr "Evaluación del Peso"
+msgstr "Evaluación del peso"
 
 msgid "Prongs"
 msgstr "Dientes"
@@ -50,16 +50,16 @@ msgid "Cutter"
 msgstr "Cortador"
 
 msgid "Overrides"
-msgstr "Usar Anulaciones"
+msgstr "Usar anulaciones"
 
 msgid "Line Width"
-msgstr "Ancho de Línea"
+msgstr "Ancho de línea"
 
 msgid "Show Composition"
-msgstr "Mostrar Composición"
+msgstr "Mostrar composición"
 
 msgid "Show Density"
-msgstr "Mostrar Densidad"
+msgstr "Mostrar densidad"
 
 msgid "Composition"
 msgstr "Composición"
@@ -68,10 +68,10 @@ msgid "Warnings"
 msgstr "Alertas"
 
 msgid "Show All"
-msgstr "Mostrar Todo"
+msgstr "Mostrar todo"
 
 msgid "Material Color"
-msgstr "Color de Material"
+msgstr "Color de material"
 
 msgid "Updates check is disabled"
 msgstr ""
@@ -83,61 +83,61 @@ msgid "Unsupported unit system"
 msgstr "Sistema de unidades no soportado"
 
 msgid "Limit by Selection"
-msgstr "Limitar por Selección"
+msgstr "Limitar por selección"
 
 msgid "Viewport Background"
-msgstr "Fondo de Vista"
+msgstr "Fondo de vista"
 
 msgid "Save to Image"
-msgstr "Guardar a Imagen"
+msgstr "Guardar a imagen"
 
 msgid "Additional Entries"
-msgstr "Entradas Adicionales"
+msgstr "Entradas adicionales"
 
 msgid "Gem Map"
-msgstr "Mapa de Gemas"
+msgstr "Mapa de gemas"
 
 msgid "Gem Map Overlay"
-msgstr "Superposición Mapa de Gema"
+msgstr "Superposición mapa de gema"
 
 msgid "Gem Table"
-msgstr "Tabla de Gemas"
+msgstr "Tabla de gemas"
 
 msgid "Gem Size"
-msgstr "Tamaño de Gemas"
+msgstr "Tamaño de gemas"
 
 msgid "Weight"
 msgstr "Peso"
 
 msgid "Preview Resolution"
-msgstr "Resolución de Previa"
+msgstr "Resolución de previa"
 
 msgid "Preview Scale"
-msgstr "Escala de Previa"
+msgstr "Escala de previa"
 
 msgid "Category is empty"
 msgstr "Categoría vacía"
 
 msgid "Popover Width"
-msgstr "Ancho del Panel Emergente"
+msgstr "Ancho del panel emergente"
 
 msgid "Snap to Edges"
-msgstr "Adherir a Bordes"
+msgstr "Adherir a bordes"
 
 msgid "Spacing Overlay"
-msgstr "Superponer Espaciado"
+msgstr "Superponer espaciado"
 
 msgid "Asset Name"
-msgstr "Nombre de Activo"
+msgstr "Nombre de activo"
 
 msgid "Category Name"
-msgstr "Nombre de Categoría"
+msgstr "Nombre de categoría"
 
 msgid "Curvature Scale"
-msgstr "Escala de Curvatura"
+msgstr "Escala de curvatura"
 
 msgid "Prong Number"
-msgstr "Número de Clavijas"
+msgstr "Número de clavijas"
 
 msgid "Detalization"
 msgstr "Detallado"
@@ -146,13 +146,13 @@ msgid "Intersection"
 msgstr "Intersección"
 
 msgid "Bump Scale"
-msgstr "Escala Elevación"
+msgstr "Escala elevación"
 
 msgid "Diameter"
 msgstr "Diámetro"
 
 msgid "Size Offset"
-msgstr "Tamaño Desfase"
+msgstr "Tamaño desfase"
 
 msgid "Girdle"
 msgstr "Pretina"
@@ -167,37 +167,37 @@ msgid "Handle"
 msgstr "Asa"
 
 msgid "Curve Seat"
-msgstr "Asiento de Curva"
+msgstr "Asiento de curva"
 
 msgid "Curve Profile"
-msgstr "Perfil de Curva"
+msgstr "Perfil de curva"
 
 msgid "Bevel Corners"
-msgstr "Bisel de Esquinas"
+msgstr "Bisel de esquinas"
 
 msgid "Length Offset"
-msgstr "Longitud del Desfase"
+msgstr "Longitud del desfase"
 
 msgid "Width Offset"
-msgstr "Ancho del Desfase"
+msgstr "Ancho del desfase"
 
 msgid "Position Offset"
-msgstr "Posición del Desfase"
+msgstr "Posición del desfase"
 
 msgid "Mirror Axis"
-msgstr "Eje de Simetría"
+msgstr "Eje de simetría"
 
 msgid "Select Children"
-msgstr "Seleccionar Hijos"
+msgstr "Seleccionar hijos"
 
 msgid "Parent to selected"
-msgstr "Padre a Seleccionado"
+msgstr "Padre a seleccionado"
 
 msgid "Use 3D Cursor"
-msgstr "Usar Cursor 3D"
+msgstr "Usar cursor 3D"
 
 msgid "Ring Size"
-msgstr "Tamaño de Anillo"
+msgstr "Tamaño de anillo"
 
 msgid "USA"
 msgstr "Estados Unidos"
@@ -224,7 +224,7 @@ msgid "Only ID"
 msgstr "Solo ID"
 
 msgid "Force Edit"
-msgstr "Forzar Edición"
+msgstr "Forzar edición"
 
 msgid "Zero dimensions"
 msgstr "Dimensiones cero"
@@ -239,7 +239,7 @@ msgid "Wedge"
 msgstr "Cuña"
 
 msgid "Keep Z Direction"
-msgstr "Conservar Dirección Z"
+msgstr "Conservar dirección Z"
 
 msgid "Factory Settings"
 msgstr ""
@@ -329,10 +329,10 @@ msgid "Deform active object profile with Lattice, also works in Edit Mode with s
 msgstr "Deformar perfil de objeto activo con Jaula, también funciona en el modo de edición con los vértices seleccionados"
 
 msgid "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "Crea puntas para gemas seleccionadas\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr "Crea puntas para gemas seleccionadas\n(Atajo: hold Ctrl when using the tool to avoid properties reset)"
 
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "Crea un cortador para las gemas seleccionadas\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
+msgstr "Crea un cortador para las gemas seleccionadas\n(Atajo: hold Ctrl when using the tool to avoid properties reset)"
 
 msgid "Curve start position"
 msgstr "Posición inicial de la curva"
@@ -449,7 +449,7 @@ msgid "Add a new measurement"
 msgstr "Añadir una nueva medida"
 
 msgid "Target type"
-msgstr "Tipo de Objetivo"
+msgstr "Tipo de objetivo"
 
 msgid "Add new item to the list"
 msgstr "Añadir un nuevo elemento a la lista"
@@ -485,7 +485,7 @@ msgid "Remove from favorites"
 msgstr "Eliminar de favoritos"
 
 msgid "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool"
-msgstr "Separar perdidos, centrar origen y arreglar la orientación (se pueden recuperar gemas de un archivo STL).\nNOTA: el ID de gema se puede añadir con la herramienta Editar Gema"
+msgstr "Separar perdidos, centrar origen y arreglar la orientación (se pueden recuperar gemas de un archivo STL).\nNOTA: el ID de gema se puede añadir con la herramienta Editar gema"
 
 msgid "Ring size format"
 msgstr "Formato tamaño anillo"
@@ -515,7 +515,7 @@ msgid "Unknown gem IDs, carats are not calculated for marked gems (*)"
 msgstr "ID de gemas desconocidas, los quilates no se calcularon para las gemas marcadas (*)"
 
 msgid "Curve Length"
-msgstr "Longitud de Curva"
+msgstr "Longitud de curva"
 
 msgid "At least two objects must be selected"
 msgstr "Al menos dos objetos deben ser seleccionados"
@@ -530,7 +530,7 @@ msgid "Active object must be a curve"
 msgstr "El objeto activo debe ser una curva"
 
 msgid "Selected objects do not have Follow Path constraint"
-msgstr "Los objetos seleccionados no tienen la restricción Seguir Trayectoría"
+msgstr "Los objetos seleccionados no tienen la restricción Seguir trayectoría"
 
 msgid "File not found"
 msgstr "Archivo no encontrado"
@@ -653,7 +653,7 @@ msgid "Citrine"
 msgstr "Citrino"
 
 msgid "Cubic Zirconia"
-msgstr "Zirconia Cúbica"
+msgstr "Zirconia cúbica"
 
 msgid "Diamond"
 msgstr "Diamante"
@@ -695,76 +695,76 @@ msgid "Zircon"
 msgstr "Circonio"
 
 msgid "Yellow Gold 24K"
-msgstr "Oro Amarillo 24K"
+msgstr "Oro amarillo 24K"
 
 msgid "Yellow Gold 22K"
-msgstr "Oro Amarillo 22K"
+msgstr "Oro amarillo 22K"
 
 msgid "Yellow Gold 18K"
-msgstr "Oro Amarillo 18K"
+msgstr "Oro amarillo 18K"
 
 msgid "Yellow Gold 14K"
-msgstr "Oro Amarillo 14K"
+msgstr "Oro amarillo 14K"
 
 msgid "Yellow Gold 10K"
-msgstr "Oro Amarillo 10K"
+msgstr "Oro amarillo 10K"
 
 msgid "White Gold 18K Pd"
-msgstr "Oro Blanco 18K Pd"
+msgstr "Oro blanco 18K Pd"
 
 msgid "White Gold 18K Ni"
-msgstr "Oro Blanco 18K Ni"
+msgstr "Oro blanco 18K Ni"
 
 msgid "White Gold 14K Pd"
-msgstr "Oro Blanco 14K Pd"
+msgstr "Oro blanco 14K Pd"
 
 msgid "White Gold 14K Ni"
-msgstr "Oro Blanco 14K Ni"
+msgstr "Oro blanco 14K Ni"
 
 msgid "White Gold 10K"
-msgstr "Oro Blanco 10K"
+msgstr "Oro blanco 10K"
 
 msgid "Rose Gold 18K"
-msgstr "Oro Rosa 18K"
+msgstr "Oro rosa 18K"
 
 msgid "Rose Gold 14K"
-msgstr "Oro Rosa 14K"
+msgstr "Oro rosa 14K"
 
 msgid "Rose Gold 10K"
-msgstr "Oro Rosa 10K"
+msgstr "Oro rosa 10K"
 
 msgid "Yellow Gold 999"
-msgstr "Oro Amarillo 999"
+msgstr "Oro amarillo 999"
 
 msgid "Yellow Gold 958"
-msgstr "Oro Amarillo 958"
+msgstr "Oro amarillo 958"
 
 msgid "Yellow Gold 750"
-msgstr "Oro Amarillo 750"
+msgstr "Oro amarillo 750"
 
 msgid "Yellow Gold 585"
-msgstr "Oro Amarillo 585"
+msgstr "Oro amarillo 585"
 
 msgid "Yellow Gold 375"
-msgstr "Oro Amarillo 375"
+msgstr "Oro amarillo 375"
 
 msgid "White Gold 750 Pd"
-msgstr "Oro Blanco 750 Pd"
+msgstr "Oro blanco 750 Pd"
 
 msgid "White Gold 750 Ni"
-msgstr "Oro Blanco 750 Ni"
+msgstr "Oro blanco 750 Ni"
 
 msgid "White Gold 585 Pd"
-msgstr "Oro Blanco 585 Pd"
+msgstr "Oro blanco 585 Pd"
 
 msgid "White Gold 585 Ni"
-msgstr "Oro Blanco 585 Ni"
+msgstr "Oro blanco 585 Ni"
 
 msgid "Red Gold 585"
-msgstr "Oro Rojo 585"
+msgstr "Oro rojo 585"
 
 msgid "Red Gold 375"
-msgstr "Oro Rojo 375"
+msgstr "Oro rojo 375"
 
 msgid "Platinum 950"
 msgstr "Platino 950"
@@ -779,7 +779,7 @@ msgid "Silver 925"
 msgstr "Plata 925"
 
 msgid "Silver Sterling"
-msgstr "Plata de Ley"
+msgstr "Plata de ley"
 
 msgid "Brass"
 msgstr "Latón"
@@ -788,7 +788,7 @@ msgid "Bronze"
 msgstr "Bronce"
 
 msgid "Steel Stainless"
-msgstr "Acero Inoxidable"
+msgstr "Acero inoxidable"
 
 msgid "Titanium"
 msgstr "Titanio"
@@ -803,7 +803,7 @@ msgid "g"
 msgstr "gr"
 
 msgid "ct"
-msgstr "K"
+msgstr "ct"
 
 msgid "pcs"
 msgstr "piezas"
@@ -818,22 +818,22 @@ msgid "Yellow"
 msgstr "Amarillo"
 
 msgid "Yellowish Green"
-msgstr "Verde Amarillento"
+msgstr "Verde amarillento"
 
 msgid "Green"
 msgstr "Verde"
 
 msgid "Bluish Green"
-msgstr "Verde Azulado"
+msgstr "Verde azulado"
 
 msgid "Greenish Blue"
-msgstr "Azul Verdoso"
+msgstr "Azul verdoso"
 
 msgid "Purple"
 msgstr "Púrpura"
 
 msgid "Reddish Purple"
-msgstr "Púrpura Rojizo"
+msgstr "Púrpura rojizo"
 
 msgid "Red"
 msgstr "Rojo"
@@ -842,7 +842,7 @@ msgid "Blue"
 msgstr "Azul"
 
 msgid "Violetish Blue"
-msgstr "Azul Violáceo"
+msgstr "Azul violáceo"
 
 msgid "Pink"
 msgstr "Rosa"
@@ -881,15 +881,15 @@ msgstr "Preciosa ГОСТ 30649-99"
 
 msgctxt "Operator"
 msgid "Add Gem"
-msgstr "Añadir Gema"
+msgstr "Añadir gema"
 
 msgctxt "Operator"
 msgid "Recover Gem"
-msgstr "Recuperar Gema"
+msgstr "Recuperar gema"
 
 msgctxt "Operator"
 msgid "Distribute on Curve"
-msgstr "Dispersor de Curva"
+msgstr "Dispersor de curva"
 
 msgctxt "Operator"
 msgid "Prongs"
@@ -897,19 +897,19 @@ msgstr "Clavijas"
 
 msgctxt "Operator"
 msgid "Instance Face"
-msgstr "Cara de Instancia"
+msgstr "Cara de instancia"
 
 msgctxt "Operator"
 msgid "Lattice Project"
-msgstr "Proyección de Jaula"
+msgstr "Proyección de jaula"
 
 msgctxt "Operator"
 msgid "Lattice Profile"
-msgstr "Perfil de Jaula"
+msgstr "Perfil de jaula"
 
 msgctxt "Operator"
 msgid "Size Curve"
-msgstr "Curva de Tamaño"
+msgstr "Curva de tamaño"
 
 msgctxt "Operator"
 msgid "Stretch"
@@ -917,15 +917,15 @@ msgstr "Estirar"
 
 msgctxt "Operator"
 msgid "Curve Length"
-msgstr "Longitud de Curva"
+msgstr "Longitud de curva"
 
 msgctxt "Operator"
 msgid "Design Report"
-msgstr "Informe de Diseño"
+msgstr "Informe de diseño"
 
 msgctxt "Operator"
 msgid "Import Asset"
-msgstr "Importar Activo"
+msgstr "Importar activo"
 
 msgctxt "Operator"
 msgid "Rename"
@@ -933,19 +933,19 @@ msgstr "Renombrar"
 
 msgctxt "Operator"
 msgid "Replace Asset"
-msgstr "Reemplazar Activo"
+msgstr "Reemplazar activo"
 
 msgctxt "Operator"
 msgid "Replace Preview"
-msgstr "Reemplazar Previa"
+msgstr "Reemplazar previa"
 
 msgctxt "Operator"
 msgid "Create Category"
-msgstr "Crear Categoría"
+msgstr "Crear categoría"
 
 msgctxt "Operator"
 msgid "Rename Category"
-msgstr "Renombrar Categoría"
+msgstr "Renombrar categoría"
 
 msgctxt "Operator"
 msgid "Override"
@@ -953,11 +953,11 @@ msgstr "Anular"
 
 msgctxt "Operator"
 msgid "Clear List"
-msgstr "Limpiar Lista"
+msgstr "Limpiar lista"
 
 msgctxt "Operator"
 msgid "Add New Material"
-msgstr "Añadir Nuevo Material"
+msgstr "Añadir nuevo material"
 
 msgctxt "Operator"
 msgid "Save As Default"
@@ -977,23 +977,23 @@ msgstr ""
 
 msgctxt "Operator"
 msgid "Set Units"
-msgstr "Ajustar Unidades"
+msgstr "Ajustar unidades"
 
 msgctxt "Operator"
 msgid "Gem Map"
-msgstr "Mapa de Gema"
+msgstr "Mapa de gema"
 
 msgctxt "Operator"
 msgid "Add New Measurement"
-msgstr "Añadir Nueva Medida"
+msgstr "Añadir nueva medida"
 
 msgctxt "Operator"
 msgid "Set Library Folder"
-msgstr "Ajustar Carpeta de Biblioteca"
+msgstr "Ajustar carpeta de biblioteca"
 
 msgctxt "Operator"
 msgid "Add to Library"
-msgstr "Añadir a Biblioteca"
+msgstr "Añadir a biblioteca"
 
 msgctxt "Operator"
 msgid "All"
@@ -1005,7 +1005,7 @@ msgstr "Calcular"
 
 msgctxt "Operator"
 msgid "Microprong Cutter"
-msgstr "Cortador de Micro-Clavijas"
+msgstr "Cortador de micro-clavijas"
 
 msgctxt "Operator"
 msgid "Similar"
@@ -1013,7 +1013,7 @@ msgstr "Similar"
 
 msgctxt "Operator"
 msgid "Save to File"
-msgstr "Guardar a Archivo"
+msgstr "Guardar a archivo"
 
 msgctxt "Operator"
 msgid "Import"
@@ -1021,7 +1021,7 @@ msgstr "Importar"
 
 msgctxt "Operator"
 msgid "Set Default"
-msgstr "Ajustar Predeterminado"
+msgstr "Ajustar predeterminado"
 
 msgctxt "Operator"
 msgid "Generate Palette"
