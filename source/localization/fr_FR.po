@@ -800,10 +800,10 @@ msgid "mm³"
 msgstr "mm³"
 
 msgid "g"
-msgstr ""
+msgstr "g"
 
 msgid "ct"
-msgstr ""
+msgstr "ct"
 
 msgid "pcs"
 msgstr ""

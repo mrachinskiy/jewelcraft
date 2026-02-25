@@ -803,7 +803,7 @@ msgid "g"
 msgstr "gr"
 
 msgid "ct"
-msgstr "Kt"
+msgstr "ct"
 
 msgid "pcs"
 msgstr "pezzi"
