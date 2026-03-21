@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 2.19.0\n"
 "POT-Creation-Date: 2025-11-20\n"
-"PO-Revision-Date: 2025-09-23\n"
+"PO-Revision-Date: 2026-03-20\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: zh_HANT\n"
@@ -32,25 +32,25 @@ msgid "Gems"
 msgstr "寶石"
 
 msgid "Assets"
-msgstr "資產庫"
+msgstr "資產"
 
 msgid "Select by Trait"
 msgstr "按特徵選取"
 
 msgid "Jeweling"
-msgstr "珠寶"
+msgstr "鑲嵌"
 
 msgid "Weighting"
-msgstr "評估重量"
+msgstr "重量估算"
 
 msgid "Prongs"
-msgstr "鑲釘"
+msgstr "鑲爪"
 
 msgid "Cutter"
-msgstr "開孔器"
+msgstr "刀器"
 
 msgid "Overrides"
-msgstr "使用自訂的覆蓋顯示"
+msgstr "覆蓋設定"
 
 msgid "Line Width"
 msgstr "線寬"
@@ -119,10 +119,10 @@ msgid "Category is empty"
 msgstr "空的類別"
 
 msgid "Popover Width"
-msgstr "彈出窗口寬度"
+msgstr "彈出視窗寬度"
 
 msgid "Snap to Edges"
-msgstr "靠齊至邊緣"
+msgstr "貼齊邊緣"
 
 msgid "Spacing Overlay"
 msgstr "重疊間距"
@@ -134,13 +134,13 @@ msgid "Category Name"
 msgstr "類別名稱"
 
 msgid "Curvature Scale"
-msgstr "彎曲比例"
+msgstr "曲率比例"
 
 msgid "Prong Number"
-msgstr "鑲釘數量"
+msgstr "鑲爪數量"
 
 msgid "Detalization"
-msgstr "詳細說明"
+msgstr "細節程度"
 
 msgid "Intersection"
 msgstr "交叉點"
@@ -155,19 +155,19 @@ msgid "Size Offset"
 msgstr "偏移大小"
 
 msgid "Girdle"
-msgstr "圍繞"
+msgstr "寶石腰圍"
 
 msgid "Hole"
 msgstr "開孔"
 
 msgid "Culet"
-msgstr "寶石底面"
+msgstr "寶石底尖"
 
 msgid "Handle"
 msgstr "手柄"
 
 msgid "Curve Seat"
-msgstr "曲線位置"
+msgstr "曲線座位"
 
 msgid "Curve Profile"
 msgstr "曲線輪廓"
@@ -191,7 +191,7 @@ msgid "Select Children"
 msgstr "選取子代"
 
 msgid "Parent to selected"
-msgstr "選取父代"
+msgstr "設為所選物件的父層"
 
 msgid "Use 3D Cursor"
 msgstr "使用3D游標"
@@ -239,31 +239,31 @@ msgid "Wedge"
 msgstr "楔子"
 
 msgid "Keep Z Direction"
-msgstr "保存 Z 軸方向"
+msgstr "保持 Z 軸方向"
 
 msgid "Factory Settings"
-msgstr ""
+msgstr "預設設定"
 
 msgid "Generate color palette"
-msgstr ""
+msgstr "產生色彩調色盤"
 
 msgid "Hue Range"
-msgstr ""
+msgstr "色相範圍"
 
 msgid "Color Range"
-msgstr ""
+msgstr "色彩範圍"
 
 msgid "Palette Size"
-msgstr ""
+msgstr "調色盤大小"
 
 msgid "Limited"
-msgstr ""
+msgstr "限制"
 
 msgid "Open add-on preferences window"
 msgstr "開啟附加元件偏好設置視窗"
 
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
-msgstr "某些附加元件偏好設定的設定資料夾，例如資產收藏夾、寶石顏色等類似資料夾"
+msgstr "某些附加元件偏好設定的配置資料夾，例如資產收藏、寶石顏色等"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "使 Z 軸上的變換與原始物件一致（不影響寶石）"
@@ -296,7 +296,7 @@ msgid "Select gems by trait"
 msgstr "以特徵選取寶石"
 
 msgid "Distribute selected object along active curve\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "以當前曲線分布選取物件\n（快捷方式: 按住 Ctrl 以使用該工具時避免屬性重置）"
+msgstr "沿當前曲線分布選取的物件\n（快捷鍵：使用工具時按住 Ctrl 可避免屬性重置）"
 
 msgid "Redistribute selected objects along curve"
 msgstr "沿曲線重新分布選取的物件"
@@ -308,31 +308,31 @@ msgid "Create instance face for selected objects"
 msgstr "為選取的物件建立實例面"
 
 msgid "Create size curve"
-msgstr "建立戒圍曲線"
+msgstr "建立尺寸曲線"
 
 msgid "Stretch deformed objects along curve on X axis, also works in Edit Mode with selected vertices"
-msgstr "沿 X 軸上的曲線拉伸欲變形的物件，也可以在編輯模式下使用選定的頂點"
+msgstr "沿 X 軸曲線拉伸變形物件，也可在編輯模式下作用於選定頂點"
 
 msgid "Display curve length"
 msgstr "顯示曲線長度"
 
 msgid "Move deformed object over or under the curve"
-msgstr "在曲線上方或下方移動變型的物件"
+msgstr "將變形物件移動到曲線上方或下方"
 
 msgid "Mirror selected objects around one or more axes, keeping object data linked"
-msgstr "圍繞一個或多個軸鏡像選定的物件，保持物件數據鏈接"
+msgstr "沿一個或多個軸鏡射選定物件，保持物件資料連結"
 
 msgid "Project selected objects onto active object using Lattice"
-msgstr "使用晶格將選定的物件投影到當前物件上"
+msgstr "使用晶格將選定物件投影到作用中的物件上"
 
 msgid "Deform active object profile with Lattice, also works in Edit Mode with selected vertices"
-msgstr "使用晶格變形當前物件的輪廓，也可以在編輯模式下使用選定的頂點"
+msgstr "使用晶格變形作用中物件的輪廓，也可在編輯模式下作用於選定頂點"
 
 msgid "Create prongs for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "為選定的寶石建立爪釘/n（快捷方式: 按住 Ctrl 以使用該工具時避免屬性重置）"
+msgstr "為選定的寶石建立鑲爪\n（快捷鍵：使用工具時按住 Ctrl 可避免屬性重置）"
 
 msgid "Create cutter for selected gems\n(Shortcut: hold Ctrl when using the tool to avoid properties reset)"
-msgstr "為選定的寶石建立切割器/n（快捷方式: 按住 Ctrl 以使用該工具時避免屬性重置）"
+msgstr "為選定的寶石建立切割器\n（快捷鍵：使用工具時按住 Ctrl 可避免屬性重置）"
 
 msgid "Curve start position"
 msgstr "曲線開始位置"
@@ -356,7 +356,7 @@ msgid "Rename asset"
 msgstr "重新命名資產"
 
 msgid "Remove from library"
-msgstr "由庫藏中刪除資產"
+msgstr "由資產庫中刪除資產"
 
 msgid "Replace current asset with selected objects"
 msgstr "用所選物件更換當前資產"
@@ -377,7 +377,7 @@ msgid "Show distance to nearby gems"
 msgstr "顯示與鄰近寶石的距離"
 
 msgid "Use object defined overlay settings"
-msgstr "使物件定義的疊加設定"
+msgstr "使用物件定義的疊加設定"
 
 msgid "Draw overlay in front of objects"
 msgstr "在物件前面繪製疊加層"
@@ -386,7 +386,7 @@ msgid "Override overlay settings for selected objects"
 msgstr "覆寫選定物件的疊加設定"
 
 msgid "Remove overrides from selected objects"
-msgstr "由選取物件中刪除疊加"
+msgstr "移除選定物件的覆寫設定"
 
 msgid "Add new material to the list"
 msgstr "在列表中添加新材質"
@@ -419,7 +419,7 @@ msgid "Enable material for weighting display"
 msgstr "啟用加權顯示材質"
 
 msgid "Parent imported asset to selected objects (Shortcut: hold Alt when using the tool)"
-msgstr "匯入父代的資產到選取的物件（快捷方式：使用這工具時按住ALT）"
+msgstr "將匯入的資產設為選取物件的父層（快捷鍵：使用工具時按住 Alt）"
 
 msgid "Select gems that are less than 0.1 mm distance from each other or overlapping"
 msgstr "選取彼此距離小於 0.1 mm 或重疊的寶石"
@@ -431,7 +431,7 @@ msgid "Show for all visible gems"
 msgstr "顯示所有可見的寶石"
 
 msgid "Use gem material color for gem map"
-msgstr "使用寶石材質顏色和寶石貼圖"
+msgstr "使用寶石材質顏色作為寶石貼圖"
 
 msgid "Enable check for updates on startup and save preferences"
 msgstr "啟動時檢查更新並儲存偏好設定"
@@ -440,7 +440,7 @@ msgid "Set optimal unit settings for jewelry modelling"
 msgstr "為珠寶建模設定最佳尺寸單位設定"
 
 msgid "Compose gem table and map it to gems in the scene"
-msgstr "編寫寶石表並將其貼圖到場景中的寶石"
+msgstr "生成寶石表並映射到場景中的寶石"
 
 msgid "Present summary information about the design, including gems, sizes and weight"
 msgstr "提供有關設計的摘要資訊，包括寶石、尺寸和重量"
@@ -467,7 +467,7 @@ msgid "Select material"
 msgstr "選取材質"
 
 msgid "Create collection instances of selected objects in radial order"
-msgstr "以放射狀順序建立選定物件的集合實例"
+msgstr "建立放射狀集合實例"
 
 msgid "Asset preview image size when creating new assets"
 msgstr "建立新資產時的資產預覽圖大小"
@@ -485,25 +485,25 @@ msgid "Remove from favorites"
 msgstr "從最愛收藏中移除"
 
 msgid "Separate loose, center origin and fix orientation (can recover gems from STL file).\nNOTE: gem ID can be added with Edit Gem tool"
-msgstr "分開鬆散、中心原點和固定方向（寶石可以從 STL 檔案中恢復），\n注意：寶石 ID 可以使用 寶石編輯工具添加"
+msgstr "分離鬆散物件、設置中心原點並修正方向（可從 STL 檔案中恢復寶石）。\n注意：寶石 ID 可使用「寶石編輯工具」添加"
 
 msgid "Ring size format"
 msgstr "戒圍尺寸格式"
 
 msgid "Create microprong cutter between selected gems"
-msgstr "在選取的寶石之間建立城堡鑲嵌切割器"
+msgstr "在選取的寶石之間建立微爪切割器"
 
 msgid "Add materials list to library"
-msgstr "將材質清單新增至庫藏中"
+msgstr "將材質清單新增至資產庫中"
 
 msgid "Replace materials list"
-msgstr "置換材質單"
+msgstr "替換材質清單"
 
 msgid "Import materials list"
 msgstr "匯入材質清單"
 
 msgid "Set materials list imported by default"
-msgstr "指定預設導入的材質清單"
+msgstr "設定預設匯入的材質清單"
 
 msgid "Include viewport preview image in report"
 msgstr "在報表中包含視口預覽圖片"
@@ -581,13 +581,13 @@ msgid "Sum (ct)"
 msgstr "總數（ct）"
 
 msgid "Total"
-msgstr "總數"
+msgstr "總計"
 
 msgid "Carats"
 msgstr "克拉"
 
 msgid "Materials"
-msgstr "材質費用"
+msgstr "材質"
 
 msgid "Notes"
 msgstr "附註"
@@ -617,13 +617,13 @@ msgid "Square"
 msgstr "正方形"
 
 msgid "Asscher"
-msgstr "Asscher 上丁方形"
+msgstr "上丁方形（Asscher）"
 
 msgid "Radiant"
-msgstr "Radiant 雷地恩形"
+msgstr "雷地恩形（Radiant）"
 
 msgid "Flanders"
-msgstr "Flanders 佛蘭德"
+msgstr "佛蘭德形（Flanders）"
 
 msgid "Octagon"
 msgstr "八角形"
@@ -632,10 +632,10 @@ msgid "Heart"
 msgstr "心形"
 
 msgid "Trillion"
-msgstr "弧邊花式三角形"
+msgstr "弧邊三角形（Trillion）"
 
 msgid "Trilliant"
-msgstr "直邊花式三角形"
+msgstr "直邊三角形（Trilliant）"
 
 msgid "Triangle"
 msgstr "三角形"
@@ -683,13 +683,13 @@ msgid "Spinel"
 msgstr "尖晶石"
 
 msgid "Tanzanite"
-msgstr "坦桑石（丹泉石）"
+msgstr "坦桑石"
 
 msgid "Topaz"
-msgstr "托帕石（黃玉）"
+msgstr "黃玉（托帕石）"
 
 msgid "Tourmaline"
-msgstr "碧璽（電氣石）"
+msgstr "碧璽"
 
 msgid "Zircon"
 msgstr "鋯石"
@@ -767,19 +767,19 @@ msgid "Red Gold 375"
 msgstr "紅金 375"
 
 msgid "Platinum 950"
-msgstr "950 鉑金"
+msgstr "鉑金 950"
 
 msgid "Platinum 900"
-msgstr "900 鉑金"
+msgstr "鉑金 900"
 
 msgid "Palladium 950"
-msgstr "950 鈀金"
+msgstr "鈀金 950"
 
 msgid "Silver 925"
-msgstr "925銀"
+msgstr "925 銀"
 
 msgid "Silver Sterling"
-msgstr "純銀"
+msgstr "925 純銀"
 
 msgid "Brass"
 msgstr "黃銅"
@@ -861,15 +861,15 @@ msgstr "圓形"
 
 msgctxt "Jewelry"
 msgid "Spacing"
-msgstr "設定距離"
+msgstr "距離"
 
 msgctxt "Jewelry"
 msgid "Cutter"
-msgstr "開孔器"
+msgstr "切割器"
 
 msgctxt "Jewelry"
 msgid "Base"
-msgstr "基本"
+msgstr "基底"
 
 msgctxt "Jewelry"
 msgid "Precious"
@@ -893,11 +893,11 @@ msgstr "沿著曲線排列"
 
 msgctxt "Operator"
 msgid "Prongs"
-msgstr "爪鑲工具"
+msgstr "鑲爪"
 
 msgctxt "Operator"
 msgid "Instance Face"
-msgstr ""
+msgstr "實例面"
 
 msgctxt "Operator"
 msgid "Lattice Project"
@@ -909,7 +909,7 @@ msgstr "晶格輪廓"
 
 msgctxt "Operator"
 msgid "Size Curve"
-msgstr "建立戒圍曲線"
+msgstr "尺寸曲線"
 
 msgctxt "Operator"
 msgid "Stretch"
@@ -917,11 +917,11 @@ msgstr "拉伸"
 
 msgctxt "Operator"
 msgid "Curve Length"
-msgstr "測量曲線長度"
+msgstr "曲線長度"
 
 msgctxt "Operator"
 msgid "Design Report"
-msgstr "建立設計報表"
+msgstr "設計報表"
 
 msgctxt "Operator"
 msgid "Import Asset"
@@ -949,7 +949,7 @@ msgstr "重新命名類別"
 
 msgctxt "Operator"
 msgid "Override"
-msgstr "自訂設定"
+msgstr "覆蓋設定"
 
 msgctxt "Operator"
 msgid "Clear List"
@@ -961,19 +961,19 @@ msgstr "添加新材質"
 
 msgctxt "Operator"
 msgid "Save As Default"
-msgstr ""
+msgstr "儲存為預設值"
 
 msgctxt "Operator"
 msgid "Load Default"
-msgstr ""
+msgstr "載入預設"
 
 msgctxt "Operator"
 msgid "Overlapping"
-msgstr "部分重疊"
+msgstr "重疊檢測"
 
 msgctxt "Operator"
 msgid "Enable and Save"
-msgstr ""
+msgstr "啟用並儲存"
 
 msgctxt "Operator"
 msgid "Set Units"
@@ -981,7 +981,7 @@ msgstr "設定最佳尺寸單位"
 
 msgctxt "Operator"
 msgid "Gem Map"
-msgstr "建立寶石貼圖"
+msgstr "寶石貼圖"
 
 msgctxt "Operator"
 msgid "Add New Measurement"
@@ -989,11 +989,11 @@ msgstr "添加新的測量"
 
 msgctxt "Operator"
 msgid "Set Library Folder"
-msgstr ""
+msgstr "設定資產庫資料夾"
 
 msgctxt "Operator"
 msgid "Add to Library"
-msgstr "添加到庫藏"
+msgstr "添加到資產庫"
 
 msgctxt "Operator"
 msgid "All"
@@ -1005,11 +1005,11 @@ msgstr "計算"
 
 msgctxt "Operator"
 msgid "Microprong Cutter"
-msgstr "城堡鑲嵌刀具"
+msgstr "微爪切割器"
 
 msgctxt "Operator"
 msgid "Similar"
-msgstr "相似的"
+msgstr "相似"
 
 msgctxt "Operator"
 msgid "Save to File"
@@ -1025,4 +1025,4 @@ msgstr "設定預設值"
 
 msgctxt "Operator"
 msgid "Generate Palette"
-msgstr ""
+msgstr "產生調色盤"
