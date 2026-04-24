@@ -132,6 +132,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
         layout.separator()
         layout.operator("object.jewelcraft_prongs_add", icon_value=icon_menu("PRONGS"))
+        layout.operator("object.jewelcraft_prongs_auto_add", text="Prongs Auto", icon_value=icon_menu("PRONGS"))
         layout.operator("object.jewelcraft_cutter_add", icon_value=icon_menu("CUTTER"))
         layout.operator("object.jewelcraft_microprong_cutter_add", icon_value=icon_menu("MICROPRONG_CUTTER"))
         layout.operator("object.jewelcraft_curve_distribute", icon_value=icon_menu("DISTRIBUTE"))
@@ -529,6 +530,7 @@ class VIEW3D_PT_jewelcraft_jeweling(SidebarSetup, Panel):
 
         col = layout.column(align=True)
         col.operator("object.jewelcraft_prongs_add", text="Prongs", icon_value=icon("PRONGS"))
+        col.operator("object.jewelcraft_prongs_auto_add", text="Prongs Auto", icon_value=icon("PRONGS"))
         col.operator("object.jewelcraft_cutter_add", text="Cutter", text_ctxt="Jewelry", icon_value=icon("CUTTER"))
         col.operator("object.jewelcraft_microprong_cutter_add", text="Microprong Cutter", icon_value=icon("MICROPRONG_CUTTER"))
 

@@ -385,6 +385,17 @@ def show_window(width: int, height: int, area_type: str | None = None, space_dat
 # ------------------------------------
 
 
+def bm_to_object(bm, name="New object", color: Color | None = None) -> Object:
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+
+    ob = bpy.data.objects.new(name, me)
+    add_material(ob, name=name, color=color)
+
+    return ob
+
+
 def bm_to_scene(bm, name="New object", color: Color | None = None) -> None:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data and space_data.local_view)
