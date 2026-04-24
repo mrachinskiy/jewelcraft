@@ -5,17 +5,13 @@ from dataclasses import dataclass
 from itertools import combinations
 from statistics import median
 
+import bl_math
 from mathutils import Matrix, Vector
 
 from ...lib import asset
 from ...lib import unit
-from ..add_prongs import prongs_mesh
 
 _EPS = 1e-6
-_BUMP_SCALE = 0.5
-_TAPER = 0.0
-_DETALIZATION = 32
-_SIZE_ROUND_MM = 0.025
 _MAX_CONNECTIONS = 2048
 _MAX_PRONGS = 4096
 
@@ -53,43 +49,26 @@ def create_prongs_auto(
     uniformity: float,
     max_gap: float,
     weld_distance: float,
+    size_round: float,
 ) -> list[ProngInfo]:
-    size_ratio = _clamp(size_ratio, 0.1, 0.5)
-    height_ratio = _clamp(height_ratio, 0.1, 1.0)
-    width_between_prongs = _clamp(width_between_prongs, 0.1, 1.0)
-    uniformity = _clamp(uniformity, 0.0, 1.0)
-    max_gap = max(0.0, max_gap)
-    weld_distance = max(0.0, weld_distance)
-
     gem_infos = [_to_gem_info(ob) for ob in gems]
     connections = _find_valid_connections(gem_infos, max_gap)
 
     if not connections:
         return []
 
-    prong_infos = _create_prong_infos(connections, size_ratio, height_ratio, width_between_prongs)
+    prong_infos = _create_prong_infos(connections, size_ratio, height_ratio, width_between_prongs, size_round)
 
     if weld_distance > 0.0 and len(prong_infos) > 1:
-        prong_infos = _merge_nearby_prongs(prong_infos, weld_distance)
+        prong_infos = _merge_nearby_prongs(prong_infos, weld_distance, size_round)
 
     if uniformity > 0.0 and len(prong_infos) > 1:
-        prong_infos = _apply_uniformity(prong_infos, uniformity)
+        prong_infos = _apply_uniformity(prong_infos, uniformity, size_round)
 
     if len(prong_infos) > _MAX_PRONGS:
         raise ValueError("Too many prongs generated. Reduce Max Gap or selection size")
 
     return prong_infos
-
-
-def create_prong_mesh(info: ProngInfo):
-    return prongs_mesh.create_prong(
-        info.size,
-        info.height,
-        info.height,
-        _BUMP_SCALE,
-        _TAPER,
-        _DETALIZATION,
-    )
 
 
 def _to_gem_info(ob) -> GemInfo:
@@ -129,6 +108,7 @@ def _create_prong_infos(
     size_ratio: float,
     height_ratio: float,
     width_between_prongs: float,
+    size_round: float,
 ) -> list[ProngInfo]:
     unit_scale = unit.Scale()
     prong_infos = []
@@ -146,17 +126,17 @@ def _create_prong_infos(
         normal = connection.first.normal + connection.second.normal
         if normal.length_squared <= _EPS:
             normal = connection.first.normal.copy()
-        if normal.length_squared <= _EPS:
-            normal = Vector((0.0, 0.0, 1.0))
+            if normal.length_squared <= _EPS:
+                normal = Vector((0.0, 0.0, 1.0))
         normal.normalize()
 
         perpendicular = axis.cross(normal)
         if perpendicular.length_squared <= _EPS:
             perpendicular = normal.cross(Vector((1.0, 0.0, 0.0)))
-        if perpendicular.length_squared <= _EPS:
-            perpendicular = normal.cross(Vector((0.0, 1.0, 0.0)))
-        if perpendicular.length_squared <= _EPS:
-            continue
+            if perpendicular.length_squared <= _EPS:
+                perpendicular = normal.cross(Vector((0.0, 1.0, 0.0)))
+                if perpendicular.length_squared <= _EPS:
+                    continue
         perpendicular.normalize()
 
         midpoint = connection.first_point.lerp(connection.second_point, 0.5)
@@ -165,22 +145,23 @@ def _create_prong_infos(
             continue
 
         half_width = avg_diameter * width_between_prongs * 0.5
-        size = _round_size(unit_scale, avg_diameter * size_ratio)
+        size = _round_size(unit_scale, avg_diameter * size_ratio, size_round)
         height = avg_diameter * height_ratio
         if size <= _EPS or height <= _EPS:
             continue
 
         offset = perpendicular * half_width
-        matrix = Matrix.Translation(midpoint - offset) @ normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        rotation = normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        matrix = Matrix.Translation(midpoint - offset) @ rotation
         app(ProngInfo((midpoint - offset).copy(), normal.copy(), size, height, matrix))
 
-        matrix = Matrix.Translation(midpoint + offset) @ normal.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        matrix = Matrix.Translation(midpoint + offset) @ rotation
         app(ProngInfo((midpoint + offset).copy(), normal.copy(), size, height, matrix))
 
     return prong_infos
 
 
-def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float) -> list[ProngInfo]:
+def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float, size_round: float) -> list[ProngInfo]:
     unit_scale = unit.Scale()
     parent = list(range(len(prongs)))
 
@@ -215,8 +196,9 @@ def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float) -> list[
             app(group[0])
             continue
 
-        position = Vector((0.0, 0.0, 0.0))
-        normal = Vector((0.0, 0.0, 0.0))
+        position = Vector()
+        normal = Vector()
+        
         size = 0.0
         height = 0.0
 
@@ -230,7 +212,7 @@ def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float) -> list[
         position /= count
         size /= count
         height /= count
-        size = _round_size(unit_scale, size)
+        size = _round_size(unit_scale, size, size_round)
 
         if normal.length_squared <= _EPS:
             normal = group[0].normal.copy()
@@ -243,18 +225,18 @@ def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float) -> list[
     return merged
 
 
-def _round_size(unit_scale: unit.Scale, size: float) -> float:
+def _round_size(unit_scale: unit.Scale, size: float, size_round: float) -> float:
     if size <= _EPS:
-        size_mm = _SIZE_ROUND_MM
+        size_mm = size_round
     else:
         size_mm = unit_scale.from_scene(size)
-        size_mm = round(size_mm / _SIZE_ROUND_MM) * _SIZE_ROUND_MM
-        size_mm = max(size_mm, _SIZE_ROUND_MM)
+        size_mm = round(size_mm / size_round) * size_round
+        size_mm = max(size_mm, size_round)
 
     return unit_scale.to_scene(size_mm)
 
 
-def _apply_uniformity(prongs: list[ProngInfo], uniformity: float) -> list[ProngInfo]:
+def _apply_uniformity(prongs: list[ProngInfo], uniformity: float, size_round: float) -> list[ProngInfo]:
     unit_scale = unit.Scale()
     median_size = median(info.size for info in prongs)
     median_height = median(info.height for info in prongs)
@@ -262,22 +244,10 @@ def _apply_uniformity(prongs: list[ProngInfo], uniformity: float) -> list[ProngI
     app = normalized.append
 
     for info in prongs:
-        size = _lerp(info.size, median_size, uniformity)
-        height = _lerp(info.height, median_height, uniformity)
-        size = _round_size(unit_scale, size)
+        size = bl_math.lerp(info.size, median_size, uniformity)
+        height = bl_math.lerp(info.height, median_height, uniformity)
+        size = _round_size(unit_scale, size, size_round)
         height = max(height, _EPS)
         app(ProngInfo(info.position, info.normal, size, height, info.matrix.copy()))
 
     return normalized
-
-
-def _lerp(current: float, target: float, factor: float) -> float:
-    return current + (target - current) * factor
-
-
-def _clamp(value: float, minimum: float, maximum: float) -> float:
-    if value < minimum:
-        return minimum
-    if value > maximum:
-        return maximum
-    return value

@@ -7,11 +7,9 @@ def draw(self, context):
     layout.use_property_split = True
     layout.use_property_decorate = False
 
-    gem_count = sum(1 for ob in context.selected_objects if "gem" in ob)
-
     layout.separator()
 
-    if gem_count < 2:
+    if self.selected_gem_count < 2:
         row = layout.row()
         row.alert = True
         row.alignment = "RIGHT"
@@ -41,3 +39,13 @@ def draw(self, context):
     col = layout.column()
     col.prop(self, "max_gap")
     col.prop(self, "weld_distance")
+
+    layout.separator()
+
+    layout.label(text="Shape")
+    col = layout.column()
+    col.prop(self, "size_round")
+    col.prop(self, "bump_scale")
+    col.prop(self, "taper")
+    col.prop(self, "detalization")
+    
