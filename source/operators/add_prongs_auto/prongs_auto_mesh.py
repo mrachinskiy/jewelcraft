@@ -59,10 +59,10 @@ def create_prongs_auto(
 
     prong_infos = _create_prong_infos(connections, size_ratio, height_ratio, width_between_prongs, size_round)
 
-    if weld_distance > 0.0 and len(prong_infos) > 1:
+    if weld_distance and len(prong_infos) > 1:
         prong_infos = _merge_nearby_prongs(prong_infos, weld_distance, size_round)
 
-    if uniformity > 0.0 and len(prong_infos) > 1:
+    if uniformity and len(prong_infos) > 1:
         prong_infos = _apply_uniformity(prong_infos, uniformity, size_round)
 
     if len(prong_infos) > _MAX_PRONGS:

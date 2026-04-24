@@ -100,4 +100,3 @@ class OBJECT_OT_prongs_auto_add(Operator):
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
         return self.execute(context)
-    

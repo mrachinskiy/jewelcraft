@@ -48,4 +48,3 @@ def draw(self, context):
     col.prop(self, "bump_scale")
     col.prop(self, "taper")
     col.prop(self, "detalization")
-    
