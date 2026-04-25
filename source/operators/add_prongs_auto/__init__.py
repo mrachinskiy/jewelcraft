@@ -1,31 +1,131 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from bpy.props import FloatProperty, IntProperty, StringProperty
+from bpy.props import BoolProperty, FloatProperty, IntProperty, StringProperty
 from bpy.types import Operator
 
 from ... import var
 
 
 class OBJECT_OT_prongs_auto_add(Operator):
-    bl_label = "Add Prongs Auto"
-    bl_description = "Create standard prongs between selected gems"
+    bl_label = "Auto Place Prongs"
+    bl_description = "Automatically place standard prongs between selected gems"
     bl_idname = "object.jewelcraft_prongs_auto_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    size_ratio: FloatProperty(name="Prong Size Ratio", default=0.4, min=0.1, max=0.5, soft_max=0.5, precision=2, options={"SKIP_SAVE"})
-    height_ratio: FloatProperty(name="Prong Height Ratio", default=0.2, min=0.1, max=1.0, soft_max=1.0, precision=2, options={"SKIP_SAVE"})
-    width_between_prongs: FloatProperty(name="Width Between Prongs Ratio", default=0.6, min=0.1, max=1.0, soft_max=1.0, precision=2, options={"SKIP_SAVE"})
-    uniformity: FloatProperty(name="Uniformity", default=0.5, min=0.0, max=1.0, soft_max=1.0, subtype="FACTOR", precision=2, options={"SKIP_SAVE"})
-    max_gap: FloatProperty(name="Max Gap", default=0.5, min=0.0, max=1.0, soft_max=1.0, step=1, unit="LENGTH", options={"SKIP_SAVE"})
-    weld_distance: FloatProperty(name="Weld Distance", default=0.3, min=0.0, max=1.0, soft_max=1.0, step=1, unit="LENGTH", options={"SKIP_SAVE"})
-    size_round: FloatProperty(name="Size Round", default=0.025, min=0.001, soft_max=1.0, precision=3, step=0.1, unit="LENGTH", options={"SKIP_SAVE"})
-    bump_scale: FloatProperty(name="Bump Scale", default=0.5, soft_min=0.0, soft_max=1.0, subtype="FACTOR", options={"SKIP_SAVE"})
-    taper: FloatProperty(name="Taper", default=0.0, min=0.0, soft_max=1.0, subtype="FACTOR", options={"SKIP_SAVE"})
-    detalization: IntProperty(name="Detalization", default=32, min=3, soft_max=64, step=1, options={"SKIP_SAVE"})
-    collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
+    collection_name: StringProperty(
+        name="Collection",
+        description="Target collection for generated prongs; if it does not exist, it will be created",
+        default="Prongs",
+        options={"SKIP_SAVE"},
+    )
+    
+    size_ratio: FloatProperty(
+        name="Size Ratio",
+        description="Prong diameter relative to the connection size of the paired gems",
+        default=0.4,
+        min=0.1,
+        max=0.5,
+        soft_max=0.5,
+        precision=2,
+        options={"SKIP_SAVE"},
+    )
+    height_ratio: FloatProperty(
+        name="Height Ratio",
+        description="Prong height above the connection midpoint, relative to the paired gem size",
+        default=0.2,
+        min=0.1,
+        max=1.0,
+        soft_max=1.0,
+        precision=2,
+        options={"SKIP_SAVE"},
+    )
+    uniformity: FloatProperty(
+        name="Uniformity",
+        description="Blends each prong size and height toward the median values of all generated prongs",
+        default=0.5,
+        min=0.0,
+        max=1.0,
+        soft_max=1.0,
+        subtype="FACTOR",
+        precision=2,
+        options={"SKIP_SAVE"},
+    )
+    
+    width_between_prongs: FloatProperty(
+        name="Width Btw Ratio",
+        description="Center-to-center spacing between the two prongs created for each gem connection",
+        default=0.6,
+        min=0.1,
+        max=1.0,
+        soft_max=1.0,
+        precision=2,
+        options={"SKIP_SAVE"},
+    )
+    max_gap: FloatProperty(
+        name="Max Gap",
+        description="Maximum allowed surface gap between two gems for creating a prong pair",
+        default=0.5,
+        min=0.0,
+        max=1.0,
+        soft_max=1.0,
+        step=1,
+        unit="LENGTH",
+        options={"SKIP_SAVE"},
+    )
+    weld_distance: FloatProperty(
+        name="Weld Distance",
+        description="Merge prongs whose centers are closer than this distance into one averaged prong",
+        default=0.3,
+        min=0.0,
+        max=1.0,
+        soft_max=1.0,
+        step=1,
+        unit="LENGTH",
+        options={"SKIP_SAVE"},
+    )
+    
+    size_round: FloatProperty(
+        name="Size Round",
+        description="Diameter rounding step in millimeters for generated prongs",
+        default=0.025,
+        min=0.001,
+        soft_max=1.0,
+        precision=3,
+        step=0.1,
+        unit="LENGTH",
+        options={"SKIP_SAVE"},
+    )
+    bump_scale: FloatProperty(
+        name="Bump Scale",
+        description="Height of the rounded top cap; set to 0 for a flat top",
+        default=0.5,
+        soft_min=0.0,
+        soft_max=1.0,
+        subtype="FACTOR",
+        options={"SKIP_SAVE"},
+    )
+    taper: FloatProperty(
+        name="Taper",
+        description="Widens the prong base relative to the top",
+        default=0.0,
+        min=0.0,
+        soft_max=1.0,
+        subtype="FACTOR",
+        options={"SKIP_SAVE"},
+    )
+    detalization: IntProperty(
+        name="Detalization",
+        description="Number of radial segments used to build the prong mesh and top cap",
+        default=32,
+        min=3,
+        soft_max=64,
+        step=1,
+        options={"SKIP_SAVE"},
+    )
     
     selected_gem_count = 0
+    has_non_round_cuts: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
 
     def draw(self, context):
         from . import prongs_auto_ui
@@ -42,13 +142,10 @@ class OBJECT_OT_prongs_auto_add(Operator):
             self.report({"ERROR"}, "At least two gem objects must be selected")
             return {"FINISHED"}
 
-        if self.collection_name:
-            collection = context.blend_data.collections.get(self.collection_name)
-        else:
-            collection = None
+        collection = context.blend_data.collections.get(self.collection_name)
 
         if collection is None:
-            collection = context.blend_data.collections.new("Prongs")
+            collection = context.blend_data.collections.new(self.collection_name)
             context.scene.collection.children.link(collection)
             self.collection_name = collection.name
 
@@ -89,10 +186,14 @@ class OBJECT_OT_prongs_auto_add(Operator):
     def invoke(self, context, event):
         gems = [ob for ob in context.selected_objects if "gem" in ob]
         self.selected_gem_count = len(gems)
+        self.has_non_round_cuts = any(ob["gem"]["cut"] != "ROUND" for ob in gems)
 
         if self.selected_gem_count < 2:
             self.report({"ERROR"}, "At least two gem objects must be selected")
             return {"CANCELLED"}
+
+        if self.has_non_round_cuts:
+            self.report({"WARNING"}, "This tool is optimized for round cuts and may work poorly with other gem cuts")
 
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         self.color = prefs.color_prongs

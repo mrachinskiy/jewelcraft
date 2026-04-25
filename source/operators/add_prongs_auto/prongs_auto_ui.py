@@ -16,13 +16,19 @@ def draw(self, context):
         row.label(text="At least two gem objects must be selected", icon="ERROR")
         layout.separator()
 
+    if self.has_non_round_cuts:
+        row = layout.row()
+        row.alert = True
+        row.alignment = "RIGHT"
+        row.label(text="This tool is optimized for round cuts", icon="INFO")
+        layout.separator()
+
     col = layout.column()
     col.prop_search(self, "collection_name", context.blend_data, "collections")
 
-    if not self.collection_name:
-        row = layout.row()
-        row.alignment = "RIGHT"
-        row.label(text="If empty, a new 'Prongs' collection will be created", icon="INFO")
+    row = layout.row()
+    row.alignment = "RIGHT"
+    row.label(text="If the collection does not exist, it will be created", icon="INFO")
 
     layout.separator()
 
@@ -30,13 +36,13 @@ def draw(self, context):
     col = layout.column()
     col.prop(self, "size_ratio")
     col.prop(self, "height_ratio")
-    col.prop(self, "width_between_prongs")
     col.prop(self, "uniformity")
 
     layout.separator()
 
     layout.label(text="Connections")
     col = layout.column()
+    col.prop(self, "width_between_prongs")
     col.prop(self, "max_gap")
     col.prop(self, "weld_distance")
 
