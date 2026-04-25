@@ -1,14 +1,14 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from bpy.props import BoolProperty, FloatProperty, IntProperty, StringProperty
+from bpy.props import FloatProperty, IntProperty, StringProperty
 from bpy.types import Operator
 
 from ... import var
 
 
 class OBJECT_OT_prongs_auto_add(Operator):
-    bl_label = "Auto Place Prongs"
+    bl_label = "Auto Prongs"
     bl_description = "Automatically place standard prongs between selected gems"
     bl_idname = "object.jewelcraft_prongs_auto_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
@@ -125,7 +125,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
     )
     
     selected_gem_count = 0
-    has_non_round_cuts: BoolProperty(options={"HIDDEN", "SKIP_SAVE"})
 
     def draw(self, context):
         from . import prongs_auto_ui
@@ -186,13 +185,13 @@ class OBJECT_OT_prongs_auto_add(Operator):
     def invoke(self, context, event):
         gems = [ob for ob in context.selected_objects if "gem" in ob]
         self.selected_gem_count = len(gems)
-        self.has_non_round_cuts = any(ob["gem"]["cut"] != "ROUND" for ob in gems)
+        has_non_round_cuts = any(ob["gem"]["cut"] != "ROUND" for ob in gems)
 
         if self.selected_gem_count < 2:
             self.report({"ERROR"}, "At least two gem objects must be selected")
             return {"CANCELLED"}
 
-        if self.has_non_round_cuts:
+        if has_non_round_cuts:
             self.report({"WARNING"}, "This tool is optimized for round cuts and may work poorly with other gem cuts")
 
         prefs = context.preferences.addons[var.ADDON_ID].preferences
