@@ -554,6 +554,10 @@ class VIEW3D_PT_jewelcraft_object(SidebarSetup, Panel):
         layout.operator("object.jewelcraft_resize", icon_value=icon("RESIZE"))
 
         col = layout.column(align=True)
+        col.operator("object.jewelcraft_increment_size", icon_value=icon("RESIZE"))
+        col.operator("object.jewelcraft_increment_size_modal", icon_value=icon("RESIZE"))
+
+        col = layout.column(align=True)
         col.operator("object.jewelcraft_lattice_project", icon_value=icon("LATTICE_PROJECT"))
         col.operator("object.jewelcraft_lattice_profile", icon_value=icon("LATTICE_PROFILE"))
 
