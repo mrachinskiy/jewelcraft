@@ -90,7 +90,7 @@ def handler_del() -> None:
 
 
 def handler_toggle(self, context) -> None:
-    if self.show_stone_magnet:
+    if self.show_gems_magnet:
         handler_add()
     else:
         handler_del()
@@ -104,7 +104,7 @@ def _timer() -> float | None:
     context = bpy.context
     wm_props = getattr(getattr(context, "window_manager", None), "jewelcraft", None)
 
-    if wm_props is None or not wm_props.show_stone_magnet:
+    if wm_props is None or not wm_props.show_gems_magnet:
         _STATE.reset()
         return None
 
@@ -130,8 +130,8 @@ def _timer() -> float | None:
     scene_props = context.scene.jewelcraft
     gems = _collect_gems(context, scene_props, selected_gems)
     to_scene = unit.Scale().to_scene
-    search_distance = to_scene(scene_props.stone_magnet_distance)
-    max_distance = to_scene(scene_props.stone_magnet_max_distance)
+    search_distance = to_scene(scene_props.gems_magnet_distance)
+    max_distance = to_scene(scene_props.gems_magnet_max_distance)
 
     if len(gems) < 2:
         _STATE.clear_drag()
@@ -153,7 +153,7 @@ def _timer() -> float | None:
                 selected_keys,
                 search_distance,
                 max_distance,
-                scene_props.stone_magnet_strength,
+                scene_props.gems_magnet_strength,
                 delta_time,
                 transform_operator,
             )
@@ -211,7 +211,7 @@ def _collect_gems(context, props, selected_gems: list[bpy.types.Object]) -> dict
             for gem_object in selected_gems
             for collection in gem_object.users_collection
         }
-        if props.stone_magnet_same_collection and selected_gems
+        if props.gems_magnet_same_collection and selected_gems
         else None
     )
     gems = {}
@@ -679,7 +679,7 @@ def _snap_location(context, transform_operator, gem: _Gem, next_location: Vector
 
 
 def _should_snap_to_face(context, transform_operator) -> tuple[bool, set[str]]:
-    if not context.scene.jewelcraft.stone_magnet_snap_to_face:
+    if not context.scene.jewelcraft.gems_magnet_snap_to_face:
         return False, set()
 
     elements = _snap_elements(context, transform_operator)
