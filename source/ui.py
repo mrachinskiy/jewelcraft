@@ -128,6 +128,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
         layout.operator("wm.call_panel", text="Spacing Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing_overlay"
         layout.operator("wm.call_panel", text="Gem Map Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_gem_map_overlay"
+        layout.operator("wm.call_panel", text="Gems Magnet", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_stone_magnet"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
         layout.separator()
@@ -436,6 +437,34 @@ class VIEW3D_PT_jewelcraft_gem_map_overlay(SidebarSetup, Panel):
         col.prop(props, "overlay_gem_map_show_in_front")
         col.prop(props, "overlay_gem_map_use_material_color")
         col.prop(props, "overlay_gem_map_opacity")
+
+
+class VIEW3D_PT_jewelcraft_stone_magnet(SidebarSetup, Panel):
+    bl_label = "Gems Magnet"
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
+
+    def draw_header(self, context):
+        wm_props = context.window_manager.jewelcraft
+        self.layout.prop(wm_props, "show_stone_magnet", text="")
+
+    def draw(self, context):
+        props = context.scene.jewelcraft
+        wm_props = context.window_manager.jewelcraft
+
+        self.popover_header_prop(wm_props, "show_stone_magnet")
+
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        col = layout.column(align=True)
+        col.active = wm_props.show_stone_magnet
+        col.prop(props, "stone_magnet_same_collection")
+        col.prop(props, "stone_magnet_snap_to_face")
+        col.prop(props, "stone_magnet_distance", slider=True)
+        col.prop(props, "stone_magnet_max_distance", slider=True)
+        col.prop(props, "stone_magnet_strength")
 
 
 class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
