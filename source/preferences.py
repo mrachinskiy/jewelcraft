@@ -98,6 +98,11 @@ def upd_gem_map_overlay(self, context):
     overlays.gem_map.handler_toggle(self, context)
 
 
+def upd_stone_magnet(self, context):
+    from .lib import overlays
+    overlays.stone_magnet.handler_toggle(self, context)
+
+
 def upd_material_list_rename(self, context):
     if not self.name:
         self["name"] = self.name_orig
@@ -748,6 +753,11 @@ class WmProperties(PropertyGroup):
         description="Show color-coded gem map",
         update=upd_gem_map_overlay,
     )
+    show_stone_magnet: BoolProperty(
+        name="Gems Magnet",
+        description="Pull neighboring gems toward spacing-aware positions while selected gems move",
+        update=upd_stone_magnet,
+    )
     asset_folder: EnumProperty(
         name="Category",
         description="Asset category",
@@ -817,6 +827,45 @@ class SceneProperties(PropertyGroup):
         name="Opacity",
         default=0.8,
         min=0.0,
+        max=1.0,
+        precision=2,
+        subtype="FACTOR",
+    )
+    stone_magnet_same_collection: BoolProperty(
+        name="Same Collection",
+        description="Limit magnet influence to gems that share a collection with the selected gems",
+        default=True,
+    )
+    stone_magnet_snap_to_face: BoolProperty(
+        name="Snap to Face",
+        description="Use Gems Magnet face projection and normal alignment fallback for face snap workflows",
+        default=True,
+    )
+    stone_magnet_distance: FloatProperty(
+        name="Search Distance",
+        description="Maximum girdle-to-girdle gap for gems to count as connected neighbors",
+        default=0.7,
+        min=0.1,
+        max=1.0,
+        step=1,
+        precision=2,
+        unit="LENGTH",
+    )
+    stone_magnet_max_distance: FloatProperty(
+        name="Max Distance",
+        description="Maximum girdle-to-girdle distance from selected gems for magnet search",
+        default=5.0,
+        min=1.0,
+        max=20.0,
+        step=1,
+        precision=2,
+        unit="LENGTH",
+    )
+    stone_magnet_strength: FloatProperty(
+        name="Strength",
+        description="Overall magnet mobility strength; gems farther from selected gems move less",
+        default=0.5,
+        min=0.01,
         max=1.0,
         precision=2,
         subtype="FACTOR",
