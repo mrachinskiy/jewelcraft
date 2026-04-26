@@ -6,18 +6,10 @@ def draw(self, context):
     layout = self.layout
     layout.use_property_split = True
     layout.use_property_decorate = False
-    has_non_round_cuts = any(ob["gem"]["cut"] != "ROUND" for ob in context.selected_objects if "gem" in ob)
 
     layout.separator()
 
-    if self.selected_gem_count < 2:
-        row = layout.row()
-        row.alert = True
-        row.alignment = "RIGHT"
-        row.label(text="At least two gem objects must be selected", icon="ERROR")
-        layout.separator()
-
-    if has_non_round_cuts:
+    if self.has_non_round_cuts:
         row = layout.row()
         row.alert = True
         row.alignment = "RIGHT"

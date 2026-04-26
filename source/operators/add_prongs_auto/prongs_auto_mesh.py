@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from dataclasses import dataclass
 from itertools import combinations
 from statistics import median
+from typing import NamedTuple
 
 import bl_math
 from mathutils import Matrix, Vector
@@ -16,24 +16,21 @@ _MAX_CONNECTIONS = 2048
 _MAX_PRONGS = 4096
 
 
-@dataclass(slots=True)
-class GemInfo:
+class GemInfo(NamedTuple):
     location: Vector
     radius: float
     matrix: Matrix
     normal: Vector
 
 
-@dataclass(slots=True)
-class ConnectionInfo:
+class ConnectionInfo(NamedTuple):
     first: GemInfo
     second: GemInfo
     first_point: Vector
     second_point: Vector
 
 
-@dataclass(slots=True)
-class ProngInfo:
+class ProngInfo(NamedTuple):
     position: Vector
     normal: Vector
     size: float

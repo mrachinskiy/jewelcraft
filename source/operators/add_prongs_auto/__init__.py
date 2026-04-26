@@ -12,6 +12,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
     bl_description = "Automatically place standard prongs between selected gems"
     bl_idname = "object.jewelcraft_prongs_auto_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
+    has_non_round_cuts = False
 
     collection_name: StringProperty(
         name="Collection",
@@ -21,22 +22,24 @@ class OBJECT_OT_prongs_auto_add(Operator):
     )
     
     size_ratio: FloatProperty(
-        name="Size Ratio",
-        description="Prong diameter relative to the connection size of the paired gems",
+        name="Size",
+        description="Multiplier for prong diameter relative to the connection size of the paired gems; for example, 0.40 makes the prong diameter 40% of that size",
         default=0.4,
         min=0.1,
         max=0.5,
         soft_max=0.5,
+        step=1,
         precision=2,
         options={"SKIP_SAVE"},
     )
     height_ratio: FloatProperty(
-        name="Height Ratio",
-        description="Prong height above the connection midpoint, relative to the paired gem size",
+        name="Height",
+        description="Multiplier for prong height above the connection midpoint relative to the paired gem size; higher values produce taller prongs",
         default=0.2,
         min=0.1,
         max=1.0,
         soft_max=1.0,
+        step=1,
         precision=2,
         options={"SKIP_SAVE"},
     )
@@ -47,18 +50,19 @@ class OBJECT_OT_prongs_auto_add(Operator):
         min=0.0,
         max=1.0,
         soft_max=1.0,
-        subtype="FACTOR",
+        step=1,
         precision=2,
         options={"SKIP_SAVE"},
     )
     
     width_between_prongs: FloatProperty(
-        name="Width Btw Ratio",
-        description="Center-to-center spacing between the two prongs created for each gem connection",
+        name="Width Between",
+        description="Multiplier for the center-to-center spacing between the two prongs created for each gem connection; higher values place them farther apart",
         default=0.6,
         min=0.1,
         max=1.0,
         soft_max=1.0,
+        step=1,
         precision=2,
         options={"SKIP_SAVE"},
     )
@@ -92,7 +96,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
         min=0.001,
         soft_max=1.0,
         precision=3,
-        step=0.1,
+        step=2.5,
         unit="LENGTH",
         options={"SKIP_SAVE"},
     )
@@ -103,6 +107,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
         soft_min=0.0,
         soft_max=1.0,
         subtype="FACTOR",
+        step=1,
         options={"SKIP_SAVE"},
     )
     taper: FloatProperty(
@@ -112,6 +117,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
         min=0.0,
         soft_max=1.0,
         subtype="FACTOR",
+        step=1,
         options={"SKIP_SAVE"},
     )
     detalization: IntProperty(
@@ -124,8 +130,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         options={"SKIP_SAVE"},
     )
     
-    selected_gem_count = 0
-
     def draw(self, context):
         from . import prongs_auto_ui
         prongs_auto_ui.draw(self, context)
@@ -136,10 +140,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         from ..add_prongs import prongs_mesh
 
         gems = [ob for ob in context.selected_objects if "gem" in ob]
-
-        if self.selected_gem_count < 2:
-            self.report({"ERROR"}, "At least two gem objects must be selected")
-            return {"FINISHED"}
 
         collection = context.blend_data.collections.get(self.collection_name)
 
@@ -184,14 +184,13 @@ class OBJECT_OT_prongs_auto_add(Operator):
 
     def invoke(self, context, event):
         gems = [ob for ob in context.selected_objects if "gem" in ob]
-        self.selected_gem_count = len(gems)
-        has_non_round_cuts = any(ob["gem"]["cut"] != "ROUND" for ob in gems)
+        self.has_non_round_cuts = any(ob["gem"]["cut"] != "ROUND" for ob in gems)
 
-        if self.selected_gem_count < 2:
+        if len(gems) < 2:
             self.report({"ERROR"}, "At least two gem objects must be selected")
             return {"CANCELLED"}
 
-        if has_non_round_cuts:
+        if self.has_non_round_cuts:
             self.report({"WARNING"}, "This tool is optimized for round cuts and may work poorly with other gem cuts")
 
         prefs = context.preferences.addons[var.ADDON_ID].preferences
