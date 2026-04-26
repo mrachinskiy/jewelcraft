@@ -1,6 +1,7 @@
 from .add_cutter import *
 from .add_microprong import *
 from .add_prongs import *
+from .add_prongs_auto import *
 from .asset_manager import *
 from .design_report import *
 from .distribute_on_curve import *

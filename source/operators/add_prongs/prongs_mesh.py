@@ -55,24 +55,45 @@ def _dome(bm: BMesh, radius: float, z_co: float, scale: float, detalization: int
     return step
 
 
-def create_prongs(self):
+def create_prong(
+    diameter: float,
+    z1: float,
+    z2: float,
+    bump_scale: float,
+    taper: float,
+    detalization: int,
+) -> BMesh:
+    prong_rad = diameter / 2
 
+    bm = bmesh.new()
+
+    if bump_scale:
+        vs1 = _dome(bm, prong_rad, z1, bump_scale, detalization)
+    else:
+        vs1 = _circle(bm, prong_rad, z1, detalization)
+        bm.faces.new(vs1).normal_flip()
+
+    vs2 = _circle(bm, prong_rad * (taper + 1), -z2, detalization)
+    bm.faces.new(vs2)
+    mesh.bridge_verts(bm, vs2, vs1)
+
+    return bm
+
+
+def create_prongs(self):
     prong_rad = self.diameter / 2
 
     # Prong
     # ---------------------------
 
-    bm = bmesh.new()
-
-    if self.bump_scale:
-        vs1 = _dome(bm, prong_rad, self.z1, self.bump_scale, self.detalization)
-    else:
-        vs1 = _circle(bm, prong_rad, self.z1, self.detalization)
-        bm.faces.new(vs1).normal_flip()
-
-    vs2 = _circle(bm, prong_rad * (self.taper + 1), -self.z2, self.detalization)
-    bm.faces.new(vs2)
-    mesh.bridge_verts(bm, vs2, vs1)
+    bm = create_prong(
+        self.diameter,
+        self.z1,
+        self.z2,
+        self.bump_scale,
+        self.taper,
+        self.detalization,
+    )
 
     # Transforms
     # ---------------------------
