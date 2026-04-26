@@ -922,7 +922,7 @@ class OBJECT_OT_increment_size_modal(Operator):
         neg = self.step < 0.0
 
         for ob in context.selected_objects:
-            size_orig = self.dims_orig[ob.name][axis]
+            size_orig = ob.dimensions[axis]
 
             if (neg and size_orig < self.min) or (not neg and size_orig > self.max):
                 continue
