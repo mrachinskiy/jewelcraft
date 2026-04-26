@@ -30,6 +30,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
         soft_max=0.5,
         step=1,
         precision=2,
+        subtype="FACTOR",
         options={"SKIP_SAVE"},
     )
     height_ratio: FloatProperty(
@@ -41,6 +42,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
         soft_max=1.0,
         step=1,
         precision=2,
+        subtype="FACTOR",
         options={"SKIP_SAVE"},
     )
     uniformity: FloatProperty(
@@ -52,6 +54,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
         soft_max=1.0,
         step=1,
         precision=2,
+        subtype="FACTOR",
         options={"SKIP_SAVE"},
     )
     
@@ -64,6 +67,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
         soft_max=1.0,
         step=1,
         precision=2,
+        subtype="FACTOR",
         options={"SKIP_SAVE"},
     )
     max_gap: FloatProperty(
@@ -106,8 +110,8 @@ class OBJECT_OT_prongs_auto_add(Operator):
         default=0.5,
         soft_min=0.0,
         soft_max=1.0,
-        subtype="FACTOR",
         step=1,
+        subtype="FACTOR",
         options={"SKIP_SAVE"},
     )
     taper: FloatProperty(
@@ -116,8 +120,8 @@ class OBJECT_OT_prongs_auto_add(Operator):
         default=0.0,
         min=0.0,
         soft_max=1.0,
-        subtype="FACTOR",
         step=1,
+        subtype="FACTOR",
         options={"SKIP_SAVE"},
     )
     detalization: IntProperty(
