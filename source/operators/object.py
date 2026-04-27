@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from math import pi, tau, modf
+from math import modf, pi, tau
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
@@ -9,6 +9,7 @@ from bpy.props import BoolProperty, EnumProperty, FloatProperty, IntProperty, St
 from bpy.types import Object, Operator
 from mathutils import Matrix
 
+from .. import var
 from ..lib import unit
 
 
@@ -776,25 +777,30 @@ def _fraction_step(value: float, step: float) -> float:
 
 class OBJECT_OT_incremental_resize(Operator):
     bl_label = "Incremental Resize"
-    bl_description = "Scale selected objects to given size"
+    bl_description = "Individually scale selected objects by given increment"
     bl_idname = "object.jewelcraft_incremental_resize"
     bl_options = {"REGISTER", "UNDO"}
 
     is_running = False
+    first_run = True
     handler_text = None
-    filter_gems = False
 
+    filter_gems = False
     axis: IntProperty(min=0, max=2)
 
     step: FloatProperty(min=0.0, default=0.1)
     min: FloatProperty(min=0.0, default=0.3)
     max: FloatProperty(min=0.0, default=1.0)
-
     gem_step: FloatProperty(min=0.0, default=0.1)
     gem_min: FloatProperty(min=0.0, default=0.8)
     gem_max: FloatProperty(min=0.0, default=3.0)
 
     def modal(self, context, event):
+        if event.shift:
+            value = 0.01
+        else:
+            value = 0.1
+
         if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
             self.__class__.is_running = False
             bpy.types.SpaceView3D.draw_handler_remove(self.handler_text, "WINDOW")
@@ -818,26 +824,14 @@ class OBJECT_OT_incremental_resize(Operator):
         elif event.type in {"MINUS", "EQUAL"} and event.value == "PRESS":
             if event.type == "MINUS":
                 if event.alt:
-                    if event.shift:
-                        self.step -= 0.01
-                    else:
-                        self.step -= 0.1
+                    self.step -= value
                 else:
-                    if event.shift:
-                        self.gem_step -= 0.01
-                    else:
-                        self.gem_step -= 0.1
+                    self.gem_step -= value
             else:
                 if event.alt:
-                    if event.shift:
-                        self.step += 0.01
-                    else:
-                        self.step += 0.1
+                    self.step += value
                 else:
-                    if event.shift:
-                        self.gem_step += 0.01
-                    else:
-                        self.gem_step += 0.1
+                    self.gem_step += value
 
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
@@ -845,28 +839,28 @@ class OBJECT_OT_incremental_resize(Operator):
         elif event.type in {"LEFT_BRACKET", "RIGHT_BRACKET"} and event.value == "PRESS":
             if event.type == "LEFT_BRACKET":
                 if event.alt:
-                    self.min -= 0.1
+                    self.min -= value
                 else:
-                    self.gem_min -= 0.1
+                    self.gem_min -= value
             else:
                 if event.alt:
-                    self.min += 0.1
+                    self.min += value
                 else:
-                    self.gem_min += 0.1
+                    self.gem_min += value
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
         elif event.type in {"COMMA", "PERIOD"} and event.value == "PRESS":
             if event.type == "COMMA":
                 if event.alt:
-                    self.max -= 0.1
+                    self.max -= value
                 else:
-                    self.gem_max -= 0.1
+                    self.gem_max -= value
             else:
                 if event.alt:
-                    self.max += 0.1
+                    self.max += value
                 else:
-                    self.gem_max += 0.1
+                    self.gem_max += value
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
@@ -932,6 +926,16 @@ class OBJECT_OT_incremental_resize(Operator):
 
         self.__class__.is_running = True
 
+        if self.__class__.first_run:
+            self.__class__.first_run = False
+            prefs = context.preferences.addons[var.ADDON_ID].preferences
+            self.gem_step = prefs.resize_gem_step
+            self.gem_min = prefs.resize_gem_min
+            self.gem_max = prefs.resize_gem_max
+            self.step = prefs.resize_step
+            self.min = prefs.resize_min
+            self.max = prefs.resize_max
+
         context.window_manager.modal_handler_add(self)
         context.workspace.status_text_set("ESC/↵/␣: Exit")
 
@@ -945,14 +949,15 @@ class OBJECT_OT_incremental_resize(Operator):
         lay.bool(_("Gems Only"), "(F)", "filter_gems")
         lay.enum(_("Axis"), "(←/→)", "axis", (_("X"), _("Y"), _("Z")))
         lay.separator()
-        lay.int(_("Step"), "(Alt -/+)", "step")
-        lay.int(_("Min"), "(Alt [/])", "min")
-        lay.int(_("Max"), "(Alt </>)", "max")
-        lay.separator()
         lay.hotkey(_("Gems"), "")
         lay.int(_("Step"), "(-/+)", "gem_step")
         lay.int(_("Min"), "([/])", "gem_min")
         lay.int(_("Max"), "(</>)", "gem_max")
+        lay.separator()
+        lay.hotkey(_("Other"), "")
+        lay.int(_("Step"), "(Alt -/+)", "step")
+        lay.int(_("Min"), "(Alt [/])", "min")
+        lay.int(_("Max"), "(Alt </>)", "max")
 
         self.handler_text = bpy.types.SpaceView3D.draw_handler_add(
             view3d_lib.draw_options,

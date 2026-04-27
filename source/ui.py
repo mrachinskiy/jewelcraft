@@ -551,8 +551,9 @@ class VIEW3D_PT_jewelcraft_object(SidebarSetup, Panel):
         row.operator("object.jewelcraft_radial_instance", text="Radial", text_ctxt="*", icon_value=icon("RADIAL"))
         col.operator("object.jewelcraft_instance_face", icon_value=icon("INSTANCE_FACE"))
 
-        layout.operator("object.jewelcraft_resize", icon_value=icon("RESIZE"))
-        layout.operator("object.jewelcraft_incremental_resize", icon_value=icon("RESIZE"))
+        row = layout.row(align=True)
+        row.operator("object.jewelcraft_resize", icon_value=icon("RESIZE"))
+        row.operator("object.jewelcraft_incremental_resize", icon_value=icon("RESIZE"), text="Incremental")
 
         col = layout.column(align=True)
         col.operator("object.jewelcraft_lattice_project", icon_value=icon("LATTICE_PROJECT"))
@@ -776,6 +777,23 @@ def prefs_ui(self, context):
         op.prop = "gem_colors"
         op.move_up = True
         sub.operator("wm.jewelcraft_ul_move", text="", icon="TRIA_DOWN").prop = "gem_colors"
+
+    if (panel := _prop_panel(main, wm_props, "prefs_show_edit")):
+        panel.label(text="Incremental Resize")
+
+        panel.label(text="Gems")
+        col = panel.column(align=True)
+        col.prop(self, "resize_gem_step")
+        row = col.row(align=True)
+        row.prop(self, "resize_gem_min", text="Clamp")
+        row.prop(self, "resize_gem_max", text="")
+
+        panel.label(text="Other")
+        col = panel.column(align=True)
+        col.prop(self, "resize_step")
+        row = col.row(align=True)
+        row.prop(self, "resize_min", text="Clamp")
+        row.prop(self, "resize_max", text="")
 
     if (panel := _prop_panel(main, wm_props, "prefs_show_asset_manager")):
         panel.label(text="Libraries")

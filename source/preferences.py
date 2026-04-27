@@ -590,6 +590,16 @@ class Preferences(ReportLangEnum, AddonPreferences):
         subtype="DIR_PATH",
     )
 
+    # Edit
+    # ------------------------
+
+    resize_gem_step: FloatProperty(name="Step", default=0.1, min=0.0, soft_max=1.0, step=10)
+    resize_gem_min: FloatProperty(name="Min", default=0.8, min=0.0, soft_max=1.0, step=10)
+    resize_gem_max: FloatProperty(name="Max", default=3.0, min=0.0, soft_max=1.0, step=10)
+    resize_step: FloatProperty(name="Step", default=0.1, min=0.0, soft_max=1.0, step=10)
+    resize_min: FloatProperty(name="Min", default=0.3, min=0.0, soft_max=1.0, step=10)
+    resize_max: FloatProperty(name="Max", default=1.0, min=0.0, soft_max=1.0, step=10)
+
     # Asset
     # ------------------------
 
@@ -712,6 +722,7 @@ class Preferences(ReportLangEnum, AddonPreferences):
 class WmProperties(PropertyGroup):
     prefs_show_general: BoolProperty(name="General")
     prefs_show_gems: BoolProperty(name="Gem Colors")
+    prefs_show_edit: BoolProperty(name="Edit")
     prefs_show_asset_manager: BoolProperty(name="Asset Manager")
     prefs_show_design_report: BoolProperty(name="Design Report")
     prefs_show_themes: BoolProperty(name="Themes")
