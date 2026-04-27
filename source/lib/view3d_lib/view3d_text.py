@@ -11,6 +11,7 @@ _TYPE_BOOL = 1
 _TYPE_INT = 2
 _TYPE_PROC = 3
 _TYPE_ENUM = 4
+_TYPE_HOTKEY = 5
 
 
 class _Prop(NamedTuple):
@@ -64,6 +65,9 @@ class Layout:
 
     def enum(self, name: str, key: str, attr: str, items: tuple[str]) -> None:
         self._prop(_TYPE_ENUM, name, key, attr, items)
+
+    def hotkey(self, name: str, key: str) -> None:
+        self._prop(_TYPE_HOTKEY, name, key, "", None)
 
 
 def _get_font_scale(prefs: bpy.types.Preferences) -> float:
@@ -180,7 +184,7 @@ def draw_options(data, layout: Layout, x: int, y: int) -> None:
             _x += 20
             blf.position(fontid, _x, y, 0.0)
             blf.color(fontid, *color_blue)
-            blf.draw(fontid, str(round(getattr(data, prop.attr), 1)))
+            blf.draw(fontid, str(round(getattr(data, prop.attr), 3)))
 
         elif prop.type is _TYPE_ENUM:
             _x += w_col2 + 10
