@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from math import pi, tau
+from math import pi, tau, modf
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
@@ -769,179 +769,158 @@ class OBJECT_OT_resize(Operator):
         return wm.invoke_props_dialog(self)
 
 
-class OBJECT_OT_increment_size(Operator):
-    bl_label = "Increment Size"
+def _fraction_step(value: float, step: float) -> float:
+    f, i = modf(value)
+    return i + (round(f / step) * step)
+
+
+class OBJECT_OT_incremental_resize(Operator):
+    bl_label = "Incremental Resize"
     bl_description = "Scale selected objects to given size"
-    bl_idname = "object.jewelcraft_increment_size"
-    bl_options = {"REGISTER", "UNDO"}
-
-    dims_orig: dict[str, tuple[float, float, float]]
-
-    axis: EnumProperty(
-        name="Axis",
-        items=(
-            ("0", "X", ""),
-            ("1", "Y", ""),
-            ("2", "Z", ""),
-        ),
-    )
-    step: FloatProperty(name="Increment", step=10, unit="LENGTH", default=0.1)
-    min: FloatProperty(name="Min", step=10, unit="LENGTH", default=0.8)
-    max: FloatProperty(name="Max", step=10, unit="LENGTH", default=3.0)
-
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
-
-        layout.separator()
-
-        col = layout.column()
-        col.row().prop(self, "axis", expand=True)
-        col.prop(self, "step")
-        row = col.row(align=True)
-        row.prop(self, "min", text="Clamp")
-        row.prop(self, "max", text="")
-
-        layout.separator()
-
-    def execute(self, context):
-        axis = int(self.axis)
-        neg = self.step < 0.0
-
-        for ob in context.selected_objects:
-            size_orig = self.dims_orig[ob.name][axis]
-
-            if (neg and size_orig < self.min) or (not neg and size_orig > self.max):
-                continue
-
-            scale = (size_orig + self.step) / size_orig
-            size_new = size_orig * scale
-
-            if neg and size_new < self.min:
-                scale = self.min / size_orig
-            elif not neg and size_new > self.max:
-                scale = self.max / size_orig
-
-            ob.scale *= scale
-
-        return {"FINISHED"}
-
-    def invoke(self, context, event):
-        obs = context.selected_objects
-        if not obs:
-            return {"CANCELLED"}
-
-        self.dims_orig = {ob.name: ob.dimensions.to_tuple() for ob in obs}
-        return self.execute(context)
-
-
-class OBJECT_OT_increment_size_modal(Operator):
-    bl_label = "Increment Size Modal"
-    bl_description = "Scale selected objects to given size"
-    bl_idname = "object.jewelcraft_increment_size_modal"
+    bl_idname = "object.jewelcraft_incremental_resize"
     bl_options = {"REGISTER", "UNDO"}
 
     is_running = False
-    dims_orig: dict[str, tuple[float, float, float]]
+    handler_text = None
+    filter_gems = False
 
-    axis: EnumProperty(
-        name="Axis",
-        items=(
-            ("0", "X", ""),
-            ("1", "Y", ""),
-            ("2", "Z", ""),
-        ),
-    )
-    step: FloatProperty(name="Increment", step=10, unit="LENGTH", default=0.1)
-    min: FloatProperty(name="Min", step=10, unit="LENGTH", default=0.8)
-    max: FloatProperty(name="Max", step=10, unit="LENGTH", default=3.0)
+    axis: IntProperty(min=0, max=2)
 
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
+    step: FloatProperty(min=0.0, default=0.1)
+    min: FloatProperty(min=0.0, default=0.3)
+    max: FloatProperty(min=0.0, default=1.0)
 
-        layout.separator()
-
-        col = layout.column()
-        col.row().prop(self, "axis", expand=True)
-        col.prop(self, "step")
-        row = col.row(align=True)
-        row.prop(self, "min", text="Clamp")
-        row.prop(self, "max", text="")
-
-        layout.separator()
+    gem_step: FloatProperty(min=0.0, default=0.1)
+    gem_min: FloatProperty(min=0.0, default=0.8)
+    gem_max: FloatProperty(min=0.0, default=3.0)
 
     def modal(self, context, event):
         if event.type in {"ESC", "RET", "SPACE", "NUMPAD_ENTER"}:
-            bpy.types.SpaceView3D.draw_handler_remove(self.handler_text, "WINDOW")
             self.__class__.is_running = False
+            bpy.types.SpaceView3D.draw_handler_remove(self.handler_text, "WINDOW")
             context.workspace.status_text_set(None)
-            self.region.tag_redraw()
+            context.region.tag_redraw()
             return {"FINISHED"}
 
-        elif event.type == "WHEELUPMOUSE" and event.value == "PRESS":
-            self.step = 0.1
-            self.execute(context)
-            self.dims_orig = {ob.name: ob.dimensions.to_tuple() for ob in context.selected_objects}
-            self.region.tag_redraw()
+        elif event.type == "F" and event.value == "PRESS":
+            self.filter_gems = not self.filter_gems
+            context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type == "WHEELDOWNMOUSE" and event.value == "PRESS":
-            self.step = -0.1
-            self.execute(context)
-            self.dims_orig = {ob.name: ob.dimensions.to_tuple() for ob in context.selected_objects}
-            self.region.tag_redraw()
+        elif event.type in {"LEFT_ARROW", "RIGHT_ARROW"} and event.value == "PRESS":
+            if event.type == "LEFT_ARROW":
+                self.axis -= 1
+            else:
+                self.axis += 1
+            context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type == "RIGHT_BRACKET" and event.value == "PRESS":
-            self.min += 0.1
-            self.region.tag_redraw()
+        elif event.type in {"MINUS", "EQUAL"} and event.value == "PRESS":
+            if event.type == "MINUS":
+                if event.alt:
+                    if event.shift:
+                        self.step -= 0.01
+                    else:
+                        self.step -= 0.1
+                else:
+                    if event.shift:
+                        self.gem_step -= 0.01
+                    else:
+                        self.gem_step -= 0.1
+            else:
+                if event.alt:
+                    if event.shift:
+                        self.step += 0.01
+                    else:
+                        self.step += 0.1
+                else:
+                    if event.shift:
+                        self.gem_step += 0.01
+                    else:
+                        self.gem_step += 0.1
+
+            context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type == "LEFT_BRACKET" and event.value == "PRESS":
-            self.min -= 0.1
-            self.region.tag_redraw()
+        elif event.type in {"LEFT_BRACKET", "RIGHT_BRACKET"} and event.value == "PRESS":
+            if event.type == "LEFT_BRACKET":
+                if event.alt:
+                    self.min -= 0.1
+                else:
+                    self.gem_min -= 0.1
+            else:
+                if event.alt:
+                    self.min += 0.1
+                else:
+                    self.gem_min += 0.1
+            context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type == "PERIOD" and event.value == "PRESS":
-            self.max += 0.1
-            self.region.tag_redraw()
+        elif event.type in {"COMMA", "PERIOD"} and event.value == "PRESS":
+            if event.type == "COMMA":
+                if event.alt:
+                    self.max -= 0.1
+                else:
+                    self.gem_max -= 0.1
+            else:
+                if event.alt:
+                    self.max += 0.1
+                else:
+                    self.gem_max += 0.1
+            context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type == "COMMA" and event.value == "PRESS":
-            self.max -= 0.1
-            self.region.tag_redraw()
+        elif not context.selected_objects:
+            pass
+
+        elif event.type in {"WHEELDOWNMOUSE", "WHEELUPMOUSE"} and event.value == "PRESS":
+            if event.type == "WHEELDOWNMOUSE":
+                self.execute_modal(context, neg=True)
+            else:
+                self.execute_modal(context)
+            context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
         return {"PASS_THROUGH"}
 
-    def execute(self, context):
-        axis = int(self.axis)
-        neg = self.step < 0.0
+    def execute_modal(self, context, neg=False):
+        from ..lib import unit
+
+        if unit._eq(self.gem_step, 0.0) or unit._eq(self.step, 0.0):
+            return
 
         for ob in context.selected_objects:
-            size_orig = ob.dimensions[axis]
+            if "gem" in ob:
+                _step = -self.gem_step if neg else self.gem_step
+                _min = self.gem_min
+                _max = self.gem_max
+            else:
+                if self.filter_gems:
+                    continue
+                _step = -self.step if neg else self.step
+                _min = self.min
+                _max = self.max
 
-            if (neg and size_orig < self.min) or (not neg and size_orig > self.max):
+            size_orig = ob.dimensions[self.axis]
+
+            if (neg and size_orig < _min) or (not neg and size_orig > _max):
                 continue
 
-            scale = (size_orig + self.step) / size_orig
-            size_new = size_orig * scale
+            size_new = _fraction_step(size_orig, _step)
+            size_new = _fraction_step(size_new + _step, _step)
+            scale = size_new / size_orig
 
-            if neg and size_new < self.min:
-                scale = self.min / size_orig
-            elif not neg and size_new > self.max:
-                scale = self.max / size_orig
+            if neg and size_new < _min:
+                scale = _min / size_orig
+            elif not neg and size_new > _max:
+                scale = _max / size_orig
 
             ob.scale *= scale
 
-        return {"FINISHED"}
+        context.view_layer.update()
 
     def invoke(self, context, event):
         from ..lib import view3d_lib
-        from .gem_map import onscreen
 
         if self.__class__.is_running:
             self.report({"ERROR"}, "Operator already running")
@@ -951,14 +930,7 @@ class OBJECT_OT_increment_size_modal(Operator):
             self.report({"ERROR"}, "Area type is not 3D View")
             return {"CANCELLED"}
 
-        obs = context.selected_objects
-        if not obs:
-            return {"CANCELLED"}
-
         self.__class__.is_running = True
-        self.region = context.region
-
-        self.dims_orig = {ob.name: ob.dimensions.to_tuple() for ob in obs}
 
         context.window_manager.modal_handler_add(self)
         context.workspace.status_text_set("ESC/↵/␣: Exit")
@@ -967,9 +939,20 @@ class OBJECT_OT_increment_size_modal(Operator):
         # ----------------------------
 
         lay = view3d_lib.Layout()
-        lay.int(_("Size"), "(MDown/MUp)", "step")
-        lay.int(_("Min"), "([/])", "min")
-        lay.int(_("Max"), "(</>)", "max")
+        lay.hotkey(_("Exit"), "(Esc)")
+        lay.hotkey(_("Resize"), "(Mouse Wheel)")
+        lay.separator()
+        lay.bool(_("Gems Only"), "(F)", "filter_gems")
+        lay.enum(_("Axis"), "(←/→)", "axis", (_("X"), _("Y"), _("Z")))
+        lay.separator()
+        lay.int(_("Step"), "(Alt -/+)", "step")
+        lay.int(_("Min"), "(Alt [/])", "min")
+        lay.int(_("Max"), "(Alt </>)", "max")
+        lay.separator()
+        lay.hotkey(_("Gems"), "")
+        lay.int(_("Step"), "(-/+)", "gem_step")
+        lay.int(_("Min"), "([/])", "gem_min")
+        lay.int(_("Max"), "(</>)", "gem_max")
 
         self.handler_text = bpy.types.SpaceView3D.draw_handler_add(
             view3d_lib.draw_options,
@@ -978,8 +961,8 @@ class OBJECT_OT_increment_size_modal(Operator):
             "POST_PIXEL",
         )
 
-        self.region.tag_redraw()
-        return {'RUNNING_MODAL'}
+        context.region.tag_redraw()
+        return {"RUNNING_MODAL"}
 
 
 class CURVE_OT_length_display(Operator):
