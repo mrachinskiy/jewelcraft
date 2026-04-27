@@ -1,5 +1,6 @@
-# SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 Artem Viveritsa
+# SPDX-FileContributor: Modified by Mikhail Rachinskiy
 
 from itertools import combinations
 from statistics import median
@@ -8,8 +9,7 @@ from typing import NamedTuple
 import bl_math
 from mathutils import Matrix, Vector
 
-from ...lib import asset
-from ...lib import unit
+from ...lib import asset, unit
 
 _EPS = 1e-6
 _MAX_CONNECTIONS = 2048
@@ -42,11 +42,11 @@ def create_prongs_auto(
     gems,
     size_ratio: float,
     height_ratio: float,
-    width_between_prongs: float,
+    gap: float,
     uniformity: float,
     max_gap: float,
-    weld_distance: float,
-    size_round: float,
+    merge_distance: float,
+    size_step: float,
 ) -> list[ProngInfo]:
     gem_infos = [_to_gem_info(ob) for ob in gems]
     connections = _find_valid_connections(gem_infos, max_gap)
@@ -54,13 +54,13 @@ def create_prongs_auto(
     if not connections:
         return []
 
-    prong_infos = _create_prong_infos(connections, size_ratio, height_ratio, width_between_prongs, size_round)
+    prong_infos = _create_prong_infos(connections, size_ratio, height_ratio, gap, size_step)
 
-    if weld_distance and len(prong_infos) > 1:
-        prong_infos = _merge_nearby_prongs(prong_infos, weld_distance, size_round)
+    if merge_distance and len(prong_infos) > 1:
+        prong_infos = _merge_nearby_prongs(prong_infos, merge_distance, size_step)
 
     if uniformity and len(prong_infos) > 1:
-        prong_infos = _apply_uniformity(prong_infos, uniformity, size_round)
+        prong_infos = _apply_uniformity(prong_infos, uniformity, size_step)
 
     if len(prong_infos) > _MAX_PRONGS:
         raise ValueError("Too many prongs generated. Reduce Max Gap or selection size")
@@ -78,7 +78,7 @@ def _to_gem_info(ob) -> GemInfo:
     else:
         normal.normalize()
 
-    radius = max(ob.dimensions.x, ob.dimensions.y) / 2
+    radius = max(ob.dimensions.xy) / 2.0
 
     return GemInfo(loc.copy(), radius, matrix, normal)
 
@@ -104,8 +104,8 @@ def _create_prong_infos(
     connections: list[ConnectionInfo],
     size_ratio: float,
     height_ratio: float,
-    width_between_prongs: float,
-    size_round: float,
+    gap: float,
+    size_step: float,
 ) -> list[ProngInfo]:
     unit_scale = unit.Scale()
     prong_infos = []
@@ -141,8 +141,8 @@ def _create_prong_infos(
         if avg_diameter <= _EPS:
             continue
 
-        half_width = avg_diameter * width_between_prongs * 0.5
-        size = _round_size(unit_scale, avg_diameter * size_ratio, size_round)
+        half_width = avg_diameter * gap * 0.5
+        size = _round_size(unit_scale, avg_diameter * size_ratio, size_step)
         height = avg_diameter * height_ratio
         if size <= _EPS or height <= _EPS:
             continue
@@ -158,7 +158,7 @@ def _create_prong_infos(
     return prong_infos
 
 
-def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float, size_round: float) -> list[ProngInfo]:
+def _merge_nearby_prongs(prongs: list[ProngInfo], merge_distance: float, size_step: float) -> list[ProngInfo]:
     unit_scale = unit.Scale()
     parent = list(range(len(prongs)))
 
@@ -176,7 +176,7 @@ def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float, size_rou
 
     for i, base in enumerate(prongs):
         for j in range(i + 1, len(prongs)):
-            if (base.position - prongs[j].position).length < weld_distance:
+            if (base.position - prongs[j].position).length < merge_distance:
                 union(i, j)
 
     groups = {}
@@ -195,7 +195,7 @@ def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float, size_rou
 
         position = Vector()
         normal = Vector()
-        
+
         size = 0.0
         height = 0.0
 
@@ -209,7 +209,7 @@ def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float, size_rou
         position /= count
         size /= count
         height /= count
-        size = _round_size(unit_scale, size, size_round)
+        size = _round_size(unit_scale, size, size_step)
 
         if normal.length_squared <= _EPS:
             normal = group[0].normal.copy()
@@ -222,18 +222,18 @@ def _merge_nearby_prongs(prongs: list[ProngInfo], weld_distance: float, size_rou
     return merged
 
 
-def _round_size(unit_scale: unit.Scale, size: float, size_round: float) -> float:
+def _round_size(unit_scale: unit.Scale, size: float, size_step: float) -> float:
     if size <= _EPS:
-        size_mm = size_round
+        size_mm = size_step
     else:
         size_mm = unit_scale.from_scene(size)
-        size_mm = round(size_mm / size_round) * size_round
-        size_mm = max(size_mm, size_round)
+        size_mm = round(size_mm / size_step) * size_step
+        size_mm = max(size_mm, size_step)
 
     return unit_scale.to_scene(size_mm)
 
 
-def _apply_uniformity(prongs: list[ProngInfo], uniformity: float, size_round: float) -> list[ProngInfo]:
+def _apply_uniformity(prongs: list[ProngInfo], uniformity: float, size_step: float) -> list[ProngInfo]:
     unit_scale = unit.Scale()
     median_size = median(info.size for info in prongs)
     median_height = median(info.height for info in prongs)
@@ -243,7 +243,7 @@ def _apply_uniformity(prongs: list[ProngInfo], uniformity: float, size_round: fl
     for info in prongs:
         size = bl_math.lerp(info.size, median_size, uniformity)
         height = bl_math.lerp(info.height, median_height, uniformity)
-        size = _round_size(unit_scale, size, size_round)
+        size = _round_size(unit_scale, size, size_step)
         height = max(height, _EPS)
         app(ProngInfo(info.position, info.normal, size, height, info.matrix.copy()))
 
