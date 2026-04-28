@@ -783,6 +783,8 @@ def prefs_ui(self, context):
     if (panel := _prop_panel(main, wm_props, "prefs_show_edit")):
         panel.label(text="Incremental Resize")
 
+        panel.prop(self, "resize_invert_wheel")
+
         panel.label(text="Gems")
         col = panel.column(align=True)
         col.prop(self, "resize_gem_step")

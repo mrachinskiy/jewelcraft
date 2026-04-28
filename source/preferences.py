@@ -593,6 +593,7 @@ class Preferences(ReportLangEnum, AddonPreferences):
     # Edit
     # ------------------------
 
+    resize_invert_wheel: BoolProperty(name="Invert Mouse Wheel", description="Invert mouse wheel direction")
     resize_gem_step: FloatProperty(name="Step", default=0.1, min=0.0, soft_max=1.0, step=10)
     resize_gem_min: FloatProperty(name="Min", default=0.8, min=0.0, soft_max=1.0, step=10)
     resize_gem_max: FloatProperty(name="Max", default=3.0, min=0.0, soft_max=1.0, step=10)
