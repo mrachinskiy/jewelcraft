@@ -777,23 +777,59 @@ def _fraction_step(value: float, step: float) -> float:
 
 class OBJECT_OT_incremental_resize(Operator):
     bl_label = "Incremental Resize"
-    bl_description = "Individually scale selected objects by given increment"
+    bl_description = (
+        "Individually scale selected objects by given increment\n"
+        "(Shortcut: hold Ctrl to show properties popup before executing)"
+    )
     bl_idname = "object.jewelcraft_incremental_resize"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {"UNDO"}
 
     is_running = False
     first_run = True
     handler_text = None
 
-    filter_gems = False
-    axis: IntProperty(min=0, max=2)
+    axis: EnumProperty(
+        name="Axis",
+        items=(
+            ("0", "X", ""),
+            ("1", "Y", ""),
+            ("2", "Z", ""),
+        ),
+    )
 
-    step: FloatProperty(min=0.0, default=0.1)
-    min: FloatProperty(min=0.0, default=0.3)
-    max: FloatProperty(min=0.0, default=1.0)
-    gem_step: FloatProperty(min=0.0, default=0.1)
-    gem_min: FloatProperty(min=0.0, default=0.8)
-    gem_max: FloatProperty(min=0.0, default=3.0)
+    filter_gems: BoolProperty(name="Gems Only", description="Ignore other objects")
+    axis_int: IntProperty(min=0, max=2)
+    step: FloatProperty(name="Step", min=0.0, soft_max=1.0, default=0.1, step=10)
+    min: FloatProperty(name="Min", min=0.0, soft_max=1.0, default=0.3, step=10)
+    max: FloatProperty(name="Max", min=0.0, soft_max=1.0, default=1.0, step=10)
+    gem_step: FloatProperty(name="Step", min=0.0, soft_max=1.0, default=0.1, step=10)
+    gem_min: FloatProperty(name="Min", min=0.0, soft_max=1.0, default=0.8, step=10)
+    gem_max: FloatProperty(name="Max", min=0.0, soft_max=1.0, default=3.0, step=10)
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        col = layout.column()
+        col.row().prop(self, "axis", expand=True)
+        col.prop(self, "filter_gems")
+
+        layout.label(text="Gems")
+        col = layout.column(align=True)
+        col.prop(self, "gem_step")
+        row = col.row(align=True)
+        row.prop(self, "gem_min", text="Clamp")
+        row.prop(self, "gem_max", text="")
+
+        layout.label(text="Other")
+        col = layout.column(align=True)
+        col.prop(self, "step")
+        row = col.row(align=True)
+        row.prop(self, "min", text="Clamp")
+        row.prop(self, "max", text="")
+
+        layout.separator()
 
     def modal(self, context, event):
         if event.value != "PRESS":
@@ -813,7 +849,7 @@ class OBJECT_OT_incremental_resize(Operator):
 
         elif event.type in {"WHEELDOWNMOUSE", "WHEELUPMOUSE"} and context.selected_objects:
             prefs = context.preferences.addons[var.ADDON_ID].preferences
-            self.execute_modal(context, neg=(event.type == "WHEELDOWNMOUSE") ^ prefs.resize_invert_wheel)
+            self._resize(context, neg=(event.type == "WHEELDOWNMOUSE") ^ prefs.resize_invert_wheel)
             return {"RUNNING_MODAL"}
 
         elif event.type == "F":
@@ -823,9 +859,9 @@ class OBJECT_OT_incremental_resize(Operator):
 
         elif event.type in {"LEFT_ARROW", "RIGHT_ARROW"}:
             if event.type == "LEFT_ARROW":
-                self.axis -= 1
+                self.axis_int -= 1
             else:
-                self.axis += 1
+                self.axis_int += 1
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
@@ -867,64 +903,12 @@ class OBJECT_OT_incremental_resize(Operator):
 
         return {"PASS_THROUGH"}
 
-    def execute_modal(self, context, neg=False):
-        from ..lib import unit
-
-        if unit._eq(self.gem_step, 0.0) or unit._eq(self.step, 0.0):
-            return
-
-        for ob in context.selected_objects:
-            if "gem" in ob:
-                _step = -self.gem_step if neg else self.gem_step
-                _min = self.gem_min
-                _max = self.gem_max
-            else:
-                if self.filter_gems:
-                    continue
-                _step = -self.step if neg else self.step
-                _min = self.min
-                _max = self.max
-
-            size_orig = ob.dimensions[self.axis]
-
-            if (neg and size_orig < _min) or (not neg and size_orig > _max):
-                continue
-
-            size_new = _fraction_step(size_orig, _step)
-            size_new = _fraction_step(size_new + _step, _step)
-            scale = size_new / size_orig
-
-            if neg and size_new < _min:
-                scale = _min / size_orig
-            elif not neg and size_new > _max:
-                scale = _max / size_orig
-
-            ob.scale *= scale
-
-        context.view_layer.update()
-
-    def invoke(self, context, event):
+    def execute(self, context):
         from ..lib import view3d_lib
-
-        if self.__class__.is_running:
-            self.report({"ERROR"}, "Operator already running")
-            return {"CANCELLED"}
-
-        if context.area.type != "VIEW_3D":
-            self.report({"ERROR"}, "Area type is not 3D View")
-            return {"CANCELLED"}
 
         self.__class__.is_running = True
 
-        if self.__class__.first_run:
-            self.__class__.first_run = False
-            prefs = context.preferences.addons[var.ADDON_ID].preferences
-            self.gem_step = prefs.resize_gem_step
-            self.gem_min = prefs.resize_gem_min
-            self.gem_max = prefs.resize_gem_max
-            self.step = prefs.resize_step
-            self.min = prefs.resize_min
-            self.max = prefs.resize_max
+        self.axis_int = int(self.axis)
 
         context.window_manager.modal_handler_add(self)
         context.workspace.status_text_set("ESC/↵/␣: Exit")
@@ -936,8 +920,8 @@ class OBJECT_OT_incremental_resize(Operator):
         lay.hotkey(_("Exit"), "(Esc)")
         lay.hotkey(_("Resize"), "(Mouse Wheel)")
         lay.separator()
+        lay.enum(_("Axis"), "(←/→)", "axis_int", (_("X"), _("Y"), _("Z")))
         lay.bool(_("Gems Only"), "(F)", "filter_gems")
-        lay.enum(_("Axis"), "(←/→)", "axis", (_("X"), _("Y"), _("Z")))
         lay.separator()
         lay.hotkey(_("Gems"), "")
         lay.int(_("Step"), "(-/+)", "gem_step")
@@ -958,6 +942,67 @@ class OBJECT_OT_incremental_resize(Operator):
 
         context.region.tag_redraw()
         return {"RUNNING_MODAL"}
+
+    def invoke(self, context, event):
+        if self.__class__.is_running:
+            self.report({"ERROR"}, "Operator already running")
+            return {"CANCELLED"}
+
+        if context.area.type != "VIEW_3D":
+            self.report({"ERROR"}, "Area type is not 3D View")
+            return {"CANCELLED"}
+
+        if self.__class__.first_run:
+            self.__class__.first_run = False
+            prefs = context.preferences.addons[var.ADDON_ID].preferences
+            self.gem_step = prefs.resize_gem_step
+            self.gem_min = prefs.resize_gem_min
+            self.gem_max = prefs.resize_gem_max
+            self.step = prefs.resize_step
+            self.min = prefs.resize_min
+            self.max = prefs.resize_max
+
+        if event.ctrl:
+            wm = context.window_manager
+            return wm.invoke_props_dialog(self)
+
+        return self.execute(context)
+
+    def _resize(self, context, neg=False):
+        from ..lib import unit
+
+        if unit._eq(self.gem_step, 0.0) or unit._eq(self.step, 0.0):
+            return
+
+        for ob in context.selected_objects:
+            if "gem" in ob:
+                _step = -self.gem_step if neg else self.gem_step
+                _min = self.gem_min
+                _max = self.gem_max
+            else:
+                if self.filter_gems:
+                    continue
+                _step = -self.step if neg else self.step
+                _min = self.min
+                _max = self.max
+
+            size_orig = ob.dimensions[self.axis_int]
+
+            if (neg and size_orig < _min) or (not neg and size_orig > _max):
+                continue
+
+            size_new = _fraction_step(size_orig, _step)
+            size_new = _fraction_step(size_new + _step, _step)
+            scale = size_new / size_orig
+
+            if neg and size_new < _min:
+                scale = _min / size_orig
+            elif not neg and size_new > _max:
+                scale = _max / size_orig
+
+            ob.scale *= scale
+
+        context.view_layer.update()
 
 
 class CURVE_OT_length_display(Operator):
