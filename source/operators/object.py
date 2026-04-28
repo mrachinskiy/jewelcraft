@@ -796,6 +796,9 @@ class OBJECT_OT_incremental_resize(Operator):
     gem_max: FloatProperty(min=0.0, default=3.0)
 
     def modal(self, context, event):
+        if event.value != "PRESS":
+            return {"PASS_THROUGH"}
+
         if event.shift:
             value = 0.01
         else:
@@ -808,12 +811,17 @@ class OBJECT_OT_incremental_resize(Operator):
             context.region.tag_redraw()
             return {"FINISHED"}
 
-        elif event.type == "F" and event.value == "PRESS":
+        elif event.type in {"WHEELDOWNMOUSE", "WHEELUPMOUSE"} and context.selected_objects:
+            prefs = context.preferences.addons[var.ADDON_ID].preferences
+            self.execute_modal(context, neg=(event.type == "WHEELDOWNMOUSE") ^ prefs.resize_invert_wheel)
+            return {"RUNNING_MODAL"}
+
+        elif event.type == "F":
             self.filter_gems = not self.filter_gems
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type in {"LEFT_ARROW", "RIGHT_ARROW"} and event.value == "PRESS":
+        elif event.type in {"LEFT_ARROW", "RIGHT_ARROW"}:
             if event.type == "LEFT_ARROW":
                 self.axis -= 1
             else:
@@ -821,57 +829,39 @@ class OBJECT_OT_incremental_resize(Operator):
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type in {"MINUS", "EQUAL"} and event.value == "PRESS":
+        elif event.type in {"MINUS", "EQUAL"}:
             if event.type == "MINUS":
-                if event.alt:
-                    self.step -= value
-                else:
-                    self.gem_step -= value
+                value = -value
+
+            if event.alt:
+                self.step += value
             else:
-                if event.alt:
-                    self.step += value
-                else:
-                    self.gem_step += value
+                self.gem_step += value
 
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type in {"LEFT_BRACKET", "RIGHT_BRACKET"} and event.value == "PRESS":
+        elif event.type in {"LEFT_BRACKET", "RIGHT_BRACKET"}:
             if event.type == "LEFT_BRACKET":
-                if event.alt:
-                    self.min -= value
-                else:
-                    self.gem_min -= value
+                value = -value
+
+            if event.alt:
+                self.min += value
             else:
-                if event.alt:
-                    self.min += value
-                else:
-                    self.gem_min += value
+                self.gem_min += value
+
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
-        elif event.type in {"COMMA", "PERIOD"} and event.value == "PRESS":
+        elif event.type in {"COMMA", "PERIOD"}:
             if event.type == "COMMA":
-                if event.alt:
-                    self.max -= value
-                else:
-                    self.gem_max -= value
-            else:
-                if event.alt:
-                    self.max += value
-                else:
-                    self.gem_max += value
-            context.region.tag_redraw()
-            return {"RUNNING_MODAL"}
+                value = -value
 
-        elif not context.selected_objects:
-            pass
-
-        elif event.type in {"WHEELDOWNMOUSE", "WHEELUPMOUSE"} and event.value == "PRESS":
-            if event.type == "WHEELDOWNMOUSE":
-                self.execute_modal(context, neg=True)
+            if event.alt:
+                self.max += value
             else:
-                self.execute_modal(context)
+                self.gem_max += value
+
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
