@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import bpy
-from mathutils import Color
 
 from ...lib import colorlib, gemlib, gettext
 
@@ -20,7 +19,7 @@ def data_process(ReportData, lang: str) -> tuple[str, tuple[int]]:
     col_cut = 0
     col_size = 0
     col_color_name = 0
-    color_var = Color((0.85, 0.35, 0.35))
+    palette_iter = bpy.context.window_manager.jewelcraft.gem_map_palette.iterate()
     _ = gettext.GetText(lang).gettext
     _pcs = _("pcs")
     _mm = _("mm")
@@ -32,13 +31,7 @@ def data_process(ReportData, lang: str) -> tuple[str, tuple[int]]:
         # Color
         # ---------------------------
 
-        color = (*color_var, 1.0)
-
-        color_var.h += 0.15
-
-        if color_var.h == 0.0:
-            color_var.s += 0.1
-            color_var.v -= 0.15
+        color = (*next(palette_iter), 1.0)
 
         if color_name:
             mat_color = (*[colorlib.linear_to_srgb(x) for x in bpy.data.materials[color_name].diffuse_color[:3]], 1.0)
