@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from bpy.props import EnumProperty, FloatProperty, FloatVectorProperty, IntProperty
+from bpy.props import BoolProperty, EnumProperty, FloatProperty, FloatVectorProperty, IntProperty
 from bpy.types import Operator
 
 from ... import var
@@ -141,6 +141,7 @@ class WM_OT_ul_gem_map_palette_generate(Operator):
         min=1,
         soft_max=64,
     )
+    use_replace: BoolProperty(name="Replace", default=True)
 
     def draw(self, context):
         layout = self.layout
@@ -159,12 +160,14 @@ class WM_OT_ul_gem_map_palette_generate(Operator):
                 row.prop(self, "color1", text="Color Range")
                 row.prop(self, "color2", text="")
         layout.prop(self, "palette_size")
+        layout.prop(self, "use_replace")
 
     def execute(self, context):
         from mathutils import Color
 
         ul = context.window_manager.jewelcraft.gem_map_palette
-        ul.clear()
+        if self.use_replace:
+            ul.clear()
 
         if self.hue_range == "RANDOM":
             import random
