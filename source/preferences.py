@@ -428,13 +428,14 @@ class PaletteList(ListProperty, PropertyGroup):
         for item in self.coll:
             yield item.color
 
-        for item in self.coll:
-            color = Color(item.color)
-            color.s *= 0.5
-            yield color
-
+        i = 1
         while True:
-            yield (1.0, 1.0, 1.0)
+            for item in self.coll:
+                color = Color(item.color)
+                color.s -= 0.2 * i
+                color.v += 0.2 * i
+                yield color
+            i += 1
 
     def serialize_path(self) -> Path:
         prefs = bpy.context.preferences.addons[var.ADDON_ID].preferences
