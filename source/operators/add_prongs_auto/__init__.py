@@ -28,7 +28,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         step=1,
         precision=2,
         subtype="FACTOR",
-        options={"SKIP_SAVE"},
     )
     height_ratio: FloatProperty(
         name="Height",
@@ -39,7 +38,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         step=1,
         precision=2,
         subtype="FACTOR",
-        options={"SKIP_SAVE"},
     )
     size_step: FloatProperty(
         name="Size Step",
@@ -50,7 +48,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         precision=3,
         step=2.5,
         unit="LENGTH",
-        options={"SKIP_SAVE"},
     )
     uniformity: FloatProperty(
         name="Uniformity",
@@ -61,7 +58,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         step=1,
         precision=2,
         subtype="FACTOR",
-        options={"SKIP_SAVE"},
     )
 
     gap: FloatProperty(
@@ -73,7 +69,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         step=1,
         precision=2,
         subtype="FACTOR",
-        options={"SKIP_SAVE"},
     )
     max_gap: FloatProperty(
         name="Max Gap",
@@ -82,7 +77,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         max=1.0,
         step=1,
         unit="LENGTH",
-        options={"SKIP_SAVE"},
     )
     merge_distance: FloatProperty(
         name="Merge Distance",
@@ -92,7 +86,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         max=1.0,
         step=1,
         unit="LENGTH",
-        options={"SKIP_SAVE"},
     )
 
     bump_scale: FloatProperty(
@@ -102,7 +95,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         soft_max=1.0,
         step=1,
         subtype="FACTOR",
-        options={"SKIP_SAVE"},
     )
     taper: FloatProperty(
         name="Taper",
@@ -111,7 +103,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         soft_max=1.0,
         step=1,
         subtype="FACTOR",
-        options={"SKIP_SAVE"},
     )
     detalization: IntProperty(
         name="Detalization",
@@ -119,7 +110,6 @@ class OBJECT_OT_prongs_auto_add(Operator):
         min=3,
         soft_max=64,
         step=1,
-        options={"SKIP_SAVE"},
     )
 
     def draw(self, context):
@@ -178,6 +168,9 @@ class OBJECT_OT_prongs_auto_add(Operator):
         if len(gems) < 2:
             self.report({"ERROR"}, "At least two gem objects must be selected")
             return {"CANCELLED"}
+
+        for name, prop in self.__annotations__.items():
+            setattr(self, name, prop.keywords["default"])
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
