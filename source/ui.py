@@ -462,8 +462,8 @@ class VIEW3D_PT_jewelcraft_gems_magnet(SidebarSetup, Panel):
         col.active = wm_props.show_gems_magnet
         col.prop(props, "gems_magnet_same_collection")
         col.prop(props, "gems_magnet_snap_to_face")
-        col.prop(props, "gems_magnet_distance", slider=True)
-        col.prop(props, "gems_magnet_max_distance", slider=True)
+        col.prop(props, "gems_magnet_max_spacing")
+        col.prop(props, "gems_magnet_falloff_distance")
         col.prop(props, "gems_magnet_strength")
 
 

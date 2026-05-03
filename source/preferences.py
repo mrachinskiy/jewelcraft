@@ -842,9 +842,9 @@ class SceneProperties(PropertyGroup):
         description="Use Gems Magnet face projection and normal alignment fallback for face snap workflows",
         default=True,
     )
-    gems_magnet_distance: FloatProperty(
-        name="Search Distance",
-        description="Maximum girdle-to-girdle gap for gems to count as connected neighbors",
+    gems_magnet_max_spacing: FloatProperty(
+            name="Max Spacing",
+            description="Maximum girdle-to-girdle spacing for gems to count as connected neighbors",
         default=0.7,
         min=0.1,
         max=1.0,
@@ -852,9 +852,9 @@ class SceneProperties(PropertyGroup):
         precision=2,
         unit="LENGTH",
     )
-    gems_magnet_max_distance: FloatProperty(
-        name="Max Distance",
-        description="Maximum girdle-to-girdle distance from selected gems for magnet search",
+    gems_magnet_falloff_distance: FloatProperty(
+            name="Falloff Distance",
+            description="Maximum girdle-to-girdle distance from selected gems where magnet influence still applies",
         default=5.0,
         min=1.0,
         max=20.0,

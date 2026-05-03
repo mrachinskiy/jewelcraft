@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from collections import deque
+from enum import IntEnum
 from math import exp
 from time import perf_counter
 
@@ -15,25 +16,29 @@ _TIMER_INTERVAL = 1 / 60
 _MAX_DELTA_TIME = 0.1
 _BASE_STRENGTH = 10.0
 _MOVE_EPSILON = 0.001
-_CONSTRAINT_PASSES = 3
+_CONSTRAINT_PASSES = 5
 _CONSTRAINT_STRENGTH = 0.5
 _SPACING_COMPRESSION_TOLERANCE = 0.15
-_SUPPORTED_SNAP_ELEMENTS = frozenset({"GRID", "INCREMENT"})
-_SURFACE_SNAP_ELEMENTS = frozenset({"FACE", "FACE_MIDPOINT"})
-_SURFACE_SNAP_INDIVIDUAL = frozenset({"FACE_PROJECT", "FACE_NEAREST"})
 _SNAP_RAY_EPSILON = 0.0001
-_ROTATION_EPSILON = 1e-6
+
+
+class _SnapElement(IntEnum):
+    GRID = 1
+    INCREMENT = 2
+    FACE = 3
+    FACE_MIDPOINT = 4
+    FACE_PROJECT = 5
+    FACE_NEAREST = 6
 
 
 class _Gem:
-    __slots__ = ("object", "location", "radius", "spacing", "pointer")
+    __slots__ = ("object", "location", "radius", "spacing")
 
     def __init__(self, gem_object: bpy.types.Object, spacing: float) -> None:
         self.object = gem_object
         self.location = gem_object.matrix_world.translation.copy()
         self.radius = max(gem_object.dimensions.xy) / 2.0
         self.spacing = spacing
-        self.pointer = gem_object.as_pointer()
 
 
 class _State:
@@ -43,9 +48,9 @@ class _State:
         self.drag_snapshot: dict[str, Matrix] = {}
         self.dragging = False
         self.drag_selected_start: dict[str, Vector] = {}
-        self.links: dict[int, tuple[int, ...]] = {}
-        self.prev_selected: dict[int, Vector] = {}
-        self.selected_keys: frozenset[int] = frozenset()
+        self.links: dict[bpy.types.Object, tuple[bpy.types.Object, ...]] = {}
+        self.prev_selected: dict[bpy.types.Object, Vector] = {}
+        self.selected_keys: frozenset[bpy.types.Object] = frozenset()
         self.time_prev: float | None = None
 
     def reset(self) -> None:
@@ -112,7 +117,16 @@ def _timer() -> float | None:
         _STATE.clear_drag()
         return _TIMER_INTERVAL
 
-    selected_gems = _selected_gems(context)
+    selected_gems = [gem_object for gem_object in context.selected_objects if _is_editable_gem(gem_object)]
+
+    if not selected_gems:
+        if _STATE.selected_keys:
+            _STATE.clear_drag()
+            _STATE.selected_keys = frozenset()
+
+        _STATE.prev_selected = {}
+        return _TIMER_INTERVAL
+
     selected_positions = _selected_positions(selected_gems)
     selected_keys = frozenset(selected_positions)
 
@@ -123,15 +137,11 @@ def _timer() -> float | None:
     current_time = perf_counter()
     delta_time = _delta_time(current_time)
 
-    if not selected_gems:
-        _STATE.prev_selected = selected_positions
-        return _TIMER_INTERVAL
-
     scene_props = context.scene.jewelcraft
     gems = _collect_gems(context, scene_props, selected_gems)
     to_scene = unit.Scale().to_scene
-    search_distance = to_scene(scene_props.gems_magnet_distance)
-    max_distance = to_scene(scene_props.gems_magnet_max_distance)
+    max_spacing = to_scene(scene_props.gems_magnet_max_spacing)
+    falloff_distance = to_scene(scene_props.gems_magnet_falloff_distance)
 
     if len(gems) < 2:
         _STATE.clear_drag()
@@ -144,15 +154,15 @@ def _timer() -> float | None:
         selection_moved = _selected_moved(selected_positions)
 
         if selection_moved and not _STATE.dragging:
-            _start_drag(gems, selected_keys, search_distance, max_distance)
+            _start_drag(gems, selected_keys, max_spacing, falloff_distance)
 
         if _STATE.dragging and selection_moved:
             _apply_magnet(
                 context,
                 gems,
                 selected_keys,
-                search_distance,
-                max_distance,
+                max_spacing,
+                falloff_distance,
                 scene_props.gems_magnet_strength,
                 delta_time,
                 transform_operator,
@@ -179,11 +189,11 @@ def _move_threshold() -> float:
     return unit.Scale().to_scene(_MOVE_EPSILON)
 
 
-def _selected_positions(selected_gems: list[bpy.types.Object]) -> dict[int, Vector]:
-    return {gem_object.as_pointer(): gem_object.matrix_world.translation.copy() for gem_object in selected_gems}
+def _selected_positions(selected_gems: list[bpy.types.Object]) -> dict[bpy.types.Object, Vector]:
+    return {gem_object: gem_object.matrix_world.translation.copy() for gem_object in selected_gems}
 
 
-def _selected_moved(selected_positions: dict[int, Vector]) -> bool:
+def _selected_moved(selected_positions: dict[bpy.types.Object, Vector]) -> bool:
     if _STATE.selected_keys != frozenset(_STATE.prev_selected):
         return False
 
@@ -197,17 +207,13 @@ def _selected_moved(selected_positions: dict[int, Vector]) -> bool:
     return False
 
 
-def _selected_gems(context) -> list[bpy.types.Object]:
-    return [gem_object for gem_object in context.selected_objects if _is_editable_gem(gem_object)]
-
-
-def _collect_gems(context, props, selected_gems: list[bpy.types.Object]) -> dict[int, _Gem]:
+def _collect_gems(context, props, selected_gems: list[bpy.types.Object]) -> dict[bpy.types.Object, _Gem]:
     to_scene = unit.Scale().to_scene
     default_spacing = float(props.overlay_spacing)
     use_overrides = props.overlay_use_overrides
-    selected_collection_pointers = (
+    selected_collections = (
         {
-            collection.as_pointer()
+            collection
             for gem_object in selected_gems
             for collection in gem_object.users_collection
         }
@@ -220,8 +226,8 @@ def _collect_gems(context, props, selected_gems: list[bpy.types.Object]) -> dict
         if not _is_editable_gem(gem_object):
             continue
 
-        if selected_collection_pointers is not None and not any(
-            collection.as_pointer() in selected_collection_pointers
+        if selected_collections is not None and not any(
+            collection in selected_collections
             for collection in gem_object.users_collection
         ):
             continue
@@ -231,8 +237,7 @@ def _collect_gems(context, props, selected_gems: list[bpy.types.Object]) -> dict
         if use_overrides and "gem_overlay" in gem_object:
             spacing = float(gem_object["gem_overlay"].get("spacing", default_spacing))
 
-        gem = _Gem(gem_object, to_scene(spacing))
-        gems[gem.pointer] = gem
+        gems[gem_object] = _Gem(gem_object, to_scene(spacing))
 
     return gems
 
@@ -241,25 +246,21 @@ def _is_editable_gem(gem_object: bpy.types.Object | None) -> bool:
     return gem_object is not None and "gem" in gem_object and gem_object.visible_get() and gem_object.is_editable
 
 
-def _is_fully_translation_locked(gem_object: bpy.types.Object) -> bool:
-    return all(bool(is_locked) for is_locked in gem_object.lock_location)
-
-
-def _is_stationary_gem(pointer: int, gem: _Gem, selected_keys: frozenset[int]) -> bool:
-    return pointer in selected_keys or _is_fully_translation_locked(gem.object)
+def _is_stationary_gem(gem_object: bpy.types.Object, gem: _Gem, selected_keys: frozenset[bpy.types.Object]) -> bool:
+    return gem_object in selected_keys or all(gem.object.lock_location)
 
 
 def _gem_mobility(
-    pointer: int,
+    gem_object: bpy.types.Object,
     gem: _Gem,
-    selected_keys: frozenset[int],
+    selected_keys: frozenset[bpy.types.Object],
     selected_distance: float,
-    max_distance: float,
+    falloff_distance: float,
 ) -> float:
-    if _is_stationary_gem(pointer, gem, selected_keys):
+    if _is_stationary_gem(gem_object, gem, selected_keys):
         return 0.0
 
-    return _distance_mobility(selected_distance, max_distance)
+    return _distance_mobility(selected_distance, falloff_distance)
 
 
 def _active_translation_transform_operator(context):
@@ -278,13 +279,18 @@ def _active_translation_transform_operator(context):
     return None
 
 
-def _merge_links(existing: dict[int, tuple[int, ...]], incoming: dict[int, tuple[int, ...]]) -> dict[int, tuple[int, ...]]:
-    merged: dict[int, set[int]] = {pointer: set(neighbors) for pointer, neighbors in existing.items()}
+def _merge_links(
+    existing: dict[bpy.types.Object, tuple[bpy.types.Object, ...]],
+    incoming: dict[bpy.types.Object, tuple[bpy.types.Object, ...]],
+) -> dict[bpy.types.Object, tuple[bpy.types.Object, ...]]:
+    merged: dict[bpy.types.Object, set[bpy.types.Object]] = {
+        gem_object: set(neighbors) for gem_object, neighbors in existing.items()
+    }
 
-    for pointer, neighbors in incoming.items():
-        merged.setdefault(pointer, set()).update(neighbors)
+    for gem_object, neighbors in incoming.items():
+        merged.setdefault(gem_object, set()).update(neighbors)
 
-    return {pointer: tuple(sorted(neighbors)) for pointer, neighbors in merged.items() if neighbors}
+    return {gem_object: tuple(neighbors) for gem_object, neighbors in merged.items() if neighbors}
 
 
 def _girdle_gap(gem1: _Gem, gem2: _Gem, center_distance: float | None = None) -> float:
@@ -294,9 +300,12 @@ def _girdle_gap(gem1: _Gem, gem2: _Gem, center_distance: float | None = None) ->
     return max(center_distance - gem1.radius - gem2.radius, 0.0)
 
 
-def _build_links(gems: dict[int, _Gem], search_distance: float) -> dict[int, tuple[int, ...]]:
+def _build_links(
+    gems: dict[bpy.types.Object, _Gem],
+    max_spacing: float,
+) -> dict[bpy.types.Object, tuple[bpy.types.Object, ...]]:
     gem_items = tuple(gems.values())
-    links: dict[int, list[int]] = {gem.pointer: [] for gem in gem_items}
+    links: dict[bpy.types.Object, list[bpy.types.Object]] = {gem.object: [] for gem in gem_items}
     kd_tree = kdtree.KDTree(len(gem_items))
     max_radius = max(gem.radius for gem in gem_items)
 
@@ -306,7 +315,7 @@ def _build_links(gems: dict[int, _Gem], search_distance: float) -> dict[int, tup
     kd_tree.balance()
 
     for index, gem1 in enumerate(gem_items):
-        search_radius = gem1.radius + max_radius + search_distance
+        search_radius = gem1.radius + max_radius + max_spacing
 
         for _coordinate, index2, center_distance in kd_tree.find_range(gem1.location, search_radius):
             if index2 <= index:
@@ -314,57 +323,57 @@ def _build_links(gems: dict[int, _Gem], search_distance: float) -> dict[int, tup
 
             gem2 = gem_items[index2]
 
-            if _girdle_gap(gem1, gem2, center_distance) > search_distance:
+            if _girdle_gap(gem1, gem2, center_distance) > max_spacing:
                 continue
 
-            links[gem1.pointer].append(gem2.pointer)
-            links[gem2.pointer].append(gem1.pointer)
+            links[gem1.object].append(gem2.object)
+            links[gem2.object].append(gem1.object)
 
-    return {pointer: tuple(neighbors) for pointer, neighbors in links.items() if neighbors}
+    return {gem_object: tuple(neighbors) for gem_object, neighbors in links.items() if neighbors}
 
 
-def _iter_link_pairs(gems: dict[int, _Gem], distances: dict[int, float]):
-    for pointer1, neighbors in _STATE.links.items():
-        gem1 = gems.get(pointer1)
-        distance1 = distances.get(pointer1)
+def _iter_link_pairs(gems: dict[bpy.types.Object, _Gem], distances: dict[bpy.types.Object, float]):
+    for gem_object1, neighbors in _STATE.links.items():
+        gem1 = gems.get(gem_object1)
+        distance1 = distances.get(gem_object1)
 
         if gem1 is None or distance1 is None:
             continue
 
-        for pointer2 in neighbors:
-            if pointer2 <= pointer1:
+        for gem_object2 in neighbors:
+            if gem_object2.as_pointer() <= gem_object1.as_pointer():
                 continue
 
-            gem2 = gems.get(pointer2)
-            distance2 = distances.get(pointer2)
+            gem2 = gems.get(gem_object2)
+            distance2 = distances.get(gem_object2)
 
             if gem2 is None or distance2 is None:
                 continue
 
-            yield pointer1, pointer2, gem1, gem2, distance1, distance2
+            yield gem_object1, gem_object2, gem1, gem2, distance1, distance2
 
 
 def _start_drag(
-    gems: dict[int, _Gem],
-    selected_keys: frozenset[int],
-    search_distance: float,
-    max_distance: float,
+    gems: dict[bpy.types.Object, _Gem],
+    selected_keys: frozenset[bpy.types.Object],
+    max_spacing: float,
+    falloff_distance: float,
 ) -> None:
-    _STATE.links = _build_links(gems, search_distance)
+    _STATE.links = _build_links(gems, max_spacing)
 
     if not _STATE.links:
         return
 
-    distances = _distance_map(gems, selected_keys, max_distance)
+    distances = _distance_map(gems, selected_keys, falloff_distance)
 
     if len(distances) <= len(selected_keys):
         return
 
     _snapshot_drag_gems(gems, distances)
     _STATE.drag_selected_start = {
-        gems[pointer].object.name: gems[pointer].location.copy()
-        for pointer in selected_keys
-        if pointer in gems
+        gems[gem_object].object.name: gems[gem_object].location.copy()
+        for gem_object in selected_keys
+        if gem_object in gems
     }
     _STATE.dragging = True
 
@@ -399,9 +408,9 @@ def _restore_drag_snapshot() -> None:
         object_.matrix_world = matrix.copy()
 
 
-def _snapshot_drag_gems(gems: dict[int, _Gem], distances: dict[int, float]) -> None:
-    for pointer in distances:
-        gem = gems.get(pointer)
+def _snapshot_drag_gems(gems: dict[bpy.types.Object, _Gem], distances: dict[bpy.types.Object, float]) -> None:
+    for gem_object in distances:
+        gem = gems.get(gem_object)
 
         if gem is None:
             continue
@@ -411,15 +420,15 @@ def _snapshot_drag_gems(gems: dict[int, _Gem], distances: dict[int, float]) -> N
 
 def _apply_magnet(
     context,
-    gems: dict[int, _Gem],
-    selected_keys: frozenset[int],
-    search_distance: float,
-    max_distance: float,
+    gems: dict[bpy.types.Object, _Gem],
+    selected_keys: frozenset[bpy.types.Object],
+    max_spacing: float,
+    falloff_distance: float,
     strength: float,
     delta_time: float,
     transform_operator,
 ) -> None:
-    live_links = _build_links(gems, search_distance)
+    live_links = _build_links(gems, max_spacing)
 
     if live_links:
         _STATE.links = _merge_links(_STATE.links, live_links)
@@ -427,7 +436,7 @@ def _apply_magnet(
     if not _STATE.links:
         return
 
-    distances = _distance_map(gems, selected_keys, max_distance)
+    distances = _distance_map(gems, selected_keys, falloff_distance)
 
     if len(distances) <= len(selected_keys):
         return
@@ -435,40 +444,40 @@ def _apply_magnet(
     _snapshot_drag_gems(gems, distances)
 
     threshold = _move_threshold()
-    offsets: dict[int, Vector] = {}
+    offsets: dict[bpy.types.Object, Vector] = {}
 
-    for pointer1, pointer2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, distances):
+    for gem_object1, gem_object2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, distances):
         spacing = max(gem1.spacing, gem2.spacing)
         offset1, offset2 = _spring_offsets(
             gem1,
             gem2,
-            pointer1,
-            pointer2,
+            gem_object1,
+            gem_object2,
             selected_keys,
             spacing,
             distance1,
             distance2,
-            max_distance,
+            falloff_distance,
             strength,
             delta_time,
         )
 
         if offset1.length_squared:
-            offsets[pointer1] = offsets.get(pointer1, Vector()) + offset1
+            offsets[gem_object1] = offsets.get(gem_object1, Vector()) + offset1
 
         if offset2.length_squared:
-            offsets[pointer2] = offsets.get(pointer2, Vector()) + offset2
+            offsets[gem_object2] = offsets.get(gem_object2, Vector()) + offset2
 
-    offsets = _resolve_spacing_constraints(gems, distances, selected_keys, max_distance, offsets, strength, delta_time)
+    offsets = _resolve_spacing_constraints(gems, distances, selected_keys, falloff_distance, offsets, strength, delta_time)
 
-    for pointer, offset in offsets.items():
-        if pointer in selected_keys:
+    for gem_object, offset in offsets.items():
+        if gem_object in selected_keys:
             continue
 
         if offset.length <= threshold:
             continue
 
-        gem = gems.get(pointer)
+        gem = gems.get(gem_object)
 
         if gem is None:
             continue
@@ -477,41 +486,41 @@ def _apply_magnet(
 
 
 def _resolve_spacing_constraints(
-    gems: dict[int, _Gem],
-    distances: dict[int, float],
-    selected_keys: frozenset[int],
-    max_distance: float,
-    offsets: dict[int, Vector],
+    gems: dict[bpy.types.Object, _Gem],
+    distances: dict[bpy.types.Object, float],
+    selected_keys: frozenset[bpy.types.Object],
+    falloff_distance: float,
+    offsets: dict[bpy.types.Object, Vector],
     strength: float,
     delta_time: float,
-) -> dict[int, Vector]:
-    proposed: dict[int, Vector] = {}
+) -> dict[bpy.types.Object, Vector]:
+    proposed: dict[bpy.types.Object, Vector] = {}
     constraint_alpha = 1.0 - exp(-_BASE_STRENGTH * _CONSTRAINT_STRENGTH * strength * delta_time)
 
     if constraint_alpha <= 0.0:
         return offsets
 
-    for pointer in distances:
-        gem = gems.get(pointer)
+    for gem_object in distances:
+        gem = gems.get(gem_object)
 
         if gem is None:
             continue
 
-        if _is_stationary_gem(pointer, gem, selected_keys):
-            proposed[pointer] = gem.location.copy()
+        if _is_stationary_gem(gem_object, gem, selected_keys):
+            proposed[gem_object] = gem.location.copy()
         else:
-            proposed[pointer] = gem.location + offsets.get(pointer, Vector())
+            proposed[gem_object] = gem.location + offsets.get(gem_object, Vector())
 
     for _pass in range(_CONSTRAINT_PASSES):
         changed = False
 
-        for pointer1, pointer2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, distances):
-            if pointer1 not in proposed or pointer2 not in proposed:
+        for gem_object1, gem_object2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, distances):
+            if gem_object1 not in proposed or gem_object2 not in proposed:
                 continue
 
             spacing = max(gem1.spacing, gem2.spacing)
             target_distance = gem1.radius + gem2.radius + spacing * (1.0 - _SPACING_COMPRESSION_TOLERANCE)
-            offset_vector = proposed[pointer2] - proposed[pointer1]
+            offset_vector = proposed[gem_object2] - proposed[gem_object1]
             distance = offset_vector.length
 
             if distance >= target_distance:
@@ -527,8 +536,8 @@ def _resolve_spacing_constraints(
                 else:
                     direction = Vector((1.0, 0.0, 0.0))
 
-            mobility1 = _gem_mobility(pointer1, gem1, selected_keys, distance1, max_distance)
-            mobility2 = _gem_mobility(pointer2, gem2, selected_keys, distance2, max_distance)
+            mobility1 = _gem_mobility(gem_object1, gem1, selected_keys, distance1, falloff_distance)
+            mobility2 = _gem_mobility(gem_object2, gem2, selected_keys, distance2, falloff_distance)
             mobility_total = mobility1 + mobility2
 
             if not mobility_total:
@@ -537,10 +546,10 @@ def _resolve_spacing_constraints(
             correction = direction * (target_distance - distance) * constraint_alpha
 
             if mobility1:
-                proposed[pointer1] -= correction * (mobility1 / mobility_total)
+                proposed[gem_object1] -= correction * (mobility1 / mobility_total)
 
             if mobility2:
-                proposed[pointer2] += correction * (mobility2 / mobility_total)
+                proposed[gem_object2] += correction * (mobility2 / mobility_total)
 
             changed = True
 
@@ -548,9 +557,9 @@ def _resolve_spacing_constraints(
             break
 
     return {
-        pointer: proposed_location - gems[pointer].location
-        for pointer, proposed_location in proposed.items()
-        if pointer in gems and not _is_stationary_gem(pointer, gems[pointer], selected_keys)
+        gem_object: proposed_location - gems[gem_object].location
+        for gem_object, proposed_location in proposed.items()
+        if gem_object in gems and not _is_stationary_gem(gem_object, gems[gem_object], selected_keys)
     }
 
 
@@ -561,8 +570,12 @@ def _nearest_selected_distance(gem: _Gem, selected_gems: tuple[_Gem, ...]) -> fl
     return min(_girdle_gap(gem, selected_gem) for selected_gem in selected_gems)
 
 
-def _distance_map(gems: dict[int, _Gem], selected_keys: frozenset[int], max_distance: float) -> dict[int, float]:
-    distances = {pointer: 0.0 for pointer in selected_keys if pointer in gems}
+def _distance_map(
+    gems: dict[bpy.types.Object, _Gem],
+    selected_keys: frozenset[bpy.types.Object],
+    falloff_distance: float,
+) -> dict[bpy.types.Object, float]:
+    distances = {gem_object: 0.0 for gem_object in selected_keys if gem_object in gems}
 
     if not distances:
         return distances
@@ -571,22 +584,35 @@ def _distance_map(gems: dict[int, _Gem], selected_keys: frozenset[int], max_dist
     queue = deque(distances)
 
     while queue:
-        pointer = queue.popleft()
+        gem_object = queue.popleft()
 
-        for pointer_next in _STATE.links.get(pointer, ()):
-            if pointer_next not in gems or pointer_next in selected_keys:
+        for gem_object_next in _STATE.links.get(gem_object, ()):
+            if gem_object_next not in gems or gem_object_next in selected_keys:
                 continue
 
-            distance_next = _nearest_selected_distance(gems[pointer_next], selected_gems)
+            distance_next = _nearest_selected_distance(gems[gem_object_next], selected_gems)
 
-            if distance_next > max_distance:
+            if distance_next > falloff_distance:
                 continue
 
-            if distance_next < distances.get(pointer_next, float("inf")):
-                distances[pointer_next] = distance_next
-                queue.append(pointer_next)
+            if distance_next < distances.get(gem_object_next, float("inf")):
+                distances[gem_object_next] = distance_next
+                queue.append(gem_object_next)
 
     return distances
+
+
+def _map_snap_elements(elements) -> set[_SnapElement]:
+    snap_element_ids = {
+        "GRID": _SnapElement.GRID,
+        "INCREMENT": _SnapElement.INCREMENT,
+        "FACE": _SnapElement.FACE,
+        "FACE_MIDPOINT": _SnapElement.FACE_MIDPOINT,
+        "FACE_PROJECT": _SnapElement.FACE_PROJECT,
+        "FACE_NEAREST": _SnapElement.FACE_NEAREST,
+    }
+
+    return {snap_element_ids[element] for element in elements if element in snap_element_ids}
 
 
 def _should_snap_translate(context, transform_operator) -> bool:
@@ -601,25 +627,25 @@ def _should_snap_translate(context, transform_operator) -> bool:
     return bool(tool_settings.use_snap and tool_settings.use_snap_translate)
 
 
-def _snap_elements(context, transform_operator) -> set[str]:
+def _snap_elements(context, transform_operator) -> set[_SnapElement]:
     elements = getattr(transform_operator, "snap_elements", None)
 
     if elements:
-        return set(elements)
+        return _map_snap_elements(elements)
 
-    return set(context.scene.tool_settings.snap_elements)
+    return _map_snap_elements(context.scene.tool_settings.snap_elements)
 
 
-def _snap_individual_elements(context, transform_operator) -> set[str]:
+def _snap_individual_elements(context, transform_operator) -> set[_SnapElement]:
     elements = getattr(transform_operator, "snap_elements_individual", None)
 
     if elements:
-        return set(elements)
+        return _map_snap_elements(elements)
 
-    return set(getattr(context.scene.tool_settings, "snap_elements_individual", ()))
+    return _map_snap_elements(getattr(context.scene.tool_settings, "snap_elements_individual", ()))
 
 
-def _snap_step(context, elements: set[str]) -> float:
+def _snap_step(context, elements: set[_SnapElement]) -> float:
     overlay = getattr(getattr(context, "space_data", None), "overlay", None)
     base_step = 0.0
 
@@ -629,7 +655,7 @@ def _snap_step(context, elements: set[str]) -> float:
     if not base_step:
         base_step = context.scene.unit_settings.scale_length or 1.0
 
-    if "INCREMENT" in elements and "GRID" not in elements:
+    if _SnapElement.INCREMENT in elements and _SnapElement.GRID not in elements:
         subdivisions = getattr(overlay, "grid_subdivisions", 1) if overlay is not None else 1
         if subdivisions > 1:
             base_step /= subdivisions
@@ -656,7 +682,7 @@ def _snap_location(context, transform_operator, gem: _Gem, next_location: Vector
 
     elements = _snap_elements(context, transform_operator)
 
-    if not elements or not elements <= _SUPPORTED_SNAP_ELEMENTS:
+    if not elements or not (elements <= {_SnapElement.GRID, _SnapElement.INCREMENT}):
         return next_location
 
     step = _snap_step(context, elements)
@@ -665,7 +691,7 @@ def _snap_location(context, transform_operator, gem: _Gem, next_location: Vector
         return next_location
 
     tool_settings = context.scene.tool_settings
-    use_absolute = "GRID" in elements or tool_settings.use_snap_grid_absolute
+    use_absolute = _SnapElement.GRID in elements or tool_settings.use_snap_grid_absolute
 
     if use_absolute:
         return _round_vector(next_location, step)
@@ -678,14 +704,17 @@ def _snap_location(context, transform_operator, gem: _Gem, next_location: Vector
     return _round_vector(next_location, step, matrix.translation)
 
 
-def _should_snap_to_face(context, transform_operator) -> tuple[bool, set[str]]:
+def _should_snap_to_face(context, transform_operator) -> tuple[bool, set[_SnapElement]]:
     if not context.scene.jewelcraft.gems_magnet_snap_to_face:
         return False, set()
 
     elements = _snap_elements(context, transform_operator)
     individual_elements = _snap_individual_elements(context, transform_operator)
 
-    return bool(elements & _SURFACE_SNAP_ELEMENTS or individual_elements & _SURFACE_SNAP_INDIVIDUAL), individual_elements
+    return bool(
+        elements & {_SnapElement.FACE, _SnapElement.FACE_MIDPOINT}
+        or individual_elements & {_SnapElement.FACE_PROJECT, _SnapElement.FACE_NEAREST}
+    ), individual_elements
 
 
 def _is_surface_snap_target(context, object_) -> bool:
@@ -768,7 +797,7 @@ def _snap_surface(
     gem: _Gem,
     next_location: Vector,
     current_rotation,
-    individual_elements: set[str],
+    individual_elements: set[_SnapElement],
 ) -> tuple[Vector, Vector | None]:
     axis = current_rotation @ Vector((0.0, 0.0, 1.0))
 
@@ -791,7 +820,7 @@ def _snap_surface(
         location, normal = min(candidates, key=lambda item: (item[0] - next_location).length_squared)
         return location, normal
 
-    if individual_elements & _SURFACE_SNAP_INDIVIDUAL:
+    if individual_elements & {_SnapElement.FACE_PROJECT, _SnapElement.FACE_NEAREST}:
         if (hit := _closest_surface_point(context, next_location)) is not None:
             return hit
 
@@ -811,6 +840,10 @@ def _align_rotation_to_normal(current_rotation, normal: Vector):
         return axis_current.normalized().rotation_difference(normal.normalized()) @ current_rotation
     except ValueError:
         return current_rotation
+
+
+def _is_same_rotation(rotation1, rotation2) -> bool:
+    return rotation1.rotation_difference(rotation2).angle < 1e-6
 
 
 def _snap_transform(context, transform_operator, gem: _Gem, next_location: Vector, current_rotation):
@@ -857,7 +890,7 @@ def _move_gem(context, transform_operator, gem: _Gem, offset: Vector) -> bool:
         current_rotation,
     )
     location_changed = (next_location - gem.location).length_squared > 0.0
-    rotation_changed = next_rotation.rotation_difference(current_rotation).angle > _ROTATION_EPSILON
+    rotation_changed = not _is_same_rotation(next_rotation, current_rotation)
 
     if not location_changed and not rotation_changed:
         return False
@@ -872,27 +905,27 @@ def _move_gem(context, transform_operator, gem: _Gem, offset: Vector) -> bool:
     return True
 
 
-def _distance_mobility(selected_distance: float, max_distance: float) -> float:
-    if selected_distance < 0.0 or selected_distance > max_distance or max_distance <= 0.0:
+def _distance_mobility(selected_distance: float, falloff_distance: float) -> float:
+    if selected_distance < 0.0 or selected_distance > falloff_distance or falloff_distance <= 0.0:
         return 0.0
 
-    return 1.0 - selected_distance / max_distance
+    return 1.0 - selected_distance / falloff_distance
 
 
-def _distance_influence(selected_distance: float, max_distance: float) -> float:
-    return _distance_mobility(selected_distance, max_distance)
+def _distance_influence(selected_distance: float, falloff_distance: float) -> float:
+    return _distance_mobility(selected_distance, falloff_distance)
 
 
 def _spring_offsets(
     gem1: _Gem,
     gem2: _Gem,
-    pointer1: int,
-    pointer2: int,
-    selected_keys: frozenset[int],
+    gem_object1: bpy.types.Object,
+    gem_object2: bpy.types.Object,
+    selected_keys: frozenset[bpy.types.Object],
     spacing: float,
     selected_distance1: float,
     selected_distance2: float,
-    max_distance: float,
+    falloff_distance: float,
     strength: float,
     delta_time: float,
 ) -> tuple[Vector, Vector]:
@@ -904,8 +937,8 @@ def _spring_offsets(
     else:
         direction = Vector((1.0, 0.0, 0.0))
 
-    mobility1 = _gem_mobility(pointer1, gem1, selected_keys, selected_distance1, max_distance)
-    mobility2 = _gem_mobility(pointer2, gem2, selected_keys, selected_distance2, max_distance)
+    mobility1 = _gem_mobility(gem_object1, gem1, selected_keys, selected_distance1, falloff_distance)
+    mobility2 = _gem_mobility(gem_object2, gem2, selected_keys, selected_distance2, falloff_distance)
     mobility_total = mobility1 + mobility2
 
     if not mobility_total:
@@ -914,8 +947,8 @@ def _spring_offsets(
 
     target_distance = gem1.radius + gem2.radius + spacing
     influence = max(
-        _distance_influence(selected_distance1, max_distance),
-        _distance_influence(selected_distance2, max_distance),
+        _distance_influence(selected_distance1, falloff_distance),
+        _distance_influence(selected_distance2, falloff_distance),
     )
     alpha = 1.0 - exp(-_BASE_STRENGTH * strength * influence * delta_time)
     correction = direction * (distance - target_distance) * alpha
