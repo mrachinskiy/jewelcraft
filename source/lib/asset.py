@@ -39,25 +39,38 @@ def iter_gems(depsgraph: Depsgraph) -> Iterator[tuple[DepsgraphObjectInstance, O
 
 def gem_transform(dup: DepsgraphObjectInstance) -> LocRadMat:
     loc, rot, sca = dup.matrix_world.decompose()
+    loc.freeze()
 
     if dup.is_instance:
         bbox = dup.instance_object.original.bound_box
-        x, y, z = bbox[0]
-        dim = Vector((
-            bbox[4][0] - x,
-            bbox[3][1] - y,
-            bbox[1][2] - z,
-        ))
-        rad = max(map(abs, dim.xy * sca.xy)) / 2.0
+        x, y, _ = bbox[0]
+        dim = (
+            (bbox[4][0] - x) * abs(sca.x),
+            (bbox[3][1] - y) * abs(sca.y),
+        )
+        rad = max(dim) / 2.0
     else:
         dim = dup.object.original.dimensions
         rad = max(dim.xy) / 2.0
 
     mat = Matrix.LocRotScale(loc, rot, (1.0, 1.0, 1.0))
-    loc.freeze()
     mat.freeze()
 
     return loc, rad, mat
+
+
+def gem_dimensions(dup: DepsgraphObjectInstance) -> Vector:
+    if dup.is_instance:
+        sca = dup.matrix_world.to_scale()
+        bbox = dup.instance_object.original.bound_box
+        x, y, z = bbox[0]
+        return Vector((
+            (bbox[4][0] - x) * abs(sca.x),
+            (bbox[3][1] - y) * abs(sca.y),
+            (bbox[1][2] - z) * abs(sca.z),
+        ))
+
+    return dup.object.original.dimensions
 
 
 def nearest_coords(rad1: float, rad2: float, mat1: Matrix, mat2: Matrix) -> tuple[Vector, Vector]:
