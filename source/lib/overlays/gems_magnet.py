@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from collections import deque
-from enum import IntEnum
 from math import exp
 from time import perf_counter
 
@@ -11,7 +10,6 @@ from mathutils import Matrix, Vector, kdtree
 
 from .. import unit
 
-
 _TIMER_INTERVAL = 1 / 60
 _MAX_DELTA_TIME = 0.1
 _BASE_STRENGTH = 10.0
@@ -19,15 +17,6 @@ _MOVE_EPSILON = 0.001
 _CONSTRAINT_PASSES = 7
 _CONSTRAINT_STRENGTH = 1
 _SNAP_RAY_EPSILON = 0.0001
-
-
-class _SnapElement(IntEnum):
-    GRID = 1
-    INCREMENT = 2
-    FACE = 3
-    FACE_MIDPOINT = 4
-    FACE_PROJECT = 5
-    FACE_NEAREST = 6
 
 
 class _Gem:
@@ -148,9 +137,7 @@ def _timer() -> float | None:
         _STATE.prev_selected = selected_positions
         return _TIMER_INTERVAL
 
-    transform_operator = _active_translation_transform_operator(context)
-
-    if transform_operator is not None:
+    if _is_active_translate_operator(context):
         selection_moved = _selected_moved(selected_positions)
 
         if selection_moved and not _STATE.dragging:
@@ -166,7 +153,6 @@ def _timer() -> float | None:
                 spacing_tolerance,
                 scene_props.gems_magnet_strength,
                 delta_time,
-                transform_operator,
             )
     elif _STATE.dragging:
         _finish_drag()
@@ -264,20 +250,15 @@ def _gem_mobility(
     return _distance_mobility(selected_distance, falloff_distance)
 
 
-def _active_translation_transform_operator(context):
+def _is_active_translate_operator(context) -> bool:
     window = context.window
-
     if window is None:
-        return None
+        return False
 
     for operator in window.modal_operators:
         if operator.bl_idname == "TRANSFORM_OT_translate":
-            return operator
-
-        if operator.bl_idname == "TRANSFORM_OT_transform" and getattr(operator, "mode", None) == "TRANSLATION":
-            return operator
-
-    return None
+            return True
+    return False
 
 
 def _merge_links(
@@ -428,7 +409,6 @@ def _apply_magnet(
     spacing_tolerance: float,
     strength: float,
     delta_time: float,
-    transform_operator,
 ) -> None:
     live_links = _build_links(gems, max_spacing)
 
@@ -493,7 +473,7 @@ def _apply_magnet(
         if gem is None:
             continue
 
-        _move_gem(context, transform_operator, gem, offset)
+        _move_gem(context, gem, offset)
 
 
 def _resolve_spacing_constraints(
@@ -615,121 +595,6 @@ def _distance_map(
     return distances
 
 
-def _map_snap_elements(elements) -> set[_SnapElement]:
-    snap_element_ids = {
-        "GRID": _SnapElement.GRID,
-        "INCREMENT": _SnapElement.INCREMENT,
-        "FACE": _SnapElement.FACE,
-        "FACE_MIDPOINT": _SnapElement.FACE_MIDPOINT,
-        "FACE_PROJECT": _SnapElement.FACE_PROJECT,
-        "FACE_NEAREST": _SnapElement.FACE_NEAREST,
-    }
-
-    return {snap_element_ids[element] for element in elements if element in snap_element_ids}
-
-
-def _should_snap_translate(context, transform_operator) -> bool:
-    tool_settings = context.scene.tool_settings
-
-    if not tool_settings.use_snap_translate:
-        return False
-
-    if transform_operator is not None:
-        return bool(tool_settings.use_snap or getattr(transform_operator, "snap", False))
-
-    return bool(tool_settings.use_snap and tool_settings.use_snap_translate)
-
-
-def _snap_elements(context, transform_operator) -> set[_SnapElement]:
-    elements = getattr(transform_operator, "snap_elements", None)
-
-    if elements:
-        return _map_snap_elements(elements)
-
-    return _map_snap_elements(context.scene.tool_settings.snap_elements)
-
-
-def _snap_individual_elements(context, transform_operator) -> set[_SnapElement]:
-    elements = getattr(transform_operator, "snap_elements_individual", None)
-
-    if elements:
-        return _map_snap_elements(elements)
-
-    return _map_snap_elements(getattr(context.scene.tool_settings, "snap_elements_individual", ()))
-
-
-def _snap_step(context, elements: set[_SnapElement]) -> float:
-    overlay = getattr(getattr(context, "space_data", None), "overlay", None)
-    base_step = 0.0
-
-    if overlay is not None:
-        base_step = getattr(overlay, "grid_scale_unit", 0.0) or getattr(overlay, "grid_scale", 0.0)
-
-    if not base_step:
-        base_step = context.scene.unit_settings.scale_length or 1.0
-
-    if _SnapElement.INCREMENT in elements and _SnapElement.GRID not in elements:
-        subdivisions = getattr(overlay, "grid_subdivisions", 1) if overlay is not None else 1
-        if subdivisions > 1:
-            base_step /= subdivisions
-
-    return base_step
-
-
-def _round_vector(value: Vector, step: float, origin: Vector | None = None) -> Vector:
-    if origin is None:
-        origin = Vector()
-
-    return Vector(
-        (
-            origin.x + round((value.x - origin.x) / step) * step,
-            origin.y + round((value.y - origin.y) / step) * step,
-            origin.z + round((value.z - origin.z) / step) * step,
-        )
-    )
-
-
-def _snap_location(context, transform_operator, gem: _Gem, next_location: Vector) -> Vector:
-    if not _should_snap_translate(context, transform_operator):
-        return next_location
-
-    elements = _snap_elements(context, transform_operator)
-
-    if not elements or not (elements <= {_SnapElement.GRID, _SnapElement.INCREMENT}):
-        return next_location
-
-    step = _snap_step(context, elements)
-
-    if step <= 0.0:
-        return next_location
-
-    tool_settings = context.scene.tool_settings
-    use_absolute = _SnapElement.GRID in elements or tool_settings.use_snap_grid_absolute
-
-    if use_absolute:
-        return _round_vector(next_location, step)
-
-    matrix = _STATE.drag_snapshot.get(gem.object.name)
-
-    if matrix is None:
-        return next_location
-
-    return _round_vector(next_location, step, matrix.translation)
-
-
-def _should_snap_to_face(context, transform_operator) -> tuple[bool, set[_SnapElement]]:
-    if not context.scene.jewelcraft.gems_magnet_snap_to_face:
-        return False, set()
-
-    elements = _snap_elements(context, transform_operator)
-    individual_elements = _snap_individual_elements(context, transform_operator)
-
-    return bool(
-        elements & {_SnapElement.FACE, _SnapElement.FACE_MIDPOINT}
-        or individual_elements & {_SnapElement.FACE_PROJECT, _SnapElement.FACE_NEAREST}
-    ), individual_elements
-
-
 def _is_surface_snap_target(context, object_) -> bool:
     tool_settings = context.scene.tool_settings
 
@@ -810,7 +675,6 @@ def _snap_surface(
     gem: _Gem,
     next_location: Vector,
     current_rotation,
-    individual_elements: set[_SnapElement],
 ) -> tuple[Vector, Vector | None]:
     axis = current_rotation @ Vector((0.0, 0.0, 1.0))
 
@@ -833,9 +697,8 @@ def _snap_surface(
         location, normal = min(candidates, key=lambda item: (item[0] - next_location).length_squared)
         return location, normal
 
-    if individual_elements & {_SnapElement.FACE_PROJECT, _SnapElement.FACE_NEAREST}:
-        if (hit := _closest_surface_point(context, next_location)) is not None:
-            return hit
+    if (hit := _closest_surface_point(context, next_location)) is not None:
+        return hit
 
     return next_location, None
 
@@ -859,28 +722,19 @@ def _is_same_rotation(rotation1, rotation2) -> bool:
     return rotation1.rotation_difference(rotation2).angle < 1e-6
 
 
-def _snap_transform(context, transform_operator, gem: _Gem, next_location: Vector, current_rotation):
-    use_face_snap, individual_elements = _should_snap_to_face(context, transform_operator)
-
-    if use_face_snap:
-        surface_location, normal = _snap_surface(context, gem, next_location, current_rotation, individual_elements)
+def _snap_transform(context, gem: _Gem, next_location: Vector, current_rotation):
+    if context.scene.jewelcraft.gems_magnet_snap_to_face:
+        surface_location, normal = _snap_surface(context, gem, next_location, current_rotation)
 
         if normal is not None:
-            align_rotation = getattr(transform_operator, "use_snap_align_rotation", None)
-            use_align_rotation = bool(align_rotation) if align_rotation is not None else bool(context.scene.tool_settings.use_snap_align_rotation)
-
-            if use_align_rotation:
-                return surface_location, _align_rotation_to_normal(current_rotation, normal)
+            return surface_location, _align_rotation_to_normal(current_rotation, normal)
 
         return surface_location, current_rotation
 
-    if not _should_snap_translate(context, transform_operator):
-        return next_location, current_rotation
-
-    return _snap_location(context, transform_operator, gem, next_location), current_rotation
+    return next_location, current_rotation
 
 
-def _move_gem(context, transform_operator, gem: _Gem, offset: Vector) -> bool:
+def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
     locked_axes = gem.object.lock_location
     offset = Vector(
         (
@@ -897,7 +751,6 @@ def _move_gem(context, transform_operator, gem: _Gem, offset: Vector) -> bool:
     current_rotation = matrix_world.to_quaternion()
     next_location, next_rotation = _snap_transform(
         context,
-        transform_operator,
         gem,
         gem.location + offset,
         current_rotation,
