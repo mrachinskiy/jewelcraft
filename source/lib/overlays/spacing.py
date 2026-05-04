@@ -315,6 +315,7 @@ def _draw_font(self, context):
         dis_str = f"{dist:.2f}"
         dim_x, dim_y = blf.dimensions(fontid, dis_str)
         pos_x, pos_y = location_3d_to_region_2d(region, region_3d, loc).to_tuple(0)
+        
         points = (
             (pos_x - 3,         pos_y - 4),
             (pos_x + 3 + dim_x, pos_y - 4),
