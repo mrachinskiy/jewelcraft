@@ -17,8 +17,7 @@ _MAX_DELTA_TIME = 0.1
 _BASE_STRENGTH = 10.0
 _MOVE_EPSILON = 0.001
 _CONSTRAINT_PASSES = 5
-_CONSTRAINT_STRENGTH = 0.5
-_SPACING_COMPRESSION_TOLERANCE = 0.15
+_CONSTRAINT_STRENGTH = 1
 _SNAP_RAY_EPSILON = 0.0001
 
 
@@ -163,6 +162,7 @@ def _timer() -> float | None:
                 selected_keys,
                 max_spacing,
                 falloff_distance,
+                scene_props.gems_magnet_spacing_tolerance,
                 scene_props.gems_magnet_strength,
                 delta_time,
                 transform_operator,
@@ -424,6 +424,7 @@ def _apply_magnet(
     selected_keys: frozenset[bpy.types.Object],
     max_spacing: float,
     falloff_distance: float,
+    spacing_tolerance: float,
     strength: float,
     delta_time: float,
     transform_operator,
@@ -468,7 +469,16 @@ def _apply_magnet(
         if offset2.length_squared:
             offsets[gem_object2] = offsets.get(gem_object2, Vector()) + offset2
 
-    offsets = _resolve_spacing_constraints(gems, distances, selected_keys, falloff_distance, offsets, strength, delta_time)
+    offsets = _resolve_spacing_constraints(
+        gems,
+        distances,
+        selected_keys,
+        falloff_distance,
+        offsets,
+        spacing_tolerance,
+        strength,
+        delta_time,
+    )
 
     for gem_object, offset in offsets.items():
         if gem_object in selected_keys:
@@ -491,6 +501,7 @@ def _resolve_spacing_constraints(
     selected_keys: frozenset[bpy.types.Object],
     falloff_distance: float,
     offsets: dict[bpy.types.Object, Vector],
+    spacing_tolerance: float,
     strength: float,
     delta_time: float,
 ) -> dict[bpy.types.Object, Vector]:
@@ -519,7 +530,7 @@ def _resolve_spacing_constraints(
                 continue
 
             spacing = max(gem1.spacing, gem2.spacing)
-            target_distance = gem1.radius + gem2.radius + spacing * (1.0 - _SPACING_COMPRESSION_TOLERANCE)
+            target_distance = gem1.radius + gem2.radius + spacing * (1.0 - spacing_tolerance)
             offset_vector = proposed[gem_object2] - proposed[gem_object1]
             distance = offset_vector.length
 

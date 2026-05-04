@@ -862,6 +862,15 @@ class SceneProperties(PropertyGroup):
         precision=2,
         unit="LENGTH",
     )
+    gems_magnet_spacing_tolerance: FloatProperty(
+        name="Spacing Tolerance",
+        description="How much of the target spacing can temporarily compress before constraints push gems apart",
+        default=0.15,
+        min=0.0,
+        max=1.0,
+        precision=2,
+        subtype="FACTOR",
+    )
     gems_magnet_strength: FloatProperty(
         name="Strength",
         description="Overall magnet mobility strength; gems farther from selected gems move less",
