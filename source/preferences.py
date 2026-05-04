@@ -864,12 +864,13 @@ class SceneProperties(PropertyGroup):
     )
     gems_magnet_spacing_tolerance: FloatProperty(
         name="Spacing Tolerance",
-        description="How much of the target spacing can temporarily compress before constraints push gems apart",
-        default=0.15,
+        description="How much girdle-to-girdle spacing may temporarily compress before constraints push gems apart",
+        default=0.03,
         min=0.0,
-        max=1.0,
+        max=0.5,
+        step=1,
         precision=2,
-        subtype="FACTOR",
+        unit="LENGTH",
     )
     gems_magnet_strength: FloatProperty(
         name="Strength",

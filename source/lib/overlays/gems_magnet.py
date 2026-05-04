@@ -16,7 +16,7 @@ _TIMER_INTERVAL = 1 / 60
 _MAX_DELTA_TIME = 0.1
 _BASE_STRENGTH = 10.0
 _MOVE_EPSILON = 0.001
-_CONSTRAINT_PASSES = 5
+_CONSTRAINT_PASSES = 7
 _CONSTRAINT_STRENGTH = 1
 _SNAP_RAY_EPSILON = 0.0001
 
@@ -141,6 +141,7 @@ def _timer() -> float | None:
     to_scene = unit.Scale().to_scene
     max_spacing = to_scene(scene_props.gems_magnet_max_spacing)
     falloff_distance = to_scene(scene_props.gems_magnet_falloff_distance)
+    spacing_tolerance = to_scene(scene_props.gems_magnet_spacing_tolerance)
 
     if len(gems) < 2:
         _STATE.clear_drag()
@@ -162,7 +163,7 @@ def _timer() -> float | None:
                 selected_keys,
                 max_spacing,
                 falloff_distance,
-                scene_props.gems_magnet_spacing_tolerance,
+                spacing_tolerance,
                 scene_props.gems_magnet_strength,
                 delta_time,
                 transform_operator,
@@ -530,7 +531,8 @@ def _resolve_spacing_constraints(
                 continue
 
             spacing = max(gem1.spacing, gem2.spacing)
-            target_distance = gem1.radius + gem2.radius + spacing * (1.0 - spacing_tolerance)
+            compressed_spacing = spacing - min(spacing_tolerance, spacing)
+            target_distance = gem1.radius + gem2.radius + compressed_spacing
             offset_vector = proposed[gem_object2] - proposed[gem_object1]
             distance = offset_vector.length
 
