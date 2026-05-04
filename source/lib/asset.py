@@ -60,6 +60,20 @@ def gem_transform(dup: DepsgraphObjectInstance) -> LocRadMat:
     return loc, rad, mat
 
 
+def gem_dimensions(dup: DepsgraphObjectInstance) -> Vector:
+    if dup.is_instance:
+        sca = dup.matrix_world.to_scale()
+        bbox = dup.instance_object.original.bound_box
+        x, y, z = bbox[0]
+        return Vector((
+            (bbox[4][0] - x) * abs(sca.x),
+            (bbox[3][1] - y) * abs(sca.y),
+            (bbox[1][2] - z) * abs(sca.z),
+        ))
+
+    return dup.object.original.dimensions
+
+
 def nearest_coords(rad1: float, rad2: float, mat1: Matrix, mat2: Matrix) -> tuple[Vector, Vector]:
     vec1 = mat1.inverted() @ mat2.translation
     vec1.z = 0.0

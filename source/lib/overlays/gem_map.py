@@ -13,7 +13,7 @@ from mathutils import Color, Matrix
 
 from ... import var
 from .. import gemlib, unit
-from ..asset import gem_transform, iter_gems
+from ..asset import gem_dimensions, gem_transform, iter_gems
 from ..colorlib import linear_to_srgb, luma
 
 _handler = None
@@ -102,7 +102,7 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False)
     for dup, ob, _ in iter_gems(depsgraph):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
+        size = tuple(round(x, 2) for x in from_scene(gem_dimensions(dup)))
         color = ob.material_slots[0].name if ob.material_slots else ""
         gems.add((stone, cut, size, color))
 
@@ -168,7 +168,7 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False)
 
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
+        size = tuple(round(x, 2) for x in from_scene(gem_dimensions(dup)))
         color_name = ob.material_slots[0].name if ob.material_slots else ""
         size, color, font_color = gem_map[(stone, cut, size, color_name)]
 
