@@ -604,43 +604,8 @@ def _ray_cast_surface(context, origin: Vector, direction: Vector, max_distance: 
     return None
 
 
-def _closest_surface_point(context, location: Vector) -> tuple[Vector, Vector] | None:
-    depsgraph = context.evaluated_depsgraph_get()
-    best_distance_squared = None
-    best_hit = None
-
-    for ob in context.visible_objects:
-        if ob.type != "MESH" or not _is_surface_snap_target(context, ob):
-            continue
-
-        local_location = ob.matrix_world.inverted() @ location
-        hit, nearest_location, normal, _ = ob.closest_point_on_mesh(local_location, depsgraph=depsgraph)
-
-        if not hit:
-            continue
-
-        location_world = ob.matrix_world @ nearest_location
-        normal_world = ob.matrix_world.to_3x3() @ normal
-
-        if normal_world.length_squared == 0.0:
-            continue
-
-        distance_squared = (location_world - location).length_squared
-
-        if best_distance_squared is None or distance_squared < best_distance_squared:
-            best_distance_squared = distance_squared
-            best_hit = (location_world.copy(), normal_world.normalized())
-
-    return best_hit
-
-
-def _snap_surface(
-    context,
-    gem: _Gem,
-    next_location: Vector,
-    current_rotation,
-) -> tuple[Vector, Vector | None]:
-    axis = current_rotation @ Vector((0.0, 0.0, 1.0))
+def _snap_surface(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion) -> tuple[Vector, Vector | None]:
+    axis = rot_current @ Vector((0.0, 0.0, 1.0))
 
     if axis.length_squared == 0.0:
         axis = Vector((0.0, 0.0, 1.0))
@@ -651,20 +616,17 @@ def _snap_surface(
     candidates = []
 
     for direction in (axis, -axis):
-        origin = next_location - direction * snap_distance
+        origin = loc_next - direction * snap_distance
         hit = _ray_cast_surface(context, origin, direction, snap_distance * 2.0)
 
         if hit is not None:
             candidates.append(hit)
 
     if candidates:
-        location, normal = min(candidates, key=lambda item: (item[0] - next_location).length_squared)
+        location, normal = min(candidates, key=lambda item: (item[0] - loc_next).length_squared)
         return location, normal
 
-    if (hit := _closest_surface_point(context, next_location)) is not None:
-        return hit
-
-    return next_location, None
+    return loc_next, None
 
 
 def _align_rotation_to_normal(current_rotation, normal: Vector):
@@ -686,16 +648,16 @@ def _is_same_rotation(rotation1, rotation2) -> bool:
     return rotation1.rotation_difference(rotation2).angle < 1e-6
 
 
-def _snap_transform(context, gem: _Gem, next_location: Vector, current_rotation):
+def _snap_transform(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion):
     if context.scene.jewelcraft.gems_magnet_snap_to_face:
-        surface_location, normal = _snap_surface(context, gem, next_location, current_rotation)
+        surface_location, normal = _snap_surface(context, gem, loc_next, rot_current)
 
         if normal is not None:
-            return surface_location, _align_rotation_to_normal(current_rotation, normal)
+            return surface_location, _align_rotation_to_normal(rot_current, normal)
 
-        return surface_location, current_rotation
+        return surface_location, rot_current
 
-    return next_location, current_rotation
+    return loc_next, rot_current
 
 
 def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
