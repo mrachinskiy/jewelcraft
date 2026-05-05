@@ -7,7 +7,7 @@ from time import perf_counter
 
 import bpy
 from bpy.types import Object
-from mathutils import Matrix, Vector, kdtree
+from mathutils import Matrix, Quaternion, Vector, kdtree
 
 from .. import unit
 
@@ -518,7 +518,6 @@ def _resolve_spacing_constraints(
 
             if mobility1:
                 proposed[ob1] -= correction * (mobility1 / mobility_total)
-
             if mobility2:
                 proposed[ob2] += correction * (mobility2 / mobility_total)
 
@@ -629,23 +628,22 @@ def _snap_surface(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion)
     return loc_next, None
 
 
-def _align_rotation_to_normal(current_rotation, normal: Vector):
+def _align_rotation_to_normal(rot_current: Quaternion, normal: Vector) -> Quaternion:
     if normal.length_squared == 0.0:
-        return current_rotation
+        return rot_current
 
-    axis_current = current_rotation @ Vector((0.0, 0.0, 1.0))
-
+    axis_current = rot_current @ Vector((0.0, 0.0, 1.0))
     if axis_current.length_squared == 0.0:
-        return current_rotation
+        return rot_current
 
     try:
-        return axis_current.normalized().rotation_difference(normal.normalized()) @ current_rotation
+        return axis_current.normalized().rotation_difference(normal.normalized()) @ rot_current
     except ValueError:
-        return current_rotation
+        return rot_current
 
 
-def _is_same_rotation(rotation1, rotation2) -> bool:
-    return rotation1.rotation_difference(rotation2).angle < 1e-6
+def _quat_eq(a: Quaternion, b: Quaternion) -> bool:
+    return a.rotation_difference(b).angle < 1e-6
 
 
 def _snap_transform(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion):
@@ -675,7 +673,7 @@ def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
     rot_current = mat.to_quaternion()
     loc_next, rot_next = _snap_transform(context, gem, gem.location + offset, rot_current)
     is_loc_changed = (loc_next - gem.location).length_squared > 0.0
-    is_rot_changed = not _is_same_rotation(rot_next, rot_current)
+    is_rot_changed = not _quat_eq(rot_next, rot_current)
 
     if not is_loc_changed and not is_rot_changed:
         return False
@@ -699,8 +697,8 @@ def _distance_mobility(selected_distance: float, falloff_distance: float) -> flo
 def _spring_offsets(
     gem1: _Gem,
     gem2: _Gem,
-    gem_object1: Object,
-    gem_object2: Object,
+    ob1: Object,
+    ob2: Object,
     selected_keys: frozenset[Object],
     spacing: float,
     selected_distance1: float,
@@ -717,8 +715,8 @@ def _spring_offsets(
     else:
         direction = Vector((1.0, 0.0, 0.0))
 
-    mobility1 = _gem_mobility(gem_object1, gem1, selected_keys, selected_distance1, falloff_distance)
-    mobility2 = _gem_mobility(gem_object2, gem2, selected_keys, selected_distance2, falloff_distance)
+    mobility1 = _gem_mobility(ob1, gem1, selected_keys, selected_distance1, falloff_distance)
+    mobility2 = _gem_mobility(ob2, gem2, selected_keys, selected_distance2, falloff_distance)
     mobility_total = mobility1 + mobility2
 
     if not mobility_total:
