@@ -138,16 +138,6 @@ def _is_active_translate_operator(context) -> bool:
     return False
 
 
-def _is_surface_snap_target(context, ob) -> bool:
-    return (
-        ob is not None
-        and ob.visible_get()
-        and not ob.hide_surface_pick
-        and "gem" not in ob
-        and not (context.scene.tool_settings.use_snap_selectable and ob.hide_select)
-    )
-
-
 def _nearest_selected_distance(gem1: _Gem, selected_gems: tuple[_Gem, ...]) -> float:
     if not selected_gems:
         return float("inf")
@@ -583,6 +573,7 @@ def _ray_cast_surface(context, origin: Vector, direction: Vector, max_distance: 
     if direction.length_squared == 0.0 or max_distance <= 0.0:
         return None
 
+    use_snap_selectable = context.scene.jewelcraft.gems_magnet_use_snap_selectable
     ray_cast = context.scene.ray_cast
     depsgraph = context.evaluated_depsgraph_get()
     direction = direction.normalized()
@@ -594,7 +585,13 @@ def _ray_cast_surface(context, origin: Vector, direction: Vector, max_distance: 
         if not is_hit:
             return None
 
-        if _is_surface_snap_target(context, ob):
+        if (
+            ob is not None
+            and ob.visible_get()
+            and not ob.hide_surface_pick
+            and "gem" not in ob
+            and not (use_snap_selectable and ob.hide_select)
+        ):
             return loc.copy(), normal.normalized()
 
         travelled = (loc - origin_current).length
