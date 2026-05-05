@@ -594,8 +594,7 @@ def _ray_cast_surface(context, origin: Vector, direction: Vector, max_distance: 
         if not is_hit:
             return None
 
-        is_backface = normal.dot(direction) > 0.0
-        if _is_surface_snap_target(context, ob) and not is_backface:
+        if _is_surface_snap_target(context, ob):
             return loc.copy(), normal.normalized()
 
         travelled = (loc - origin_current).length
