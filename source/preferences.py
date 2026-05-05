@@ -838,9 +838,13 @@ class SceneProperties(PropertyGroup):
         default=True,
     )
     gems_magnet_snap_to_face: BoolProperty(
-        name="Snap to Face",
+        name="On Surface",
         description="Use Gems Magnet face projection and normal alignment fallback for face snap workflows",
         default=True,
+    )
+    gems_magnet_use_snap_selectable: BoolProperty(
+        name="Selectable Only",
+        description="Snap only onto objects that are selectable",
     )
     gems_magnet_max_spacing: FloatProperty(
             name="Max Spacing",

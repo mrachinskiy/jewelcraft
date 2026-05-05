@@ -458,12 +458,21 @@ class VIEW3D_PT_jewelcraft_gems_magnet(SidebarSetup, Panel):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        col = layout.column(align=True)
+        col = layout.column(align=True, heading="Restrict")
         col.active = wm_props.show_gems_magnet
         col.prop(props, "gems_magnet_same_collection")
+
+        col = layout.column(align=True, heading="Snap")
+        col.active = wm_props.show_gems_magnet
         col.prop(props, "gems_magnet_snap_to_face")
-        col.prop(props, "gems_magnet_max_spacing")
+        sub = col.row()
+        sub.active = props.gems_magnet_snap_to_face
+        sub.prop(props, "gems_magnet_use_snap_selectable")
+
+        col = layout.column(align=True)
+        col.active = wm_props.show_gems_magnet
         col.prop(props, "gems_magnet_falloff_distance")
+        col.prop(props, "gems_magnet_max_spacing")
         col.prop(props, "gems_magnet_spacing_tolerance")
         col.prop(props, "gems_magnet_strength")
 
