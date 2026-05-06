@@ -77,28 +77,15 @@ class _Gem:
 
 
 class _State:
-    __slots__ = ("drag_snapshot", "dragging", "drag_selected_start", "links", "prev_selected", "selected_keys", "time_prev")
+    __slots__ = "links", "time_prev"
 
     def __init__(self) -> None:
-        self.drag_snapshot: dict[str, Matrix] = {}
-        self.dragging = False
-        self.drag_selected_start: dict[str, Vector] = {}
         self.links: dict[Object, tuple[Object, ...]] = {}
-        self.prev_selected: dict[Object, Vector] = {}
-        self.selected_keys: frozenset[Object] = frozenset()
         self.time_prev: float | None = None
 
     def reset(self) -> None:
-        self.clear_drag()
-        self.prev_selected.clear()
-        self.selected_keys = frozenset()
-        self.time_prev = None
-
-    def clear_drag(self) -> None:
-        self.drag_snapshot.clear()
-        self.dragging = False
-        self.drag_selected_start.clear()
         self.links.clear()
+        self.time_prev = None
 
 
 # Helpers
@@ -128,11 +115,7 @@ def _gem_mobility(gem_object: Object, gem: _Gem, selected_keys: frozenset[Object
 
 
 def _is_active_translate_operator(context) -> bool:
-    window = context.window
-    if window is None:
-        return False
-
-    for operator in window.modal_operators:
+    for operator in context.window.modal_operators:
         if operator.bl_idname == "TRANSFORM_OT_translate":
             return True
     return False
@@ -166,92 +149,50 @@ def _delta_time(current_time: float) -> float:
 
 
 def _timer() -> float | None:
+    global _state
+
     context = bpy.context
     wm_props = context.window_manager.jewelcraft
 
     if not wm_props.show_gems_magnet:
-        _state.reset()
+        _state = None
         return None
 
+    if not _is_active_translate_operator(context):
+        return _TIMER_INTERVAL
+
     if context.window_manager.is_interface_locked or context.mode != "OBJECT":
-        _state.clear_drag()
         return _TIMER_INTERVAL
 
-    selected_gems = [ob for ob in context.selected_objects if _is_editable_gem(ob)]
-
+    selected_gems = {ob for ob in context.selected_objects if _is_editable_gem(ob)}
     if not selected_gems:
-        if _state.selected_keys:
-            _state.clear_drag()
-            _state.selected_keys = frozenset()
-
-        _state.prev_selected = {}
         return _TIMER_INTERVAL
-
-    selected_positions = {ob: ob.matrix_world.translation.copy() for ob in selected_gems}
-    selected_keys = frozenset(selected_positions)
-
-    if selected_keys != _state.selected_keys:
-        _state.clear_drag()
-        _state.selected_keys = selected_keys
-
-    current_time = perf_counter()
-    delta_time = _delta_time(current_time)
 
     scene_props = context.scene.jewelcraft
     gems = _collect_gems(context, scene_props, selected_gems)
+    if len(gems) < 2:
+        return _TIMER_INTERVAL
+
     to_scene = unit.Scale().to_scene
     max_spacing = to_scene(scene_props.gems_magnet_max_spacing)
     falloff_distance = to_scene(scene_props.gems_magnet_falloff_distance)
     spacing_tolerance = to_scene(scene_props.gems_magnet_spacing_tolerance)
 
-    if len(gems) < 2:
-        _state.clear_drag()
-        _state.prev_selected = selected_positions
-        return _TIMER_INTERVAL
+    current_time = perf_counter()
+    delta_time = _delta_time(current_time)
 
-    if _is_active_translate_operator(context):
-        selection_moved = _selected_moved(selected_positions)
-
-        if selection_moved and not _state.dragging:
-            _start_drag(gems, selected_keys, max_spacing, falloff_distance)
-
-        if _state.dragging and selection_moved:
-            _apply_magnet(
-                context,
-                gems,
-                selected_keys,
-                max_spacing,
-                falloff_distance,
-                spacing_tolerance,
-                scene_props.gems_magnet_strength,
-                delta_time,
-            )
-    elif _state.dragging:
-        if _is_cancelled_drag():
-            for name, mat in _state.drag_snapshot.items():
-                if (ob := bpy.data.objects.get(name)) is None:
-                    continue
-                ob.matrix_world = mat.copy()
-
-        _state.clear_drag()
-
-    _state.prev_selected = selected_positions
+    _apply_magnet(
+        context,
+        gems,
+        selected_gems,
+        max_spacing,
+        falloff_distance,
+        spacing_tolerance,
+        scene_props.gems_magnet_strength,
+        delta_time,
+    )
 
     return _TIMER_INTERVAL
-
-
-def _selected_moved(selected_positions: dict[Object, Vector]) -> bool:
-    if _state.selected_keys != frozenset(_state.prev_selected):
-        return False
-
-    threshold = _move_threshold()
-
-    for ob, loc in selected_positions.items():
-        previous_location = _state.prev_selected.get(ob)
-        if previous_location is not None and (loc - previous_location).length > threshold:
-            return True
-
-    return False
 
 
 def _collect_gems(context, props, obs: list[Object]) -> dict[Object, _Gem]:
@@ -346,48 +287,6 @@ def _iter_link_pairs(gems: dict[Object, _Gem], distances: dict[Object, float]):
             yield ob1, ob2, gem1, gem2, distance1, distance2
 
 
-def _start_drag(gems: dict[Object, _Gem], selected_keys: frozenset[Object], max_spacing: float, falloff_distance: float) -> None:
-    _state.links = _build_links(gems, max_spacing)
-
-    if not _state.links:
-        return
-
-    distances = _distance_map(gems, selected_keys, falloff_distance)
-
-    if len(distances) <= len(selected_keys):
-        return
-
-    _snapshot_drag_gems(gems, distances)
-    _state.drag_selected_start = {
-        gems[gem_object].object.name: gems[gem_object].location.copy()
-        for gem_object in selected_keys
-        if gem_object in gems
-    }
-    _state.dragging = True
-
-
-def _is_cancelled_drag() -> bool:
-    if not _state.drag_selected_start:
-        return False
-
-    threshold = _move_threshold()
-
-    for name, loc in _state.drag_selected_start.items():
-        ob = bpy.data.objects.get(name)
-        if ob is None or (ob.matrix_world.translation - loc).length > threshold:
-            return False
-
-    return True
-
-
-def _snapshot_drag_gems(gems: dict[Object, _Gem], distances: dict[Object, float]) -> None:
-    for ob in distances:
-        gem = gems.get(ob)
-        if gem is None:
-            continue
-        _state.drag_snapshot.setdefault(gem.object.name, gem.object.matrix_world.copy())
-
-
 def _apply_magnet(
     context,
     gems: dict[Object, _Gem],
@@ -410,8 +309,6 @@ def _apply_magnet(
 
     if len(distances) <= len(selected_keys):
         return
-
-    _snapshot_drag_gems(gems, distances)
 
     threshold = _move_threshold()
     offsets: dict[Object, Vector] = {}
