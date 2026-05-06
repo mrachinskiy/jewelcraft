@@ -14,8 +14,8 @@ from .. import unit
 _TIMER_INTERVAL = 1 / 60
 _MAX_DELTA_TIME = 0.1
 _BASE_STRENGTH = 10.0
+_CONSTRAINT_STRENGTH = 1.0
 _CONSTRAINT_PASSES = 7
-_CONSTRAINT_STRENGTH = 1
 _SNAP_RAY_EPSILON = 0.0001
 
 _time_prev = 0.0
@@ -56,24 +56,20 @@ class _Gem:
 # -------------------------------------
 
 
-def _move_threshold() -> float:
-    return unit.Scale().to_scene(0.001)
-
-
 def _quat_eq(a: Quaternion, b: Quaternion) -> bool:
     return a.rotation_difference(b).angle < 1e-6
 
 
-def _is_editable_gem(ob: Object | None) -> bool:
-    return ob is not None and "gem" in ob and ob.visible_get() and ob.is_editable
+def _is_editable_gem(ob: Object) -> bool:
+    return "gem" in ob and ob.visible_get() and ob.is_editable
 
 
-def _is_stationary_gem(ob: Object, gem: _Gem, selected_keys: frozenset[Object]) -> bool:
-    return ob in selected_keys or all(gem.object.lock_location)
+def _is_stationary_gem(ob: Object, gem: _Gem, selected: set[Object]) -> bool:
+    return ob in selected or all(gem.object.lock_location)
 
 
-def _gem_mobility(gem_object: Object, gem: _Gem, selected_keys: frozenset[Object], selected_distance: float, falloff_distance: float) -> float:
-    if _is_stationary_gem(gem_object, gem, selected_keys):
+def _gem_mobility(ob: Object, gem: _Gem, selected: set[Object], selected_distance: float, falloff_distance: float) -> float:
+    if _is_stationary_gem(ob, gem, selected):
         return 0.0
     return _distance_mobility(selected_distance, falloff_distance)
 
@@ -85,11 +81,10 @@ def _is_active_translate_operator(context) -> bool:
     return False
 
 
-def _nearest_selected_distance(gem1: _Gem, selected_gems: tuple[_Gem, ...]) -> float:
-    if not selected_gems:
+def _nearest_selected_distance(gem1: _Gem, selected: tuple[_Gem, ...]) -> float:
+    if not selected:
         return float("inf")
-
-    return min(_girdle_gap(gem1, gem2) for gem2 in selected_gems)
+    return min(_girdle_gap(gem1, gem2) for gem2 in selected)
 
 
 def _distance_mobility(selected_distance: float, falloff_distance: float) -> float:
@@ -102,10 +97,10 @@ def _delta_time() -> float:
     global _time_prev
 
     now = perf_counter()
-    d = min(now - _time_prev, _MAX_DELTA_TIME)
+    delta = min(now - _time_prev, _MAX_DELTA_TIME)
     _time_prev = now
 
-    return d
+    return delta
 
 
 # Main Loop
@@ -240,13 +235,14 @@ def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, tuple[Object,
 def _apply_magnet(
     context,
     gems: dict[Object, _Gem],
-    selected_keys: frozenset[Object],
+    selected_keys: set[Object],
     max_spacing: float,
     falloff_distance: float,
     spacing_tolerance: float,
     strength: float,
     delta_time: float,
 ) -> None:
+
     links = _build_links(gems, max_spacing)
     if not links:
         return
@@ -255,7 +251,6 @@ def _apply_magnet(
     if len(distances) <= len(selected_keys):
         return
 
-    threshold = _move_threshold()
     offsets: dict[Object, Vector] = {}
 
     for gem_object1, gem_object2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
@@ -276,7 +271,6 @@ def _apply_magnet(
 
         if offset1.length_squared:
             offsets[gem_object1] = offsets.get(gem_object1, Vector()) + offset1
-
         if offset2.length_squared:
             offsets[gem_object2] = offsets.get(gem_object2, Vector()) + offset2
 
@@ -291,6 +285,7 @@ def _apply_magnet(
         strength,
         delta_time,
     )
+    threshold = unit.Scale().to_scene(0.001)
 
     for gem_object, offset in offsets.items():
         if gem_object in selected_keys:
@@ -311,18 +306,19 @@ def _resolve_spacing_constraints(
     gems: dict[Object, _Gem],
     links: dict[Object, tuple[Object, ...]],
     distances: dict[Object, float],
-    selected_keys: frozenset[Object],
+    selected_keys: set[Object],
     falloff_distance: float,
     offsets: dict[Object, Vector],
     spacing_tolerance: float,
     strength: float,
     delta_time: float,
 ) -> dict[Object, Vector]:
-    proposed: dict[Object, Vector] = {}
-    constraint_alpha = 1.0 - exp(-_BASE_STRENGTH * _CONSTRAINT_STRENGTH * strength * delta_time)
 
+    constraint_alpha = 1.0 - exp(-_BASE_STRENGTH * _CONSTRAINT_STRENGTH * strength * delta_time)
     if constraint_alpha <= 0.0:
         return offsets
+
+    proposed: dict[Object, Vector] = {}
 
     for ob in distances:
         gem = gems.get(ob)
@@ -386,7 +382,7 @@ def _resolve_spacing_constraints(
     }
 
 
-def _distance_map(gems: dict[Object, _Gem], links: dict[Object, tuple[Object, ...]], selected_keys: frozenset[Object], falloff_distance: float) -> dict[Object, float]:
+def _distance_map(gems: dict[Object, _Gem], links: dict[Object, tuple[Object, ...]], selected_keys: set[Object], falloff_distance: float) -> dict[Object, float]:
     distances = {ob: 0.0 for ob in selected_keys if ob in gems}
     if not distances:
         return distances
@@ -532,7 +528,7 @@ def _spring_offsets(
     gem2: _Gem,
     ob1: Object,
     ob2: Object,
-    selected_keys: frozenset[Object],
+    selected_keys: set[Object],
     spacing: float,
     selected_distance1: float,
     selected_distance2: float,
@@ -540,6 +536,7 @@ def _spring_offsets(
     strength: float,
     delta_time: float,
 ) -> tuple[Vector, Vector]:
+
     offset_vector = gem2.location - gem1.location
     distance = offset_vector.length
 
