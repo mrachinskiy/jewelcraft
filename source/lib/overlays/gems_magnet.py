@@ -18,7 +18,7 @@ _CONSTRAINT_PASSES = 7
 _CONSTRAINT_STRENGTH = 1
 _SNAP_RAY_EPSILON = 0.0001
 
-_state: "_State" = None
+_time_prev = 0.0
 
 
 def handler_toggle(self, context) -> None:
@@ -29,37 +29,13 @@ def handler_toggle(self, context) -> None:
 
 
 def handler_add() -> None:
-    global _state
-
-    _state = _State()
-
     if not bpy.app.timers.is_registered(_timer):
         bpy.app.timers.register(_timer, first_interval=0.0)
 
-    if _undo_post not in bpy.app.handlers.undo_post:
-        bpy.app.handlers.undo_post.append(_undo_post)
-
-    if _undo_post not in bpy.app.handlers.redo_post:
-        bpy.app.handlers.redo_post.append(_undo_post)
-
 
 def handler_del() -> None:
-    global _state
-
     if bpy.app.timers.is_registered(_timer):
         bpy.app.timers.unregister(_timer)
-
-    if _undo_post in bpy.app.handlers.undo_post:
-        bpy.app.handlers.undo_post.remove(_undo_post)
-
-    if _undo_post in bpy.app.handlers.redo_post:
-        bpy.app.handlers.redo_post.remove(_undo_post)
-
-    _state = None
-
-
-def _undo_post(_) -> None:
-    _state.reset()
 
 
 # Types
@@ -74,16 +50,6 @@ class _Gem:
         self.location = gem_object.matrix_world.translation.copy()
         self.radius = max(gem_object.dimensions.xy) / 2.0
         self.spacing = spacing
-
-
-class _State:
-    __slots__ = "links", "time_prev"
-
-    def __init__(self) -> None:
-        self.time_prev: float | None = None
-
-    def reset(self) -> None:
-        self.time_prev = None
 
 
 # Helpers
@@ -132,14 +98,14 @@ def _distance_mobility(selected_distance: float, falloff_distance: float) -> flo
     return 1.0 - selected_distance / falloff_distance
 
 
-def _delta_time(current_time: float) -> float:
-    if _state.time_prev is None:
-        _state.time_prev = current_time
-        return _TIMER_INTERVAL
+def _delta_time() -> float:
+    global _time_prev
 
-    delta_time = min(current_time - _state.time_prev, _MAX_DELTA_TIME)
-    _state.time_prev = current_time
-    return delta_time
+    now = perf_counter()
+    d = min(now - _time_prev, _MAX_DELTA_TIME)
+    _time_prev = now
+
+    return d
 
 
 # Main Loop
@@ -147,13 +113,10 @@ def _delta_time(current_time: float) -> float:
 
 
 def _timer() -> float | None:
-    global _state
-
     context = bpy.context
     wm_props = context.window_manager.jewelcraft
 
     if not wm_props.show_gems_magnet:
-        _state = None
         return None
 
     if not _is_active_translate_operator(context):
@@ -175,9 +138,7 @@ def _timer() -> float | None:
     max_spacing = to_scene(scene_props.gems_magnet_max_spacing)
     falloff_distance = to_scene(scene_props.gems_magnet_falloff_distance)
     spacing_tolerance = to_scene(scene_props.gems_magnet_spacing_tolerance)
-
-    current_time = perf_counter()
-    delta_time = _delta_time(current_time)
+    delta_time = _delta_time()
 
     _apply_magnet(
         context,
