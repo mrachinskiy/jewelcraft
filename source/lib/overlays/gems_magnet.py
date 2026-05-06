@@ -80,11 +80,9 @@ class _State:
     __slots__ = "links", "time_prev"
 
     def __init__(self) -> None:
-        self.links: dict[Object, tuple[Object, ...]] = {}
         self.time_prev: float | None = None
 
     def reset(self) -> None:
-        self.links.clear()
         self.time_prev = None
 
 
@@ -222,15 +220,6 @@ def _collect_gems(context, props, obs: list[Object]) -> dict[Object, _Gem]:
     return gems
 
 
-def _merge_links(existing: dict[Object, tuple[Object, ...]], incoming: dict[Object, tuple[Object, ...]]) -> dict[Object, tuple[Object, ...]]:
-    merged = {ob: set(neighbors) for ob, neighbors in existing.items()}
-
-    for ob, neighbors in incoming.items():
-        merged.setdefault(ob, set()).update(neighbors)
-
-    return {ob: tuple(neighbors) for ob, neighbors in merged.items() if neighbors}
-
-
 def _girdle_gap(gem1: _Gem, gem2: _Gem, center_distance: float | None = None) -> float:
     if center_distance is None:
         center_distance = (gem1.location - gem2.location).length
@@ -266,8 +255,8 @@ def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, t
     return {ob: tuple(neighbors) for ob, neighbors in links.items() if neighbors}
 
 
-def _iter_link_pairs(gems: dict[Object, _Gem], distances: dict[Object, float]):
-    for ob1, neighbors in _state.links.items():
+def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, tuple[Object, ...]], distances: dict[Object, float]):
+    for ob1, neighbors in links.items():
         gem1 = gems.get(ob1)
         distance1 = distances.get(ob1)
 
@@ -297,23 +286,18 @@ def _apply_magnet(
     strength: float,
     delta_time: float,
 ) -> None:
-    live_links = _build_links(gems, max_spacing)
-
-    if live_links:
-        _state.links = _merge_links(_state.links, live_links)
-
-    if not _state.links:
+    links = _build_links(gems, max_spacing)
+    if not links:
         return
 
-    distances = _distance_map(gems, selected_keys, falloff_distance)
-
+    distances = _distance_map(gems, links, selected_keys, falloff_distance)
     if len(distances) <= len(selected_keys):
         return
 
     threshold = _move_threshold()
     offsets: dict[Object, Vector] = {}
 
-    for gem_object1, gem_object2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, distances):
+    for gem_object1, gem_object2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
         spacing = max(gem1.spacing, gem2.spacing)
         offset1, offset2 = _spring_offsets(
             gem1,
@@ -337,6 +321,7 @@ def _apply_magnet(
 
     offsets = _resolve_spacing_constraints(
         gems,
+        links,
         distances,
         selected_keys,
         falloff_distance,
@@ -363,6 +348,7 @@ def _apply_magnet(
 
 def _resolve_spacing_constraints(
     gems: dict[Object, _Gem],
+    links: dict[Object, tuple[Object, ...]],
     distances: dict[Object, float],
     selected_keys: frozenset[Object],
     falloff_distance: float,
@@ -390,7 +376,7 @@ def _resolve_spacing_constraints(
     for _ in range(_CONSTRAINT_PASSES):
         changed = False
 
-        for ob1, ob2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, distances):
+        for ob1, ob2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
             if ob1 not in proposed or ob2 not in proposed:
                 continue
 
@@ -439,7 +425,7 @@ def _resolve_spacing_constraints(
     }
 
 
-def _distance_map(gems: dict[Object, _Gem], selected_keys: frozenset[Object], falloff_distance: float) -> dict[Object, float]:
+def _distance_map(gems: dict[Object, _Gem], links: dict[Object, tuple[Object, ...]], selected_keys: frozenset[Object], falloff_distance: float) -> dict[Object, float]:
     distances = {ob: 0.0 for ob in selected_keys if ob in gems}
     if not distances:
         return distances
@@ -450,7 +436,7 @@ def _distance_map(gems: dict[Object, _Gem], selected_keys: frozenset[Object], fa
     while queue:
         ob = queue.popleft()
 
-        for ob_next in _state.links.get(ob, ()):
+        for ob_next in links.get(ob, ()):
             if ob_next not in gems or ob_next in selected_keys:
                 continue
 
