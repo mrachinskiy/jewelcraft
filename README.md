@@ -87,6 +87,6 @@ Contributing
 > * Look out for appropriate context, `Base` for example is used in the context of materials as `Base Metal`, which in other words means `Non-Presious Metal` and should not be translated as `Basis` or `Foundation`.
 
 
-[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.18.0-blender4.2.0/jewelcraft-2_18_0.zip?repository=https://mrachinskiy.github.io/api/v1/extensions.json&blender_version_min=4.2.0
+[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.18.1-blender4.2.0/jewelcraft-2_18_1.zip?repository=https://mrachinskiy.github.io/api/v1/extensions.json&blender_version_min=4.2.0
 [download_v2_17_4]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.17.4-blender3.5.0/jewelcraft-2_17_4.zip
 [issues_url]: https://github.com/mrachinskiy/jewelcraft/issues
