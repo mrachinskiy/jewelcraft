@@ -4,6 +4,7 @@
 from collections import deque
 from math import exp
 from time import perf_counter
+from typing import NamedTuple
 
 import bpy
 from bpy.types import Object
@@ -12,13 +13,17 @@ from mathutils import Matrix, Quaternion, Vector, kdtree
 from .. import unit
 
 _TIMER_INTERVAL = 1 / 60
-_MAX_DELTA_TIME = 0.1
 _BASE_STRENGTH = 10.0
-_CONSTRAINT_STRENGTH = 1.0
 _CONSTRAINT_PASSES = 7
 _SNAP_RAY_EPSILON = 0.0001
 
 _time_prev = 0.0
+
+
+class _Gem(NamedTuple):
+    ob: Object
+    radius: float
+    spacing: float
 
 
 def handler_toggle(self, context) -> None:
@@ -38,20 +43,6 @@ def handler_del() -> None:
         bpy.app.timers.unregister(_timer)
 
 
-# Types
-# -------------------------------------
-
-
-class _Gem:
-    __slots__ = ("object", "location", "radius", "spacing")
-
-    def __init__(self, gem_object: Object, spacing: float) -> None:
-        self.object = gem_object
-        self.location = gem_object.matrix_world.translation.copy()
-        self.radius = max(gem_object.dimensions.xy) / 2.0
-        self.spacing = spacing
-
-
 # Helpers
 # -------------------------------------
 
@@ -65,7 +56,7 @@ def _is_editable_gem(ob: Object) -> bool:
 
 
 def _is_stationary_gem(ob: Object, gem: _Gem, selected: set[Object]) -> bool:
-    return ob in selected or all(gem.object.lock_location)
+    return ob in selected or all(gem.ob.lock_location)
 
 
 def _gem_mobility(ob: Object, gem: _Gem, selected: set[Object], selected_distance: float, falloff_distance: float) -> float:
@@ -84,7 +75,11 @@ def _is_active_translate_operator(context) -> bool:
 def _nearest_selected_distance(gem1: _Gem, selected: tuple[_Gem, ...]) -> float:
     if not selected:
         return float("inf")
-    return min(_girdle_gap(gem1, gem2) for gem2 in selected)
+
+    return min(
+        (gem1.ob.matrix_world.translation - gem2.ob.matrix_world.translation).length
+        for gem2 in selected
+    )
 
 
 def _distance_mobility(selected_distance: float, falloff_distance: float) -> float:
@@ -97,7 +92,7 @@ def _delta_time() -> float:
     global _time_prev
 
     now = perf_counter()
-    delta = min(now - _time_prev, _MAX_DELTA_TIME)
+    delta = min(now - _time_prev, 0.1)
     _time_prev = now
 
     return delta
@@ -171,42 +166,35 @@ def _collect_gems(context, props, obs: list[Object]) -> dict[Object, _Gem]:
         if use_overrides and "gem_overlay" in ob:
             spacing = ob["gem_overlay"].get("spacing", default_spacing)
 
-        gems[ob] = _Gem(ob, to_scene(spacing))
+        gems[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing))
 
     return gems
 
 
-def _girdle_gap(gem1: _Gem, gem2: _Gem, center_distance: float | None = None) -> float:
-    if center_distance is None:
-        center_distance = (gem1.location - gem2.location).length
-
-    return max(center_distance - gem1.radius - gem2.radius, 0.0)
-
-
 def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, tuple[Object, ...]]:
     gems_info = tuple(gems.values())
-    links = {gem.object: [] for gem in gems_info}
+    links = {gem.ob: [] for gem in gems_info}
     kd_tree = kdtree.KDTree(len(gems_info))
     max_radius = max(gem.radius for gem in gems_info)
 
     for i1, gem in enumerate(gems_info):
-        kd_tree.insert(gem.location, i1)
+        kd_tree.insert(gem.ob.matrix_world.translation, i1)
 
     kd_tree.balance()
 
     for i1, gem1 in enumerate(gems_info):
         search_radius = gem1.radius + max_radius + max_spacing
 
-        for _, i2, distance in kd_tree.find_range(gem1.location, search_radius):
+        for _, i2, distance in kd_tree.find_range(gem1.ob.matrix_world.translation, search_radius):
             if i2 <= i1:
                 continue
 
             gem2 = gems_info[i2]
-            if _girdle_gap(gem1, gem2, distance) > max_spacing:
+            if max(distance - gem1.radius - gem2.radius, 0.0) > max_spacing:
                 continue
 
-            links[gem1.object].append(gem2.object)
-            links[gem2.object].append(gem1.object)
+            links[gem1.ob].append(gem2.ob)
+            links[gem2.ob].append(gem1.ob)
 
     return {ob: tuple(neighbors) for ob, neighbors in links.items() if neighbors}
 
@@ -254,14 +242,12 @@ def _apply_magnet(
     offsets: dict[Object, Vector] = {}
 
     for gem_object1, gem_object2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
-        spacing = max(gem1.spacing, gem2.spacing)
         offset1, offset2 = _spring_offsets(
             gem1,
             gem2,
             gem_object1,
             gem_object2,
             selected_keys,
-            spacing,
             distance1,
             distance2,
             falloff_distance,
@@ -314,7 +300,7 @@ def _resolve_spacing_constraints(
     delta_time: float,
 ) -> dict[Object, Vector]:
 
-    constraint_alpha = 1.0 - exp(-_BASE_STRENGTH * _CONSTRAINT_STRENGTH * strength * delta_time)
+    constraint_alpha = 1.0 - exp(-_BASE_STRENGTH * strength * delta_time)
     if constraint_alpha <= 0.0:
         return offsets
 
@@ -326,9 +312,9 @@ def _resolve_spacing_constraints(
             continue
 
         if _is_stationary_gem(ob, gem, selected_keys):
-            proposed[ob] = gem.location.copy()
+            proposed[ob] = gem.ob.matrix_world.translation.copy()
         else:
-            proposed[ob] = gem.location + offsets.get(ob, Vector())
+            proposed[ob] = gem.ob.matrix_world.translation + offsets.get(ob, Vector())
 
     for _ in range(_CONSTRAINT_PASSES):
         changed = False
@@ -349,7 +335,7 @@ def _resolve_spacing_constraints(
             if distance:
                 direction = offset_vector / distance
             else:
-                current_offset = gem2.location - gem1.location
+                current_offset = gem2.ob.matrix_world.translation - gem1.ob.matrix_world.translation
 
                 if current_offset.length_squared:
                     direction = current_offset.normalized()
@@ -376,7 +362,7 @@ def _resolve_spacing_constraints(
             break
 
     return {
-        ob: loc - gems[ob].location
+        ob: loc - ob.matrix_world.translation
         for ob, loc in proposed.items()
         if ob in gems and not _is_stationary_gem(ob, gems[ob], selected_keys)
     }
@@ -413,15 +399,13 @@ def _ray_cast_surface(context, origin: Vector, direction: Vector, max_distance: 
     if direction.length_squared == 0.0 or max_distance <= 0.0:
         return None
 
+    direction.normalize()
     use_snap_selectable = context.scene.jewelcraft.gems_magnet_use_snap_selectable
     ray_cast = context.scene.ray_cast
     depsgraph = context.evaluated_depsgraph_get()
-    direction = direction.normalized()
-    distance_left = max_distance
-    origin_current = origin
 
-    while distance_left > 0.0:
-        is_hit, loc, normal, _, ob, _ = ray_cast(depsgraph, origin_current, direction, distance=distance_left)
+    while max_distance > 0.0:
+        is_hit, loc, normal, _, ob, _ = ray_cast(depsgraph, origin, direction, distance=max_distance)
         if not is_hit:
             return None
 
@@ -432,69 +416,66 @@ def _ray_cast_surface(context, origin: Vector, direction: Vector, max_distance: 
             and "gem" not in ob
             and not (use_snap_selectable and ob.hide_select)
         ):
-            return loc.copy(), normal.normalized()
+            return loc, normal
 
-        travelled = (loc - origin_current).length
-        step = max(travelled, _SNAP_RAY_EPSILON)
-        origin_current = loc + direction * _SNAP_RAY_EPSILON
-        distance_left -= step + _SNAP_RAY_EPSILON
+        step = max((loc - origin).length, _SNAP_RAY_EPSILON)
+        origin = loc + direction * _SNAP_RAY_EPSILON
+        max_distance -= step + _SNAP_RAY_EPSILON
 
     return None
 
 
 def _snap_surface(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion) -> tuple[Vector, Vector | None]:
     axis = rot_current @ Vector((0.0, 0.0, 1.0))
-
     if axis.length_squared == 0.0:
         axis = Vector((0.0, 0.0, 1.0))
     else:
         axis.normalize()
 
-    snap_distance = max(max(gem.object.dimensions), gem.radius * 4.0, unit.Scale().to_scene(1.0))
+    snap_distance = max(gem.ob.dimensions) * 2.0
     candidates = []
 
     for direction in (axis, -axis):
         origin = loc_next - direction * snap_distance
         hit = _ray_cast_surface(context, origin, direction, snap_distance * 2.0)
-
         if hit is not None:
             candidates.append(hit)
 
     if candidates:
-        location, normal = min(candidates, key=lambda item: (item[0] - loc_next).length_squared)
-        return location, normal
+        loc, normal = min(candidates, key=lambda item: (item[0] - loc_next).length_squared)
+        return loc, normal
 
     return loc_next, None
 
 
-def _align_rotation_to_normal(rot_current: Quaternion, normal: Vector) -> Quaternion:
+def _align_rotation_to_normal(rot: Quaternion, normal: Vector) -> Quaternion:
     if normal.length_squared == 0.0:
-        return rot_current
+        return rot
 
-    axis_current = rot_current @ Vector((0.0, 0.0, 1.0))
-    if axis_current.length_squared == 0.0:
-        return rot_current
+    axis = rot @ Vector((0.0, 0.0, 1.0))
+    if axis.length_squared == 0.0:
+        return rot
 
     try:
-        return axis_current.normalized().rotation_difference(normal.normalized()) @ rot_current
+        return axis.normalized().rotation_difference(normal.normalized()) @ rot
     except ValueError:
-        return rot_current
+        return rot
 
 
 def _snap_transform(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion):
     if context.scene.jewelcraft.gems_magnet_snap_to_face:
-        surface_location, normal = _snap_surface(context, gem, loc_next, rot_current)
+        loc_surface, normal = _snap_surface(context, gem, loc_next, rot_current)
 
         if normal is not None:
-            return surface_location, _align_rotation_to_normal(rot_current, normal)
+            return loc_surface, _align_rotation_to_normal(rot_current, normal)
 
-        return surface_location, rot_current
+        return loc_surface, rot_current
 
     return loc_next, rot_current
 
 
 def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
-    x, y, z = gem.object.lock_location
+    x, y, z = gem.ob.lock_location
     offset = Vector((
         0.0 if x else offset.x,
         0.0 if y else offset.y,
@@ -504,22 +485,19 @@ def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
     if offset.length_squared == 0.0:
         return False
 
-    mat = gem.object.matrix_world.copy()
-    rot_current = mat.to_quaternion()
-    loc_next, rot_next = _snap_transform(context, gem, gem.location + offset, rot_current)
-    is_loc_changed = (loc_next - gem.location).length_squared > 0.0
-    is_rot_changed = not _quat_eq(rot_next, rot_current)
+    loc, rot, sca = gem.ob.matrix_world.decompose()
+    loc_next, rot_next = _snap_transform(context, gem, loc + offset, rot)
+    is_loc_changed = (loc_next - loc).length_squared > 0.0
+    is_rot_changed = not _quat_eq(rot_next, rot)
 
     if not is_loc_changed and not is_rot_changed:
         return False
 
     if is_rot_changed:
-        gem.object.matrix_world = Matrix.LocRotScale(loc_next, rot_next, mat.to_scale())
+        gem.ob.matrix_world = Matrix.LocRotScale(loc_next, rot_next, sca)
     else:
-        mat.translation = loc_next
-        gem.object.matrix_world = mat
+        gem.ob.matrix_world.translation = loc_next
 
-    gem.location = loc_next
     return True
 
 
@@ -529,7 +507,6 @@ def _spring_offsets(
     ob1: Object,
     ob2: Object,
     selected_keys: set[Object],
-    spacing: float,
     selected_distance1: float,
     selected_distance2: float,
     falloff_distance: float,
@@ -537,7 +514,7 @@ def _spring_offsets(
     delta_time: float,
 ) -> tuple[Vector, Vector]:
 
-    offset_vector = gem2.location - gem1.location
+    offset_vector = gem2.ob.matrix_world.translation - gem1.ob.matrix_world.translation
     distance = offset_vector.length
 
     if distance:
@@ -553,7 +530,7 @@ def _spring_offsets(
         zero = Vector()
         return zero, zero
 
-    target_distance = gem1.radius + gem2.radius + spacing
+    target_distance = gem1.radius + gem2.radius + max(gem1.spacing, gem2.spacing)
     influence = max(
         _distance_mobility(selected_distance1, falloff_distance),
         _distance_mobility(selected_distance2, falloff_distance),
