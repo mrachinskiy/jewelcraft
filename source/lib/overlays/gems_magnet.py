@@ -24,6 +24,7 @@ class _Gem(NamedTuple):
     ob: Object
     radius: float
     spacing: float
+    locked: bool
 
 
 def handler_toggle(self, context) -> None:
@@ -51,16 +52,8 @@ def _quat_eq(a: Quaternion, b: Quaternion) -> bool:
     return a.rotation_difference(b).angle < 1e-6
 
 
-def _is_editable_gem(ob: Object) -> bool:
-    return "gem" in ob and ob.visible_get() and ob.is_editable
-
-
-def _is_stationary_gem(ob: Object, gem: _Gem, selected: set[Object]) -> bool:
-    return ob in selected or all(gem.ob.lock_location)
-
-
-def _gem_mobility(ob: Object, gem: _Gem, selected: set[Object], selected_distance: float, falloff_distance: float) -> float:
-    if _is_stationary_gem(ob, gem, selected):
+def _gem_mobility(gem: _Gem, selected_distance: float, falloff_distance: float) -> float:
+    if gem.locked:
         return 0.0
     return _distance_mobility(selected_distance, falloff_distance)
 
@@ -109,13 +102,10 @@ def _timer() -> float | None:
     if not wm_props.show_gems_magnet:
         return None
 
-    if not _is_active_translate_operator(context):
+    if not _is_active_translate_operator(context) or context.window_manager.is_interface_locked or context.mode != "OBJECT":
         return _TIMER_INTERVAL
 
-    if context.window_manager.is_interface_locked or context.mode != "OBJECT":
-        return _TIMER_INTERVAL
-
-    selected_gems = {ob for ob in context.selected_objects if _is_editable_gem(ob)}
+    selected_gems = {ob for ob in context.selected_objects if "gem" in ob}
     if not selected_gems:
         return _TIMER_INTERVAL
 
@@ -144,29 +134,33 @@ def _timer() -> float | None:
     return _TIMER_INTERVAL
 
 
-def _collect_gems(context, props, obs: list[Object]) -> dict[Object, _Gem]:
+def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
     to_scene = unit.Scale().to_scene
     default_spacing = props.overlay_spacing
     use_overrides = props.overlay_use_overrides
 
     colls = None
-    if props.gems_magnet_same_collection and obs:
+    if props.gems_magnet_same_collection and selected:
         colls = {
             coll
-            for ob in obs
+            for ob in selected
             for coll in ob.users_collection
         }
 
     gems = {}
     for ob in context.visible_objects:
-        if not _is_editable_gem(ob) or (colls is not None and colls.isdisjoint(set(ob.users_collection))):
+        if "gem" not in ob:
             continue
 
         spacing = default_spacing
         if use_overrides and "gem_overlay" in ob:
             spacing = ob["gem_overlay"].get("spacing", default_spacing)
 
-        gems[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing))
+        if (colls is not None and colls.isdisjoint(set(ob.users_collection))):
+            gems[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), True)
+        else:
+            locked = ob in selected or ob.get("gem_lock", False)
+            gems[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), locked)
 
     return gems
 
@@ -217,7 +211,7 @@ def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, tuple[Object,
             if gem2 is None or distance2 is None:
                 continue
 
-            yield ob1, ob2, gem1, gem2, distance1, distance2
+            yield gem1, gem2, distance1, distance2
 
 
 def _apply_magnet(
@@ -241,13 +235,10 @@ def _apply_magnet(
 
     offsets: dict[Object, Vector] = {}
 
-    for gem_object1, gem_object2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
+    for gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
         offset1, offset2 = _spring_offsets(
             gem1,
             gem2,
-            gem_object1,
-            gem_object2,
-            selected_keys,
             distance1,
             distance2,
             falloff_distance,
@@ -256,15 +247,14 @@ def _apply_magnet(
         )
 
         if offset1.length_squared:
-            offsets[gem_object1] = offsets.get(gem_object1, Vector()) + offset1
+            offsets[gem1.ob] = offsets.get(gem1.ob, Vector()) + offset1
         if offset2.length_squared:
-            offsets[gem_object2] = offsets.get(gem_object2, Vector()) + offset2
+            offsets[gem2.ob] = offsets.get(gem2.ob, Vector()) + offset2
 
     offsets = _resolve_spacing_constraints(
         gems,
         links,
         distances,
-        selected_keys,
         falloff_distance,
         offsets,
         spacing_tolerance,
@@ -292,7 +282,6 @@ def _resolve_spacing_constraints(
     gems: dict[Object, _Gem],
     links: dict[Object, tuple[Object, ...]],
     distances: dict[Object, float],
-    selected_keys: set[Object],
     falloff_distance: float,
     offsets: dict[Object, Vector],
     spacing_tolerance: float,
@@ -311,7 +300,7 @@ def _resolve_spacing_constraints(
         if gem is None:
             continue
 
-        if _is_stationary_gem(ob, gem, selected_keys):
+        if gem.locked:
             proposed[ob] = gem.ob.matrix_world.translation.copy()
         else:
             proposed[ob] = gem.ob.matrix_world.translation + offsets.get(ob, Vector())
@@ -319,14 +308,14 @@ def _resolve_spacing_constraints(
     for _ in range(_CONSTRAINT_PASSES):
         changed = False
 
-        for ob1, ob2, gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
-            if ob1 not in proposed or ob2 not in proposed:
+        for gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
+            if gem1.ob not in proposed or gem2.ob not in proposed:
                 continue
 
             spacing = max(gem1.spacing, gem2.spacing)
             compressed_spacing = spacing - min(spacing_tolerance, spacing)
             target_distance = gem1.radius + gem2.radius + compressed_spacing
-            offset_vector = proposed[ob2] - proposed[ob1]
+            offset_vector = proposed[gem2.ob] - proposed[gem1.ob]
             distance = offset_vector.length
 
             if distance >= target_distance:
@@ -342,8 +331,8 @@ def _resolve_spacing_constraints(
                 else:
                     direction = Vector((1.0, 0.0, 0.0))
 
-            mobility1 = _gem_mobility(ob1, gem1, selected_keys, distance1, falloff_distance)
-            mobility2 = _gem_mobility(ob2, gem2, selected_keys, distance2, falloff_distance)
+            mobility1 = _gem_mobility(gem1, distance1, falloff_distance)
+            mobility2 = _gem_mobility(gem2, distance2, falloff_distance)
             mobility_total = mobility1 + mobility2
 
             if not mobility_total:
@@ -352,9 +341,9 @@ def _resolve_spacing_constraints(
             correction = direction * (target_distance - distance) * constraint_alpha
 
             if mobility1:
-                proposed[ob1] -= correction * (mobility1 / mobility_total)
+                proposed[gem1.ob] -= correction * (mobility1 / mobility_total)
             if mobility2:
-                proposed[ob2] += correction * (mobility2 / mobility_total)
+                proposed[gem2.ob] += correction * (mobility2 / mobility_total)
 
             changed = True
 
@@ -364,7 +353,7 @@ def _resolve_spacing_constraints(
     return {
         ob: loc - ob.matrix_world.translation
         for ob, loc in proposed.items()
-        if ob in gems and not _is_stationary_gem(ob, gems[ob], selected_keys)
+        if ob in gems and not gems[ob].locked
     }
 
 
@@ -504,9 +493,6 @@ def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
 def _spring_offsets(
     gem1: _Gem,
     gem2: _Gem,
-    ob1: Object,
-    ob2: Object,
-    selected_keys: set[Object],
     selected_distance1: float,
     selected_distance2: float,
     falloff_distance: float,
@@ -522,8 +508,8 @@ def _spring_offsets(
     else:
         direction = Vector((1.0, 0.0, 0.0))
 
-    mobility1 = _gem_mobility(ob1, gem1, selected_keys, selected_distance1, falloff_distance)
-    mobility2 = _gem_mobility(ob2, gem2, selected_keys, selected_distance2, falloff_distance)
+    mobility1 = _gem_mobility(gem1, selected_distance1, falloff_distance)
+    mobility2 = _gem_mobility(gem2, selected_distance2, falloff_distance)
     mobility_total = mobility1 + mobility2
 
     if not mobility_total:
