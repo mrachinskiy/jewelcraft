@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from collections import deque
+from collections import defaultdict, deque
 from math import exp
 from time import perf_counter
 from typing import NamedTuple
@@ -52,12 +52,6 @@ def _quat_eq(a: Quaternion, b: Quaternion) -> bool:
     return a.rotation_difference(b).angle < 1e-6
 
 
-def _gem_mobility(gem: _Gem, selected_distance: float, falloff_distance: float) -> float:
-    if gem.locked:
-        return 0.0
-    return _distance_mobility(selected_distance, falloff_distance)
-
-
 def _is_active_translate_operator(context) -> bool:
     for operator in context.window.modal_operators:
         if operator.bl_idname == "TRANSFORM_OT_translate":
@@ -75,10 +69,16 @@ def _nearest_selected_distance(gem1: _Gem, selected: tuple[_Gem, ...]) -> float:
     )
 
 
-def _distance_mobility(selected_distance: float, falloff_distance: float) -> float:
-    if selected_distance < 0.0 or selected_distance > falloff_distance or falloff_distance <= 0.0:
+def _gem_mobility(gem: _Gem, dist: float, falloff: float) -> float:
+    if gem.locked:
         return 0.0
-    return 1.0 - selected_distance / falloff_distance
+    return _distance_mobility(dist, falloff)
+
+
+def _distance_mobility(dist: float, falloff: float) -> float:
+    if dist < 0.0 or dist > falloff or falloff <= 0.0:
+        return 0.0
+    return 1.0 - dist / falloff
 
 
 def _delta_time() -> float:
@@ -165,11 +165,12 @@ def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
     return gems
 
 
-def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, tuple[Object, ...]]:
+def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, list[Object]]:
     gems_info = tuple(gems.values())
-    links = {gem.ob: [] for gem in gems_info}
-    kd_tree = kdtree.KDTree(len(gems_info))
     max_radius = max(gem.radius for gem in gems_info)
+    links = defaultdict(list)
+
+    kd_tree = kdtree.KDTree(len(gems_info))
 
     for i1, gem in enumerate(gems_info):
         kd_tree.insert(gem.ob.matrix_world.translation, i1)
@@ -190,15 +191,15 @@ def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, t
             links[gem1.ob].append(gem2.ob)
             links[gem2.ob].append(gem1.ob)
 
-    return {ob: tuple(neighbors) for ob, neighbors in links.items() if neighbors}
+    return links
 
 
-def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, tuple[Object, ...]], distances: dict[Object, float]):
+def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, list[Object]], distances: dict[Object, float]):
     for ob1, neighbors in links.items():
         gem1 = gems.get(ob1)
         distance1 = distances.get(ob1)
 
-        if gem1 is None or distance1 is None:
+        if distance1 is None:
             continue
 
         for ob2 in neighbors:
@@ -208,7 +209,7 @@ def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, tuple[Object,
             gem2 = gems.get(ob2)
             distance2 = distances.get(ob2)
 
-            if gem2 is None or distance2 is None:
+            if distance2 is None:
                 continue
 
             yield gem1, gem2, distance1, distance2
@@ -280,9 +281,9 @@ def _apply_magnet(
 
 def _resolve_spacing_constraints(
     gems: dict[Object, _Gem],
-    links: dict[Object, tuple[Object, ...]],
+    links: dict[Object, list[Object]],
     distances: dict[Object, float],
-    falloff_distance: float,
+    falloff: float,
     offsets: dict[Object, Vector],
     spacing_tolerance: float,
     strength: float,
@@ -296,20 +297,16 @@ def _resolve_spacing_constraints(
     proposed: dict[Object, Vector] = {}
 
     for ob in distances:
-        gem = gems.get(ob)
-        if gem is None:
-            continue
-
-        if gem.locked:
-            proposed[ob] = gem.ob.matrix_world.translation.copy()
+        if gems[ob].locked:
+            proposed[ob] = ob.matrix_world.translation.copy()
         else:
-            proposed[ob] = gem.ob.matrix_world.translation + offsets.get(ob, Vector())
+            proposed[ob] = ob.matrix_world.translation + offsets.get(ob, Vector())
 
     for _ in range(_CONSTRAINT_PASSES):
         changed = False
 
-        for gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
-            if gem1.ob not in proposed or gem2.ob not in proposed:
+        for gem1, gem2, dist1, dist2 in _iter_link_pairs(gems, links, distances):
+            if gem1.ob not in proposed or gem2.ob not in proposed or (gem1.locked and gem2.locked):
                 continue
 
             spacing = max(gem1.spacing, gem2.spacing)
@@ -331,19 +328,18 @@ def _resolve_spacing_constraints(
                 else:
                     direction = Vector((1.0, 0.0, 0.0))
 
-            mobility1 = _gem_mobility(gem1, distance1, falloff_distance)
-            mobility2 = _gem_mobility(gem2, distance2, falloff_distance)
-            mobility_total = mobility1 + mobility2
+            m1 = _gem_mobility(gem1, dist1, falloff)
+            m2 = _gem_mobility(gem2, dist2, falloff)
+            correction = direction * (target_distance - distance) * constraint_alpha
+            m_total = m1 + m2
 
-            if not mobility_total:
+            if not m_total:
                 continue
 
-            correction = direction * (target_distance - distance) * constraint_alpha
-
-            if mobility1:
-                proposed[gem1.ob] -= correction * (mobility1 / mobility_total)
-            if mobility2:
-                proposed[gem2.ob] += correction * (mobility2 / mobility_total)
+            if m1:
+                proposed[gem1.ob] -= correction * (m1 / m_total)
+            if m2:
+                proposed[gem2.ob] += correction * (m2 / m_total)
 
             changed = True
 
@@ -352,12 +348,11 @@ def _resolve_spacing_constraints(
 
     return {
         ob: loc - ob.matrix_world.translation
-        for ob, loc in proposed.items()
-        if ob in gems and not gems[ob].locked
+        for ob, loc in proposed.items() if not gems[ob].locked
     }
 
 
-def _distance_map(gems: dict[Object, _Gem], links: dict[Object, tuple[Object, ...]], selected_keys: set[Object], falloff_distance: float) -> dict[Object, float]:
+def _distance_map(gems: dict[Object, _Gem], links: dict[Object, list[Object]], selected_keys: set[Object], falloff_distance: float) -> dict[Object, float]:
     distances = {ob: 0.0 for ob in selected_keys if ob in gems}
     if not distances:
         return distances
@@ -493,9 +488,9 @@ def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
 def _spring_offsets(
     gem1: _Gem,
     gem2: _Gem,
-    selected_distance1: float,
-    selected_distance2: float,
-    falloff_distance: float,
+    dist1: float,
+    dist2: float,
+    falloff: float,
     strength: float,
     delta_time: float,
 ) -> tuple[Vector, Vector]:
@@ -508,20 +503,20 @@ def _spring_offsets(
     else:
         direction = Vector((1.0, 0.0, 0.0))
 
-    mobility1 = _gem_mobility(gem1, selected_distance1, falloff_distance)
-    mobility2 = _gem_mobility(gem2, selected_distance2, falloff_distance)
-    mobility_total = mobility1 + mobility2
+    m1 = _gem_mobility(gem1, dist1, falloff)
+    m2 = _gem_mobility(gem2, dist2, falloff)
+    m_total = m1 + m2
 
-    if not mobility_total:
+    if not m_total:
         zero = Vector()
         return zero, zero
 
     target_distance = gem1.radius + gem2.radius + max(gem1.spacing, gem2.spacing)
     influence = max(
-        _distance_mobility(selected_distance1, falloff_distance),
-        _distance_mobility(selected_distance2, falloff_distance),
+        _distance_mobility(dist1, falloff),
+        _distance_mobility(dist2, falloff),
     )
     alpha = 1.0 - exp(-_BASE_STRENGTH * strength * influence * delta_time)
     correction = direction * (distance - target_distance) * alpha
 
-    return correction * (mobility1 / mobility_total), -correction * (mobility2 / mobility_total)
+    return correction * (m1 / m_total), -correction * (m2 / m_total)
