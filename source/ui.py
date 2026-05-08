@@ -379,10 +379,42 @@ class VIEW3D_PT_jewelcraft_gems(SidebarSetup, Panel):
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
 
 
-class VIEW3D_PT_jewelcraft_spacing(SidebarSetup, Panel):
-    bl_label = "Spacing"
+class VIEW3D_PT_jewelcraft_spacing_overlay(SidebarSetup, Panel):
+    bl_label = "Spacing Overlay"
     bl_options = {"DEFAULT_CLOSED"}
     bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
+
+    def draw_header(self, context):
+        wm_props = context.window_manager.jewelcraft
+        self.layout.prop(wm_props, "show_spacing", text="")
+
+    def draw(self, context):
+        props = context.scene.jewelcraft
+        wm_props = context.window_manager.jewelcraft
+
+        self.popover_header_prop(wm_props, "show_spacing")
+
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        col = layout.column(align=True)
+        col.active = wm_props.show_spacing
+        col.prop(props, "overlay_show_all")
+        col.prop(props, "overlay_show_in_front")
+        col.prop(props, "overlay_use_overrides")
+        col.prop(props, "overlay_spacing", text="Spacing", text_ctxt="Jewelry")
+
+        col.separator()
+
+        row = col.row(align=True)
+        row.operator("object.jewelcraft_overlay_override_add")
+        row.operator("object.jewelcraft_overlay_override_del")
+
+
+class VIEW3D_PT_jewelcraft_spacing(SidebarSetup, Panel):
+    bl_label = "Spacing"
+    bl_parent_id = "VIEW3D_PT_jewelcraft_spacing_overlay"
 
     def draw_header(self, context):
         wm_props = context.window_manager.jewelcraft
@@ -417,39 +449,6 @@ class VIEW3D_PT_jewelcraft_spacing(SidebarSetup, Panel):
         col.prop(props, "spacing_tolerance")
         col.separator(factor=0.9)
         col.prop(props, "spacing_strength")
-
-
-class VIEW3D_PT_jewelcraft_spacing_overlay(SidebarSetup, Panel):
-    bl_label = "Spacing Overlay"
-    bl_options = {"DEFAULT_CLOSED"}
-    bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
-
-    def draw_header(self, context):
-        wm_props = context.window_manager.jewelcraft
-        self.layout.prop(wm_props, "show_spacing", text="")
-
-    def draw(self, context):
-        props = context.scene.jewelcraft
-        wm_props = context.window_manager.jewelcraft
-
-        self.popover_header_prop(wm_props, "show_spacing")
-
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
-
-        col = layout.column(align=True)
-        col.active = wm_props.show_spacing
-        col.prop(props, "overlay_show_all")
-        col.prop(props, "overlay_show_in_front")
-        col.prop(props, "overlay_use_overrides")
-        col.prop(props, "overlay_spacing", text="Spacing", text_ctxt="Jewelry")
-
-        col.separator()
-
-        row = col.row(align=True)
-        row.operator("object.jewelcraft_overlay_override_add")
-        row.operator("object.jewelcraft_overlay_override_del")
 
 
 class VIEW3D_PT_jewelcraft_gem_map_overlay(SidebarSetup, Panel):
