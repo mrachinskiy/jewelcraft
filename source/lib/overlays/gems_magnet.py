@@ -28,7 +28,7 @@ class _Gem(NamedTuple):
 
 
 def handler_toggle(self, context) -> None:
-    if self.show_gems_magnet:
+    if self.use_spacing:
         handler_add()
     else:
         handler_del()
@@ -87,30 +87,30 @@ def _timer() -> float | None:
     context = bpy.context
     wm_props = context.window_manager.jewelcraft
 
-    if not wm_props.show_gems_magnet:
+    if not wm_props.use_spacing:
         return None
 
     if not _is_active_translate_operator(context) or context.window_manager.is_interface_locked or context.mode != "OBJECT":
         return _TIMER_INTERVAL
 
-    gems_selected = {ob for ob in context.selected_objects if "gem" in ob}
-    if not gems_selected:
+    selected_gems = {ob for ob in context.selected_objects if "gem" in ob}
+    if not selected_gems:
         return _TIMER_INTERVAL
 
     scene_props = context.scene.jewelcraft
-    gems_info = _collect_gems(context, scene_props, gems_selected)
+    gems_info = _collect_gems(context, scene_props, selected_gems)
     if len(gems_info) < 2:
         return _TIMER_INTERVAL
 
     to_scene = unit.Scale().to_scene
 
-    _apply_magnet(
-        gems_selected,
+    _apply_spacing(
         gems_info,
-        to_scene(scene_props.gems_magnet_max_spacing),
-        to_scene(scene_props.gems_magnet_falloff_distance),
-        to_scene(scene_props.gems_magnet_spacing_tolerance),
-        scene_props.gems_magnet_strength,
+        selected_gems,
+        to_scene(scene_props.spacing_radius),
+        to_scene(scene_props.spacing_tether),
+        to_scene(scene_props.spacing_tolerance),
+        scene_props.spacing_strength,
         _delta_time(),
     )
 
@@ -123,14 +123,14 @@ def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
     use_overrides = props.overlay_use_overrides
 
     colls = None
-    if props.gems_magnet_same_collection and selected:
+    if props.spacing_restrict_by_collection and selected:
         colls = {
             coll
             for ob in selected
             for coll in ob.users_collection
         }
 
-    gems = {}
+    info = {}
     for ob in context.visible_objects:
         if "gem" not in ob:
             continue
@@ -140,38 +140,38 @@ def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
             spacing = ob["gem_overlay"].get("spacing", default_spacing)
 
         if (colls is not None and colls.isdisjoint(set(ob.users_collection))):
-            gems[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), True)
+            info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), True)
         else:
             locked = ob in selected or ob.get("gem_lock", False)
-            gems[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), locked)
+            info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), locked)
 
-    return gems
+    return info
 
 
-def _apply_magnet(
+def _apply_spacing(
+    gems_info: dict[Object, _Gem],
     selected: set[Object],
-    gems: dict[Object, _Gem],
-    max_spacing: float,
-    falloff: float,
-    spacing_tolerance: float,
+    effect_radius: float,
+    tether: float,
+    tolerance: float,
     strength: float,
     delta_time: float,
 ) -> None:
 
-    links = _build_links(gems, max_spacing)
-    distances = _distance_map(selected, links, falloff)
+    links = _build_links(gems_info, tether)
+    distances = _distance_map(selected, links, effect_radius)
     if len(distances) <= len(selected):
         return
 
     offsets = {}
 
-    for gem1, gem2, dist1, dist2 in _iter_link_pairs(gems, links, distances):
+    for gem1, gem2, dist1, dist2 in _iter_link_pairs(gems_info, links, distances):
         offset1, offset2 = _spring_offsets(
             gem1,
             gem2,
             dist1,
             dist2,
-            falloff,
+            effect_radius,
             strength,
             delta_time,
         )
@@ -182,12 +182,12 @@ def _apply_magnet(
             offsets[gem2.ob] = offsets.get(gem2.ob, Vector()) + offset2
 
     offsets = _resolve_spacing_constraints(
-        gems,
+        gems_info,
         links,
         distances,
-        falloff,
         offsets,
-        spacing_tolerance,
+        effect_radius,
+        tolerance,
         strength,
         delta_time,
     )
@@ -196,30 +196,30 @@ def _apply_magnet(
     for ob, offset in offsets.items():
         if ob in selected or offset.length <= threshold:
             continue
-        _move_gem(gems[ob], offset)
+        _move_gem(gems_info[ob], offset)
 
 
-def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, list[Object]]:
-    gems_info = tuple(gems.values())
-    max_radius = max(gem.radius for gem in gems_info)
+def _build_links(gems_info: dict[Object, _Gem], tether: float) -> dict[Object, list[Object]]:
+    info = tuple(gems_info.values())
+    max_radius = max(gem.radius for gem in info)
     links = defaultdict(list)
 
-    kd_tree = kdtree.KDTree(len(gems_info))
+    kd_tree = kdtree.KDTree(len(info))
 
-    for i1, gem in enumerate(gems_info):
+    for i1, gem in enumerate(info):
         kd_tree.insert(gem.ob.matrix_world.translation, i1)
 
     kd_tree.balance()
 
-    for i1, gem1 in enumerate(gems_info):
-        search_radius = gem1.radius + max_radius + max_spacing
+    for i1, gem1 in enumerate(info):
+        search_radius = gem1.radius + max_radius + tether
 
         for _, i2, distance in kd_tree.find_range(gem1.ob.matrix_world.translation, search_radius):
             if i2 <= i1:
                 continue
 
-            gem2 = gems_info[i2]
-            if max(distance - gem1.radius - gem2.radius, 0.0) > max_spacing:
+            gem2 = info[i2]
+            if max(distance - gem1.radius - gem2.radius, 0.0) > tether:
                 continue
 
             links[gem1.ob].append(gem2.ob)
@@ -228,7 +228,7 @@ def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, l
     return links
 
 
-def _distance_map(selected: set[Object], links: dict[Object, list[Object]], falloff: float) -> dict[Object, float]:
+def _distance_map(selected: set[Object], links: dict[Object, list[Object]], effect_radius: float) -> dict[Object, float]:
     distances = {ob: 0.0 for ob in selected}
     queue = deque(selected)
 
@@ -244,7 +244,7 @@ def _distance_map(selected: set[Object], links: dict[Object, list[Object]], fall
                 for ob2 in selected
             )
 
-            if distance_next > falloff:
+            if distance_next > effect_radius:
                 continue
 
             if distance_next < distances.get(ob_next, float("inf")):
@@ -254,11 +254,10 @@ def _distance_map(selected: set[Object], links: dict[Object, list[Object]], fall
     return distances
 
 
-def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, list[Object]], distances: dict[Object, float]):
+def _iter_link_pairs(gems_info: dict[Object, _Gem], links: dict[Object, list[Object]], distances: dict[Object, float]):
     for ob1, neighbors in links.items():
-        gem1 = gems.get(ob1)
+        gem1 = gems_info[ob1]
         dist1 = distances.get(ob1)
-
         if dist1 is None:
             continue
 
@@ -266,9 +265,8 @@ def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, list[Object]]
             if ob2.as_pointer() <= ob1.as_pointer():
                 continue
 
-            gem2 = gems.get(ob2)
+            gem2 = gems_info[ob2]
             dist2 = distances.get(ob2)
-
             if dist2 is None:
                 continue
 
@@ -280,7 +278,7 @@ def _spring_offsets(
     gem2: _Gem,
     dist1: float,
     dist2: float,
-    falloff: float,
+    effect_radius: float,
     strength: float,
     delta_time: float,
 ) -> tuple[Vector, Vector]:
@@ -293,8 +291,8 @@ def _spring_offsets(
     else:
         direction = Vector((1.0, 0.0, 0.0))
 
-    m1 = _gem_mobility(gem1, dist1, falloff)
-    m2 = _gem_mobility(gem2, dist2, falloff)
+    m1 = _gem_mobility(gem1, dist1, effect_radius)
+    m2 = _gem_mobility(gem2, dist2, effect_radius)
     m_total = m1 + m2
 
     if not m_total:
@@ -302,7 +300,7 @@ def _spring_offsets(
         return zero, zero
 
     target_distance = gem1.radius + gem2.radius + max(gem1.spacing, gem2.spacing)
-    influence = max(_mobility(dist1, falloff), _mobility(dist2, falloff))
+    influence = max(_mobility(dist1, effect_radius), _mobility(dist2, effect_radius))
     alpha = 1.0 - exp(-_BASE_STRENGTH * strength * influence * delta_time)
     correction = direction * (distance - target_distance) * alpha
 
@@ -310,12 +308,12 @@ def _spring_offsets(
 
 
 def _resolve_spacing_constraints(
-    gems: dict[Object, _Gem],
+    gems_info: dict[Object, _Gem],
     links: dict[Object, list[Object]],
     distances: dict[Object, float],
-    falloff: float,
     offsets: dict[Object, Vector],
-    spacing_tolerance: float,
+    effect_radius: float,
+    tolerance: float,
     strength: float,
     delta_time: float,
 ) -> dict[Object, Vector]:
@@ -327,7 +325,7 @@ def _resolve_spacing_constraints(
     proposed: dict[Object, Vector] = {}
 
     for ob in distances:
-        if gems[ob].locked:
+        if gems_info[ob].locked:
             proposed[ob] = ob.matrix_world.translation.copy()
         else:
             proposed[ob] = ob.matrix_world.translation + offsets.get(ob, Vector())
@@ -335,12 +333,12 @@ def _resolve_spacing_constraints(
     for _ in range(_CONSTRAINT_PASSES):
         changed = False
 
-        for gem1, gem2, dist1, dist2 in _iter_link_pairs(gems, links, distances):
+        for gem1, gem2, dist1, dist2 in _iter_link_pairs(gems_info, links, distances):
             if gem1.ob not in proposed or gem2.ob not in proposed or (gem1.locked and gem2.locked):
                 continue
 
             spacing = max(gem1.spacing, gem2.spacing)
-            compressed_spacing = spacing - min(spacing_tolerance, spacing)
+            compressed_spacing = spacing - min(tolerance, spacing)
             target_distance = gem1.radius + gem2.radius + compressed_spacing
             offset_vector = proposed[gem2.ob] - proposed[gem1.ob]
             distance = offset_vector.length
@@ -358,8 +356,8 @@ def _resolve_spacing_constraints(
                 else:
                     direction = Vector((1.0, 0.0, 0.0))
 
-            m1 = _gem_mobility(gem1, dist1, falloff)
-            m2 = _gem_mobility(gem2, dist2, falloff)
+            m1 = _gem_mobility(gem1, dist1, effect_radius)
+            m2 = _gem_mobility(gem2, dist2, effect_radius)
             correction = direction * (target_distance - distance) * constraint_alpha
             m_total = m1 + m2
 
@@ -378,7 +376,7 @@ def _resolve_spacing_constraints(
 
     return {
         ob: loc - ob.matrix_world.translation
-        for ob, loc in proposed.items() if not gems[ob].locked
+        for ob, loc in proposed.items() if not gems_info[ob].locked
     }
 
 
@@ -414,7 +412,7 @@ def _move_gem(gem: _Gem, offset: Vector) -> bool:
 
 
 def _snap_transform(gem: _Gem, loc_next: Vector, rot_current: Quaternion) -> tuple[Vector, Quaternion]:
-    if bpy.context.scene.jewelcraft.gems_magnet_snap_to_face:
+    if bpy.context.scene.jewelcraft.spacing_snap_to_surface:
         loc_surface, normal = _snap_surface(gem, loc_next, rot_current)
 
         if normal is not None:
@@ -455,7 +453,7 @@ def _ray_cast_surface(origin: Vector, direction: Vector, max_distance: float) ->
     direction.normalize()
 
     context = bpy.context
-    use_snap_selectable = context.scene.jewelcraft.gems_magnet_use_snap_selectable
+    use_snap_selectable = context.scene.jewelcraft.spacing_snap_selectable
     ray_cast = context.scene.ray_cast
     depsgraph = context.evaluated_depsgraph_get()
 
