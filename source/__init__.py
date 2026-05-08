@@ -49,7 +49,7 @@ def register():
 
 
 def unregister():
-    from .lib import overlays
+    from .lib import overlays, spacing
 
     for cls in classes:
         bpy.utils.unregister_class(cls)
@@ -66,6 +66,7 @@ def unregister():
     # ---------------------------
 
     overlays.clear()
+    spacing.handler_del()
     on_load.handler_del()
 
     # Translations
