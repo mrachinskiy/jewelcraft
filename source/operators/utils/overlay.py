@@ -36,6 +36,10 @@ class OBJECT_OT_overlay_override_add(Operator):
         precision=2,
         unit="LENGTH",
     )
+    locked: BoolProperty(
+        name="Lock",
+        description="Lock position for spacing"
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -46,15 +50,19 @@ class OBJECT_OT_overlay_override_add(Operator):
         col.prop(self, "color")
         col.prop(self, "linewidth")
         col.prop(self, "spacing", text="Spacing", text_ctxt="Jewelry")
+        col.prop(self, "locked")
 
     def execute(self, context):
+        settings = {
+            "color": self.color,
+            "linewidth": self.linewidth,
+            "spacing": self.spacing,
+            "locked": self.locked,
+        }
+
         for ob in context.selected_objects:
             if "gem" in ob:
-                ob["gem_overlay"] = {
-                    "color": self.color,
-                    "linewidth": self.linewidth,
-                    "spacing": self.spacing,
-                }
+                ob["gem_overlay"] = settings
 
         context.area.tag_redraw()
 
@@ -68,15 +76,15 @@ class OBJECT_OT_overlay_override_add(Operator):
             "color": prefs.overlay_color,
             "linewidth": prefs.overlay_linewidth,
             "spacing": props.overlay_spacing,
+            "locked": False,
         }
 
         ovrd = context.object.get("gem_overlay")
         if ovrd:
             default_settings.update(ovrd)
 
-        self.color = default_settings["color"]
-        self.linewidth = default_settings["linewidth"]
-        self.spacing = default_settings["spacing"]
+        for k, v in default_settings.items():
+            setattr(self, k, v)
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
