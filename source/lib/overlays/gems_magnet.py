@@ -44,7 +44,7 @@ def handler_del() -> None:
         bpy.app.timers.unregister(_timer)
 
 
-# Helpers
+# Utility
 # -------------------------------------
 
 
@@ -59,25 +59,13 @@ def _is_active_translate_operator(context) -> bool:
     return False
 
 
-def _nearest_selected_distance(gem1: _Gem, selected: tuple[_Gem, ...]) -> float:
-    if not selected:
-        return float("inf")
-
-    return min(
-        (gem1.ob.matrix_world.translation - gem2.ob.matrix_world.translation).length
-        for gem2 in selected
-    )
-
-
 def _gem_mobility(gem: _Gem, dist: float, falloff: float) -> float:
     if gem.locked:
         return 0.0
-    return _distance_mobility(dist, falloff)
+    return _mobility(dist, falloff)
 
 
-def _distance_mobility(dist: float, falloff: float) -> float:
-    if dist < 0.0 or dist > falloff or falloff <= 0.0:
-        return 0.0
+def _mobility(dist: float, falloff: float) -> float:
     return 1.0 - dist / falloff
 
 
@@ -105,30 +93,25 @@ def _timer() -> float | None:
     if not _is_active_translate_operator(context) or context.window_manager.is_interface_locked or context.mode != "OBJECT":
         return _TIMER_INTERVAL
 
-    selected_gems = {ob for ob in context.selected_objects if "gem" in ob}
-    if not selected_gems:
+    gems_selected = {ob for ob in context.selected_objects if "gem" in ob}
+    if not gems_selected:
         return _TIMER_INTERVAL
 
     scene_props = context.scene.jewelcraft
-    gems = _collect_gems(context, scene_props, selected_gems)
-    if len(gems) < 2:
+    gems_info = _collect_gems(context, scene_props, gems_selected)
+    if len(gems_info) < 2:
         return _TIMER_INTERVAL
 
     to_scene = unit.Scale().to_scene
-    max_spacing = to_scene(scene_props.gems_magnet_max_spacing)
-    falloff_distance = to_scene(scene_props.gems_magnet_falloff_distance)
-    spacing_tolerance = to_scene(scene_props.gems_magnet_spacing_tolerance)
-    delta_time = _delta_time()
 
     _apply_magnet(
-        context,
-        gems,
-        selected_gems,
-        max_spacing,
-        falloff_distance,
-        spacing_tolerance,
+        gems_selected,
+        gems_info,
+        to_scene(scene_props.gems_magnet_max_spacing),
+        to_scene(scene_props.gems_magnet_falloff_distance),
+        to_scene(scene_props.gems_magnet_spacing_tolerance),
         scene_props.gems_magnet_strength,
-        delta_time,
+        _delta_time(),
     )
 
     return _TIMER_INTERVAL
@@ -165,60 +148,9 @@ def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
     return gems
 
 
-def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, list[Object]]:
-    gems_info = tuple(gems.values())
-    max_radius = max(gem.radius for gem in gems_info)
-    links = defaultdict(list)
-
-    kd_tree = kdtree.KDTree(len(gems_info))
-
-    for i1, gem in enumerate(gems_info):
-        kd_tree.insert(gem.ob.matrix_world.translation, i1)
-
-    kd_tree.balance()
-
-    for i1, gem1 in enumerate(gems_info):
-        search_radius = gem1.radius + max_radius + max_spacing
-
-        for _, i2, distance in kd_tree.find_range(gem1.ob.matrix_world.translation, search_radius):
-            if i2 <= i1:
-                continue
-
-            gem2 = gems_info[i2]
-            if max(distance - gem1.radius - gem2.radius, 0.0) > max_spacing:
-                continue
-
-            links[gem1.ob].append(gem2.ob)
-            links[gem2.ob].append(gem1.ob)
-
-    return links
-
-
-def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, list[Object]], distances: dict[Object, float]):
-    for ob1, neighbors in links.items():
-        gem1 = gems.get(ob1)
-        dist1 = distances.get(ob1)
-
-        if dist1 is None:
-            continue
-
-        for ob2 in neighbors:
-            if ob2.as_pointer() <= ob1.as_pointer():
-                continue
-
-            gem2 = gems.get(ob2)
-            dist2 = distances.get(ob2)
-
-            if dist2 is None:
-                continue
-
-            yield gem1, gem2, dist1, dist2
-
-
 def _apply_magnet(
-    context,
-    gems: dict[Object, _Gem],
     selected: set[Object],
+    gems: dict[Object, _Gem],
     max_spacing: float,
     falloff: float,
     spacing_tolerance: float,
@@ -227,14 +159,11 @@ def _apply_magnet(
 ) -> None:
 
     links = _build_links(gems, max_spacing)
-    if not links:
-        return
-
-    distances = _distance_map(gems, links, selected, falloff)
+    distances = _distance_map(selected, links, falloff)
     if len(distances) <= len(selected):
         return
 
-    offsets: dict[Object, Vector] = {}
+    offsets = {}
 
     for gem1, gem2, dist1, dist2 in _iter_link_pairs(gems, links, distances):
         offset1, offset2 = _spring_offsets(
@@ -267,7 +196,117 @@ def _apply_magnet(
     for ob, offset in offsets.items():
         if ob in selected or offset.length <= threshold:
             continue
-        _move_gem(context, gems[ob], offset)
+        _move_gem(gems[ob], offset)
+
+
+def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, list[Object]]:
+    gems_info = tuple(gems.values())
+    max_radius = max(gem.radius for gem in gems_info)
+    links = defaultdict(list)
+
+    kd_tree = kdtree.KDTree(len(gems_info))
+
+    for i1, gem in enumerate(gems_info):
+        kd_tree.insert(gem.ob.matrix_world.translation, i1)
+
+    kd_tree.balance()
+
+    for i1, gem1 in enumerate(gems_info):
+        search_radius = gem1.radius + max_radius + max_spacing
+
+        for _, i2, distance in kd_tree.find_range(gem1.ob.matrix_world.translation, search_radius):
+            if i2 <= i1:
+                continue
+
+            gem2 = gems_info[i2]
+            if max(distance - gem1.radius - gem2.radius, 0.0) > max_spacing:
+                continue
+
+            links[gem1.ob].append(gem2.ob)
+            links[gem2.ob].append(gem1.ob)
+
+    return links
+
+
+def _distance_map(selected: set[Object], links: dict[Object, list[Object]], falloff: float) -> dict[Object, float]:
+    distances = {ob: 0.0 for ob in selected}
+    queue = deque(selected)
+
+    while queue:
+        ob = queue.popleft()
+
+        for ob_next in links[ob]:
+            if ob_next in selected:
+                continue
+
+            distance_next = min(
+                (ob_next.matrix_world.translation - ob2.matrix_world.translation).length
+                for ob2 in selected
+            )
+
+            if distance_next > falloff:
+                continue
+
+            if distance_next < distances.get(ob_next, float("inf")):
+                distances[ob_next] = distance_next
+                queue.append(ob_next)
+
+    return distances
+
+
+def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, list[Object]], distances: dict[Object, float]):
+    for ob1, neighbors in links.items():
+        gem1 = gems.get(ob1)
+        dist1 = distances.get(ob1)
+
+        if dist1 is None:
+            continue
+
+        for ob2 in neighbors:
+            if ob2.as_pointer() <= ob1.as_pointer():
+                continue
+
+            gem2 = gems.get(ob2)
+            dist2 = distances.get(ob2)
+
+            if dist2 is None:
+                continue
+
+            yield gem1, gem2, dist1, dist2
+
+
+def _spring_offsets(
+    gem1: _Gem,
+    gem2: _Gem,
+    dist1: float,
+    dist2: float,
+    falloff: float,
+    strength: float,
+    delta_time: float,
+) -> tuple[Vector, Vector]:
+
+    offset_vector = gem2.ob.matrix_world.translation - gem1.ob.matrix_world.translation
+    distance = offset_vector.length
+
+    if distance:
+        direction = offset_vector / distance
+    else:
+        direction = Vector((1.0, 0.0, 0.0))
+
+    m1 = _gem_mobility(gem1, dist1, falloff)
+    m2 = _gem_mobility(gem2, dist2, falloff)
+    m_total = m1 + m2
+
+    if not m_total:
+        zero = Vector()
+        return zero, zero
+
+    target_distance = gem1.radius + gem2.radius + max(gem1.spacing, gem2.spacing)
+    influence = max(_mobility(dist1, falloff), _mobility(dist2, falloff))
+    alpha = 1.0 - exp(-_BASE_STRENGTH * strength * influence * delta_time)
+    correction = direction * (distance - target_distance) * alpha
+
+    return correction * (m1 / m_total), -correction * (m2 / m_total)
 
 
 def _resolve_spacing_constraints(
@@ -343,110 +382,7 @@ def _resolve_spacing_constraints(
     }
 
 
-def _distance_map(gems: dict[Object, _Gem], links: dict[Object, list[Object]], selected: set[Object], falloff: float) -> dict[Object, float]:
-    distances = {ob: 0.0 for ob in selected}
-    selected_gems = tuple(gems[ob] for ob in selected)
-    queue = deque(selected)
-
-    while queue:
-        ob = queue.popleft()
-
-        for ob_next in links.get(ob):
-            if ob_next not in gems or ob_next in selected:
-                continue
-
-            distance_next = _nearest_selected_distance(gems[ob_next], selected_gems)
-
-            if distance_next > falloff:
-                continue
-
-            if distance_next < distances.get(ob_next, float("inf")):
-                distances[ob_next] = distance_next
-                queue.append(ob_next)
-
-    return distances
-
-
-def _ray_cast_surface(context, origin: Vector, direction: Vector, max_distance: float) -> tuple[Vector, Vector] | None:
-    if direction.length_squared == 0.0 or max_distance <= 0.0:
-        return None
-
-    direction.normalize()
-    use_snap_selectable = context.scene.jewelcraft.gems_magnet_use_snap_selectable
-    ray_cast = context.scene.ray_cast
-    depsgraph = context.evaluated_depsgraph_get()
-
-    while max_distance > 0.0:
-        is_hit, loc, normal, _, ob, _ = ray_cast(depsgraph, origin, direction, distance=max_distance)
-        if not is_hit:
-            return None
-
-        if (
-            ob is not None
-            and ob.visible_get()
-            and not ob.hide_surface_pick
-            and "gem" not in ob
-            and not (use_snap_selectable and ob.hide_select)
-        ):
-            return loc, normal
-
-        step = max((loc - origin).length, _SNAP_RAY_EPSILON)
-        origin = loc + direction * _SNAP_RAY_EPSILON
-        max_distance -= step + _SNAP_RAY_EPSILON
-
-    return None
-
-
-def _snap_surface(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion) -> tuple[Vector, Vector | None]:
-    axis = rot_current @ Vector((0.0, 0.0, 1.0))
-    if axis.length_squared == 0.0:
-        axis = Vector((0.0, 0.0, 1.0))
-    else:
-        axis.normalize()
-
-    snap_distance = max(gem.ob.dimensions) * 2.0
-    candidates = []
-
-    for direction in (axis, -axis):
-        origin = loc_next - direction * snap_distance
-        hit = _ray_cast_surface(context, origin, direction, snap_distance * 2.0)
-        if hit is not None:
-            candidates.append(hit)
-
-    if candidates:
-        loc, normal = min(candidates, key=lambda item: (item[0] - loc_next).length_squared)
-        return loc, normal
-
-    return loc_next, None
-
-
-def _align_rotation_to_normal(rot: Quaternion, normal: Vector) -> Quaternion:
-    if normal.length_squared == 0.0:
-        return rot
-
-    axis = rot @ Vector((0.0, 0.0, 1.0))
-    if axis.length_squared == 0.0:
-        return rot
-
-    try:
-        return axis.normalized().rotation_difference(normal.normalized()) @ rot
-    except ValueError:
-        return rot
-
-
-def _snap_transform(context, gem: _Gem, loc_next: Vector, rot_current: Quaternion):
-    if context.scene.jewelcraft.gems_magnet_snap_to_face:
-        loc_surface, normal = _snap_surface(context, gem, loc_next, rot_current)
-
-        if normal is not None:
-            return loc_surface, _align_rotation_to_normal(rot_current, normal)
-
-        return loc_surface, rot_current
-
-    return loc_next, rot_current
-
-
-def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
+def _move_gem(gem: _Gem, offset: Vector) -> bool:
     x, y, z = gem.ob.lock_location
     offset = Vector((
         0.0 if x else offset.x,
@@ -458,7 +394,7 @@ def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
         return False
 
     loc, rot, sca = gem.ob.matrix_world.decompose()
-    loc_next, rot_next = _snap_transform(context, gem, loc + offset, rot)
+    loc_next, rot_next = _snap_transform(gem, loc + offset, rot)
     is_loc_changed = (loc_next - loc).length_squared > 0.0
     is_rot_changed = not _quat_eq(rot_next, rot)
 
@@ -473,38 +409,85 @@ def _move_gem(context, gem: _Gem, offset: Vector) -> bool:
     return True
 
 
-def _spring_offsets(
-    gem1: _Gem,
-    gem2: _Gem,
-    dist1: float,
-    dist2: float,
-    falloff: float,
-    strength: float,
-    delta_time: float,
-) -> tuple[Vector, Vector]:
+# Project on Surface
+# -------------------------------------
 
-    offset_vector = gem2.ob.matrix_world.translation - gem1.ob.matrix_world.translation
-    distance = offset_vector.length
 
-    if distance:
-        direction = offset_vector / distance
+def _snap_transform(gem: _Gem, loc_next: Vector, rot_current: Quaternion) -> tuple[Vector, Quaternion]:
+    if bpy.context.scene.jewelcraft.gems_magnet_snap_to_face:
+        loc_surface, normal = _snap_surface(gem, loc_next, rot_current)
+
+        if normal is not None:
+            return loc_surface, _align_rotation_to_normal(rot_current, normal)
+
+        return loc_surface, rot_current
+
+    return loc_next, rot_current
+
+
+def _snap_surface(gem: _Gem, loc_next: Vector, rot_current: Quaternion) -> tuple[Vector, Vector | None]:
+    axis = rot_current @ Vector((0.0, 0.0, 1.0))
+    if axis.length_squared == 0.0:
+        axis = Vector((0.0, 0.0, 1.0))
     else:
-        direction = Vector((1.0, 0.0, 0.0))
+        axis.normalize()
 
-    m1 = _gem_mobility(gem1, dist1, falloff)
-    m2 = _gem_mobility(gem2, dist2, falloff)
-    m_total = m1 + m2
+    snap_distance = max(gem.ob.dimensions) * 2.0
+    candidates = []
 
-    if not m_total:
-        zero = Vector()
-        return zero, zero
+    for direction in (axis, -axis):
+        origin = loc_next - direction * snap_distance
+        hit = _ray_cast_surface(origin, direction, snap_distance * 2.0)
+        if hit is not None:
+            candidates.append(hit)
 
-    target_distance = gem1.radius + gem2.radius + max(gem1.spacing, gem2.spacing)
-    influence = max(
-        _distance_mobility(dist1, falloff),
-        _distance_mobility(dist2, falloff),
-    )
-    alpha = 1.0 - exp(-_BASE_STRENGTH * strength * influence * delta_time)
-    correction = direction * (distance - target_distance) * alpha
+    if candidates:
+        loc, normal = min(candidates, key=lambda item: (item[0] - loc_next).length_squared)
+        return loc, normal
 
-    return correction * (m1 / m_total), -correction * (m2 / m_total)
+    return loc_next, None
+
+
+def _ray_cast_surface(origin: Vector, direction: Vector, max_distance: float) -> tuple[Vector, Vector] | None:
+    if direction.length_squared == 0.0 or max_distance <= 0.0:
+        return None
+
+    direction.normalize()
+
+    context = bpy.context
+    use_snap_selectable = context.scene.jewelcraft.gems_magnet_use_snap_selectable
+    ray_cast = context.scene.ray_cast
+    depsgraph = context.evaluated_depsgraph_get()
+
+    while max_distance > 0.0:
+        is_hit, loc, normal, _, ob, _ = ray_cast(depsgraph, origin, direction, distance=max_distance)
+        if not is_hit:
+            return None
+
+        if (
+            ob is not None
+            and not ob.hide_surface_pick
+            and "gem" not in ob
+            and not (use_snap_selectable and ob.hide_select)
+        ):
+            return loc, normal
+
+        step = max((loc - origin).length, _SNAP_RAY_EPSILON)
+        origin = loc + direction * _SNAP_RAY_EPSILON
+        max_distance -= step + _SNAP_RAY_EPSILON
+
+    return None
+
+
+def _align_rotation_to_normal(rot: Quaternion, normal: Vector) -> Quaternion:
+    if normal.length_squared == 0.0:
+        return rot
+
+    axis = rot @ Vector((0.0, 0.0, 1.0))
+    if axis.length_squared == 0.0:
+        return rot
+
+    try:
+        return axis.normalized().rotation_difference(normal.normalized()) @ rot
+    except ValueError:
+        return rot
