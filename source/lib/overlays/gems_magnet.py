@@ -197,9 +197,9 @@ def _build_links(gems: dict[Object, _Gem], max_spacing: float) -> dict[Object, l
 def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, list[Object]], distances: dict[Object, float]):
     for ob1, neighbors in links.items():
         gem1 = gems.get(ob1)
-        distance1 = distances.get(ob1)
+        dist1 = distances.get(ob1)
 
-        if distance1 is None:
+        if dist1 is None:
             continue
 
         for ob2 in neighbors:
@@ -207,20 +207,20 @@ def _iter_link_pairs(gems: dict[Object, _Gem], links: dict[Object, list[Object]]
                 continue
 
             gem2 = gems.get(ob2)
-            distance2 = distances.get(ob2)
+            dist2 = distances.get(ob2)
 
-            if distance2 is None:
+            if dist2 is None:
                 continue
 
-            yield gem1, gem2, distance1, distance2
+            yield gem1, gem2, dist1, dist2
 
 
 def _apply_magnet(
     context,
     gems: dict[Object, _Gem],
-    selected_keys: set[Object],
+    selected: set[Object],
     max_spacing: float,
-    falloff_distance: float,
+    falloff: float,
     spacing_tolerance: float,
     strength: float,
     delta_time: float,
@@ -230,19 +230,19 @@ def _apply_magnet(
     if not links:
         return
 
-    distances = _distance_map(gems, links, selected_keys, falloff_distance)
-    if len(distances) <= len(selected_keys):
+    distances = _distance_map(gems, links, selected, falloff)
+    if len(distances) <= len(selected):
         return
 
     offsets: dict[Object, Vector] = {}
 
-    for gem1, gem2, distance1, distance2 in _iter_link_pairs(gems, links, distances):
+    for gem1, gem2, dist1, dist2 in _iter_link_pairs(gems, links, distances):
         offset1, offset2 = _spring_offsets(
             gem1,
             gem2,
-            distance1,
-            distance2,
-            falloff_distance,
+            dist1,
+            dist2,
+            falloff,
             strength,
             delta_time,
         )
@@ -256,7 +256,7 @@ def _apply_magnet(
         gems,
         links,
         distances,
-        falloff_distance,
+        falloff,
         offsets,
         spacing_tolerance,
         strength,
@@ -264,19 +264,10 @@ def _apply_magnet(
     )
     threshold = unit.Scale().to_scene(0.001)
 
-    for gem_object, offset in offsets.items():
-        if gem_object in selected_keys:
+    for ob, offset in offsets.items():
+        if ob in selected or offset.length <= threshold:
             continue
-
-        if offset.length <= threshold:
-            continue
-
-        gem = gems.get(gem_object)
-
-        if gem is None:
-            continue
-
-        _move_gem(context, gem, offset)
+        _move_gem(context, gems[ob], offset)
 
 
 def _resolve_spacing_constraints(
@@ -352,24 +343,21 @@ def _resolve_spacing_constraints(
     }
 
 
-def _distance_map(gems: dict[Object, _Gem], links: dict[Object, list[Object]], selected_keys: set[Object], falloff_distance: float) -> dict[Object, float]:
-    distances = {ob: 0.0 for ob in selected_keys if ob in gems}
-    if not distances:
-        return distances
-
-    selected_gems = tuple(gems[ob] for ob in distances)
-    queue = deque(distances)
+def _distance_map(gems: dict[Object, _Gem], links: dict[Object, list[Object]], selected: set[Object], falloff: float) -> dict[Object, float]:
+    distances = {ob: 0.0 for ob in selected}
+    selected_gems = tuple(gems[ob] for ob in selected)
+    queue = deque(selected)
 
     while queue:
         ob = queue.popleft()
 
-        for ob_next in links.get(ob, ()):
-            if ob_next not in gems or ob_next in selected_keys:
+        for ob_next in links.get(ob):
+            if ob_next not in gems or ob_next in selected:
                 continue
 
             distance_next = _nearest_selected_distance(gems[ob_next], selected_gems)
 
-            if distance_next > falloff_distance:
+            if distance_next > falloff:
                 continue
 
             if distance_next < distances.get(ob_next, float("inf")):
