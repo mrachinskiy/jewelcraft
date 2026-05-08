@@ -88,6 +88,11 @@ def upd_asset_popover_width(self, context):
     bpy.utils.register_class(ui.VIEW3D_PT_jewelcraft_assets)
 
 
+def upd_spacing(self, context):
+    from .lib import overlays
+    overlays.gems_magnet.handler_toggle(self, context)
+
+
 def upd_spacing_overlay(self, context):
     from .lib import overlays
     overlays.spacing.handler_toggle(self, context)
@@ -96,11 +101,6 @@ def upd_spacing_overlay(self, context):
 def upd_gem_map_overlay(self, context):
     from .lib import overlays
     overlays.gem_map.handler_toggle(self, context)
-
-
-def upd_gems_magnet(self, context):
-    from .lib import overlays
-    overlays.gems_magnet.handler_toggle(self, context)
 
 
 def upd_material_list_rename(self, context):
@@ -744,6 +744,11 @@ class WmProperties(PropertyGroup):
         subtype="COLOR",
     )
     gem_color_name: StringProperty(name="Color Name")
+    use_spacing: BoolProperty(
+        name="Spacing",
+        description="Space out nearby gems",
+        update=upd_spacing,
+    )
     show_spacing: BoolProperty(
         name="Spacing Overlay",
         description="Show distance to nearby gems",
@@ -753,11 +758,6 @@ class WmProperties(PropertyGroup):
         name="Gem Map",
         description="Show color-coded gem map",
         update=upd_gem_map_overlay,
-    )
-    show_gems_magnet: BoolProperty(
-        name="Gems Magnet",
-        description="Pull neighboring gems toward spacing-aware positions while selected gems move",
-        update=upd_gems_magnet,
     )
     asset_folder: EnumProperty(
         name="Category",
@@ -832,53 +832,53 @@ class SceneProperties(PropertyGroup):
         precision=2,
         subtype="FACTOR",
     )
-    gems_magnet_same_collection: BoolProperty(
-        name="Same Collection",
-        description="Limit magnet influence to gems that share a collection with the selected gems",
+    spacing_restrict_by_collection: BoolProperty(
+        name="By Collection",
+        description="Restrict spacing to gems in the same collection",
         default=True,
     )
-    gems_magnet_snap_to_face: BoolProperty(
+    spacing_snap_to_surface: BoolProperty(
         name="On Surface",
-        description="Use Gems Magnet face projection and normal alignment fallback for face snap workflows",
+        description="Project affected gems on surface",
         default=True,
     )
-    gems_magnet_use_snap_selectable: BoolProperty(
+    spacing_snap_selectable: BoolProperty(
         name="Selectable Only",
         description="Snap only onto objects that are selectable",
     )
-    gems_magnet_max_spacing: FloatProperty(
-            name="Max Spacing",
-            description="Maximum girdle-to-girdle spacing for gems to count as connected neighbors",
+    spacing_radius: FloatProperty(
+        name="Radius",
+        description="Effect radius from selected gem",
+        default=5.0,
+        min=0.1,
+        soft_max=20.0,
+        step=10,
+        precision=1,
+        unit="LENGTH",
+    )
+    spacing_tether: FloatProperty(
+        name="Tether",
+        description="Distance between gems within effect radius to count as tethered",
         default=0.7,
         min=0.1,
-        max=1.0,
-        step=1,
-        precision=2,
+        soft_max=1.0,
+        step=10,
+        precision=1,
         unit="LENGTH",
     )
-    gems_magnet_falloff_distance: FloatProperty(
-            name="Falloff Distance",
-            description="Maximum girdle-to-girdle distance from selected gems where magnet influence still applies",
-        default=5.0,
-        min=1.0,
-        max=20.0,
-        step=1,
-        precision=2,
-        unit="LENGTH",
-    )
-    gems_magnet_spacing_tolerance: FloatProperty(
-        name="Spacing Tolerance",
-        description="How much girdle-to-girdle spacing may temporarily compress before constraints push gems apart",
+    spacing_tolerance: FloatProperty(
+        name="Tolerance",
+        description="Spacing tolerance between gems",
         default=0.03,
         min=0.0,
-        max=0.5,
+        soft_max=0.5,
         step=1,
         precision=2,
         unit="LENGTH",
     )
-    gems_magnet_strength: FloatProperty(
+    spacing_strength: FloatProperty(
         name="Strength",
-        description="Overall magnet mobility strength; gems farther from selected gems move less",
+        description="Effect strength",
         default=0.5,
         min=0.01,
         max=1.0,
