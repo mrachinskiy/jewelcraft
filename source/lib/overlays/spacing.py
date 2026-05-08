@@ -228,13 +228,15 @@ def _draw(self, context):
         if show_all or use_diplay_dis:
 
             if use_ovrd and "gem_overlay" in ob2:
-                _color = ob2["gem_overlay"].get("color", default_color)
-                _linewidth = ob2["gem_overlay"].get("linewidth", default_linewidth)
-                spacing2 = ob2["gem_overlay"].get("spacing", default_spacing)
+                _color = (ovr := ob2["gem_overlay"]).get("color", default_color)
+                _linewidth = ovr.get("linewidth", default_linewidth)
+                spacing2 = ovr.get("spacing", default_spacing)
+                _locked = ovr.get("locked", False)
             else:
                 _color = default_color
                 _linewidth = default_linewidth
                 spacing2 = default_spacing
+                _locked = False
 
             shader.uniform_float("color", _color)
             shader.uniform_float("lineWidth", _linewidth)
@@ -277,7 +279,7 @@ def _draw(self, context):
         # -----------------------------------
 
         if show_all or spacing_thold:
-            batch = batch_for_shader(shader, "LINE_LOOP", {"pos": _circle_cos(rad2 + spacing2, mat2)})
+            batch = batch_for_shader(shader, "LINES" if _locked else "LINE_LOOP", {"pos": _circle_cos(rad2 + spacing2, mat2)})
             batch.draw(shader)
 
     _CC.set(show_all, gems_count)
@@ -315,7 +317,6 @@ def _draw_font(self, context):
         dis_str = f"{dist:.2f}"
         dim_x, dim_y = blf.dimensions(fontid, dis_str)
         pos_x, pos_y = location_3d_to_region_2d(region, region_3d, loc).to_tuple(0)
-        
         points = (
             (pos_x - 3,         pos_y - 4),
             (pos_x + 3 + dim_x, pos_y - 4),

@@ -136,13 +136,15 @@ def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
             continue
 
         spacing = default_spacing
+        locked = False
         if use_overrides and "gem_overlay" in ob:
             spacing = ob["gem_overlay"].get("spacing", default_spacing)
+            locked |= ob["gem_overlay"].get("locked", False)
 
         if (colls is not None and colls.isdisjoint(set(ob.users_collection))):
             info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), True)
         else:
-            locked = ob in selected or ob.get("gem_lock", False)
+            locked |= ob in selected
             info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), locked)
 
     return info
