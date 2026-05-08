@@ -89,8 +89,8 @@ def upd_asset_popover_width(self, context):
 
 
 def upd_spacing(self, context):
-    from .lib import overlays
-    overlays.gems_magnet.handler_toggle(self, context)
+    from .lib import spacing
+    spacing.handler_toggle(self, context)
 
 
 def upd_spacing_overlay(self, context):
