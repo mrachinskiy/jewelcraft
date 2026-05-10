@@ -355,41 +355,42 @@ def _get_combined_shader():
         interface = gpu.types.GPUStageInterfaceInfo("gem_map_2_font_view_iface")
         interface.smooth("VEC2", "uvInterp")
         interface.smooth("VEC4", "colorInterp")
-        interface.smooth("FLOAT", "textInterp")
+        interface.flat("FLOAT", "radiusInterp")
 
         shader_info = gpu.types.GPUShaderCreateInfo()
         shader_info.push_constant("MAT4", "viewProjectionMatrix")
         shader_info.push_constant("VEC2", "viewportSize")
-        shader_info.push_constant("VEC3", "viewOrigin")
-        shader_info.push_constant("VEC3", "viewDirection")
-        shader_info.push_constant("FLOAT", "perspectiveMix")
-        shader_info.push_constant("FLOAT", "depthOffset")
+        shader_info.push_constant("VEC4", "viewOriginAndMix")
+        shader_info.push_constant("VEC4", "viewDirection")
         shader_info.sampler(0, "FLOAT_2D", "image")
         shader_info.vertex_in(0, "VEC3", "anchor")
-        shader_info.vertex_in(1, "VEC2", "posOffset")
-        shader_info.vertex_in(2, "VEC2", "texCoord")
-        shader_info.vertex_in(3, "VEC4", "color")
-        shader_info.vertex_in(4, "FLOAT", "radius")
-        shader_info.vertex_in(5, "FLOAT", "isText")
+        shader_info.vertex_in(1, "VEC4", "glyphData")
+        shader_info.vertex_in(2, "VEC4", "color")
+        shader_info.vertex_in(3, "FLOAT", "radius")
         shader_info.vertex_out(interface)
         shader_info.fragment_out(0, "VEC4", "fragColor")
         shader_info.vertex_source(
             """
+            #define DEPTH_OFFSET 0.0001
+            
             void main()
             {
+                vec3 viewOrigin = viewOriginAndMix.xyz;
+                float perspectiveMix = viewOriginAndMix.w;
                 vec4 clip = viewProjectionMatrix * vec4(anchor, 1.0);
+                vec2 posOffset = glyphData.xy;
 
-                if (isText > 0.5) {
+                if (radius > 0.0) {
                     vec3 dirPersp = normalize(anchor - viewOrigin);
-                    vec3 dir = normalize(mix(viewDirection, dirPersp, perspectiveMix));
+                    vec3 dir = normalize(mix(viewDirection.xyz, dirPersp, perspectiveMix));
                     clip = viewProjectionMatrix * vec4(anchor - dir * radius, 1.0);
                     clip.xy += (posOffset / viewportSize) * 2.0 * clip.w;
                 }
 
-                clip.z -= depthOffset;
-                uvInterp = texCoord;
+                clip.z -= DEPTH_OFFSET;
+                uvInterp = glyphData.zw;
                 colorInterp = color;
-                textInterp = isText;
+                radiusInterp = radius;
                 gl_Position = clip;
             }
             """
@@ -400,7 +401,7 @@ def _get_combined_shader():
             {
                 float alpha = 1.0;
 
-                if (textInterp > 0.5) {
+                if (radiusInterp > 0.0) {
                     alpha = texture(image, uvInterp).a;
                 }
 
@@ -495,11 +496,9 @@ def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, font
         mesh_vertex_count += len(anchors)
 
     text_anchors = []
-    text_offsets = []
-    text_tex_coords = []
+    text_glyph_data = []
     text_colors = []
     text_radii = []
-    text_flags = []
     text_indices = []
     vertex_index = mesh_vertex_count
 
@@ -523,11 +522,9 @@ def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, font
             dtype=np.float32,
         )
         text_anchors.append(np.full((4, 3), loc, np.float32))
-        text_offsets.append(corners)
-        text_tex_coords.append(np.array(uv, np.float32))
+        text_glyph_data.append(np.concatenate((corners, np.array(uv, np.float32)), axis=1))
         text_colors.append(np.full((4, 4), (*color, 1.0), np.float32))
         text_radii.append(np.full(4, size * 0.5, np.float32))
-        text_flags.append(np.ones(4, np.float32))
         text_indices.append(np.array(((vertex_index, vertex_index + 1, vertex_index + 2), (vertex_index, vertex_index + 2, vertex_index + 3)), np.int32))
         vertex_index += 4
 
@@ -542,19 +539,15 @@ def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, font
 
     if text_anchors:
         text_anchors = np.concatenate(text_anchors)
-        text_offsets = np.concatenate(text_offsets)
-        text_tex_coords = np.concatenate(text_tex_coords)
+        text_glyph_data = np.concatenate(text_glyph_data)
         text_colors = np.concatenate(text_colors)
         text_radii = np.concatenate(text_radii)
-        text_flags = np.concatenate(text_flags)
         text_indices = np.concatenate(text_indices)
     else:
         text_anchors = np.empty((0, 3), np.float32)
-        text_offsets = np.empty((0, 2), np.float32)
-        text_tex_coords = np.empty((0, 2), np.float32)
+        text_glyph_data = np.empty((0, 4), np.float32)
         text_colors = np.empty((0, 4), np.float32)
         text_radii = np.empty(0, np.float32)
-        text_flags = np.empty(0, np.float32)
         text_indices = np.empty((0, 3), np.int32)
 
     total_vertex_count = len(mesh_anchors) + len(text_anchors)
@@ -565,17 +558,15 @@ def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, font
         return None
 
     anchors = np.concatenate((mesh_anchors, text_anchors))
-    offsets = np.concatenate((np.zeros((len(mesh_anchors), 2), np.float32), text_offsets))
-    tex_coords = np.concatenate((np.zeros((len(mesh_anchors), 2), np.float32), text_tex_coords))
+    glyph_data = np.concatenate((np.zeros((len(mesh_anchors), 4), np.float32), text_glyph_data))
     colors = np.concatenate((mesh_colors, text_colors))
     radii = np.concatenate((np.zeros(len(mesh_anchors), np.float32), text_radii))
-    text_flags = np.concatenate((np.zeros(len(mesh_anchors), np.float32), text_flags))
     indices = np.concatenate((mesh_indices, text_indices))
 
     _shader_combined_batch_cache = batch_for_shader(
         shader,
         "TRIS",
-        {"anchor": anchors, "posOffset": offsets, "texCoord": tex_coords, "color": colors, "radius": radii, "isText": text_flags},
+        {"anchor": anchors, "glyphData": glyph_data, "color": colors, "radius": radii},
         indices=indices,
     )
     _shader_combined_batch_cache_key = cache_key
@@ -769,7 +760,6 @@ def _draw_font(self, context, is_overlay=True, to_2d=None, display_mode_override
 
 _shader_cache_revision = 0
 _mesh_data_cache = {}
-_SHADER_DEPTH_OFFSET = 1e-4
 _GEOMETRY_UPDATE_IDS = {"MESH", "CURVE", "SURFACE", "META", "FONT", "CURVES", "POINTCLOUD", "VOLUME", "LATTICE", "KEY", "NODETREE"}
 _BATCH_UPDATE_IDS = _GEOMETRY_UPDATE_IDS | {"OBJECT", "COLLECTION", "MATERIAL"}
 
@@ -1011,7 +1001,7 @@ def _draw_shader_mode(
         return []
 
     view_origin, view_direction, perspective_mix = _font_view_state_get(context, region_3d)
-    depth_mode = "NONE" if (not show_all or in_front) else "LESS_EQUAL"
+    depth_mode = "NONE" if in_front else "LESS_EQUAL"
 
     gpu.state.blend_set("ALPHA")
     gpu.state.depth_mask_set(False)
@@ -1019,10 +1009,8 @@ def _draw_shader_mode(
     shader.bind()
     shader.uniform_float("viewProjectionMatrix", region_3d.perspective_matrix)
     shader.uniform_float("viewportSize", (region.width, region.height))
-    shader.uniform_float("viewOrigin", view_origin)
-    shader.uniform_float("viewDirection", view_direction)
-    shader.uniform_float("perspectiveMix", perspective_mix)
-    shader.uniform_float("depthOffset", _SHADER_DEPTH_OFFSET)
+    shader.uniform_float("viewOriginAndMix", (*view_origin, perspective_mix))
+    shader.uniform_float("viewDirection", (*view_direction, 0.0))
 
     shader.uniform_sampler("image", _font_atlas_texture if font_ready else _get_transparent_texture())
 
