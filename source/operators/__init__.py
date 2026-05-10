@@ -7,6 +7,7 @@ from .design_report import *
 from .distribute_on_curve import *
 from .gem import *
 from .gem_map import *
+from .gem_map_2 import *
 from .utils import *
 from .weighting import *
 from .object import *

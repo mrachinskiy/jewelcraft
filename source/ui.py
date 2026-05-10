@@ -129,6 +129,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.operator("wm.call_panel", text="Spacing", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing"
         layout.operator("wm.call_panel", text="Spacing Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing_overlay"
         layout.operator("wm.call_panel", text="Gem Map Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_gem_map_overlay"
+        layout.operator("wm.call_panel", text="Gem Map 2 Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_gem_map_2_overlay"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
         layout.separator()
@@ -156,6 +157,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.separator()
         layout.operator("wm.jewelcraft_design_report", text="Design Report")
         layout.operator("view3d.jewelcraft_gem_map")
+        layout.operator("view3d.jewelcraft_gem_map_2")
         layout.operator("wm.call_panel", text="Additional Entries", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_measurement"
 
 
@@ -478,6 +480,33 @@ class VIEW3D_PT_jewelcraft_gem_map_overlay(SidebarSetup, Panel):
         col.prop(props, "overlay_gem_map_opacity")
 
 
+class VIEW3D_PT_jewelcraft_gem_map_2_overlay(SidebarSetup, Panel):
+    bl_label = "Gem Map 2 Overlay"
+    bl_options = {"DEFAULT_CLOSED"}
+    bl_parent_id = "VIEW3D_PT_jewelcraft_gems"
+
+    def draw_header(self, context):
+        wm_props = context.window_manager.jewelcraft
+        self.layout.prop(wm_props, "show_gem_map_2", text="")
+
+    def draw(self, context):
+        props = context.scene.jewelcraft
+        wm_props = context.window_manager.jewelcraft
+
+        self.popover_header_prop(wm_props, "show_gem_map_2")
+
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        col = layout.column(align=True)
+        col.active = wm_props.show_gem_map_2
+        col.prop(props, "overlay_gem_map_2_show_all")
+        col.prop(props, "overlay_gem_map_2_show_in_front")
+        col.prop(props, "overlay_gem_map_2_use_material_color")
+        col.prop(props, "overlay_gem_map_2_opacity")
+
+
 class VIEW3D_PT_jewelcraft_assets(SidebarSetup, Panel):
     bl_label = "Assets"
     bl_options = {"DEFAULT_CLOSED"}
@@ -694,6 +723,7 @@ class VIEW3D_PT_jewelcraft_design_report(SidebarSetup, Panel):
         layout = self.layout
         layout.operator("wm.jewelcraft_design_report", text="Design Report")
         layout.operator("view3d.jewelcraft_gem_map")
+        layout.operator("view3d.jewelcraft_gem_map_2")
 
 
 class VIEW3D_PT_jewelcraft_measurement(SidebarSetup, Panel):
