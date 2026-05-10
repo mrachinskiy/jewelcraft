@@ -386,7 +386,7 @@ def _get_combined_shader():
                     clip.xy += (posOffset / viewportSize) * 2.0 * clip.w;
                 }
 
-                clip.z -= depthOffset * clip.w;
+                clip.z -= depthOffset;
                 uvInterp = texCoord;
                 colorInterp = color;
                 textInterp = isText;
@@ -684,7 +684,6 @@ def _draw_solid_mode(
     use_mat_color,
     opacity,
 ) -> None:
-    mat_sca = Matrix.Diagonal((1.003, 1.003, 1.003)).to_4x4()
     gems = set()
 
     for dup, ob, _ in iter_gems(depsgraph):
@@ -721,7 +720,7 @@ def _draw_solid_mode(
             continue
 
         try:
-            me.transform(dup.matrix_world @ mat_sca)
+            me.transform(dup.matrix_world)
             me.calc_loop_triangles()
 
             points = np.empty((len(me.vertices), 3), np.float32)
