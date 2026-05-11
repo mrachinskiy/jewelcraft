@@ -371,7 +371,7 @@ def _get_combined_shader():
         shader_info.fragment_out(0, "VEC4", "fragColor")
         shader_info.vertex_source(
             """
-            #define DEPTH_OFFSET 0.0001
+            #define DEPTH_OFFSET 0.00003
             
             void main()
             {
