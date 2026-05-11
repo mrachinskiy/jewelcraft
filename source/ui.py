@@ -922,6 +922,10 @@ def prefs_ui(self, context):
         row = col.row(align=True)
         sub = col.row(align=True)
         sub.scale_y = 0.7
+        if not wm_props.gem_map_palette.coll:
+            alert_box = row.box()
+            alert_box.alert = True
+            alert_box.label(text="Palette is missing", icon="ERROR")
         for i, item in enumerate(wm_props.gem_map_palette.coll):
             icon = "RADIOBUT_ON" if i == wm_props.gem_map_palette.index else "RADIOBUT_OFF"
             row.prop(item, "color", text="")

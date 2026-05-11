@@ -430,6 +430,10 @@ class PaletteList(ListProperty, PropertyGroup):
     def iterate(self) -> tuple[float, float, float]:
         from mathutils import Color
 
+        if not self.coll:
+            while True:
+                yield 1.0, 1.0, 1.0
+
         for item in self.coll:
             yield item.color
 
