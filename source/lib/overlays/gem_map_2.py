@@ -361,7 +361,7 @@ def _get_combined_shader():
         shader_info.push_constant("MAT4", "viewProjectionMatrix")
         shader_info.push_constant("VEC2", "viewportSize")
         shader_info.push_constant("VEC4", "viewOriginAndMix")
-        shader_info.push_constant("VEC4", "viewDirection")
+        shader_info.push_constant("VEC3", "viewDirection")
         shader_info.sampler(0, "FLOAT_2D", "image")
         shader_info.vertex_in(0, "VEC3", "anchor")
         shader_info.vertex_in(1, "VEC4", "glyphData")
@@ -382,7 +382,7 @@ def _get_combined_shader():
 
                 if (radius > 0.0) {
                     vec3 dirPersp = normalize(anchor - viewOrigin);
-                    vec3 dir = normalize(mix(viewDirection.xyz, dirPersp, perspectiveMix));
+                    vec3 dir = normalize(mix(viewDirection, dirPersp, perspectiveMix));
                     clip = viewProjectionMatrix * vec4(anchor - dir * radius, 1.0);
                     clip.xy += (posOffset / viewportSize) * 2.0 * clip.w;
                 }
@@ -1010,7 +1010,7 @@ def _draw_shader_mode(
     shader.uniform_float("viewProjectionMatrix", region_3d.perspective_matrix)
     shader.uniform_float("viewportSize", (region.width, region.height))
     shader.uniform_float("viewOriginAndMix", (*view_origin, perspective_mix))
-    shader.uniform_float("viewDirection", (*view_direction, 0.0))
+    shader.uniform_float("viewDirection", view_direction)
 
     shader.uniform_sampler("image", _font_atlas_texture if font_ready else _get_transparent_texture())
 
