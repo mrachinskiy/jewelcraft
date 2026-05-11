@@ -7,16 +7,33 @@ from bpy.app.handlers import persistent
 from .. import var
 
 
+_is_executed = False
+
+
 def handler_add():
     bpy.app.handlers.load_post.append(_execute)
+    bpy.app.timers.register(_timer)  # Execute once after registration
 
 
 def handler_del():
     bpy.app.handlers.load_post.remove(_execute)
 
 
+def _timer():
+    global _is_executed
+
+    if _is_executed:
+        return
+
+    _execute(None)
+
+
 @persistent
 def _execute(dummy):
+    global _is_executed
+
+    _is_executed = True
+
     _scene_props_versioning()
     var.config_naming_versioning()
 
