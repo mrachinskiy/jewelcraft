@@ -9,9 +9,9 @@ def hex_to_rgb(v: str | int) -> tuple[float, float, float]:
         v = int(v, base=16)
 
     return (
-        _srgb_to_linear((v >> 16) & 255),
-        _srgb_to_linear((v >> 8) & 255),
-        _srgb_to_linear(v & 255),
+        _int_srgb_to_linear((v >> 16) & 255),
+        _int_srgb_to_linear((v >> 8) & 255),
+        _int_srgb_to_linear(v & 255),
     )
 
 
@@ -20,9 +20,11 @@ def rbg_to_hex(rgb: tuple[float, float, float]) -> str:
     return f"{r:02x}{g:02x}{b:02x}"
 
 
-def _srgb_to_linear(v: int) -> float:
-    v = v / 255
+def _int_srgb_to_linear(v: int) -> float:
+    return srgb_to_linear(v / 255)
 
+
+def srgb_to_linear(v: float) -> float:
     if v == 1.0:
         return v
 
