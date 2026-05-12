@@ -21,10 +21,8 @@ from ..colorlib import linear_to_srgb, luma
 _FONT_ID = 0
 _FONT_ATLAS_PADDING = 4
 _FONT_ATLAS_MIN_SIZE = 64
-_UPDATE_IDS_GEOMETRY = {"MESH", "CURVE", "SURFACE", "META", "FONT", "CURVES", "POINTCLOUD", "VOLUME", "LATTICE", "KEY", "NODETREE"}
+_UPDATE_IDS_GEOMETRY = {"MESH"}
 _UPDATE_IDS_BATCH = _UPDATE_IDS_GEOMETRY | {"OBJECT", "COLLECTION", "MATERIAL"}
-_UPDATE_IDS_GEOMETRY_FALLBACK = ("MESH", "CURVE", "SURFACE", "META", "FONT", "CURVES", "LATTICE", "KEY", "NODETREE")
-_UPDATE_IDS_BATCH_FALLBACK = ("OBJECT", "COLLECTION", "MATERIAL")
 
 _handler = None
 _shader_combined = None
@@ -43,28 +41,6 @@ _cache = {
         "empty_texture": None,
     },
 }
-
-
-def _draw_cache_clear(*, atlas=False, empty=False) -> None:
-    draw_cache = _cache["draw"]
-    draw_cache["batch_key"] = None
-    draw_cache["batch"] = None
-
-    if atlas:
-        image = draw_cache["atlas_image"]
-        path = draw_cache["atlas_path"]
-        draw_cache["atlas_key"] = None
-        draw_cache["atlas_entries"].clear()
-        draw_cache["atlas_texture"] = None
-        draw_cache["atlas_image"] = None
-        draw_cache["atlas_path"] = None
-        _font_atlas_release(image, path)
-
-    if empty:
-        image = draw_cache["empty_image"]
-        draw_cache["empty_image"] = None
-        draw_cache["empty_texture"] = None
-        _font_atlas_release(image, None)
 
 
 def handler_add(self, context, is_overlay=True, use_select=False, use_mat_color=False):
@@ -107,7 +83,113 @@ def handler_toggle(self, context):
             handler_del()
 
 
-def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False, view_matrix_override=None, projection_matrix_override=None, viewport_size_override=None) -> None:
+def _font_atlas_release(image, atlas_path) -> None:
+    if image is not None:
+        try:
+            image.gl_free()
+        except (ReferenceError, RuntimeError):
+            pass
+
+        try:
+            bpy.data.images.remove(image)
+        except (ReferenceError, RuntimeError):
+            pass
+
+    if atlas_path is not None:
+        atlas_path.unlink(missing_ok=True)
+
+
+def _draw_cache_clear(*, atlas=False, empty=False) -> None:
+    draw_cache = _cache["draw"]
+    draw_cache["batch_key"] = None
+    draw_cache["batch"] = None
+
+    if atlas:
+        image = draw_cache["atlas_image"]
+        path = draw_cache["atlas_path"]
+        draw_cache["atlas_key"] = None
+        draw_cache["atlas_entries"].clear()
+        draw_cache["atlas_texture"] = None
+        draw_cache["atlas_image"] = None
+        draw_cache["atlas_path"] = None
+        _font_atlas_release(image, path)
+
+    if empty:
+        image = draw_cache["empty_image"]
+        draw_cache["empty_image"] = None
+        draw_cache["empty_texture"] = None
+        _font_atlas_release(image, None)
+
+
+def _cache_clear(mesh_data=True):
+    _draw_cache_clear()
+
+    if mesh_data:
+        _cache["mesh_data"].clear()
+
+
+def _cache_invalidate(mesh_data=True) -> None:
+    _cache["draw"]["revision"] += 1
+    _cache_clear(mesh_data=mesh_data)
+
+
+def _instance_key(dup, ob, instancer) -> tuple:
+    random_id = int(dup.random_id) if dup.is_instance else 0
+    return (
+        None if ob is None else ob.session_uid,
+        None if instancer is None else instancer.session_uid,
+        random_id,
+    )
+
+
+def _depsgraph_update_flags(depsgraph) -> tuple[bool, bool]:
+    update_batch = False
+    update_mesh_data = False
+
+    try:
+        for update in depsgraph.updates:
+            id_type = update.id.id_type
+
+            if update.is_updated_geometry or id_type in _UPDATE_IDS_GEOMETRY:
+                update_mesh_data = True
+                update_batch = True
+                break
+
+            if update.is_updated_transform or update.is_updated_shading or id_type in _UPDATE_IDS_BATCH:
+                update_batch = True
+                
+    except ReferenceError:
+        return True, True
+
+    return update_batch, update_mesh_data
+
+
+def _depsgraph_changed(_scene, depsgraph=None) -> None:
+    if _handler is None:
+        return
+
+    if depsgraph is None:
+        _cache_invalidate(mesh_data=True)
+        return
+
+    update_batch, update_mesh_data = _depsgraph_update_flags(depsgraph)
+
+    if update_mesh_data:
+        _cache_invalidate(mesh_data=True)
+    elif update_batch:
+        _cache_invalidate(mesh_data=False)
+
+
+def _draw(
+    self,
+    context,
+    is_overlay=True,
+    use_select=False,
+    use_mat_color=False,
+    view_matrix_override=None,
+    projection_matrix_override=None,
+    viewport_size_override=None,
+) -> None:
     region = context.region
     region_3d = context.space_data.region_3d
     depsgraph = context.evaluated_depsgraph_get()
@@ -138,12 +220,6 @@ def _draw(self, context, is_overlay=True, use_select=False, use_mat_color=False,
     records, gems = _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, loc1, rad1)
     gem_map = _gem_map_create(gems, palette_iter, use_mat_color, opacity)
 
-    gpu.state.blend_set("ALPHA")
-    gpu.state.depth_mask_set(True)
-
-    if not in_front:
-        gpu.state.depth_test_set("LESS_EQUAL")
-
     _draw_shader_mode(
         context,
         depsgraph,
@@ -172,8 +248,9 @@ def _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, lo
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
         gem_size = tuple(round(x, 2) for x in from_scene(gem_dimensions(dup)))
-        color_name = ob.material_slots[0].name if ob.material_slots else ""
-        gem = stone, cut, gem_size, color_name
+        material = ob.material_slots[0].material if ob.material_slots else None
+        material_color = tuple(material.diffuse_color[:3]) if material is not None else None
+        gem = stone, cut, gem_size, material_color
         gems.add(gem)
 
         loc2, rad2, _ = gem_transform(dup)
@@ -187,7 +264,9 @@ def _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, lo
             if not show:
                 continue
 
-        records.append((ob, gem, tuple(loc2), rad2, _instance_key(dup, ob, instancer), tuple(value for row in dup.matrix_world for value in row)))
+        matrix_key = dup.matrix_world.copy()
+        matrix_key.freeze()
+        records.append((ob, gem, loc2, rad2, _instance_key(dup, ob, instancer), matrix_key))
 
     return records, gems
 
@@ -195,21 +274,23 @@ def _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, lo
 def _gem_map_create(gems, palette_iter, use_mat_color: bool, opacity: float) -> dict:
     gem_map = {}
 
-    for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0])):
-
+    for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0], item[3])):
+        
+        stone, cut, gem_size, material_color = gem
+        
         if use_mat_color:
-            if gem[3]:
-                color = (*[linear_to_srgb(x) for x in bpy.data.materials[gem[3]].diffuse_color[:3]], opacity)
+            if material_color is not None:
+                color = (*(linear_to_srgb(x) for x in material_color), opacity)
             else:
                 color = (1.0, 1.0, 1.0, 0.0)
         else:
             color = (*next(palette_iter), opacity)
 
         color_font = (1.0, 1.0, 1.0) if luma(color) < 0.4 else (0.0, 0.0, 0.0)
-        w, l = tuple(int(value) if value.is_integer() else value for value in gem[2][:2])
+        w, l = tuple(int(value) if value.is_integer() else value for value in gem_size[:2])
 
         try:
-            trait = gemlib.CUTS[gem[1]].trait
+            trait = gemlib.CUTS[cut].trait
         except KeyError:
             trait = None
 
@@ -376,14 +457,9 @@ def _draw_shader_mode(
 
     if image_texture is None:
         if draw_cache["empty_texture"] is None:
-            image = bpy.data.images.new(".jewelcraft_gem_map_2_empty_atlas", 1, 1, alpha=True)
+            image = bpy.data.images.new(".jewelcraft_gem_map_2_empty_atlas", 1, 1, alpha=True, is_data=True)
             image.alpha_mode = "STRAIGHT"
             image.pixels = (0.0, 0.0, 0.0, 0.0)
-
-            try:
-                image.colorspace_settings.name = "Non-Color"
-            except (AttributeError, TypeError, ValueError):
-                pass
 
             image.use_view_as_render = False
             image.gl_load()
@@ -393,7 +469,6 @@ def _draw_shader_mode(
         image_texture = draw_cache["empty_texture"]
 
     viewport_size = (region.width, region.height) if viewport_size_override is None else viewport_size_override
-
     depth_mode = "NONE" if in_front else "LESS_EQUAL"
 
     gpu.state.blend_set("ALPHA")
@@ -405,7 +480,6 @@ def _draw_shader_mode(
     _shader_combined.uniform_float("viewOriginAndMix", (*view_origin, perspective_mix))
     _shader_combined.uniform_float("viewDirection", view_direction)
     _shader_combined.uniform_sampler("image", image_texture)
-
     batch.draw(_shader_combined)
 
 
@@ -480,7 +554,7 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
 
         try:
             image.colorspace_settings.name = "Non-Color"
-        except (AttributeError, TypeError, ValueError):
+        except (TypeError, ValueError):
             pass
 
         image.use_view_as_render = False
@@ -534,22 +608,6 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
     return True
 
 
-def _font_atlas_release(image, atlas_path) -> None:
-    if image is not None:
-        try:
-            image.gl_free()
-        except (AttributeError, ReferenceError, RuntimeError):
-            pass
-
-        try:
-            bpy.data.images.remove(image)
-        except (ReferenceError, RuntimeError):
-            pass
-
-    if atlas_path is not None:
-        atlas_path.unlink(missing_ok=True)
-
-
 def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, signature: int):
     draw_cache = _cache["draw"]
 
@@ -572,7 +630,7 @@ def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, sign
             continue
 
         points_h, mesh_indices = mesh_data
-        matrix = np.array(matrix_key, dtype=np.float32).reshape((4, 4))
+        matrix = np.asarray(matrix_key, dtype=np.float32)
         mesh_anchors = (points_h @ matrix.T)[:, :3]
         vertex_count = len(mesh_anchors)
         anchors.append(mesh_anchors)
@@ -627,91 +685,6 @@ def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, sign
     return draw_cache["batch"]
 
 
-def _cache_clear(mesh_data=True):
-    _draw_cache_clear()
-
-    if mesh_data:
-        _cache["mesh_data"].clear()
-
-
-def _cache_invalidate(mesh_data=True) -> None:
-    _cache["draw"]["revision"] += 1
-    _cache_clear(mesh_data=mesh_data)
-
-
-def _id_key(id_data) -> int:
-    return getattr(id_data, "session_uid", id_data.as_pointer())
-
-
-def _depsgraph_id_type_updated(depsgraph, id_type: str) -> bool:
-    try:
-        return depsgraph.id_type_updated(id_type)
-    except (AttributeError, TypeError):
-        return False
-
-
-def _depsgraph_update_flags(depsgraph) -> tuple[bool, bool]:
-    update_batch = False
-    update_mesh_data = False
-
-    try:
-        for update in depsgraph.updates:
-            id_type = getattr(update.id, "id_type", "")
-
-            if update.is_updated_geometry or id_type in _UPDATE_IDS_GEOMETRY:
-                update_mesh_data = True
-                update_batch = True
-                break
-
-            if update.is_updated_transform or update.is_updated_shading or id_type in _UPDATE_IDS_BATCH:
-                update_batch = True
-    except (AttributeError, ReferenceError):
-        return True, True
-
-    if update_batch or update_mesh_data:
-        return update_batch, update_mesh_data
-
-    update_mesh_data = any(
-        _depsgraph_id_type_updated(depsgraph, id_type)
-        for id_type in _UPDATE_IDS_GEOMETRY_FALLBACK
-    )
-    update_batch = update_mesh_data or any(
-        _depsgraph_id_type_updated(depsgraph, id_type)
-        for id_type in _UPDATE_IDS_BATCH_FALLBACK
-    )
-
-    if not update_batch and not update_mesh_data:
-        update_batch = True
-        update_mesh_data = True
-
-    return update_batch, update_mesh_data
-
-
-def _depsgraph_changed(_scene, depsgraph=None) -> None:
-    if _handler is None:
-        return
-
-    if depsgraph is None:
-        _cache_invalidate(mesh_data=True)
-        return
-
-    update_batch, update_mesh_data = _depsgraph_update_flags(depsgraph)
-
-    if update_mesh_data:
-        _cache_invalidate(mesh_data=True)
-    elif update_batch:
-        _cache_invalidate(mesh_data=False)
-
-
-def _instance_key(dup, ob, instancer) -> tuple:
-    if dup.is_instance:
-        persistent_id = tuple(dup.persistent_id)
-    else:
-        persistent_id = ()
-
-    return _id_key(ob), _id_key(instancer), persistent_id
-
-
 def _mesh_data_get(depsgraph, ob):
     mesh_data_cache = _cache["mesh_data"]
 
@@ -719,7 +692,7 @@ def _mesh_data_get(depsgraph, ob):
         return None
 
     me = ob.data
-    cache_key = None if ob.modifiers else _id_key(me)
+    cache_key = None if ob.modifiers else me.session_uid
 
     if cache_key is not None and cache_key in mesh_data_cache:
         return mesh_data_cache[cache_key]
