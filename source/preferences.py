@@ -103,11 +103,6 @@ def upd_gem_map_overlay(self, context):
     overlays.gem_map.handler_toggle(self, context)
 
 
-def upd_gem_map_2_overlay(self, context):
-    from .lib import overlays
-    overlays.gem_map_2.handler_toggle(self, context)
-
-
 def upd_material_list_rename(self, context):
     if not self.name:
         self["name"] = self.name_orig
@@ -764,11 +759,6 @@ class WmProperties(PropertyGroup):
         description="Show color-coded gem map",
         update=upd_gem_map_overlay,
     )
-    show_gem_map_2: BoolProperty(
-        name="Gem Map 2",
-        description="Show color-coded gem map using the new renderer",
-        update=upd_gem_map_2_overlay,
-    )
     asset_folder: EnumProperty(
         name="Category",
         description="Asset category",
@@ -835,26 +825,6 @@ class SceneProperties(PropertyGroup):
         description="Use gem material color for gem map",
     )
     overlay_gem_map_opacity: FloatProperty(
-        name="Opacity",
-        default=0.8,
-        min=0.0,
-        max=1.0,
-        precision=2,
-        subtype="FACTOR",
-    )
-    overlay_gem_map_2_show_all: BoolProperty(
-        name="Show All",
-        description="Show for all visible gems",
-    )
-    overlay_gem_map_2_show_in_front: BoolProperty(
-        name="In Front",
-        description="Draw overlay in front of objects",
-    )
-    overlay_gem_map_2_use_material_color: BoolProperty(
-        name="Material Color",
-        description="Use gem material color for gem map",
-    )
-    overlay_gem_map_2_opacity: FloatProperty(
         name="Opacity",
         default=0.8,
         min=0.0,

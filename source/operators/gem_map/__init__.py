@@ -82,9 +82,9 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         from ..design_report import report_get
         from . import onscreen, report_proc
 
-        ReportData = report_get.data_collect(gem_map=True)
+        report_data = report_get.data_collect(gem_map=True)
 
-        if not ReportData.gems:
+        if not report_data.gems:
             self.report({"ERROR"}, "No gems in the scene")
             return {"CANCELLED"}
 
@@ -93,30 +93,17 @@ class VIEW3D_OT_gem_map(preferences.ReportLangEnum, Operator):
         self.region_3d = context.space_data.region_3d
         self.is_rendering = False
 
-        # 3D View Options
-        # ----------------------------
-
         lay = view3d_lib.Layout()
         lay.bool(_("Limit by Selection"), "(S)", "use_select")
         lay.bool(_("Material Color"), "(M)", "use_mat_color")
         lay.bool(_("Viewport Background"), "(B)", "use_background")
         lay.proc(_("Save to Image"), "(F12)", "is_rendering")
 
-        # Gem report
-        # ----------------------------
-
-        self.table_data = report_proc.data_process(ReportData, self.report_lang)
-
-        # Warnings
-        # ----------------------------
-
-        self.show_warn = bool(ReportData.warnings)
+        self.table_data = report_proc.data_process(report_data, self.report_lang)
+        self.show_warn = bool(report_data.warnings)
 
         if self.show_warn:
-            self.warn = [_("WARNING")] + [f"* {_(x)}" for x in ReportData.warnings]
-
-        # Handlers
-        # ----------------------------
+            self.warn = [_("WARNING")] + [f"* {_(x)}" for x in report_data.warnings]
 
         context.window_manager.jewelcraft.show_gem_map = False
         overlays.gem_map.handler_add(self, context, is_overlay=False, use_select=self.use_select, use_mat_color=self.use_mat_color)
