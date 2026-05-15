@@ -21,11 +21,9 @@ from ..colorlib import linear_to_srgb, luma
 _FONT_ID = 0
 _FONT_ATLAS_PADDING = 4
 _FONT_ATLAS_MIN_SIZE = 64
-_UPDATE_IDS_GEOMETRY = {"MESH"}
-_UPDATE_IDS_BATCH = _UPDATE_IDS_GEOMETRY | {"OBJECT", "COLLECTION", "MATERIAL"}
+_UPDATE_IDS_BATCH = {"OBJECT", "COLLECTION", "MATERIAL", "MESH"}
 
 _handler = None
-_shader_combined = None
 _cache = {
     "mesh_data": {},
     "draw": {
@@ -41,6 +39,65 @@ _cache = {
         "empty_texture": None,
     },
 }
+
+_shader_interface = gpu.types.GPUStageInterfaceInfo("gem_map_font_view_iface")
+_shader_interface.smooth("VEC2", "uvInterp")
+_shader_interface.smooth("VEC4", "colorInterp")
+_shader_interface.flat("FLOAT", "radiusInterp")
+
+_shader_info = gpu.types.GPUShaderCreateInfo()
+_shader_info.push_constant("MAT4", "viewProjectionMatrix")
+_shader_info.push_constant("VEC2", "viewportSize")
+_shader_info.push_constant("VEC4", "viewOriginAndMix")
+_shader_info.push_constant("VEC3", "viewDirection")
+_shader_info.sampler(0, "FLOAT_2D", "image")
+_shader_info.vertex_in(0, "VEC3", "anchor")
+_shader_info.vertex_in(1, "VEC4", "glyphData")
+_shader_info.vertex_in(2, "VEC4", "color")
+_shader_info.vertex_in(3, "FLOAT", "radius")
+_shader_info.vertex_out(_shader_interface)
+_shader_info.fragment_out(0, "VEC4", "fragColor")
+_shader_info.vertex_source(
+    """
+    #define DEPTH_OFFSET 0.00005
+
+    void main()
+    {
+        vec3 viewOrigin = viewOriginAndMix.xyz;
+        float perspectiveMix = viewOriginAndMix.w;
+        vec4 clip = viewProjectionMatrix * vec4(anchor, 1.0);
+        vec2 posOffset = glyphData.xy;
+
+        if (radius > 0.0) {
+            vec3 dirPersp = normalize(anchor - viewOrigin);
+            vec3 dir = normalize(mix(viewDirection, dirPersp, perspectiveMix));
+            clip = viewProjectionMatrix * vec4(anchor - dir * radius, 1.0);
+            clip.xy += (posOffset / viewportSize) * 2.0 * clip.w;
+        }
+
+        clip.z -= DEPTH_OFFSET;
+        uvInterp = glyphData.zw;
+        colorInterp = color;
+        radiusInterp = radius;
+        gl_Position = clip;
+    }
+    """
+)
+_shader_info.fragment_source(
+    """
+    void main()
+    {
+        float alpha = 1.0;
+
+        if (radiusInterp > 0.0) {
+            alpha = texture(image, uvInterp).a;
+        }
+
+        fragColor = vec4(colorInterp.rgb, colorInterp.a * alpha);
+    }
+    """
+)
+_shader_combined = gpu.shader.create_from_info(_shader_info)
 
 
 def handler_add(self, context, is_overlay=True, use_select=False, use_mat_color=False):
@@ -70,11 +127,6 @@ def handler_del():
     _cache_clear()
 
 
-def resources_clear() -> None:
-    _draw_cache_clear(atlas=True, empty=True)
-    _cache["mesh_data"].clear()
-
-
 def handler_toggle(self, context):
     if context.area.type == "VIEW_3D":
         if self.show_gem_map:
@@ -99,7 +151,7 @@ def _font_atlas_release(image, atlas_path) -> None:
         atlas_path.unlink(missing_ok=True)
 
 
-def _draw_cache_clear(*, atlas=False, empty=False) -> None:
+def _cache_clear(*, mesh_data=True, atlas=True, empty=True) -> None:
     draw_cache = _cache["draw"]
     draw_cache["batch_key"] = None
     draw_cache["batch"] = None
@@ -120,25 +172,20 @@ def _draw_cache_clear(*, atlas=False, empty=False) -> None:
         draw_cache["empty_texture"] = None
         _font_atlas_release(image, None)
 
-
-def _cache_clear(mesh_data=True):
-    _draw_cache_clear()
-
     if mesh_data:
         _cache["mesh_data"].clear()
 
 
 def _cache_invalidate(mesh_data=True) -> None:
     _cache["draw"]["revision"] += 1
-    _cache_clear(mesh_data=mesh_data)
+    _cache_clear(mesh_data=mesh_data, atlas=False, empty=False)
 
 
 def _instance_key(dup, ob, instancer) -> tuple:
-    random_id = int(dup.random_id) if dup.is_instance else 0
     return (
         None if ob is None else ob.session_uid,
         None if instancer is None else instancer.session_uid,
-        random_id,
+        dup.random_id,
     )
 
 
@@ -150,7 +197,7 @@ def _depsgraph_update_flags(depsgraph) -> tuple[bool, bool]:
         for update in depsgraph.updates:
             id_type = update.id.id_type
 
-            if update.is_updated_geometry or id_type in _UPDATE_IDS_GEOMETRY:
+            if update.is_updated_geometry or id_type == "MESH":
                 update_mesh_data = True
                 update_batch = True
                 break
@@ -320,8 +367,6 @@ def _draw_shader_mode(
     projection_matrix_override=None,
     viewport_size_override=None,
 ) -> None:
-    global _shader_combined
-
     if force_geometry_update:
         _cache_invalidate(mesh_data=True)
 
@@ -355,66 +400,6 @@ def _draw_shader_mode(
 
         if not font_ready:
             font_ready = _font_atlas_rebuild(font_size, texts)
-
-    if _shader_combined is None:
-        interface = gpu.types.GPUStageInterfaceInfo("gem_map_font_view_iface")
-        interface.smooth("VEC2", "uvInterp")
-        interface.smooth("VEC4", "colorInterp")
-        interface.flat("FLOAT", "radiusInterp")
-
-        shader_info = gpu.types.GPUShaderCreateInfo()
-        shader_info.push_constant("MAT4", "viewProjectionMatrix")
-        shader_info.push_constant("VEC2", "viewportSize")
-        shader_info.push_constant("VEC4", "viewOriginAndMix")
-        shader_info.push_constant("VEC3", "viewDirection")
-        shader_info.sampler(0, "FLOAT_2D", "image")
-        shader_info.vertex_in(0, "VEC3", "anchor")
-        shader_info.vertex_in(1, "VEC4", "glyphData")
-        shader_info.vertex_in(2, "VEC4", "color")
-        shader_info.vertex_in(3, "FLOAT", "radius")
-        shader_info.vertex_out(interface)
-        shader_info.fragment_out(0, "VEC4", "fragColor")
-        shader_info.vertex_source(
-            """
-            #define DEPTH_OFFSET 0.00005
-
-            void main()
-            {
-                vec3 viewOrigin = viewOriginAndMix.xyz;
-                float perspectiveMix = viewOriginAndMix.w;
-                vec4 clip = viewProjectionMatrix * vec4(anchor, 1.0);
-                vec2 posOffset = glyphData.xy;
-
-                if (radius > 0.0) {
-                    vec3 dirPersp = normalize(anchor - viewOrigin);
-                    vec3 dir = normalize(mix(viewDirection, dirPersp, perspectiveMix));
-                    clip = viewProjectionMatrix * vec4(anchor - dir * radius, 1.0);
-                    clip.xy += (posOffset / viewportSize) * 2.0 * clip.w;
-                }
-
-                clip.z -= DEPTH_OFFSET;
-                uvInterp = glyphData.zw;
-                colorInterp = color;
-                radiusInterp = radius;
-                gl_Position = clip;
-            }
-            """
-        )
-        shader_info.fragment_source(
-            """
-            void main()
-            {
-                float alpha = 1.0;
-
-                if (radiusInterp > 0.0) {
-                    alpha = texture(image, uvInterp).a;
-                }
-
-                fragColor = vec4(colorInterp.rgb, colorInterp.a * alpha);
-            }
-            """
-        )
-        _shader_combined = gpu.shader.create_from_info(shader_info)
 
     batch = _combined_shader_batch_ensure(
         _shader_combined,
@@ -602,7 +587,7 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
     draw_cache["atlas_texture"] = texture
     draw_cache["atlas_path"] = atlas_path
     draw_cache["atlas_key"] = _FONT_ID, font_size
-    _draw_cache_clear()
+    _cache_clear(mesh_data=False, atlas=False, empty=False)
     _font_atlas_release(old_image, old_path)
     return True
 
