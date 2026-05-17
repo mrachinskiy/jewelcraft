@@ -62,7 +62,7 @@ def _render_map(self, tempdir: str) -> None:
 
     render_filepath = Path(tempdir) / "gem_map_temp.png"
 
-    asset.render_preview(width, height, render_filepath, compression=15, gamma=2.2, use_transparent=not self.use_background)
+    asset.render_preview(width, height, render_filepath, compression=15, use_transparent=not self.use_background)
     render_image = load_image(str(render_filepath))
 
     mat_offscreen = Matrix()
@@ -73,7 +73,7 @@ def _render_map(self, tempdir: str) -> None:
 
     gpu.state.blend_set("ALPHA")
 
-    shader = gpu.shader.from_builtin("IMAGE")
+    shader = gpu.shader.from_builtin("IMAGE_SCENE_LINEAR_TO_REC709_SRGB")
     offscreen = gpu.types.GPUOffScreen(width, height)
 
     with offscreen.bind():
