@@ -102,14 +102,12 @@ def _timer() -> float | None:
     if len(gems_info) < 2:
         return _TIMER_INTERVAL
 
-    to_scene = unit.Scale().to_scene
-
     _apply_spacing(
         gems_info,
         selected_gems,
-        to_scene(scene_props.spacing_radius),
-        to_scene(scene_props.spacing_tether),
-        to_scene(scene_props.spacing_tolerance),
+        scene_props.spacing_radius,
+        scene_props.spacing_tether,
+        scene_props.spacing_tolerance,
         scene_props.spacing_strength,
         _delta_time(),
     )
@@ -118,9 +116,9 @@ def _timer() -> float | None:
 
 
 def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
-    to_scene = unit.Scale().to_scene
     default_spacing = props.overlay_spacing
     use_overrides = props.overlay_use_overrides
+    radius_thold = props.spacing_radius + 1.0
 
     colls = None
     if props.spacing_restrict_by_collection and selected:
@@ -130,9 +128,10 @@ def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
             for coll in ob.users_collection
         }
 
+    locs_selected = [ob.matrix_world.translation for ob in selected]
     info = {}
     for ob in context.visible_objects:
-        if "gem" not in ob:
+        if "gem" not in ob or not any((ob.matrix_world.translation - loc).length < radius_thold for loc in locs_selected):
             continue
 
         spacing = default_spacing
@@ -142,10 +141,10 @@ def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
             locked |= ob["gem_overlay"].get("locked", False)
 
         if (colls is not None and colls.isdisjoint(set(ob.users_collection))):
-            info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), True)
+            info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, spacing, True)
         else:
             locked |= ob in selected
-            info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, to_scene(spacing), locked)
+            info[ob] = _Gem(ob, max(ob.dimensions.xy) / 2.0, spacing, locked)
 
     return info
 
