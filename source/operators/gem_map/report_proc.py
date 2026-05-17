@@ -31,12 +31,12 @@ def data_process(ReportData, lang: str) -> tuple[str, tuple[int]]:
         # Color
         # ---------------------------
 
-        color = (*next(palette_iter), 1.0)
+        color = (*[colorlib.linear_to_srgb(x) for x in next(palette_iter)], 1.0)
 
         if color_name:
             mat_color = (*[colorlib.linear_to_srgb(x) for x in bpy.data.materials[color_name].diffuse_color[:3]], 1.0)
         else:
-            mat_color = (0.0, 0.0, 0.0, 0.0)
+            mat_color = (1.0, 1.0, 1.0, 0.0)
 
         # Format
         # ---------------------------

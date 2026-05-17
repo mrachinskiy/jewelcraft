@@ -111,6 +111,7 @@ def _render_map(self, tempdir: str) -> None:
             self,
             bpy.context,
             is_overlay=False,
+            to_srgb=True,
             use_select=self.use_select,
             use_mat_color=self.use_mat_color,
             view_matrix_override=view_matrix,

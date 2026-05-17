@@ -100,7 +100,7 @@ _shader_info.fragment_source(
 _shader_combined = gpu.shader.create_from_info(_shader_info)
 
 
-def handler_add(self, context, is_overlay=True, use_select=False, use_mat_color=False):
+def handler_add(self, context, is_overlay=True, to_srgb=False, use_select=False, use_mat_color=False):
     global _handler
 
     handlers = bpy.app.handlers.depsgraph_update_post
@@ -109,7 +109,7 @@ def handler_add(self, context, is_overlay=True, use_select=False, use_mat_color=
         handlers.append(_depsgraph_changed)
 
     if _handler is None:
-        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context, is_overlay, use_select, use_mat_color), "WINDOW", "POST_VIEW")
+        _handler = bpy.types.SpaceView3D.draw_handler_add(_draw, (self, context, is_overlay, to_srgb, use_select, use_mat_color), "WINDOW", "POST_VIEW")
 
 
 def handler_del():
@@ -231,6 +231,7 @@ def _draw(
     self,
     context,
     is_overlay=True,
+    to_srgb=False,
     use_select=False,
     use_mat_color=False,
     view_matrix_override=None,
@@ -265,7 +266,7 @@ def _draw(
         rad1 = max(ob.dimensions.xy) / 2.0
 
     records, gems = _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, loc1, rad1)
-    gem_map = _gem_map_create(gems, palette_iter, use_mat_color, opacity)
+    gem_map = _gem_map_create(gems, palette_iter, use_mat_color, opacity, to_srgb)
 
     _draw_shader_mode(
         context,
@@ -318,7 +319,7 @@ def _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, lo
     return records, gems
 
 
-def _gem_map_create(gems, palette_iter, use_mat_color: bool, opacity: float) -> dict:
+def _gem_map_create(gems, palette_iter, use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
     gem_map = {}
 
     for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0], item[3])):
@@ -326,11 +327,14 @@ def _gem_map_create(gems, palette_iter, use_mat_color: bool, opacity: float) -> 
 
         if use_mat_color:
             if material_color is not None:
-                color = (*(linear_to_srgb(x) for x in material_color), opacity)
+                color = (*material_color, opacity)
             else:
                 color = (1.0, 1.0, 1.0, 0.0)
         else:
             color = (*next(palette_iter), opacity)
+
+        if to_srgb:
+            color = tuple(linear_to_srgb(x) for x in color)
 
         color_font = (1.0, 1.0, 1.0) if luma(color) < 0.4 else (0.0, 0.0, 0.0)
         w, l = tuple(int(value) if value.is_integer() else value for value in gem_size[:2])
