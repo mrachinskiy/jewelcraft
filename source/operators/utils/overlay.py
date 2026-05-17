@@ -129,7 +129,7 @@ class WM_OT_ul_gem_map_palette_generate(Operator):
     )
     color1: FloatVectorProperty(
         name="Color 1",
-        default=(1.0, 0.15, 0.15),
+        default=(1.0, 0.02, 0.02),
         size=3,
         min=0.0,
         soft_max=1.0,
@@ -137,7 +137,7 @@ class WM_OT_ul_gem_map_palette_generate(Operator):
     )
     color2: FloatVectorProperty(
         name="Color 2",
-        default=(1.0, 0.86, 0.15),
+        default=(1.0, 0.86, 0.02),
         size=3,
         min=0.0,
         soft_max=1.0,
@@ -182,7 +182,7 @@ class WM_OT_ul_gem_map_palette_generate(Operator):
 
             color = Color((1.0, 1.0, 1.0))
             for _ in range(self.palette_size):
-                color.s = random.uniform(0.6, 1.0)
+                color.s = 0.98
                 color.h = random.random()
                 item = ul.add()
                 item.color = color
