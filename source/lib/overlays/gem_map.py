@@ -1,5 +1,6 @@
-# SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
+# SPDX-FileCopyrightText: 2026 Artem Viveritsa
 
 import math
 import tempfile

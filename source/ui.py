@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from bpy.types import Menu, Panel, PropertyGroup, UILayout, UIList

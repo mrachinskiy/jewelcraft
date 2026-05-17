@@ -1,5 +1,6 @@
-# SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2026 Artem Viveritsa
+# SPDX-FileCopyrightText: 2026 Mikhail Rachinskiy
 
 from collections import defaultdict, deque
 from math import exp
