@@ -98,7 +98,14 @@ def _timer() -> float | None:
         return _TIMER_INTERVAL
 
     scene_props = context.scene.jewelcraft
-    gems_info = _collect_gems(context, scene_props, selected_gems)
+    gems_info = _collect_gems(
+        context,
+        selected_gems,
+        scene_props.spacing_restrict_by_collection,
+        scene_props.spacing_radius,
+        scene_props.overlay_use_overrides,
+        scene_props.overlay_spacing,
+    )
     if len(gems_info) < 2:
         return _TIMER_INTERVAL
 
@@ -115,23 +122,20 @@ def _timer() -> float | None:
     return _TIMER_INTERVAL
 
 
-def _collect_gems(context, props, selected: list[Object]) -> dict[Object, _Gem]:
-    default_spacing = props.overlay_spacing
-    use_overrides = props.overlay_use_overrides
-    radius_thold = props.spacing_radius + 1.0
-
+def _collect_gems(context, selected: list[Object], restrict_by_collection: bool, effect_radius: float, use_overrides: bool, default_spacing: float) -> dict[Object, _Gem]:
     colls = None
-    if props.spacing_restrict_by_collection and selected:
+    if restrict_by_collection and selected:
         colls = {
             coll
             for ob in selected
             for coll in ob.users_collection
         }
 
+    threshold = effect_radius + 1.0
     locs_selected = [ob.matrix_world.translation for ob in selected]
     info = {}
     for ob in context.visible_objects:
-        if "gem" not in ob or not any((ob.matrix_world.translation - loc).length < radius_thold for loc in locs_selected):
+        if "gem" not in ob or not any((ob.matrix_world.translation - loc).length < threshold for loc in locs_selected):
             continue
 
         spacing = default_spacing
