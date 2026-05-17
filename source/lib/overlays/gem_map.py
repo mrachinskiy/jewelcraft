@@ -137,6 +137,10 @@ def handler_toggle(self, context):
             handler_del()
 
 
+# Utility
+# -------------------------------------
+
+
 def _font_atlas_release(image, atlas_path: Path) -> None:
     if image is not None:
         try:
@@ -229,6 +233,10 @@ def _depsgraph_changed(_scene, depsgraph: Depsgraph | None = None) -> None:
         _cache_invalidate(mesh_data=False)
 
 
+# Main loop
+# -------------------------------------
+
+
 def _draw(
     self,
     context,
@@ -266,6 +274,8 @@ def _draw(
     if ob is not None and (is_gem := ob.select_get() and "gem" in ob):
         loc1 = ob.matrix_world.translation
         rad1 = max(ob.dimensions.xy) / 2.0
+    elif not show_all:
+        return
 
     records, gems = _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, loc1, rad1)
     gem_map = _gem_map_create(gems, palette_iter, use_mat_color, opacity, to_srgb)
