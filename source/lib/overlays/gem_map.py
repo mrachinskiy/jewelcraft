@@ -3,6 +3,7 @@
 
 import math
 import tempfile
+from collections.abc import Callable, Iterator
 from pathlib import Path
 
 import blf
@@ -10,6 +11,7 @@ import bpy
 import gpu
 import imbuf
 import numpy as np
+from bpy.types import Depsgraph, DepsgraphObjectInstance, Object
 from gpu_extras.batch import batch_for_shader
 from mathutils import Vector
 
@@ -135,7 +137,7 @@ def handler_toggle(self, context):
             handler_del()
 
 
-def _font_atlas_release(image, atlas_path) -> None:
+def _font_atlas_release(image, atlas_path: Path) -> None:
     if image is not None:
         try:
             image.gl_free()
@@ -151,7 +153,7 @@ def _font_atlas_release(image, atlas_path) -> None:
         atlas_path.unlink(missing_ok=True)
 
 
-def _cache_clear(*, mesh_data=True, atlas=True, empty=True) -> None:
+def _cache_clear(mesh_data=True, atlas=True, empty=True) -> None:
     draw_cache = _cache["draw"]
     draw_cache["batch_key"] = None
     draw_cache["batch"] = None
@@ -181,7 +183,7 @@ def _cache_invalidate(mesh_data=True) -> None:
     _cache_clear(mesh_data=mesh_data, atlas=False, empty=False)
 
 
-def _instance_key(dup, ob, instancer) -> tuple:
+def _instance_key(dup: DepsgraphObjectInstance, ob: Object, instancer: Object) -> tuple[int, int, int]:
     return (
         None if ob is None else ob.session_uid,
         None if instancer is None else instancer.session_uid,
@@ -189,7 +191,7 @@ def _instance_key(dup, ob, instancer) -> tuple:
     )
 
 
-def _depsgraph_update_flags(depsgraph) -> tuple[bool, bool]:
+def _depsgraph_update_flags(depsgraph: Depsgraph) -> tuple[bool, bool]:
     update_batch = False
     update_mesh_data = False
 
@@ -211,7 +213,7 @@ def _depsgraph_update_flags(depsgraph) -> tuple[bool, bool]:
     return update_batch, update_mesh_data
 
 
-def _depsgraph_changed(_scene, depsgraph=None) -> None:
+def _depsgraph_changed(_scene, depsgraph: Depsgraph | None = None) -> None:
     if _handler is None:
         return
 
@@ -288,7 +290,7 @@ def _draw(
     gpu.state.depth_mask_set(False)
 
 
-def _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, loc1, rad1) -> tuple[list, set]:
+def _gem_records_collect(depsgraph: Depsgraph, from_scene: Callable, show_all: bool, is_overlay: bool, is_gem: bool, loc1: Vector, rad1: float) -> tuple[list[tuple], set[tuple]]:
     records = []
     gems = set()
 
@@ -319,11 +321,11 @@ def _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, lo
     return records, gems
 
 
-def _gem_map_create(gems, palette_iter, use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
+def _gem_map_create(gems: set[tuple], palette_iter: Iterator[tuple[float, float, float]], use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
     gem_map = {}
 
-    for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0])):
-        stone, cut, gem_size, material_color = gem
+    for gem in gems:
+        _, cut, gem_size, material_color = gem
 
         if use_mat_color:
             if material_color is not None:
@@ -358,20 +360,19 @@ def _gem_map_create(gems, palette_iter, use_mat_color: bool, opacity: float, to_
 
 def _draw_shader_mode(
     context,
-    depsgraph,
+    depsgraph: Depsgraph,
     region,
     region_3d,
-    records,
-    gem_map,
-    in_front,
-    font_size,
-    force_geometry_update,
-    *,
+    records: list[tuple],
+    gem_map: dict,
+    in_front: bool,
+    font_size: int,
+    use_force_geometry_update: bool,
     view_matrix_override=None,
     projection_matrix_override=None,
     viewport_size_override=None,
 ) -> None:
-    if force_geometry_update:
+    if use_force_geometry_update:
         _cache_invalidate(mesh_data=True)
 
     draw_cache = _cache["draw"]
@@ -596,7 +597,7 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
     return True
 
 
-def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, signature: int):
+def _combined_shader_batch_ensure(shader, depsgraph: Depsgraph, records: list[tuple], labels: list, signature: int):
     draw_cache = _cache["draw"]
 
     cache_key = draw_cache["revision"], draw_cache["atlas_key"], len(records), len(labels), signature
@@ -673,7 +674,7 @@ def _combined_shader_batch_ensure(shader, depsgraph, records, labels: list, sign
     return draw_cache["batch"]
 
 
-def _mesh_data_get(depsgraph, ob):
+def _mesh_data_get(depsgraph: Depsgraph, ob: Object):
     mesh_data_cache = _cache["mesh_data"]
 
     if ob.type != "MESH":

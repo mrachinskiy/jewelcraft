@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2015-2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from pathlib import Path
 
 import bpy
@@ -427,7 +427,7 @@ class PaletteList(ListProperty, PropertyGroup):
     index: IntProperty()
     coll: CollectionProperty(type=PaletteColor)
 
-    def iterate(self) -> tuple[float, float, float]:
+    def iterate(self) -> Iterator[tuple[float, float, float]]:
         from mathutils import Color
 
         if not self.coll:
