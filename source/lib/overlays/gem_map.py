@@ -322,7 +322,7 @@ def _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, lo
 def _gem_map_create(gems, palette_iter, use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
     gem_map = {}
 
-    for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0], item[3])):
+    for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0])):
         stone, cut, gem_size, material_color = gem
 
         if use_mat_color:
