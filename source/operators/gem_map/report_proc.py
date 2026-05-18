@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import bpy
+from mathutils import Color
 
-from ...lib import colorlib, gemlib, gettext
+from ...lib import gemlib, gettext
 
 
 def _to_int(x: float) -> int | float:
@@ -31,10 +32,10 @@ def data_process(ReportData, lang: str) -> tuple[str, tuple[int]]:
         # Color
         # ---------------------------
 
-        color = (*[colorlib.linear_to_srgb(x) for x in next(palette_iter)], 1.0)
+        color = (*next(palette_iter).copy().from_scene_linear_to_srgb(), 1.0)
 
         if color_name:
-            mat_color = (*[colorlib.linear_to_srgb(x) for x in bpy.data.materials[color_name].diffuse_color[:3]], 1.0)
+            mat_color = (*Color(bpy.data.materials[color_name].diffuse_color[:3]).from_scene_linear_to_srgb(), 1.0)
         else:
             mat_color = (1.0, 1.0, 1.0, 0.0)
 

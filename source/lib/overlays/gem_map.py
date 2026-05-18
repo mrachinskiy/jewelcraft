@@ -14,12 +14,12 @@ import imbuf
 import numpy as np
 from bpy.types import Depsgraph, DepsgraphObjectInstance, Object
 from gpu_extras.batch import batch_for_shader
-from mathutils import Vector
+from mathutils import Color, Vector
 
 from ... import var
 from .. import gemlib, unit
 from ..asset import gem_dimensions, gem_transform, iter_gems
-from ..colorlib import linear_to_srgb, luma
+from ..colorlib import luma
 
 _FONT_ID = 0
 _FONT_ATLAS_PADDING = 4
@@ -324,7 +324,7 @@ def _gem_records_collect(depsgraph: Depsgraph, show_all: bool, is_overlay: bool,
 
 
 def _gem_map_create(gems: set[tuple], use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
-    palette_iter: Iterator[tuple[float, float, float]] = bpy.context.window_manager.jewelcraft.gem_map_palette.iterate()
+    palette_iter: Iterator[Color] = bpy.context.window_manager.jewelcraft.gem_map_palette.iterate()
     gem_map = {}
 
     for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0], item[3])):
@@ -332,14 +332,17 @@ def _gem_map_create(gems: set[tuple], use_mat_color: bool, opacity: float, to_sr
 
         if use_mat_color:
             if color_name:
-                color = (*[linear_to_srgb(x) for x in bpy.data.materials[color_name].diffuse_color[:3]], opacity)
+                color = bpy.data.materials[color_name].diffuse_color[:3]
             else:
-                color = (1.0, 1.0, 1.0, 0.0)
+                color = (1.0, 1.0, 1.0)
+                opacity = 0.0
         else:
-            color = (*next(palette_iter), opacity)
+            color = next(palette_iter)
 
         if to_srgb:
-            color = tuple(linear_to_srgb(x) for x in color)
+            color = (*Color(color).from_scene_linear_to_srgb(), opacity)
+        else:
+            color = (*color, opacity)
 
         color_font = (1.0, 1.0, 1.0) if luma(color) < 0.4 else (0.0, 0.0, 0.0)
         w, l = tuple(int(value) if value.is_integer() else value for value in gem_size[:2])

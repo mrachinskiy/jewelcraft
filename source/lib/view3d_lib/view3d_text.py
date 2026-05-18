@@ -227,9 +227,9 @@ def text_color(color: tuple[float, float, float] = (1.0, 1.0, 1.0)) -> tuple[flo
         else:
             bgc = gradients.high_gradient
     elif shading.background_type == "WORLD":
-        bgc = [colorlib.linear_to_srgb(x) for x in bpy.context.scene.world.color]
+        bgc = bpy.context.scene.world.color.copy().from_scene_linear_to_srgb()
     elif shading.background_type == "VIEWPORT":
-        bgc = [colorlib.linear_to_srgb(x) for x in shading.background_color]
+        bgc = shading.background_color.copy().from_scene_linear_to_srgb()
 
     color_luma = colorlib.luma(color)
     bgc_luma = colorlib.luma(bgc)

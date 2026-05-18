@@ -1,47 +1,25 @@
-# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
+
+from mathutils import Color
 
 
-def hex_to_rgb(v: str | int) -> tuple[float, float, float]:
-    if isinstance(v, str):
-        if v[0] == "#":
-            v = v[1:]
-        v = int(v, base=16)
+def hex_to_rgb(v: str) -> Color:
+    if v[0] == "#":
+        v = v[1:]
 
-    return (
-        _int_srgb_to_linear((v >> 16) & 255),
-        _int_srgb_to_linear((v >> 8) & 255),
-        _int_srgb_to_linear(v & 255),
-    )
+    v = int(v, base=16)
+
+    r = (v >> 16) & 255
+    g = (v >> 8) & 255
+    b = v & 255
+
+    return Color((r / 255, g / 255, b / 255)).from_srgb_to_scene_linear()
 
 
-def rbg_to_hex(rgb: tuple[float, float, float]) -> str:
-    r, g, b = [int(linear_to_srgb(v) * 255 + 0.5) for v in rgb]
+def rbg_to_hex(color: Color) -> str:
+    r, g, b = [int(v * 255 + 0.5) for v in color.copy().from_scene_linear_to_srgb()]
     return f"{r:02x}{g:02x}{b:02x}"
-
-
-def _int_srgb_to_linear(v: int) -> float:
-    return srgb_to_linear(v / 255)
-
-
-def srgb_to_linear(v: float) -> float:
-    if v == 1.0:
-        return v
-
-    if v <= 0.04045:
-        return v / 12.92
-
-    return ((v + 0.055) / 1.055) ** 2.4
-
-
-def linear_to_srgb(v: float) -> float:
-        if v >= 1.0:
-            return 1.0
-
-        if v <= 0.0031308:
-            return v * 12.92
-
-        return 1.055 * (v ** (1 / 2.4)) - 0.055
 
 
 def luma(rgb: tuple[float, float, float, ...]) -> float:
