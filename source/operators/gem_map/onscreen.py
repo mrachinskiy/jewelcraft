@@ -48,7 +48,7 @@ def gem_table(self, x: int, y: int, color: Color | None = None) -> int:
     shader = gpu.shader.from_builtin("UNIFORM_COLOR")
 
     if color is None:
-        color = bpy.context.preferences.themes[0].view_3d.space.text_hi
+        color = view3d_lib.text_color(bpy.context.preferences.themes[0].view_3d.space.text_hi)
 
     blf.size(fontid, self.prefs.gem_map_fontsize_table)
     blf.color(fontid, *color, 1.0)
@@ -88,8 +88,9 @@ def gem_table(self, x: int, y: int, color: Color | None = None) -> int:
 
 def warning(self, x, y):
     fontid = 1
+    color = view3d_lib.text_color((1.0, 0.3, 0.3))
     blf.size(fontid, self.prefs.gem_map_fontsize_table)
-    blf.color(fontid, 1.0, 0.3, 0.3, 1.0)
+    blf.color(fontid, *color, 1.0)
 
     _, font_h = blf.dimensions(fontid, "Row Height")
     font_row_height = font_h * 2

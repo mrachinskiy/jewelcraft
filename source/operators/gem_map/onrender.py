@@ -10,7 +10,7 @@ from bpy_extras.image_utils import load_image
 from gpu_extras.batch import batch_for_shader
 from mathutils import Matrix
 
-from ...lib import asset, colorlib, overlays
+from ...lib import asset, overlays, view3d_lib
 from . import onscreen
 
 
@@ -24,25 +24,7 @@ def _get_resolution(region, region_3d, render) -> tuple[int, int]:
 
 def _text_color(use_background: bool) -> tuple[float, float, float]:
     if use_background:
-        shading = bpy.context.space_data.shading
-
-        if shading.background_type == "THEME":
-            gradients = bpy.context.preferences.themes[0].view_3d.space.gradients
-
-            if gradients.background_type == "RADIAL":
-                bgc = gradients.gradient
-            else:
-                bgc = gradients.high_gradient
-
-        elif shading.background_type == "WORLD":
-            bgc = [colorlib.linear_to_srgb(x) for x in bpy.context.scene.world.color]
-
-        elif shading.background_type == "VIEWPORT":
-            bgc = [colorlib.linear_to_srgb(x) for x in shading.background_color]
-
-        if colorlib.luma(bgc) < 0.4:
-            return (1.0, 1.0, 1.0)
-
+        return view3d_lib.text_color()
     return (0.0, 0.0, 0.0)
 
 

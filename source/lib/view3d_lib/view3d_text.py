@@ -6,6 +6,9 @@ from typing import NamedTuple
 
 import blf
 import bpy
+from mathutils import Color
+
+from .. import colorlib
 
 _TYPE_BOOL = 1
 _TYPE_INT = 2
@@ -124,12 +127,17 @@ def _get_props(layout: Layout, data) -> Iterator[_Prop]:
 def draw_options(data, layout: Layout, x: int, y: int) -> None:
     prefs = bpy.context.preferences
 
-    color_text = prefs.themes[0].view_3d.space.text_hi
-    color_grey = (0.67, 0.67, 0.67, 1.0)
-    color_green = (0.3, 1.0, 0.3, 1.0)
-    color_red = (1.0, 0.3, 0.3, 1.0)
-    color_yellow = (0.9, 0.9, 0.0, 1.0)
-    color_blue = (0.5, 0.6, 1.0, 1.0)
+    color_text = text_color(prefs.themes[0].view_3d.space.text_hi)
+
+    color_grey = Color(color_text)
+    color_grey.s *= 0.8
+    color_grey.v = max(min(color_grey.v, 0.8), 0.2) * 0.8
+    color_grey = text_color(color_grey)
+
+    color_green = text_color((0.3, 1.0, 0.3))
+    color_red = text_color((1.0, 0.3, 0.3))
+    color_yellow = text_color((0.9, 0.9, 0.0))
+    color_blue = text_color((0.2, 0.7, 1.0))
 
     fontid = 1
     fontscale = _get_font_scale(prefs)
@@ -157,7 +165,7 @@ def draw_options(data, layout: Layout, x: int, y: int) -> None:
         if prop.key:
             _x += w_col1 + 20
             blf.position(fontid, _x, y, 0.0)
-            blf.color(fontid, *color_grey)
+            blf.color(fontid, *color_grey, 1.0)
             blf.draw(fontid, prop.key)
 
         if prop.type is _TYPE_BOOL:
@@ -169,10 +177,10 @@ def draw_options(data, layout: Layout, x: int, y: int) -> None:
             _x += 20
             blf.position(fontid, _x, y, 0.0)
             if getattr(data, prop.attr):
-                blf.color(fontid, *color_green)
+                blf.color(fontid, *color_green, 1.0)
                 blf.draw(fontid, "ON")
             else:
-                blf.color(fontid, *color_red)
+                blf.color(fontid, *color_red, 1.0)
                 blf.draw(fontid, "OFF")
 
         elif prop.type is _TYPE_INT:
@@ -183,7 +191,7 @@ def draw_options(data, layout: Layout, x: int, y: int) -> None:
 
             _x += 20
             blf.position(fontid, _x, y, 0.0)
-            blf.color(fontid, *color_blue)
+            blf.color(fontid, *color_blue, 1.0)
             blf.draw(fontid, str(round(getattr(data, prop.attr), 3)))
 
         elif prop.type is _TYPE_ENUM:
@@ -206,5 +214,29 @@ def draw_options(data, layout: Layout, x: int, y: int) -> None:
 
                 _x += 20
                 blf.position(fontid, _x, y, 0.0)
-                blf.color(fontid, *color_yellow)
+                blf.color(fontid, *color_yellow, 1.0)
                 blf.draw(fontid, "PROCESSING...")
+
+
+def text_color(color: tuple[float, float, float] = (1.0, 1.0, 1.0)) -> tuple[float, float, float]:
+    shading = bpy.context.space_data.shading
+    if shading.background_type == "THEME":
+        gradients = bpy.context.preferences.themes[0].view_3d.space.gradients
+        if gradients.background_type == "RADIAL":
+            bgc = gradients.gradient
+        else:
+            bgc = gradients.high_gradient
+    elif shading.background_type == "WORLD":
+        bgc = [colorlib.linear_to_srgb(x) for x in bpy.context.scene.world.color]
+    elif shading.background_type == "VIEWPORT":
+        bgc = [colorlib.linear_to_srgb(x) for x in shading.background_color]
+
+    color_luma = colorlib.luma(color)
+    bgc_luma = colorlib.luma(bgc)
+    if abs(bgc_luma - color_luma) > 0.3:
+        return color
+
+    if colorlib.luma(bgc) < 0.4:
+        return (1.0, 1.0, 1.0)
+
+    return (0.0, 0.0, 0.0)
