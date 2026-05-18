@@ -308,10 +308,9 @@ def _gem_records_collect(depsgraph: Depsgraph, from_scene: Callable, show_all: b
     for dup, ob, instancer in iter_gems(depsgraph):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        gem_size = tuple(round(x, 2) for x in from_scene(gem_dimensions(dup)))
-        material = ob.material_slots[0].material if ob.material_slots else None
-        material_color = tuple(material.diffuse_color[:3]) if material is not None else None
-        gem = stone, cut, gem_size, material_color
+        size = tuple(round(x, 2) for x in from_scene(gem_dimensions(dup)))
+        color_name = ob.material_slots[0].name if ob.material_slots else ""
+        gem = stone, cut, size, color_name
         gems.add(gem)
 
         loc2, rad2, _ = gem_transform(dup)
@@ -335,12 +334,12 @@ def _gem_records_collect(depsgraph: Depsgraph, from_scene: Callable, show_all: b
 def _gem_map_create(gems: set[tuple], palette_iter: Iterator[tuple[float, float, float]], use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
     gem_map = {}
 
-    for gem in gems:
-        _, cut, gem_size, material_color = gem
+    for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0], item[3])):
+        _, cut, gem_size, color_name = gem
 
         if use_mat_color:
-            if material_color is not None:
-                color = (*material_color, opacity)
+            if color_name:
+                color = (*[linear_to_srgb(x) for x in bpy.data.materials[color_name].diffuse_color[:3]], opacity)
             else:
                 color = (1.0, 1.0, 1.0, 0.0)
         else:
