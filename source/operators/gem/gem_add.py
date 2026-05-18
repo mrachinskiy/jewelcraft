@@ -1,11 +1,10 @@
-# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
 from bpy.props import BoolProperty, EnumProperty, FloatProperty
 from bpy.types import Operator
-from mathutils import Matrix
 
 from ... import var
 from ...lib import dynamic_list, unit
@@ -378,6 +377,7 @@ class OBJECT_OT_gem_recover(Operator):
         import collections
         import itertools
         import operator
+        from mathutils import Matrix
 
         rotvar = self.rot_var - 1
         yvar = self.y_var - 1
