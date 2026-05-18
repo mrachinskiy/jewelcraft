@@ -4,7 +4,7 @@
 
 import math
 import tempfile
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from pathlib import Path
 
 import blf
@@ -249,13 +249,6 @@ def _draw(
     projection_matrix_override=None,
     viewport_size_override=None,
 ) -> None:
-    region = context.region
-    region_3d = context.space_data.region_3d
-    depsgraph = context.evaluated_depsgraph_get()
-    palette_iter = context.window_manager.jewelcraft.gem_map_palette.iterate()
-    from_scene = unit.Scale().from_scene
-    font_size = context.preferences.addons[var.ADDON_ID].preferences.gem_map_fontsize_gem_size
-
     if is_overlay:
         props = context.scene.jewelcraft
         show_all = props.overlay_gem_map_show_all
@@ -278,18 +271,16 @@ def _draw(
     elif not show_all:
         return
 
-    records, gems = _gem_records_collect(depsgraph, from_scene, show_all, is_overlay, is_gem, loc1, rad1)
-    gem_map = _gem_map_create(gems, palette_iter, use_mat_color, opacity, to_srgb)
+    depsgraph = context.evaluated_depsgraph_get()
+    records, gems = _gem_records_collect(depsgraph, show_all, is_overlay, is_gem, loc1, rad1)
+    gem_map = _gem_map_create(gems, use_mat_color, opacity, to_srgb)
 
     _draw_shader_mode(
         context,
         depsgraph,
-        region,
-        region_3d,
         records,
         gem_map,
         in_front,
-        font_size,
         context.mode == "EDIT_MESH" and ob is not None and "gem" in ob,
         view_matrix_override=view_matrix_override,
         projection_matrix_override=projection_matrix_override,
@@ -301,9 +292,10 @@ def _draw(
     gpu.state.depth_mask_set(False)
 
 
-def _gem_records_collect(depsgraph: Depsgraph, from_scene: Callable, show_all: bool, is_overlay: bool, is_gem: bool, loc1: Vector, rad1: float) -> tuple[list[tuple], set[tuple]]:
+def _gem_records_collect(depsgraph: Depsgraph, show_all: bool, is_overlay: bool, is_gem: bool, loc1: Vector, rad1: float) -> tuple[list[tuple], set[tuple]]:
     records = []
     gems = set()
+    from_scene = unit.Scale().from_scene
 
     for dup, ob, instancer in iter_gems(depsgraph):
         stone = ob["gem"]["stone"]
@@ -331,7 +323,8 @@ def _gem_records_collect(depsgraph: Depsgraph, from_scene: Callable, show_all: b
     return records, gems
 
 
-def _gem_map_create(gems: set[tuple], palette_iter: Iterator[tuple[float, float, float]], use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
+def _gem_map_create(gems: set[tuple], use_mat_color: bool, opacity: float, to_srgb: bool) -> dict:
+    palette_iter: Iterator[tuple[float, float, float]] = bpy.context.window_manager.jewelcraft.gem_map_palette.iterate()
     gem_map = {}
 
     for gem in sorted(gems, key=lambda item: (item[1], -item[2][1], -item[2][0], item[0], item[3])):
@@ -371,12 +364,9 @@ def _gem_map_create(gems: set[tuple], palette_iter: Iterator[tuple[float, float,
 def _draw_shader_mode(
     context,
     depsgraph: Depsgraph,
-    region,
-    region_3d,
     records: list[tuple],
     gem_map: dict,
     in_front: bool,
-    font_size: int,
     use_force_geometry_update: bool,
     view_matrix_override=None,
     projection_matrix_override=None,
@@ -387,6 +377,9 @@ def _draw_shader_mode(
 
     draw_cache = _cache["draw"]
 
+    font_size = context.preferences.addons[var.ADDON_ID].preferences.gem_map_fontsize_gem_size
+    region = context.region
+    region_3d = context.space_data.region_3d
     batch_records = []
     labels = []
     signature = 0
@@ -417,7 +410,6 @@ def _draw_shader_mode(
             font_ready = _font_atlas_rebuild(font_size, texts)
 
     batch = _combined_shader_batch_ensure(
-        _shader_combined,
         depsgraph,
         batch_records,
         labels if font_ready else (),
@@ -444,10 +436,8 @@ def _draw_shader_mode(
         perspective_mix = 0.0
     elif region_3d.view_perspective == "CAMERA":
         camera = context.scene.camera
-
         if camera is not None:
             view_origin = camera.matrix_world.translation
-
             if camera.data.type == "ORTHO":
                 perspective_mix = 0.0
                 view_direction = (camera.matrix_world.to_3x3() @ Vector((0.0, 0.0, -1.0))).normalized()
@@ -583,7 +573,6 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
 
     try:
         texture = gpu.texture.from_image(image)
-
         try:
             texture.filter_mode(True)
             texture.extend_mode("CLAMP_TO_BORDER")
@@ -607,9 +596,8 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
     return True
 
 
-def _combined_shader_batch_ensure(shader, depsgraph: Depsgraph, records: list[tuple], labels: list, signature: int):
+def _combined_shader_batch_ensure(depsgraph: Depsgraph, records: list[tuple], labels: list, signature: int):
     draw_cache = _cache["draw"]
-
     cache_key = draw_cache["revision"], draw_cache["atlas_key"], len(records), len(labels), signature
 
     if draw_cache["batch_key"] == cache_key:
@@ -661,7 +649,15 @@ def _combined_shader_batch_ensure(shader, depsgraph: Depsgraph, records: list[tu
         glyph_data.append(np.concatenate((corners, np.array(uv, np.float32)), axis=1))
         colors.append(np.full((4, 4), (*color, 1.0), np.float32))
         radii.append(np.full(4, size * 0.5, np.float32))
-        indices.append(np.array(((vertex_index, vertex_index + 1, vertex_index + 2), (vertex_index, vertex_index + 2, vertex_index + 3)), np.int32))
+        indices.append(
+            np.array(
+                (
+                    (vertex_index, vertex_index + 1, vertex_index + 2),
+                    (vertex_index, vertex_index + 2, vertex_index + 3),
+                ),
+                np.int32,
+            )
+        )
         vertex_index += 4
 
     if not vertex_index:
@@ -670,7 +666,7 @@ def _combined_shader_batch_ensure(shader, depsgraph: Depsgraph, records: list[tu
         return None
 
     draw_cache["batch"] = batch_for_shader(
-        shader,
+        _shader_combined,
         "TRIS",
         {
             "anchor": np.concatenate(anchors),
