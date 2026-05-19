@@ -49,6 +49,7 @@ _shader_interface.smooth("VEC4", "colorInterp")
 _shader_interface.flat("FLOAT", "radiusInterp")
 
 _shader_info = gpu.types.GPUShaderCreateInfo()
+_shader_info.define("DEPTH_OFFSET", "0.00005")
 _shader_info.push_constant("MAT4", "viewProjectionMatrix")
 _shader_info.push_constant("VEC2", "viewportSize")
 _shader_info.push_constant("VEC4", "viewOriginAndMix")
@@ -62,8 +63,6 @@ _shader_info.vertex_out(_shader_interface)
 _shader_info.fragment_out(0, "VEC4", "fragColor")
 _shader_info.vertex_source(
     """
-    #define DEPTH_OFFSET 0.00005
-
     void main()
     {
         vec3 viewOrigin = viewOriginAndMix.xyz;
@@ -146,13 +145,13 @@ def _font_atlas_release(image, atlas_path: Path) -> None:
     if image is not None:
         try:
             image.gl_free()
-        except (ReferenceError, RuntimeError):
-            pass
+        except (ReferenceError, RuntimeError) as e:
+            print("Failed to free GPU resources:", e)
 
         try:
             bpy.data.images.remove(image)
-        except (ReferenceError, RuntimeError):
-            pass
+        except (ReferenceError, RuntimeError) as e:
+            print("Failed to remove image:", e)
 
     if atlas_path is not None:
         atlas_path.unlink(missing_ok=True)
