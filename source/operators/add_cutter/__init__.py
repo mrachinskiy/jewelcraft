@@ -71,11 +71,26 @@ class OBJECT_OT_cutter_add(Operator):
         cutter_ui.draw(self, context)
 
     def execute(self, context):
-        from ...lib import asset
+        import collections
+
+        from ...lib import asset, unit
         from . import cutter_mesh
 
-        bm = cutter_mesh.get(self)
-        asset.bm_to_scene(bm, name="Cutter", color=self.color)
+        from_scene = unit.Scale().from_scene
+        group_by_size = collections.defaultdict(list)
+        active_dim = context.object.dimensions
+
+        for ob in context.selected_objects:
+            if "gem" in ob:
+                size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
+                group_by_size[size].append(ob)
+
+        for size, obs in group_by_size.items():
+            try:
+                bm = cutter_mesh.get(self, obs[0].dimensions, active_dim)
+                asset.bm_to_parent(bm, obs, name="Cutter", color=self.color)
+            finally:
+                bm.free()
 
         return {"FINISHED"}
 
@@ -89,7 +104,6 @@ class OBJECT_OT_cutter_add(Operator):
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        self.gem_dim = ob.dimensions.copy()
         self.cut = ob["gem"]["cut"] if "gem" in ob else "ROUND"
         try:
             self.shape = gemlib.CUTS[self.cut].shape
@@ -100,7 +114,7 @@ class OBJECT_OT_cutter_add(Operator):
         self.color = prefs.color_cutter
 
         if not event.ctrl:
-            init_presets(self)
+            init_presets(self, ob.dimensions)
 
         if event.alt:
             self.use_hole = False

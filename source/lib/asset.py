@@ -395,30 +395,26 @@ def show_window(width: int, height: int, area_type: str | None = None, space_dat
 # ------------------------------------
 
 
-def bm_to_object(bm, name="New object", color: Color | None = None) -> Object:
+def bm_to_scene(bm, coll: Collection, name="New object", color: Color = Color((1.0, 1.0, 1.0))) -> Object:
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
-    bm.free()
 
     ob = bpy.data.objects.new(name, me)
     add_material(ob, name=name, color=color)
 
+    ob_link(ob, coll)
+
     return ob
 
 
-def bm_to_scene(bm, name="New object", color: Color | None = None) -> None:
+def bm_to_parent(bm, obs: list[Object], name="New object", color: Color = Color((1.0, 1.0, 1.0))) -> None:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data and space_data.local_view)
 
-    bpy.context.view_layer.update()
-    size = bpy.context.object.dimensions.y
-
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
-    bm.free()
 
-    for parent in bpy.context.selected_objects:
-
+    for parent in obs:
         ob = bpy.data.objects.new(name, me)
 
         for coll in parent.users_collection:
@@ -429,7 +425,6 @@ def bm_to_scene(bm, name="New object", color: Color | None = None) -> None:
 
         ob.location = parent.location
         ob.rotation_euler = parent.rotation_euler
-        ob.scale *= parent.dimensions.y / size
         ob.parent = parent
         ob.matrix_parent_inverse = parent.matrix_basis.inverted()
 

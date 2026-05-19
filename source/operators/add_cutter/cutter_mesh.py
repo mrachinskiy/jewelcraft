@@ -8,27 +8,31 @@ from ...lib import gemlib, iterutils, mesh
 from . import profiles
 
 
-def get(self):
+def get(self, gem_dim: Vector, active_dim: Vector):
 
     # Section sizes
     # ---------------------------------
 
+    scale_x = gem_dim.x / active_dim.x
+    scale_y = gem_dim.y / active_dim.y
+    scale_z = gem_dim.z / active_dim.z
+
     Handle = Vector((
-        self.handle_dim.x / 2,
-        self.handle_dim.y / 2,
+        self.handle_dim.x * scale_x / 2,
+        self.handle_dim.y * scale_y / 2,
         self.handle_dim.z1,
-        self.handle_dim.z2,
+        self.handle_dim.z2 * scale_z,
     ))
     Girdle = Vector((
-        self.gem_dim.x / 2 + self.girdle_dim.x,
-        self.gem_dim.y / 2 + self.girdle_dim.y,
-        self.girdle_dim.z1,
+        gem_dim.x / 2 + self.girdle_dim.x,
+        gem_dim.y / 2 + self.girdle_dim.y,
+        self.girdle_dim.z1 * scale_z,
         -self.girdle_dim.z2,
     ))
     Hole = Vector((
-        self.hole_dim.x / 2,
-        self.hole_dim.y / 2,
-        -self.hole_dim.z1,
+        self.hole_dim.x * scale_x / 2,
+        self.hole_dim.y * scale_y / 2,
+        -self.hole_dim.z1 * scale_z,
         -self.hole_dim.z2,
     ))
 
@@ -38,10 +42,10 @@ def get(self):
         Hole.x = Hole.y
     elif self.shape is gemlib.SHAPE_TRIANGLE:
         Handle.y = self.handle_dim.y
-        Girdle.y = self.gem_dim.y + self.girdle_dim.y
+        Girdle.y = gem_dim.y + self.girdle_dim.y
         Hole.y = self.hole_dim.y
     elif self.cut in {"OVAL", "MARQUISE", "PEAR"}:
-        Girdle.x = self.gem_dim.x / 2 + self.girdle_dim.y
+        Girdle.x = gem_dim.x / 2 + self.girdle_dim.y
 
     if self.cut in {"PEAR", "HEART"}:
         handle_ofst = (0.0, self.handle_shift, 0.0)
@@ -50,7 +54,7 @@ def get(self):
         handle_ofst = hole_ofst = (0.0, 0.0, 0.0)
 
     if self.cut == "PEAR":
-        cullet_pos = (0.0, self.gem_dim.y / 4 - self.hole_shift, Hole.z)
+        cullet_pos = (0.0, gem_dim.y / 4 - self.hole_shift, Hole.z)
     else:
         cullet_pos = (0.0, 0.0, Hole.z)
 

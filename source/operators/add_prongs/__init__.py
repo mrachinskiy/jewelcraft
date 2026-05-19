@@ -39,11 +39,25 @@ class OBJECT_OT_prongs_add(Operator):
         prongs_ui.draw(self, context)
 
     def execute(self, context):
-        from ...lib import asset
+        import collections
+
+        from ...lib import asset, unit
         from . import prongs_mesh
 
-        bm = prongs_mesh.create_prongs(self)
-        asset.bm_to_scene(bm, name="Prongs", color=self.color)
+        from_scene = unit.Scale().from_scene
+        group_by_size = collections.defaultdict(list)
+
+        for ob in context.selected_objects:
+            if "gem" in ob:
+                size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
+                group_by_size[size].append(ob)
+
+        for size, obs in group_by_size.items():
+            try:
+                bm = prongs_mesh.create_prongs(self, obs[0].dimensions)
+                asset.bm_to_parent(bm, obs, name="Prongs", color=self.color)
+            finally:
+                bm.free()
 
         return {"FINISHED"}
 
@@ -57,7 +71,6 @@ class OBJECT_OT_prongs_add(Operator):
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        self.gem_dim = ob.dimensions.copy()
         self.cut = ob["gem"]["cut"] if "gem" in ob else None
         try:
             self.shape = gemlib.CUTS[self.cut].shape
@@ -68,7 +81,7 @@ class OBJECT_OT_prongs_add(Operator):
         self.color = prefs.color_prongs
 
         if not event.ctrl:
-            prongs_presets.init_presets(self)
+            prongs_presets.init_presets(self, ob.dimensions.copy())
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)

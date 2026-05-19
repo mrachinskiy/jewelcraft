@@ -3,18 +3,20 @@
 
 from math import radians
 
+from mathutils import Vector
+
 from ...lib import gemlib
 
 
-def init_presets(self):
+def init_presets(self, gem_dim: Vector):
 
     # Defaults
     # ---------------------------
 
     self.number = 2
-    self.diameter = 0.4 * self.gem_dim.y
-    self.z1 = 0.15 * self.gem_dim.y
-    self.z2 = 0.3 * self.gem_dim.y
+    self.diameter = 0.4 * gem_dim.y
+    self.z1 = 0.15 * gem_dim.y
+    self.z2 = 0.3 * gem_dim.y
     self.position = radians(45.0)
     self.intersection = 0.0
     self.alignment = 0.0
@@ -27,15 +29,15 @@ def init_presets(self):
     # Sizes
     # ---------------------------
 
-    if self.gem_dim.y >= 2.5:
+    if gem_dim.y >= 2.5:
         self.diameter = 0.8
-    elif self.gem_dim.y >= 1.7:
+    elif gem_dim.y >= 1.7:
         self.diameter = 0.7
-    elif self.gem_dim.y >= 1.5:
+    elif gem_dim.y >= 1.5:
         self.diameter = 0.6
-    elif self.gem_dim.y >= 1.2:
+    elif gem_dim.y >= 1.2:
         self.diameter = 0.5
-    elif self.gem_dim.y >= 1.0:
+    elif gem_dim.y >= 1.0:
         self.diameter = 0.4
 
     # Shapes
@@ -69,9 +71,9 @@ def init_presets(self):
             self.intersection = -10.0
 
     elif self.shape is gemlib.SHAPE_FANTASY:
-        self.diameter = 0.28 * self.gem_dim.x
-        self.z1 = 0.15 * self.gem_dim.x
-        self.z2 = 0.3 * self.gem_dim.x
+        self.diameter = 0.28 * gem_dim.x
+        self.z1 = 0.15 * gem_dim.x
+        self.z2 = 0.3 * gem_dim.x
 
         if self.cut == "OVAL":
             self.position = radians(30.0)

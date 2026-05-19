@@ -147,17 +147,19 @@ class OBJECT_OT_prongs_auto_add(Operator):
 
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         for info in prong_infos:
-            bm = prongs_mesh.create_prong(
-                info.size,
-                info.height,
-                info.height,
-                self.bump_scale,
-                self.taper,
-                self.detalization,
-            )
-            ob = asset.bm_to_object(bm, name="Prong", color=prefs.color_prongs)
-            asset.ob_link(ob, coll)
-            ob.matrix_world = info.matrix
+            try:
+                bm = prongs_mesh.create_prong(
+                    info.size,
+                    info.height,
+                    info.height,
+                    self.bump_scale,
+                    self.taper,
+                    self.detalization,
+                )
+                ob = asset.bm_to_scene(bm, coll, name="Prong", color=prefs.color_prongs)
+                ob.matrix_world = info.matrix
+            finally:
+                bm.free()
 
         return {"FINISHED"}
 

@@ -5,7 +5,7 @@ from math import cos, pi, sin, tau
 
 import bmesh
 from bmesh.types import BMesh, BMVert
-from mathutils import Matrix
+from mathutils import Matrix, Vector
 
 from ...lib import iterutils, mesh
 
@@ -80,7 +80,7 @@ def create_prong(
     return bm
 
 
-def create_prongs(self):
+def create_prongs(self, gem_dim: Vector):
     prong_rad = self.diameter / 2
 
     # Prong
@@ -102,7 +102,7 @@ def create_prongs(self):
         bm.transform(Matrix.Rotation(-self.alignment, 4, "X"))
 
     # Intersection
-    pos_offset = (self.gem_dim.y / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
+    pos_offset = (gem_dim.y / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
     bm.transform(Matrix.Translation((0.0, pos_offset, 0.0)))
 
     # Position
