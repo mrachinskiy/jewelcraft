@@ -4,3 +4,6 @@ line-length = 120
 [tool.ruff.format]
 line-ending = "lf"
 quote-style = "double"
+
+[tool.ruff.lint]
+ignore = ["E741"]

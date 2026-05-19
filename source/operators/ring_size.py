@@ -4,7 +4,6 @@
 from math import pi
 
 import bpy
-from bpy.app.translations import pgettext_iface as _
 from bpy.props import BoolProperty, EnumProperty, FloatProperty, IntProperty
 from bpy.types import Operator
 from mathutils import Matrix

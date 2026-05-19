@@ -5,7 +5,6 @@ from collections.abc import Iterable, Iterator
 from pathlib import Path
 
 import bpy
-from bpy.app.translations import pgettext_iface as _
 from bpy.types import (ID, BlendData, Collection, Depsgraph,
                        DepsgraphObjectInstance, Modifier, Object, Space)
 from mathutils import Matrix, Vector, kdtree

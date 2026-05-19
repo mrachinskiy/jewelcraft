@@ -73,7 +73,7 @@ def test_design_report() -> None:
             test_path = Path(tempdir) / f"Design Report.{fmt.lower()}"
             example_path = Path(__file__).parent / "data" / f"Design Report.{fmt.lower()}"
             bpy.ops.wm.jewelcraft_design_report(file_format=fmt, use_preview=False, filepath=str(test_path))
-            assert filecmp.cmp(test_path, example_path, shallow=False) == True
+            assert filecmp.cmp(test_path, example_path, shallow=False)
 
 
 try:

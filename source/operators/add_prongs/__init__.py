@@ -54,7 +54,7 @@ class OBJECT_OT_prongs_add(Operator):
 
         for size, obs in group_by_size.items():
             try:
-                bm = prongs_mesh.create_prongs(self, obs[0].dimensions)
+                bm = prongs_mesh.get(self, obs[0].dimensions)
                 asset.bm_to_parent(bm, obs, name="Prongs", color=self.color)
             finally:
                 bm.free()

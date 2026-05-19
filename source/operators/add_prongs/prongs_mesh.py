@@ -10,77 +10,7 @@ from mathutils import Matrix, Vector
 from ...lib import iterutils, mesh
 
 
-def _circle(bm: BMesh, radius: float, z: float, detalization: int) -> list[BMVert]:
-    angle = tau / detalization
-
-    return [
-        bm.verts.new(
-            (
-                sin(i * angle) * radius,
-                cos(i * angle) * radius,
-                z,
-            )
-        )
-        for i in range(detalization)
-    ]
-
-
-def _dome(bm: BMesh, radius: float, z_co: float, scale: float, detalization: int) -> list[BMVert]:
-    dome_resolution = max(detalization, 4) // 4 + 1
-    angle = (pi / 2) / (dome_resolution - 1)
-    zero_loop = True
-    first_loop = True
-
-    for i in range(dome_resolution):
-        y = sin(i * angle) * radius
-        z = cos(i * angle) * radius * scale + z_co
-
-        if zero_loop:
-            zero_loop = False
-            pole_z = z
-            continue
-
-        step = _circle(bm, y, z, detalization)
-
-        if first_loop:
-            first_loop = False
-            v3 = bm.verts.new((0.0, 0.0, pole_z))
-            for v1, v2 in iterutils.pairwise_cyclic(step):
-                bm.faces.new((v3, v2, v1))
-        else:
-            mesh.bridge_verts(bm, step, prev_step)
-
-        prev_step = step
-
-    return step
-
-
-def create_prong(
-    diameter: float,
-    z1: float,
-    z2: float,
-    bump_scale: float,
-    taper: float,
-    detalization: int,
-) -> BMesh:
-    prong_rad = diameter / 2
-
-    bm = bmesh.new()
-
-    if bump_scale:
-        vs1 = _dome(bm, prong_rad, z1, bump_scale, detalization)
-    else:
-        vs1 = _circle(bm, prong_rad, z1, detalization)
-        bm.faces.new(vs1).normal_flip()
-
-    vs2 = _circle(bm, prong_rad * (taper + 1), -z2, detalization)
-    bm.faces.new(vs2)
-    mesh.bridge_verts(bm, vs2, vs1)
-
-    return bm
-
-
-def create_prongs(self, gem_dim: Vector):
+def get(self, gem_dim: Vector):
     prong_rad = self.diameter / 2
 
     # Prong
@@ -135,3 +65,67 @@ def create_prongs(self, gem_dim: Vector):
             bm.transform(Matrix.Rotation(-self.symmetry_pivot, 4, "Z"))
 
     return bm
+
+
+def create_prong(diameter: float, z1: float, z2: float, bump_scale: float, taper: float, detalization: int) -> BMesh:
+    prong_rad = diameter / 2
+
+    bm = bmesh.new()
+
+    if bump_scale:
+        vs1 = _dome(bm, prong_rad, z1, bump_scale, detalization)
+    else:
+        vs1 = _circle(bm, prong_rad, z1, detalization)
+        bm.faces.new(vs1).normal_flip()
+
+    vs2 = _circle(bm, prong_rad * (taper + 1), -z2, detalization)
+    bm.faces.new(vs2)
+    mesh.bridge_verts(bm, vs2, vs1)
+
+    return bm
+
+
+def _circle(bm: BMesh, radius: float, z: float, detalization: int) -> list[BMVert]:
+    angle = tau / detalization
+
+    return [
+        bm.verts.new(
+            (
+                sin(i * angle) * radius,
+                cos(i * angle) * radius,
+                z,
+            )
+        )
+        for i in range(detalization)
+    ]
+
+
+def _dome(bm: BMesh, radius: float, z_co: float, scale: float, detalization: int) -> list[BMVert]:
+    dome_resolution = max(detalization, 4) // 4 + 1
+    angle = (pi / 2) / (dome_resolution - 1)
+    zero_loop = True
+    first_loop = True
+    prev_step = []
+
+    for i in range(dome_resolution):
+        y = sin(i * angle) * radius
+        z = cos(i * angle) * radius * scale + z_co
+
+        if zero_loop:
+            zero_loop = False
+            pole_z = z
+            continue
+
+        step = _circle(bm, y, z, detalization)
+
+        if first_loop:
+            first_loop = False
+            v3 = bm.verts.new((0.0, 0.0, pole_z))
+            for v1, v2 in iterutils.pairwise_cyclic(step):
+                bm.faces.new((v3, v2, v1))
+        else:
+            mesh.bridge_verts(bm, step, prev_step)
+
+        prev_step = step
+
+    return step
