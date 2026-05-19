@@ -15,36 +15,29 @@ from . import ui, var
 from .lib import dynamic_list
 
 
-# Update callbacks
+# Update lock
 # ------------------------------------------
 
 
-_upd_lock = False
+_upd_locked = False
 
 
-def _serialize_colors_interval():
-    global _upd_lock
+def _upd_lock(func: Callable) -> None:
+    global _upd_locked
 
-    bpy.context.window_manager.jewelcraft.gem_colors.serialize()
-    _upd_lock = False
+    if not _upd_locked:
 
+        def _unlock():
+            global _upd_locked
+            func()
+            _upd_locked = False
 
-def upd_serialize_colors(self, context):
-    global _upd_lock
-
-    if self.builtin:
-        return
-
-    if not _upd_lock:
-        bpy.app.timers.register(_serialize_colors_interval, first_interval=2)
-        _upd_lock = True
+        bpy.app.timers.register(_unlock, first_interval=2.0)
+        _upd_locked = True
 
 
-def upd_color_name(self, context=None):
-    wm_props = context.window_manager.jewelcraft
-    color = wm_props.gem_colors.active_item()
-    wm_props["gem_color"] = color.color
-    wm_props["gem_color_name"] = _(color.name)
+# Folder cache
+# ------------------------------------------
 
 
 _folder_cache = {}
@@ -70,6 +63,23 @@ def upd_folder_list(self, context):
             _folder_cache.clear()
 
     wm_props.property_unset("asset_folder")
+
+
+# Update callbacks
+# ------------------------------------------
+
+
+def upd_serialize_colors(self, context):
+    if self.builtin:
+        return
+    _upd_lock(bpy.context.window_manager.jewelcraft.gem_colors.serialize)
+
+
+def upd_color_name(self, context=None):
+    wm_props = context.window_manager.jewelcraft
+    color = wm_props.gem_colors.active_item()
+    wm_props["gem_color"] = color.color
+    wm_props["gem_color_name"] = _(color.name)
 
 
 def upd_folder_list_serialize(self, context):
