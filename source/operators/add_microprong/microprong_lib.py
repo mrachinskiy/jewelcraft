@@ -12,7 +12,6 @@ def prepare_object(self, bm, is_between: bool = True) -> Object:
     ob_name = "Microprong Cutter"
     me = bpy.data.meshes.new(ob_name)
     bm.to_mesh(me)
-    bm.free()
 
     ob = bpy.data.objects.new(ob_name, me)
     asset.add_material(ob, name="Cutter", color=self.color)

@@ -46,69 +46,73 @@ def _distribute(context, ob, size):
 
 
 def add(self, context):
-    bm = bmesh.new()
+    try:
+        bm = bmesh.new()
 
-    w = self.side_x / 2
-    l = self.side_y / 2
+        w = self.side_x / 2
+        l = self.side_y / 2
 
-    coords = (
-        ( w,   l,  w + self.side_z1),
-        ( w,   l, -w),
-        ( 0.0, l, -w - self.side_z2),
-        (-w,   l, -w),
-        (-w,   l,  w + self.side_z1),
-    )
-
-    vs_north = [bm.verts.new(co) for co in coords]
-    vs_south = [bm.verts.new((x, -y, z)) for x, y, z in coords]
-
-    bm.faces.new(vs_north)
-    bm.faces.new(vs_south).normal_flip()
-
-    es, _ = mesh.bridge_verts(bm, vs_north, vs_south)
-
-    if self.bevel_top:
-        edges = (es[0], es[4])
-        ofst = self.bevel_top / 100.0 * self.side_x
-        bmesh.ops.bevel(
-            bm,
-            geom=edges,
-            affect="EDGES",
-            clamp_overlap=False,
-            offset=ofst,
-            offset_type="OFFSET",
-            segments=self.bevel_segments,
-            profile=0.5,
+        coords = (
+            ( w,   l,  w + self.side_z1),
+            ( w,   l, -w),
+            ( 0.0, l, -w - self.side_z2),
+            (-w,   l, -w),
+            (-w,   l,  w + self.side_z1),
         )
 
-    if self.bevel_btm:
-        edges = (es[1], es[3])
-        ofst = self.bevel_btm / 100.0 * self.side_x
-        bmesh.ops.bevel(
-            bm,
-            geom=edges,
-            affect="EDGES",
-            clamp_overlap=False,
-            offset=ofst,
-            offset_type="OFFSET",
-            segments=self.bevel_segments,
-            profile=0.5,
-        )
+        vs_north = [bm.verts.new(co) for co in coords]
+        vs_south = [bm.verts.new((x, -y, z)) for x, y, z in coords]
 
-    if self.bevel_wedge and self.side_z2:
-        bmesh.ops.bevel(
-            bm,
-            geom=(es[2],),
-            affect="EDGES",
-            clamp_overlap=False,
-            offset=self.bevel_wedge,
-            offset_type="PERCENT",
-            segments=self.bevel_segments,
-            profile=0.5,
-        )
+        bm.faces.new(vs_north)
+        bm.faces.new(vs_south).normal_flip()
 
-    if self.bevel_btm or self.bevel_top or (self.bevel_wedge and self.side_z2):
-        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+        es, _ = mesh.bridge_verts(bm, vs_north, vs_south)
 
-    ob = microprong_lib.prepare_object(self, bm, is_between=False)
-    _distribute(context, ob, self.size_active)
+        if self.bevel_top:
+            edges = (es[0], es[4])
+            ofst = self.bevel_top / 100.0 * self.side_x
+            bmesh.ops.bevel(
+                bm,
+                geom=edges,
+                affect="EDGES",
+                clamp_overlap=False,
+                offset=ofst,
+                offset_type="OFFSET",
+                segments=self.bevel_segments,
+                profile=0.5,
+            )
+
+        if self.bevel_btm:
+            edges = (es[1], es[3])
+            ofst = self.bevel_btm / 100.0 * self.side_x
+            bmesh.ops.bevel(
+                bm,
+                geom=edges,
+                affect="EDGES",
+                clamp_overlap=False,
+                offset=ofst,
+                offset_type="OFFSET",
+                segments=self.bevel_segments,
+                profile=0.5,
+            )
+
+        if self.bevel_wedge and self.side_z2:
+            bmesh.ops.bevel(
+                bm,
+                geom=(es[2],),
+                affect="EDGES",
+                clamp_overlap=False,
+                offset=self.bevel_wedge,
+                offset_type="PERCENT",
+                segments=self.bevel_segments,
+                profile=0.5,
+            )
+
+        if self.bevel_btm or self.bevel_top or (self.bevel_wedge and self.side_z2):
+            bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+
+        ob = microprong_lib.prepare_object(self, bm, is_between=False)
+        _distribute(context, ob, self.size_active)
+
+    finally:
+        bm.free()

@@ -76,26 +76,30 @@ def _distribute(context, ob: Object, curve_length: float, is_cyclic: bool) -> tu
 
 
 def add(self, context) -> tuple[float, float]:
-    bm = bmesh.new()
+    try:
+        bm = bmesh.new()
 
-    w = self.between_x / 2
-    l = self.between_y / 2
+        w = self.between_x / 2
+        l = self.between_y / 2
 
-    coords = (
-        ( w,   l,  self.between_z1),
-        ( w,   l,  0.0),
-        ( 0.0, l, -self.between_z2),
-        (-w,   l,  0.0),
-        (-w,   l,  self.between_z1),
-    )
+        coords = (
+            ( w,   l,  self.between_z1),
+            ( w,   l,  0.0),
+            ( 0.0, l, -self.between_z2),
+            (-w,   l,  0.0),
+            (-w,   l,  self.between_z1),
+        )
 
-    vs_north = [bm.verts.new(co) for co in coords]
-    vs_south = [bm.verts.new((x, -y, z)) for x, y, z in coords]
+        vs_north = [bm.verts.new(co) for co in coords]
+        vs_south = [bm.verts.new((x, -y, z)) for x, y, z in coords]
 
-    bm.faces.new(vs_north)
-    bm.faces.new(vs_south).normal_flip()
+        bm.faces.new(vs_north)
+        bm.faces.new(vs_south).normal_flip()
 
-    mesh.bridge_verts(bm, vs_north, vs_south)
+        mesh.bridge_verts(bm, vs_north, vs_south)
 
-    ob = microprong_lib.prepare_object(self, bm)
-    return _distribute(context, ob, self.curve_length, self.is_cyclic)
+        ob = microprong_lib.prepare_object(self, bm)
+        return _distribute(context, ob, self.curve_length, self.is_cyclic)
+
+    finally:
+        bm.free()
