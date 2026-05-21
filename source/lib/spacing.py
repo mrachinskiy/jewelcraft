@@ -470,7 +470,7 @@ def _ray_cast_surface(origin: Vector, direction: Vector, max_distance: float) ->
 
         if (
             ob is not None
-            and not ob.hide_surface_pick
+            and not getattr(ob, "hide_surface_pick", False)  # VER >= 5.0
             and "gem" not in ob
             and not (use_snap_selectable and ob.hide_select)
         ):
