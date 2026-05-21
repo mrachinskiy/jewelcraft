@@ -9,7 +9,10 @@ tags = ["Modeling"]
 blender_version_min = "4.5.0"
 website = "https://github.com/mrachinskiy/jewelcraft"
 license = ["SPDX:GPL-3.0-or-later"]
-copyright = ["2015-2025 Mikhail Rachinskiy"]
+copyright = [
+    "2015-2026 Mikhail Rachinskiy",
+    "2026 Artem Viveritsa",
+]
 
 [permissions]
 files = "Manage asset library"
