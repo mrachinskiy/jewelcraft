@@ -272,7 +272,7 @@ def asset_export(data_blocks: set[ID], filepath: Path) -> None:
     bpy.data.libraries.write(str(filepath), data_blocks, compress=True)
 
 
-def render_preview(width: int, height: int, filepath: Path, compression=100, use_transparent=True) -> None:
+def render_preview(width: int, height: int, filepath: Path, compression=100, gamma=1.0, use_transparent=True) -> None:
     scene = bpy.context.scene
     render_props = scene.render
     image_props = render_props.image_settings
@@ -295,7 +295,9 @@ def render_preview(width: int, height: int, filepath: Path, compression=100, use
         "compression": compression,
     }
 
-    view_config = {}
+    view_config = {
+        "gamma": gamma
+    }
 
     if shading_props.type in {"WIREFRAME", "SOLID"}:
         view_config["view_transform"] = "Standard"

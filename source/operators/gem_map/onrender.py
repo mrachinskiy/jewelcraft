@@ -35,16 +35,21 @@ def render_map(self) -> None:
 
 def _render_map(self, tempdir: str) -> None:
     image_name = "Gem Map"
+    render_filepath = Path(tempdir) / "gem_map_temp.png"
+    width, height = _get_resolution(self.region, self.region_3d, bpy.context.scene.render)
 
-    render = bpy.context.scene.render
-    width, height = _get_resolution(self.region, self.region_3d, render)
     padding = 30
     x = padding
     y = height - padding
 
-    render_filepath = Path(tempdir) / "gem_map_temp.png"
+    if bpy.app.version >= (5, 0, 0):
+        gamma = 1.0
+        shader_name = "IMAGE_SCENE_LINEAR_TO_REC709_SRGB"
+    else:
+        gamma = 2.2
+        shader_name = "IMAGE"
 
-    asset.render_preview(width, height, render_filepath, compression=15, use_transparent=not self.use_background)
+    asset.render_preview(width, height, render_filepath, compression=15, gamma=gamma, use_transparent=not self.use_background)
     render_image = load_image(str(render_filepath))
 
     mat_offscreen = Matrix()
@@ -55,7 +60,7 @@ def _render_map(self, tempdir: str) -> None:
 
     gpu.state.blend_set("ALPHA")
 
-    shader = gpu.shader.from_builtin("IMAGE_SCENE_LINEAR_TO_REC709_SRGB")
+    shader = gpu.shader.from_builtin(shader_name)
     offscreen = gpu.types.GPUOffScreen(width, height)
 
     with offscreen.bind():
