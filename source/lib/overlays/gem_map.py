@@ -480,11 +480,12 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
     if not texts:
         return False
 
-    blf.size(_FONT_ID, font_size)
     padding = _FONT_ATLAS_PADDING
+    max_width = _FONT_ATLAS_MIN_SIZE
     items = []
     total_area = 0
-    max_width = _FONT_ATLAS_MIN_SIZE
+
+    blf.size(_FONT_ID, font_size)
 
     for text in texts:
         dim_x, dim_y = blf.dimensions(_FONT_ID, text)
@@ -518,22 +519,21 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
     atlas_path = None
 
     try:
-        try:
-            blf.color(_FONT_ID, 1.0, 1.0, 1.0, 1.0)
+        blf.color(_FONT_ID, 1.0, 1.0, 1.0, 1.0)
 
-            with blf.bind_imbuf(_FONT_ID, atlas, display_name="sRGB"):
-                for text, (_dim_x, _dim_y, x, y, _sprite_w, _sprite_h, offset_x, offset_y) in entries.items():
-                    blf.position(_FONT_ID, x + offset_x, y + offset_y, 0)
-                    blf.draw_buffer(_FONT_ID, text)
+        with blf.bind_imbuf(_FONT_ID, atlas, display_name="sRGB"):
+            for text, (_dim_x, _dim_y, x, y, _sprite_w, _sprite_h, offset_x, offset_y) in entries.items():
+                blf.position(_FONT_ID, x + offset_x, y + offset_y, 0)
+                blf.draw_buffer(_FONT_ID, text)
 
-            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as handle:
-                atlas_path = Path(handle.name)
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as handle:
+            atlas_path = Path(handle.name)
 
-            imbuf.write(atlas, filepath=str(atlas_path))
-        except (OSError, RuntimeError, TypeError, ValueError):
-            if atlas_path is not None:
-                atlas_path.unlink(missing_ok=True)
-            return False
+        imbuf.write(atlas, filepath=str(atlas_path))
+    except (OSError, RuntimeError, TypeError, ValueError):
+        if atlas_path is not None:
+            atlas_path.unlink(missing_ok=True)
+        return False
     finally:
         atlas.free()
 
@@ -542,12 +542,7 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
     try:
         image = bpy.data.images.load(str(atlas_path), check_existing=False)
         image.alpha_mode = "STRAIGHT"
-
-        try:
-            image.colorspace_settings.name = "Non-Color"
-        except (TypeError, ValueError):
-            pass
-
+        image.colorspace_settings.name = "Non-Color"
         image.use_view_as_render = False
         image.gl_load()
     except (OSError, RuntimeError, TypeError, ValueError):
@@ -575,7 +570,7 @@ def _font_atlas_rebuild(font_size: int, texts: tuple[str, ...]) -> bool:
 
     try:
         texture = gpu.texture.from_image(image)
-        try:
+        try:  # VER >= 5.1
             texture.filter_mode(True)
             texture.extend_mode("CLAMP_TO_BORDER")
         except (AttributeError, RuntimeError):
