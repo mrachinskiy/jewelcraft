@@ -614,6 +614,7 @@ def _combined_shader_batch_ensure(depsgraph: Depsgraph, records: list[tuple], la
             continue
 
         points_h, mesh_indices = mesh_data
+        matrix_key = matrix_key.copy()  # VER >= 5.0
         matrix = np.asarray(matrix_key, dtype=np.float32)
         mesh_anchors = (points_h @ matrix.T)[:, :3]
         vertex_count = len(mesh_anchors)
