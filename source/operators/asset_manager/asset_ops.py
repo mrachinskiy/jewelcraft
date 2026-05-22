@@ -316,9 +316,6 @@ class WM_OT_asset_menu(Operator):
 
     filepath: StringProperty(options={"SKIP_SAVE", "HIDDEN"})
 
-    # VER
-    icon_rename = "GREASEPENCIL" if bpy.app.version >= (4, 3, 0) else "OUTLINER_DATA_GP_LAYER"
-
     def execute(self, context):
         return {"FINISHED"}
 
@@ -332,7 +329,7 @@ class WM_OT_asset_menu(Operator):
         layout.emboss = "PULLDOWN_MENU"
 
         row = layout.row()
-        row.operator("wm.jewelcraft_asset_rename", text="", icon=self.icon_rename).filepath = self.filepath
+        row.operator("wm.jewelcraft_asset_rename", text="", icon="GREASEPENCIL").filepath = self.filepath
         row.operator("wm.jewelcraft_asset_preview_replace", text="", icon="IMAGE_DATA").filepath = self.filepath
         row.operator("wm.jewelcraft_asset_replace", text="", icon="FILE_TICK").filepath = self.filepath
         row.operator("wm.jewelcraft_asset_remove", text="", icon="TRASH").filepath = self.filepath

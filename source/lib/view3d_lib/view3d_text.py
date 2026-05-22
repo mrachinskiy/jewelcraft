@@ -74,13 +74,7 @@ class Layout:
 
 
 def _get_font_scale(prefs: bpy.types.Preferences) -> float:
-    # VER
-    if bpy.app.version >= (4, 3, 0):
-        font_size = prefs.ui_styles[0].widget.points
-    else:
-        font_size = prefs.ui_styles[0].widget_label.points
-
-    return font_size * prefs.view.ui_scale / 11  # 11 is the default font size
+    return prefs.ui_styles[0].widget.points * prefs.view.ui_scale / 11  # 11 is the default font size
 
 
 def get_xy() -> tuple[int, int]:
