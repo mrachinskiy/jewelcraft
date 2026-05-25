@@ -1,51 +1,17 @@
-# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 
-import collections
+from math import pi
 from pathlib import Path
 
 import bpy
 
-from ...lib import asset, mesh, unit
-from . import report_warn
+from ...lib import asset, mesh, ringsizelib, unit
+from . import report, report_warn
 
 
-class _Data:
-    __slots__ = "warnings", "metadata", "gems", "entries"
-
-    def __init__(self):
-        self.gems = collections.defaultdict(int)
-        self.warnings = []
-        self.metadata = []
-        self.entries = []
-
-    def is_empty(self):
-        if any((self.gems, self.entries, self.metadata)):
-            return False
-        return True
-
-    def asdict(self):
-        d = collections.defaultdict(list)
-
-        for prop in self.__slots__:
-            if not (value := getattr(self, prop)):
-                continue
-
-            if prop == "warnings":
-                d[prop] = value
-            elif prop == "metadata":
-                d[prop] = tuple((k, v) for k, v in value)
-            elif prop == "gems":
-                d[prop] = [x._asdict() for x in value]
-            else:
-                for i, k, v in value:
-                    d[i.lower()].append((k, v))
-
-        return d
-
-
-def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
-    Report = _Data()
+def data_collect(gem_map: bool = False, show_warnings: bool = True) -> report.Data:
+    Report = report.Data()
     Warn = report_warn.Warnings()
     Scale = unit.Scale()
 
@@ -65,7 +31,7 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
         Warn.overlap(dup)
         stone, cut = Warn.validate_id(stone, cut)
 
-        Report.gems[(stone, cut, size, color)] += 1
+        Report.gems[report.GemRaw(stone, cut, size, color)] += 1
 
     if show_warnings:
         Warn.report(Report.warnings)
@@ -99,11 +65,16 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
             if not meta_value:
                 continue
 
-            Report.metadata.append((item.name, meta_value))
+            Report.metadata.append(report.Meta(item.name, meta_value))
             continue
+
+        # Other entries
+        # ---------------------------
 
         if item.collection is None and item.object is None:
             continue
+
+        value = None
 
         if item.datablock_type == "OBJECT":
             obs = (item.object,)
@@ -121,17 +92,29 @@ def data_collect(gem_map: bool = False, show_warnings: bool = True) -> _Data:
         if item.type == "WEIGHT":
             vol = Scale.from_scene_vol(mesh.est_volume(obs))
             density = unit.convert_cm3_mm3(item.material_density)
-            Report.entries.append((item.type, item.name, (vol, density)))
+            value = round(vol * density, 2)
+
         elif item.type == "VOLUME":
-            vol = Scale.from_scene_vol(mesh.est_volume(obs))
-            Report.entries.append((item.type, item.name, vol))
+            value = round(Scale.from_scene_vol(mesh.est_volume(obs)), 2)
+
         elif item.type == "RING_SIZE":
-            values = (round(dim[int(item.axis)], 2), item.ring_size)
-            Report.entries.append((item.type, item.name, values))
+            dia = round(dim[int(item.axis)], 2)
+            cir = dia * pi
+
+            if item.ring_size == "DIAMETER":
+                size = dia
+            elif item.ring_size == "CIRCUMFERENCE":
+                size = round(cir, 2)
+            else:
+                size = ringsizelib.to_size_fmt(cir, item.ring_size)
+
+            value = report.RingValue(item.ring_size, size)
+
         elif item.type == "DIMENSIONS":
-            values = tuple(round(v, 2) for k, v in zip((item.x, item.y, item.z), dim) if k)
-            if not values:
+            if not any((item.x, item.y, item.z)):
                 continue
-            Report.entries.append((item.type, item.name, values))
+            value = tuple(round(v, 2) for k, v in zip((item.x, item.y, item.z), dim) if k)
+
+        Report.entries.append(report.Entry(item.type, item.name, value))
 
     return Report

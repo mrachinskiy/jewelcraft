@@ -5,6 +5,7 @@ import bpy
 from mathutils import Color
 
 from ...lib import gemlib, gettext
+from ..design_report import report
 
 
 def _to_int(x: float) -> int | float:
@@ -13,7 +14,7 @@ def _to_int(x: float) -> int | float:
     return x
 
 
-def data_process(ReportData, lang: str) -> tuple[str, tuple[int]]:
+def data_process(Report: report.Data, lang: str) -> tuple[str, tuple[int]]:
     table_data = []
     _table_tmp = []
     col_stone = 0
@@ -26,7 +27,7 @@ def data_process(ReportData, lang: str) -> tuple[str, tuple[int]]:
     _mm = _("mm")
 
     for (stone, cut, size, color_name), qty in sorted(
-        ReportData.gems.items(),
+        Report.gems.items(),
         key=lambda x: (x[0][1], -x[0][2][1], -x[0][2][0], x[0][0]),
     ):
         # Color
