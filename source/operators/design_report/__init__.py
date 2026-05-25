@@ -102,11 +102,11 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
                 preview = _render_preview_base64(self.preview_resolution)
 
             doc = html_doc.make(Report, preview, Path(self.filepath).stem, _gettext)
-            with open(self.filepath, "w", encoding="utf-8") as file:
+            with open(self.filepath, "w", encoding="utf-8", newline="\n") as file:
                 file.write(doc)
         else:
             import json
-            with open(self.filepath, "w", encoding="utf-8") as file:
+            with open(self.filepath, "w", encoding="utf-8", newline="\n") as file:
                 json.dump(Report.asdict(), file, indent=4, ensure_ascii=False)
 
         if not bpy.app.background:
