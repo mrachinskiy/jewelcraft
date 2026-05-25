@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Mikhail Rachinskiy
+# SPDX-FileCopyrightText: 2025-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import filecmp
@@ -11,6 +11,13 @@ import bpy
 from bpy.types import Object
 
 
+def _meta(name: str, value: str) -> None:
+    item = bpy.context.scene.jewelcraft.measurements.add()
+    item.type = "METADATA"
+    item.name = name
+    item.value = value
+
+
 def _entry(type: str, ob: Object, **kwargs) -> None:
     item = bpy.context.scene.jewelcraft.measurements.add()
 
@@ -18,7 +25,9 @@ def _entry(type: str, ob: Object, **kwargs) -> None:
     item.object = ob
     item.datablock_type = "OBJECT"
 
-    if type == "WEIGHT":
+    if type == "VOLUME":
+        item.name = kwargs["name"]
+    elif type == "WEIGHT":
         item.name = kwargs["name"]
         item.material_name = kwargs["name"]
         item.material_density = kwargs["density"]
@@ -53,8 +62,10 @@ def set_up() -> None:
     cube.dimensions = 3, 4, 5
 
     bpy.context.scene.jewelcraft.measurements.clear()
+    _meta("Project", "Test")
     _entry("WEIGHT", cube, name="Gold", density=15.53)
     _entry("WEIGHT", cube, name="Silver", density=10.36)
+    _entry("VOLUME", cube, name="Volume")
     _entry("RING_SIZE", curve, size_format="US")
     _entry("RING_SIZE", curve, size_format="DIAMETER")
     _entry("DIMENSIONS", cube, z=True)

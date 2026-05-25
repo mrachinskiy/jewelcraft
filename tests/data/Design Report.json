@@ -2,6 +2,12 @@
     "warnings": [
         "Overlapping gems"
     ],
+    "metadata": [
+        {
+            "name": "Project",
+            "value": "Test"
+        }
+    ],
     "gems": [
         {
             "stone": "Diamond",
@@ -41,40 +47,46 @@
         }
     ],
     "weight": [
-        [
-            "Gold",
-            0.93
-        ],
-        [
-            "Silver",
-            0.62
-        ]
+        {
+            "name": "Gold",
+            "value": 0.93
+        },
+        {
+            "name": "Silver",
+            "value": 0.62
+        }
+    ],
+    "volume": [
+        {
+            "name": "Volume",
+            "value": 60.0
+        }
     ],
     "ring_size": [
-        [
-            "Ring Size (US)",
-            4.5
-        ],
-        [
-            "Ring Size (DIAMETER)",
-            15.29
-        ]
+        {
+            "name": "Ring Size (US)",
+            "value": 4.5
+        },
+        {
+            "name": "Ring Size (DIAMETER)",
+            "value": 15.29
+        }
     ],
     "dimensions": [
-        [
-            "Cube Dimensions",
-            [
+        {
+            "name": "Cube Dimensions",
+            "value": [
                 3.0,
                 4.0,
                 5.0
             ]
-        ],
-        [
-            "Cube Dimensions",
-            [
+        },
+        {
+            "name": "Cube Dimensions",
+            "value": [
                 3.0,
                 4.0
             ]
-        ]
+        }
     ]
 }

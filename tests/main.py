@@ -1,15 +1,13 @@
-# SPDX-FileCopyrightText: 2025 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025-2026 Mikhail Rachinskiy
 
 import subprocess
 from pathlib import Path
 
 TEST_VERSIONS = {
-    "4.2",
-    "4.3",
-    "4.4",
     "4.5",
     "5.0",
+    "5.1",
 }
 
 # Color codes
