@@ -368,7 +368,7 @@ class Favorite:
 
         favs_filepath.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(favs_filepath, "w", encoding="utf-8") as file:
+        with open(favs_filepath, "w", encoding="utf-8", newline="\n") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
         dynamic_list.assets_refresh(favs=True)
