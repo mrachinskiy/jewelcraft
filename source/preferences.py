@@ -3,6 +3,7 @@
 
 from collections.abc import Callable, Iterator
 from pathlib import Path
+from typing import Any
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
@@ -263,11 +264,16 @@ class Measurement(PropertyGroup):
         elif self.type == "DIMENSIONS":
             d["value"] = self.x, self.y, self.z
         elif self.type == "RING_SIZE":
-            d["value"] = self.ring_size, "XYZ"[int(self.axis)]
+            d["value"] = {
+                "format": self.ring_size,
+                "axis": "XYZ"[int(self.axis)],
+            }
 
         return d
 
-    def fromdict(self, item):
+    def fromdict(self, item: dict[str, Any]) -> bool:
+        use_versioning = False
+
         d = {
             "type": "METADATA",
             "name": "Untitled",
@@ -290,12 +296,22 @@ class Measurement(PropertyGroup):
         elif self.type == "DIMENSIONS":
             self.x, self.y, self.z = d["value"]
         elif self.type == "RING_SIZE":
+            size = {
+                "format": "DIAMETER",
+                "axis": "X",
+            }
             try:
+                size |= d["value"]
+                fmt = size["format"]
+                axis = size["axis"]
+            except ValueError:  # VER JC < 3.0
                 fmt, axis = d["value"]
-                self.ring_size = fmt
-                self.axis = {"X": "0", "Y": "1", "Z": "2"}.get(axis, "0")
-            except TypeError:
-                pass
+                use_versioning = True
+
+            self.ring_size = fmt
+            self.axis = {"X": "0", "Y": "1", "Z": "2"}.get(axis, "0")
+
+        return use_versioning
 
 
 class AssetLib(PropertyGroup):
@@ -366,7 +382,7 @@ class ListProperty:
 
         filepath.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(filepath, "w", encoding="utf-8") as file:
+        with open(filepath, "w", encoding="utf-8", newline="\n") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
     def serialize_on_change(self) -> None:
@@ -519,15 +535,19 @@ class MeasurementsList(ListProperty, PropertyGroup):
         if load_factory or not (filepath := self.serialize_path()).exists():
             filepath = var.REPORT_ENTRIES_FILE
 
+        use_versioning = False
         with open(filepath, "r", encoding="utf-8") as file:
             self.clear()
             data = json.load(file)
 
             for data_item in data:
                 item = self.add()
-                item.fromdict(data_item)
+                use_versioning |= item.fromdict(data_item)
 
             self["index"] = 0
+
+        if use_versioning:
+            self.serialize()
 
 
 class AssetLibsList(ListProperty, PropertyGroup):
