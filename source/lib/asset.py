@@ -207,7 +207,7 @@ def gn_setup(ng_name: str, prefix: str, set_active: bool = False) -> Modifier:
         bpy.context.view_layer.objects.active = gn
 
     if (ng := bpy.data.node_groups.get(ng_name)) is None:
-        imported = asset_import(var.NODES_ASSET_FILEPATH, ng_name=ng_name)
+        imported = asset_import(var.NODES_FILE, ng_name=ng_name)
         ng = imported.node_groups[0]
 
     md = gn.modifiers.new(ng_name, "NODES")

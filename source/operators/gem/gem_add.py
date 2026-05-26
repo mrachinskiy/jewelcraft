@@ -114,7 +114,7 @@ class OBJECT_OT_gem_add(Operator):
         for ob in context.selected_objects:
             ob.select_set(False)
 
-        imported = asset.asset_import(var.GEM_ASSET_FILEPATH, ob_name=cut_name)
+        imported = asset.asset_import(var.GEMS_FILE, ob_name=cut_name)
         ob = imported.objects[0]
         asset.ob_link(ob, context.collection)
 
@@ -208,7 +208,7 @@ class OBJECT_OT_gem_edit(Operator):
         obs = context.selected_objects
         cut_name = gemlib.CUTS[self.cut].name
 
-        imported = asset.asset_import(var.GEM_ASSET_FILEPATH, me_name=cut_name)
+        imported = asset.asset_import(var.GEMS_FILE, me_name=cut_name)
         me = imported.meshes[0]
 
         for ob in obs:

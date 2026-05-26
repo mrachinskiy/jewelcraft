@@ -425,7 +425,7 @@ class GemColorsList(ListProperty, PropertyGroup):
                 return item["color"][0] == "#"
 
         self.clear()
-        self._deserialize(var.GEM_ASSET_DIR / "colors.json", fmt=hex_to_rgb, is_builtin=True)
+        self._deserialize(var.GEMS_DIR / "colors.json", fmt=hex_to_rgb, is_builtin=True)
 
         if (filepath := self.serialize_path()).exists():
             hash_sign = self._deserialize(filepath, fmt=hex_to_rgb, check_data=check_hash_sign)
@@ -496,7 +496,7 @@ class WeightingMaterialsList(ListProperty, PropertyGroup):
 
         if name.startswith("BUILTIN/"):
             name = name.split("/")[1]
-            filepath = var.WEIGHTING_LISTS_DIR / f"{name}.json"
+            filepath = var.WEIGHTING_DIR / f"{name}.json"
             self._deserialize(filepath, fmt=translate_name)
         else:
             filepath = self.serialize_path(name)
@@ -517,7 +517,7 @@ class MeasurementsList(ListProperty, PropertyGroup):
             return
 
         if load_factory or not (filepath := self.serialize_path()).exists():
-            filepath = var.ENTRIES_FILEPATH
+            filepath = var.REPORT_ENTRIES_FILE
 
         with open(filepath, "r", encoding="utf-8") as file:
             self.clear()

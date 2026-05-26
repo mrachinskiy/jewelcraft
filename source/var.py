@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 
 from pathlib import Path
 
@@ -10,12 +10,12 @@ ADDON_ID = __package__
 ADDON_DIR = Path(__file__).parent
 
 ICONS_DIR = ADDON_DIR / "assets" / "icons"
-GEM_ASSET_DIR = ADDON_DIR / "assets" / "gems"
-GEM_ASSET_FILEPATH = GEM_ASSET_DIR / "gems.blend"
-WEIGHTING_LISTS_DIR = ADDON_DIR / "assets" / "weighting"
-HTML_REPORT_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
-ENTRIES_FILEPATH = ADDON_DIR / "assets" / "templates" / "report_entries.json"
-NODES_ASSET_FILEPATH = ADDON_DIR / "assets" / "nodes_4_2.blend"
+GEMS_DIR = ADDON_DIR / "assets" / "gems"
+GEMS_FILE = GEMS_DIR / "gems.blend"
+WEIGHTING_DIR = ADDON_DIR / "assets" / "weighting"
+REPORT_HTML_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
+REPORT_ENTRIES_FILE = ADDON_DIR / "assets" / "templates" / "report_entries.json"
+NODES_FILE = ADDON_DIR / "assets" / "nodes_4_5.blend"
 
 
 def config_dir_versioning() -> None:

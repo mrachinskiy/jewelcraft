@@ -47,7 +47,7 @@ def stones(self, context) -> EnumItems4:
 def _cuts(lang: str, color: float) -> EnumItems5:
     from . import gemlib
 
-    pcoll = previewlib.scan_icons("cuts", var.GEM_ASSET_DIR)
+    pcoll = previewlib.scan_icons("cuts", var.GEMS_DIR)
     theme = "DARK" if color < 0.5 else "LIGHT"
 
     return tuple(
@@ -85,7 +85,7 @@ def weighting_lib() -> None:
     lib_path = bpy.context.scene.jewelcraft.weighting_materials.serialize_path()
     item_map = {}
 
-    for child in var.WEIGHTING_LISTS_DIR.iterdir():
+    for child in var.WEIGHTING_DIR.iterdir():
         if child.is_file() and child.suffix == ".json":
             item = lib.add()
             item["name"] = child.stem
