@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 
 from math import pi
 from typing import NamedTuple
@@ -88,18 +88,18 @@ def ct_calc(stone: str, cut: str, size: tuple[float, float, float]) -> float:
         vol_corr = _cut.vol_correction
         shape = _cut.vol_shape
     except KeyError:
-        return 0
+        return 0.0
 
-    a, b, h = size
+    x, y, z = size
 
     if shape is VOL_CONE:
-        vol = pi * (a / 2) * (b / 2) * (h / 3)
+        vol = pi * (x / 2) * (y / 2) * (z / 3)
     elif shape is VOL_PYRAMID:
-        vol = (a * b * h) / 3
+        vol = (x * y * z) / 3
     elif shape is VOL_TETRAHEDRON:
-        vol = (a * b * h) / 6
+        vol = (x * y * z) / 6
     elif shape is VOL_PRISM:
-        vol = a * b * (h / 2)
+        vol = x * y * (z / 2)
 
     g = vol * vol_corr * dens
     ct = unit.convert_g_ct(g)
