@@ -272,7 +272,7 @@ def asset_export(data_blocks: set[ID], filepath: Path) -> None:
     bpy.data.libraries.write(str(filepath), data_blocks, compress=True)
 
 
-def render_preview(width: int, height: int, filepath: Path, compression=100, gamma=1.0, use_transparent=True) -> None:
+def render_preview(width: int, height: int, filepath: Path, format="PNG", compression=100, quality=90, gamma=1.0, use_transparent=True) -> None:
     scene = bpy.context.scene
     render_props = scene.render
     image_props = render_props.image_settings
@@ -290,9 +290,10 @@ def render_preview(width: int, height: int, filepath: Path, compression=100, gam
     }
 
     image_config = {
-        "file_format": "PNG",
+        "file_format": format,
         "color_mode": "RGBA",
         "compression": compression,
+        "quality": quality,
     }
 
     view_config = {

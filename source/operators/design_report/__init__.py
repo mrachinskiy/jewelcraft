@@ -24,8 +24,8 @@ def _render_preview_base64(resolution: int) -> str:
         w = round(w * (resolution / h))
 
     with tempfile.TemporaryDirectory() as tempdir:
-        filepath = Path(tempdir) / "design_report_temp.png"
-        asset.render_preview(w, resolution, filepath, compression=100)
+        filepath = Path(tempdir) / "design_report_temp.webp"
+        asset.render_preview(w, resolution, filepath, format="WEBP")
         with open(filepath, "rb") as f:
             image_string = base64.b64encode(f.read()).decode("utf-8")
 
