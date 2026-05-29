@@ -16,3 +16,9 @@ copyright = [
 
 [permissions]
 files = "Manage asset library"
+
+[build]
+paths_exclude_pattern = [
+    "__pycache__/",
+    "*.pickle",
+]

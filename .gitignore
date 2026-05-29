@@ -1,5 +1,7 @@
 # Release files
 assets/
+tools/*.json
+*.zip
 
 # IDE
 .idea/
@@ -46,12 +48,6 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
 
 # Shortcuts
 *.lnk
