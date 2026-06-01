@@ -13,8 +13,8 @@ ICONS_DIR = ADDON_DIR / "assets" / "icons"
 GEMS_DIR = ADDON_DIR / "assets" / "gems"
 GEMS_FILE = GEMS_DIR / "gems.blend"
 WEIGHTING_DIR = ADDON_DIR / "assets" / "weighting"
-REPORT_HTML_DIR = ADDON_DIR / "assets" / "templates" / "report_html"
-REPORT_ENTRIES_FILE = ADDON_DIR / "assets" / "templates" / "report_entries.json"
+REPORT_HTML_DIR = ADDON_DIR / "assets" / "report" / "html_components"
+REPORT_ENTRIES_FILE = ADDON_DIR / "assets" / "report" / "entries.json"
 NODES_FILE = ADDON_DIR / "assets" / "nodes_4_5.blend"
 
 

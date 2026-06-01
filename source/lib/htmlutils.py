@@ -1,15 +1,15 @@
-# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 
 from pathlib import Path
 
 
-def tag(value, tag_name: str) -> str:
+def _tag(tag_name: str, value) -> str:
     return f"<{tag_name}>{value}</{tag_name}>"
 
 
-def tag_row(values: tuple, tag_name: str = "td") -> str:
-    return tag("".join(tag(v, tag_name) for v in values), "tr")
+def _tr(values: tuple, cell_tag: str = "td") -> str:
+    return _tag("tr", "".join(_tag(cell_tag, v) for v in values))
 
 
 def _minify(s: str) -> str:
@@ -31,19 +31,19 @@ class Document:
 
     def write_warning(self, title: str, warns: list[str]) -> None:
         self.contents.append(
-            self.template["warning"].format(title, "\n        ".join(tag(x, "li") for x in warns))
+            self.template["warning"].format(title, "\n        ".join(_tag("li", x) for x in warns))
         )
 
     def write_table(self, header: tuple, body: list[tuple], footer: tuple) -> None:
-        header = tag_row(header, "th")
-        body = "\n        ".join(tag_row(x) for x in body)
+        header = _tr(header, cell_tag="th")
+        body = "\n        ".join(_tr(x) for x in body)
         self.contents.append(self.template["table"].format(header, body, *footer))
 
     def write_list(self, values: list[tuple]) -> None:
-        self.contents.append(self.template["list"].format("\n        ".join(tag_row(x) for x in values)))
+        self.contents.append(self.template["list"].format("\n        ".join(_tr(x) for x in values)))
 
-    def write_img(self, img: str) -> None:
-        self.contents.append(self.template["img"].format(img))
+    def write_img(self, image: str) -> None:
+        self.contents.append(f'<img src="data:image/webp;base64,{image}" alt="">\n')
 
     def write_section(self, title: str) -> None:
         self.sections.append(self.template["section"].format(title, "".join(self.contents).strip()))
