@@ -5,16 +5,11 @@
 if "bpy" in locals():
     essentials.reload_recursive(var.ADDON_DIR, locals())
 else:
-    from . import var
-    from .lib import essentials
-
-    essentials.check_integrity(var.ICONS_DIR)
-
     import bpy
     from bpy.props import PointerProperty
 
-    from . import localization, operators, preferences, ui
-    from .lib import on_load, previewlib
+    from . import localization, operators, preferences, ui, var
+    from .lib import essentials, on_load, previewlib
 
 
 classes = essentials.get_classes((operators, preferences, ui))
