@@ -32,7 +32,7 @@ def _iface_lang(context) -> str:
 
 def cuts(self, context) -> EnumItems5:
     lang = _iface_lang(context)
-    color = context.preferences.themes[0].user_interface.wcol_menu_item.text.v
+    color = context.preferences.themes[0].user_interface.wcol_menu.inner[:]
 
     return _cuts(lang, color)
 
@@ -44,11 +44,11 @@ def stones(self, context) -> EnumItems4:
 
 
 @lru_cache(maxsize=1)
-def _cuts(lang: str, color: float) -> EnumItems5:
-    from . import gemlib
+def _cuts(lang: str, color: tuple[float, ...]) -> EnumItems5:
+    from . import colorlib, gemlib
 
     pcoll = previewlib.scan_icons("cuts", var.GEMS_DIR)
-    theme = "DARK" if color < 0.5 else "LIGHT"
+    theme = "DARK" if colorlib.luma(color) < 0.4 else "LIGHT"
 
     return tuple(
         (k, _(_(v.name, "Jewelry")), "", pcoll[theme + k].icon_id, i)  # _(_()) default return value workaround

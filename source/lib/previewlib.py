@@ -9,6 +9,7 @@ from .. import var
 
 
 _previews = {}
+_cache = {}
 
 
 def clear_previews() -> None:
@@ -18,6 +19,7 @@ def clear_previews() -> None:
         bpy.utils.previews.remove(pcoll)
 
     _previews.clear()
+    _cache.clear()
 
 
 def scan_icons(pcoll_name: str, folder: Path) -> dict:
@@ -42,18 +44,27 @@ def scan_icons(pcoll_name: str, folder: Path) -> dict:
     return pcoll
 
 
-def icon(name: str, override: float | None = None) -> int:
-    if override is not None:
-        value = override
-    else:
-        value = bpy.context.preferences.themes[0].user_interface.wcol_tool.text.v
-
-    theme = "DARK" if value < 0.5 else "LIGHT"
-    return scan_icons("icons", var.ICONS_DIR)[theme + name].icon_id
+def icon(name: str) -> int:
+    return _icon(name, bpy.context.preferences.themes[0].user_interface.wcol_tool.inner[:])
 
 
 def icon_menu(name: str) -> int:
-    return icon(name, override=bpy.context.preferences.themes[0].user_interface.wcol_menu_item.text.v)
+    return _icon(name, bpy.context.preferences.themes[0].user_interface.wcol_menu_item.inner[:])
+
+
+def _icon(name: str, color: tuple[float, ...]) -> int:
+    if (iid := _cache.get((name, color))) is not None:
+        return iid
+
+    from . import colorlib
+
+    theme = "DARK" if colorlib.luma(color) < 0.5 else "LIGHT"
+    iid = _cache[(name, color)] = scan_icons("icons", var.ICONS_DIR)[theme + name].icon_id
+
+    if len(_cache) > 60:
+        del _cache[next(iter(_cache))]
+
+    return iid
 
 
 def _no_preview() -> int:
