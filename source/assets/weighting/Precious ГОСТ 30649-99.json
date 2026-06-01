@@ -1,0 +1,77 @@
+[
+    {
+        "name": "Yellow Gold 999",
+        "composition": "Зл 999,9",
+        "density": 19.3
+    },
+    {
+        "name": "Yellow Gold 958",
+        "composition": "ЗлСрМ 958-20",
+        "density": 18.52
+    },
+    {
+        "name": "Yellow Gold 750",
+        "composition": "ЗлСрМ 750-150",
+        "density": 15.53
+    },
+    {
+        "name": "Yellow Gold 585",
+        "composition": "ЗлСрМ 585-300",
+        "density": 13.92
+    },
+    {
+        "name": "Yellow Gold 375",
+        "composition": "ЗлСрМ 375-250",
+        "density": 11.74
+    },
+    {
+        "name": "White Gold 750 Pd",
+        "composition": "ЗлСрПд 750-100-150",
+        "density": 16.44
+    },
+    {
+        "name": "White Gold 750 Ni",
+        "composition": "ЗлСрНЦ 750-150-7,5",
+        "density": 15.38
+    },
+    {
+        "name": "White Gold 585 Pd",
+        "composition": "ЗлСрПд 585-255-160",
+        "density": 14.76
+    },
+    {
+        "name": "White Gold 585 Ni",
+        "composition": "ЗлНЦМ 585-12,5-4",
+        "density": 12.85
+    },
+    {
+        "name": "Red Gold 585",
+        "composition": "ЗлСрМ 585-80",
+        "density": 13.24
+    },
+    {
+        "name": "Red Gold 375",
+        "composition": "ЗлСрМ 375-160",
+        "density": 11.54
+    },
+    {
+        "name": "Platinum 950",
+        "composition": "ПлРд 950-50",
+        "density": 20.7
+    },
+    {
+        "name": "Platinum 900",
+        "composition": "ПлИ 900-100",
+        "density": 21.54
+    },
+    {
+        "name": "Palladium 950",
+        "composition": "ПдРу 950-50",
+        "density": 12.16
+    },
+    {
+        "name": "Silver 925",
+        "composition": "СрМ 925",
+        "density": 10.36
+    }
+]

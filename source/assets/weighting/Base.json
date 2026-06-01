@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Brass",
+        "composition": "Cu 85%, Zn 15%",
+        "density": 8.75
+    },
+    {
+        "name": "Bronze",
+        "composition": "Cu 92%, Sn 8%",
+        "density": 8.8
+    },
+    {
+        "name": "Steel Stainless",
+        "composition": "Grade 420",
+        "density": 7.75
+    },
+    {
+        "name": "Titanium",
+        "composition": "Ti6Al4V",
+        "density": 4.43
+    }
+]

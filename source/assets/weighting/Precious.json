@@ -1,0 +1,87 @@
+[
+    {
+        "name": "Yellow Gold 24K",
+        "composition": "Au 99.9%",
+        "density": 19.32
+    },
+    {
+        "name": "Yellow Gold 22K",
+        "composition": "Au 91.6%, Ag 4.9%, Cu 3.5%",
+        "density": 17.86
+    },
+    {
+        "name": "Yellow Gold 18K",
+        "composition": "Au 75.3%, Ag 16.5%, Cu 6.7%, Zn 1.5%",
+        "density": 15.53
+    },
+    {
+        "name": "Yellow Gold 14K",
+        "composition": "Au 58.4%, Ag 9.8%, Cu 28%, Zn 3.8%",
+        "density": 13.05
+    },
+    {
+        "name": "Yellow Gold 10K",
+        "composition": "Au 41.7%, Ag 11.2%, Cu 40.5%, Zn 6.6%",
+        "density": 11.47
+    },
+    {
+        "name": "White Gold 18K Pd",
+        "composition": "Au 78.7%, Cu 8.3%, Pd 13%",
+        "density": 15.66
+    },
+    {
+        "name": "White Gold 18K Ni",
+        "composition": "Au 75.15%, Cu 8.75%, Ni 12%, Zn 4.1%",
+        "density": 14.69
+    },
+    {
+        "name": "White Gold 14K Pd",
+        "composition": "Au 58.55%, Cu 7.2%, Ag 20%, Pd 13.5%, Zn 0.75%",
+        "density": 14.6
+    },
+    {
+        "name": "White Gold 14K Ni",
+        "composition": "Au 58.43%, Cu 21%, Ni 12.73%, Zn 7.84%",
+        "density": 12.61
+    },
+    {
+        "name": "White Gold 10K",
+        "composition": "Au 41.7%, Cu 35.7%, Ni 10.3%, Zn 12.3%",
+        "density": 10.99
+    },
+    {
+        "name": "Rose Gold 18K",
+        "composition": "Au 75.3%, Cu 23.3%, Ag 1.2%, Zn 0.2%",
+        "density": 15.02
+    },
+    {
+        "name": "Rose Gold 14K",
+        "composition": "Au 58.4%, Cu 39.2%, Ag 2%, Zn 0.4%",
+        "density": 13.03
+    },
+    {
+        "name": "Rose Gold 10K",
+        "composition": "Au 41.5%, Cu 55%, Ag 3%, Zn 0.5%",
+        "density": 11.52
+    },
+    {
+        "name": "Platinum 950",
+        "composition": "Pt 95%, Ru 5%",
+        "density": 20.7
+    },
+    {
+        "name": "Platinum 900",
+        "composition": "Pt 90%, Ir 10%",
+        "density": 21.54
+    },
+    {
+        "name": "Palladium 950",
+        "composition": "Pd 95%, Ru 5%",
+        "density": 12.16
+    },
+    {
+        "name": "Silver Sterling",
+        "composition": "Ag 92.5%, Cu 7.5%",
+        "density": 10.36
+    }
+]

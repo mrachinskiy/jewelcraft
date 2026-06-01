@@ -1,0 +1,14 @@
+[
+    {"color": "ffffff", "name": "Colorless"},
+    {"color": "f8f800", "name": "Yellow"},
+    {"color": "4dc100", "name": "Yellowish Green"},
+    {"color": "00c000", "name": "Green"},
+    {"color": "00b96f", "name": "Bluish Green"},
+    {"color": "09e8e8", "name": "Greenish Blue"},
+    {"color": "d40cb1", "name": "Purple"},
+    {"color": "e90a9e", "name": "Reddish Purple"},
+    {"color": "fa0303", "name": "Red"},
+    {"color": "0916a5", "name": "Blue"},
+    {"color": "0808a0", "name": "Violetish Blue"},
+    {"color": "ffdfdf", "name": "Pink"}
+]

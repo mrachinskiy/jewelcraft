@@ -1,0 +1,139 @@
+/*
+ * Defaults
+ */
+
+:root {
+    padding: 0;
+    margin: 0;
+
+    font-family: sans-serif;
+    font-size: 12pt;
+    line-height: 2;
+
+    color: #000;
+    background-color: #eee;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    line-height: 1;
+    margin: 0 0 1rem 0;
+}
+
+h3 {
+    line-height: 1;
+    margin: 0 0 0.5rem 0;
+}
+
+ul {
+    padding-left: 1rem;
+    margin: 0;
+}
+
+table {
+    text-align: left;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0;
+    font-weight: normal;
+}
+
+/*
+ * Components
+ */
+
+.page {
+    width: 210mm;
+    min-height: 297mm;
+
+    padding: 15mm;
+    margin: 8mm auto 50mm;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    background-color: #fff;
+    box-shadow: 0 0 2mm rgb(0 0 0 / 15%);
+}
+
+.meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+    .meta img {
+        width: 70mm;
+        height: 70mm;
+        object-fit: cover;
+    }
+    .meta td:first-child {
+        font-weight: bold;
+    }
+
+.table {
+    width: 100%;
+    white-space: nowrap;
+}
+    .table tbody tr:nth-child(odd) {
+        background-color: rgb(0 0 0 / 4%);
+    }
+    .table th,
+    .table td {
+        padding: 0 0.5rem;
+    }
+    .table th:nth-child(n+4),
+    .table td:nth-child(n+4),
+    .table tfoot {
+        text-align: right;
+    }
+    .table th:nth-child(6),
+    .table td:nth-child(6) {
+        width: 8%;
+    }
+    .table th:nth-child(7),
+    .table td:nth-child(7) {
+        width: 12%;
+    }
+
+.list td:first-child {
+    padding-right: 1.5rem;
+}
+
+.warning {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #ff7b7b;
+}
+
+/*
+ * Overrides
+ */
+
+@media print {
+
+    :root {
+        background-color: #fff;
+    }
+
+    .page {
+        width: auto;
+        min-height: auto;
+
+        padding: 0;
+        margin: 0;
+
+        box-shadow: none;
+    }
+
+}

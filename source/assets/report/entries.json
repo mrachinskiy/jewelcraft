@@ -1,0 +1,27 @@
+[
+    {
+        "type": "METADATA",
+        "name": "Project",
+        "value": "{blend_name}"
+    },
+    {
+        "type": "METADATA",
+        "name": "Date",
+        "value": "{date}"
+    },
+    {
+        "type": "WEIGHT",
+        "name": "Yellow Gold 14K",
+        "datablock_type": "COLLECTION",
+        "value": 13.05
+    },
+    {
+        "type": "RING_SIZE",
+        "name": "Ring Size (Diameter)",
+        "datablock_type": "OBJECT",
+        "value": {
+            "format": "DIAMETER",
+            "axis": "X"
+        }
+    }
+]
