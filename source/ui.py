@@ -126,16 +126,15 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.operator("object.jewelcraft_gem_edit", icon_value=icon_menu("GEM_EDIT"))
         layout.operator("object.jewelcraft_gem_recover", icon_value=icon_menu("GEM_RECOVER"))
         layout.menu("VIEW3D_MT_jewelcraft_select_gem_by")
-        layout.operator("wm.call_panel", text="Spacing", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing"
         layout.operator("wm.call_panel", text="Spacing Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_spacing_overlay"
         layout.operator("wm.call_panel", text="Gem Map Overlay", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_gem_map_overlay"
         layout.separator()
         layout.operator("wm.call_panel", text="Assets", text_ctxt="*", icon="WINDOW").name = "VIEW3D_PT_jewelcraft_assets"
         layout.separator()
         layout.operator("object.jewelcraft_prongs_add", icon_value=icon_menu("PRONGS"))
-        layout.operator("object.jewelcraft_prongs_auto_add", text="Auto Prongs", icon_value=icon_menu("PRONGS"))
+        layout.operator("object.jewelcraft_prongs_auto_add", text="Auto Prongs", icon_value=icon_menu("PRONGS_AUTO"))
         layout.operator("object.jewelcraft_cutter_add", icon_value=icon_menu("CUTTER"))
-        layout.operator("object.jewelcraft_microprong_cutter_add", icon_value=icon_menu("MICROPRONG_CUTTER"))
+        layout.operator("object.jewelcraft_microprong_cutter_add", icon_value=icon_menu("CUTTER_MICROPRONG"))
         layout.operator("object.jewelcraft_curve_distribute", icon_value=icon_menu("DISTRIBUTE"))
         layout.operator("object.jewelcraft_curve_redistribute", icon_value=icon_menu("REDISTRIBUTE"))
         layout.separator()
@@ -143,6 +142,7 @@ class VIEW3D_MT_jewelcraft(Menu):
         layout.operator("object.jewelcraft_radial_instance", icon_value=icon_menu("RADIAL"))
         layout.operator("object.jewelcraft_instance_face", icon_value=icon_menu("INSTANCE_FACE"))
         layout.operator("object.jewelcraft_resize", icon_value=icon_menu("RESIZE"))
+        layout.operator("object.jewelcraft_incremental_resize", icon_value=icon_menu("RESIZE_INCREMENTAL"), text="Incremental")
         layout.operator("object.jewelcraft_lattice_project", icon_value=icon_menu("LATTICE_PROJECT"))
         layout.operator("object.jewelcraft_lattice_profile", icon_value=icon_menu("LATTICE_PROFILE"))
         layout.separator()
@@ -570,9 +570,9 @@ class VIEW3D_PT_jewelcraft_jeweling(SidebarSetup, Panel):
 
         col = layout.column(align=True)
         col.operator("object.jewelcraft_prongs_add", text="Prongs", icon_value=icon("PRONGS"))
-        col.operator("object.jewelcraft_prongs_auto_add", text="Auto Prongs", icon_value=icon("PRONGS"))
+        col.operator("object.jewelcraft_prongs_auto_add", text="Auto Prongs", icon_value=icon("PRONGS_AUTO"))
         col.operator("object.jewelcraft_cutter_add", text="Cutter", text_ctxt="Jewelry", icon_value=icon("CUTTER"))
-        col.operator("object.jewelcraft_microprong_cutter_add", text="Microprong Cutter", icon_value=icon("MICROPRONG_CUTTER"))
+        col.operator("object.jewelcraft_microprong_cutter_add", text="Microprong Cutter", icon_value=icon("CUTTER_MICROPRONG"))
 
         row = layout.row(align=True)
         row.operator("object.jewelcraft_curve_distribute", icon_value=icon("DISTRIBUTE"))
@@ -595,7 +595,7 @@ class VIEW3D_PT_jewelcraft_object(SidebarSetup, Panel):
 
         row = layout.row(align=True)
         row.operator("object.jewelcraft_resize", icon_value=icon("RESIZE"))
-        row.operator("object.jewelcraft_incremental_resize", icon_value=icon("RESIZE"), text="Incremental")
+        row.operator("object.jewelcraft_incremental_resize", icon_value=icon("RESIZE_INCREMENTAL"), text="Incremental")
 
         col = layout.column(align=True)
         col.operator("object.jewelcraft_lattice_project", icon_value=icon("LATTICE_PROJECT"))
