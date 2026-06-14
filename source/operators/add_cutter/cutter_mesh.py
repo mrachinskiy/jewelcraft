@@ -46,7 +46,7 @@ def get(self, gem_dim: Vector, active_dim: Vector):
         Handle.y = self.handle_dim.y
         Girdle.y = gem_dim.y + self.girdle_dim.y
         Hole.y = self.hole_dim.y
-    elif self.cut in {"OVAL", "MARQUISE", "PEAR"}:
+    elif self.shape is gemlib.SHAPE_RECTANGLE or self.cut in {"OVAL", "MARQUISE", "PEAR"}:
         Girdle.x = gem_dim.x / 2 + self.girdle_dim.y
 
     if self.cut in {"PEAR", "HEART"}:
