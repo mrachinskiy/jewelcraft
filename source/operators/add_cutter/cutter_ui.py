@@ -84,6 +84,10 @@ def draw(self, context):
         col.enabled = self.cut == "PEAR"
         col.prop(self, "hole_shift")
 
+    layout.separator()
+
+    layout.prop(self, "seat_depth")
+
     # Curve seat
     # ------------------------
 

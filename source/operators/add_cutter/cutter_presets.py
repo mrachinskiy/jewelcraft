@@ -10,6 +10,7 @@ def init_presets(self, gem_dim: Vector):
     # ---------------------------
 
     self.detalization = 32
+    self.seat_depth = 0.0
 
     self.use_handle = True
     self.handle_dim.x = gem_dim.x * 0.66

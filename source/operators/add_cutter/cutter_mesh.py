@@ -17,6 +17,8 @@ def get(self, gem_dim: Vector, active_dim: Vector):
     scale_y = gem_dim.y / active_dim.y
     scale_z = gem_dim.z / active_dim.z
 
+    seat_depth = gem_dim.z * self.seat_depth
+
     Handle = Vector((
         self.handle_dim.x * scale_x / 2,
         self.handle_dim.y * scale_y / 2,
@@ -27,12 +29,12 @@ def get(self, gem_dim: Vector, active_dim: Vector):
         gem_dim.x / 2 + self.girdle_dim.x,
         gem_dim.y / 2 + self.girdle_dim.y,
         self.girdle_dim.z1 * scale_z,
-        -self.girdle_dim.z2,
+        -self.girdle_dim.z2 - seat_depth,
     ))
     Hole = Vector((
         self.hole_dim.x * scale_x / 2,
         self.hole_dim.y * scale_y / 2,
-        -self.hole_dim.z1 * scale_z,
+        -self.hole_dim.z1 * scale_z - seat_depth,
         -self.hole_dim.z2,
     ))
 

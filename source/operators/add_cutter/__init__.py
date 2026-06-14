@@ -50,6 +50,8 @@ class OBJECT_OT_cutter_add(Operator):
     culet_z: FloatProperty(name="Culet", options={"HIDDEN"})
     culet_size: FloatProperty(name="Length", options={"HIDDEN"})
 
+    seat_depth: FloatProperty(name="Seat Depth", min=0.0, soft_max=1.0, subtype="FACTOR")
+
     use_curve_seat: BoolProperty(name="Curve Seat")
     curve_seat_profile: FloatProperty(name="Profile", default=0.5, min=0.15, max=1.0, subtype="FACTOR")
     curve_seat_segments: IntProperty(name="Segments", default=15, min=2, soft_max=30, step=1)
