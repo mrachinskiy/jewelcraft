@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 2025-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025-2026 Mikhail Rachinskiy
 
 import filecmp
 import sys
@@ -72,7 +72,7 @@ def set_up() -> None:
     _entry("DIMENSIONS", cube, z=False)
 
 
-def _make_examples() -> None:
+def make_examples() -> None:
     for fmt in ("HTML", "JSON"):
         path = Path(__file__).parent / "data" / f"Design Report.{fmt.lower()}"
         bpy.ops.wm.jewelcraft_design_report(file_format=fmt, use_preview=False, filepath=str(path))
@@ -89,8 +89,10 @@ def test_design_report() -> None:
 
 try:
     set_up()
-    test_design_report()
-    # _make_examples()
+    if "--make_examples" in sys.argv:
+        make_examples()
+    else:
+        test_design_report()
 except:
     traceback.print_exc()
     sys.exit(1)
