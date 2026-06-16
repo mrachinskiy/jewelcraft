@@ -100,14 +100,14 @@ class OBJECT_OT_mirror(Operator):
             coll_name = self.collection_name if self.use_coll_move else None
 
             md, coll_obs = asset.gn_setup_coll("Mirror Instance", obs, coll_name)
-            md["Input_2"] = coll_obs
-            md["Input_3"] = self.x
-            md["Input_4"] = self.y
-            md["Input_5"] = self.z
+            asset.md_input_set(md, "Input_2", coll_obs)
+            asset.md_input_set(md, "Input_3", self.x)
+            asset.md_input_set(md, "Input_4", self.y)
+            asset.md_input_set(md, "Input_5", self.z)
 
             if self.pivot == "OBJECT":
                 pivot = asset.pivot_add(coll_obs.name)
-                md["Input_6"] = pivot
+                asset.md_input_set(md, "Input_6", pivot)
         else:
             context.view_layer.update()
 
@@ -239,11 +239,11 @@ class OBJECT_OT_radial_instance(Operator):
     axis: EnumProperty(
         name="Axis",
         items=(
-            ("0", "X", ""),
-            ("1", "Y", ""),
-            ("2", "Z", ""),
+            ("X", "X", ""),
+            ("Y", "Y", ""),
+            ("Z", "Z", ""),
         ),
-        default="2",
+        default="Z",
     )
     pivot: EnumProperty(
         name="Pivot Point",
@@ -294,15 +294,15 @@ class OBJECT_OT_radial_instance(Operator):
         coll_name = self.collection_name if self.use_coll_move else None
 
         md, coll_obs = asset.gn_setup_coll("Radial Instance", obs, coll_name)
-        md["Input_2"] = coll_obs
-        md["Input_3"] = self.count
-        md["Input_4"] = self.use_include_original
-        md["Input_5"] = self.angle
-        md["Socket_0"] = int(self.axis)
+        asset.md_input_set(md, "Input_2", coll_obs)
+        asset.md_input_set(md, "Input_3", self.count)
+        asset.md_input_set(md, "Input_4", self.use_include_original)
+        asset.md_input_set(md, "Input_5", self.angle)
+        asset.md_input_set(md, "Socket_0", self.axis, ("X", "Y", "Z"))
 
         if self.pivot == "OBJECT":
             pivot = asset.pivot_add(coll_obs.name)
-            md["Input_9"] = pivot
+            asset.md_input_set(md, "Input_9", pivot)
 
         return {"FINISHED"}
 
@@ -370,13 +370,13 @@ class OBJECT_OT_instance_face(Operator):
                 break
 
         md, coll_obs = asset.gn_setup_coll("Instance Face", obs, coll_name)
-        md["Input_2"] = coll_obs
+        asset.md_input_set(md, "Input_2", coll_obs)
 
         if self.pivot == "OBJECT":
             pivot = asset.pivot_add(coll_obs.name)
             pivot.empty_display_size = max(ob.dimensions.xy) * 0.75
             pivot.location = ob.location
-            md["Input_3"] = pivot
+            asset.md_input_set(md, "Input_3", pivot)
 
         # Setup instance face object
         # -------------------------------

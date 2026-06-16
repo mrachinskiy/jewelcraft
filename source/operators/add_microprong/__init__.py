@@ -239,12 +239,12 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         curve = self.get_curve(context)
 
         md = asset.gn_setup("Channel", "Microprong")
-        md["Input_2"] = curve
-        md["Input_3"] = self.channel_diameter
+        asset.md_input_set(md, "Input_2", curve)
+        asset.md_input_set(md, "Input_3", self.channel_diameter)
         if not self.is_cyclic:
-            md["Input_6"] = start / 100
-            md["Input_7"] = end / 100
-        md["Input_8"] = self.channel_loc_z - 0.01
+            asset.md_input_set(md, "Input_6", start / 100)
+            asset.md_input_set(md, "Input_7", end / 100)
+        asset.md_input_set(md, "Input_8", self.channel_loc_z - 0.01)
 
         md.id_data.location = curve.location
         md.id_data.rotation_euler = curve.rotation_euler

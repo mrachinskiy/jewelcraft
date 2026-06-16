@@ -3,10 +3,10 @@
 
 from collections.abc import Iterable, Iterator
 from pathlib import Path
+from typing import Any
 
 import bpy
-from bpy.types import (ID, BlendData, Collection, Depsgraph,
-                       DepsgraphObjectInstance, Modifier, Object, Space)
+from bpy.types import ID, BlendData, Collection, Depsgraph, DepsgraphObjectInstance, Modifier, Object, Space
 from mathutils import Matrix, Vector, kdtree
 
 from .. import var
@@ -241,6 +241,17 @@ def pivot_add(prefix: str) -> Object:
     pivot.empty_display_size = 0.5
 
     return pivot
+
+
+def md_input_set(md: Modifier, prop: str, value: Any, enum_items: list[str] | None = None) -> None:
+    if bpy.app.version >= (5, 2, 0):  # VER
+        getattr(md.properties.inputs, prop).value = value
+        return
+
+    if enum_items is not None:
+        value = enum_items.index(value)
+
+    md[prop] = value
 
 
 # Asset
