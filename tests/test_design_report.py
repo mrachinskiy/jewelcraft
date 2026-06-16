@@ -87,12 +87,17 @@ def test_design_report() -> None:
             assert filecmp.cmp(test_path, example_path, shallow=False)
 
 
-try:
+def main() -> None:
     set_up()
+
     if "--make_examples" in sys.argv:
         make_examples()
     else:
         test_design_report()
+
+
+try:
+    main()
 except:
     traceback.print_exc()
     sys.exit(1)

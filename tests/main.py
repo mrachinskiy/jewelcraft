@@ -38,8 +38,9 @@ def main() -> None:
     # Blender apps
     # --------------------
 
-    blender_apps = get_blender_apps()
-    if not blender_apps:
+    try:
+        blender_apps = get_blender_apps()
+    except FileNotFoundError:
         print_err("BLENDER VERSION NOT FOUND")
         return
 
@@ -69,11 +70,13 @@ def main() -> None:
     print_info("END")
 
 
-def input_blender_ver() -> str:
+def input_blender_ver(vers: list[tuple[int, ...]]) -> str:
+    vers = "  ".join(".".join(str(i) for i in v) for v in vers)
+
     print_info("TEST SPECIFIC BLENDER VERSION?")
     _input = input(
         "\n"
-        "DEFAULT: Manifest [blender_version_min]\n"
+        f"DEFAULT:  {vers}\n"
         "\n"
         "> "
     )
@@ -104,26 +107,29 @@ def get_tests() -> list[Path]:
 
 
 def get_blender_apps() -> list[Path]:
-    blender_ver = input_blender_ver()
+    with open(TESTS_DIR.parent / "source" / "blender_manifest.toml", "rb") as file:
+        manifest = tomllib.load(file)
 
-    if (use_specific_ver := bool(blender_ver)):
-        ver = str_to_ver(blender_ver)
-    else:
-        with open(TESTS_DIR.parent / "source" / "blender_manifest.toml", "rb") as file:
-            manifest = tomllib.load(file)
-        ver = str_to_ver(manifest["blender_version_min"])
+    ver = str_to_ver(manifest["blender_version_min"])
 
-    apps = []
+    apps = {}
     for entry in BLENDER_APPS_DIR.iterdir():
         if entry.is_dir() and entry.name.startswith("blender"):
             app_ver = str_to_ver(entry.name.split("-")[1])
-            if use_specific_ver:
-                if app_ver == ver:
-                    apps.append(entry)
-            elif app_ver >= ver:
-                apps.append(entry)
+            if app_ver >= ver:
+                apps[app_ver] = entry
 
-    return apps
+    if not apps:
+        raise FileNotFoundError
+
+    blender_ver = input_blender_ver(apps.keys())
+    if blender_ver:
+        ver = str_to_ver(blender_ver)
+        if (app := apps.get(ver)):
+            return [app]
+        raise FileNotFoundError
+
+    return list(apps.values())
 
 
 main()
