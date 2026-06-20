@@ -5,7 +5,7 @@ from math import modf, pi, tau
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
-from bpy.props import BoolProperty, EnumProperty, FloatProperty, IntProperty, StringProperty
+from bpy.props import BoolProperty, EnumProperty, FloatProperty, FloatVectorProperty, IntProperty, StringProperty
 from bpy.types import Object, Operator
 from mathutils import Matrix
 
@@ -87,12 +87,8 @@ class OBJECT_OT_mirror(Operator):
     def execute(self, context):
         from ..lib import asset
 
-        axes = []
-        if self.x: axes.append(0)
-        if self.y: axes.append(1)
-        if self.z: axes.append(2)
-
-        if not axes:
+        axes = self.x, self.y, self.z
+        if not any(axes):
             return {"FINISHED"}
 
         if self.mirror_type == "INSTANCE":
@@ -116,8 +112,9 @@ class OBJECT_OT_mirror(Operator):
                 ob.select_set(False)
                 obs.append((ob, False))
 
-            for axis in axes:
-                obs = self.object_mirror(obs, axis)
+            for i, enabled in enumerate(axes):
+                if enabled:
+                    obs = self.object_mirror(obs, i)
 
             for ob, flipped in obs:
                 if flipped and ob.type == "MESH":
@@ -462,10 +459,13 @@ class OBJECT_OT_lattice_project(Operator):
         row.prop_enum(self, "direction", "NEG_Z")
 
     def execute(self, context):
+        from ..lib import asset
+
         surf = context.object
         surf.select_set(False)
 
         obs = context.selected_objects
+        BBox = asset.BoundBox(obs)
 
         lat_data = bpy.data.lattices.new("Lattice Project")
         lat = bpy.data.objects.new("Lattice Project", lat_data)
@@ -491,30 +491,30 @@ class OBJECT_OT_lattice_project(Operator):
         direction, axis = self.direction.split("_")
 
         if axis == "X":
-            lat.scale.xy = self.BBox.dimensions.zy
-            lat.location.zy = self.BBox.location.zy
+            lat.scale.xy = BBox.dimensions.zy
+            lat.location.zy = BBox.location.zy
             if direction == "NEG":
-                lat.location.x = self.BBox.min.x
+                lat.location.x = BBox.min.x
                 lat.rotation_euler.y = pi / 2
             else:
-                lat.location.x = self.BBox.max.x
+                lat.location.x = BBox.max.x
                 lat.rotation_euler.y = -pi / 2
         elif axis == "Y":
-            lat.scale.xy = self.BBox.dimensions.xz
-            lat.location.xz = self.BBox.location.xz
+            lat.scale.xy = BBox.dimensions.xz
+            lat.location.xz = BBox.location.xz
             if direction == "NEG":
-                lat.location.y = self.BBox.min.y
+                lat.location.y = BBox.min.y
                 lat.rotation_euler.x = -pi / 2
             else:
-                lat.location.y = self.BBox.max.y
+                lat.location.y = BBox.max.y
                 lat.rotation_euler.x = pi / 2
         else:
-            lat.scale.xy = self.BBox.dimensions.xy
-            lat.location.xy = self.BBox.location.xy
+            lat.scale.xy = BBox.dimensions.xy
+            lat.location.xy = BBox.location.xy
             if direction == "NEG":
-                lat.location.z = self.BBox.min.z
+                lat.location.z = BBox.min.z
             else:
-                lat.location.z = self.BBox.max.z
+                lat.location.z = BBox.max.z
                 lat.rotation_euler.x = -pi
 
         ratio = _ratio(*lat.scale.xy)
@@ -533,16 +533,9 @@ class OBJECT_OT_lattice_project(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        from ..lib import asset
-
-        obs = context.selected_objects
-
-        if len(obs) < 2:
+        if len(context.selected_objects) < 2:
             self.report({"ERROR"}, "At least two objects must be selected")
             return {"CANCELLED"}
-
-        obs.remove(context.object)
-        self.BBox = asset.BoundBox(obs)
 
         wm = context.window_manager
         return wm.invoke_props_popup(self, event)
@@ -589,8 +582,11 @@ class OBJECT_OT_lattice_profile(Operator):
         layout.separator()
 
     def execute(self, context):
+        from ..lib import asset
+
         ob = context.object
         obs = context.selected_objects
+        BBox = asset.BoundBox((ob,))
         is_editmesh = context.mode == "EDIT_MESH"
 
         if ob.select_get():
@@ -600,10 +596,10 @@ class OBJECT_OT_lattice_profile(Operator):
 
         if self.axis == "X":
             rot_z = 0.0
-            dim_xy = self.BBox.dimensions.y or 1.0
+            dim_xy = BBox.dimensions.y or 1.0
         else:
             rot_z = pi / 2
-            dim_xy = self.BBox.dimensions.x or 1.0
+            dim_xy = BBox.dimensions.x or 1.0
 
         if is_editmesh:
             bpy.ops.object.mode_set(mode="OBJECT")
@@ -623,8 +619,8 @@ class OBJECT_OT_lattice_profile(Operator):
 
         if self.lat_type == "2D":
 
-            lat.location = self.BBox.location
-            lat.scale = (1.0, dim_xy * 1.5, self.BBox.dimensions.z)
+            lat.location = BBox.location
+            lat.scale = (1.0, dim_xy * 1.5, BBox.dimensions.z)
 
             lat_data.interpolation_type_w = "KEY_LINEAR"
 
@@ -642,8 +638,8 @@ class OBJECT_OT_lattice_profile(Operator):
 
         else:
 
-            lat.location.xy = self.BBox.location.xy
-            lat.location.z = self.BBox.max.z
+            lat.location.xy = BBox.location.xy
+            lat.location.z = BBox.max.z
             lat.scale.y = dim_xy * 1.5
 
             lat_data.points_u = 1
@@ -691,20 +687,20 @@ class OBJECT_OT_lattice_profile(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        from ..lib import asset
-
         if not context.object:
             return {"CANCELLED"}
-
-        self.BBox = asset.BoundBox((context.object,))
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)
         return self.execute(context)
 
 
-def upd_size(self, context):
-    self.size = self.dim_orig[int(self.axis)]
+def _upd_size(self, context):
+    self.size = _xyz(self.dimensions, self.axis)
+
+
+def _xyz(seq: list[float], axis: str) -> float:
+    return seq[{"X": 0, "Y": 1, "Z": 2}[axis]]
 
 
 class OBJECT_OT_resize(Operator):
@@ -713,19 +709,18 @@ class OBJECT_OT_resize(Operator):
     bl_idname = "object.jewelcraft_resize"
     bl_options = {"REGISTER", "UNDO"}
 
-    dim_orig: tuple[float, float, float]
-    pivot: tuple[float, float, float]
-
     axis: EnumProperty(
         name="Axis",
         items=(
-            ("0", "X", ""),
-            ("1", "Y", ""),
-            ("2", "Z", ""),
+            ("X", "X", ""),
+            ("Y", "Y", ""),
+            ("Z", "Z", ""),
         ),
-        update=upd_size,
+        update=_upd_size,
     )
-    size: FloatProperty(name="Size", min=0.0, step=10, unit="LENGTH")
+    size: FloatProperty(name="Size", min=0.0, step=10, unit="LENGTH", options={"SKIP_SAVE"})
+    dimensions: FloatVectorProperty(options={"SKIP_SAVE"})
+    pivot: FloatVectorProperty(options={"SKIP_SAVE"})
 
     def draw(self, context):
         layout = self.layout
@@ -737,7 +732,7 @@ class OBJECT_OT_resize(Operator):
         col = layout.column()
         col.row().prop(self, "axis", expand=True)
 
-        if self.dim_orig[int(self.axis)]:
+        if _xyz(self.dimensions, self.axis):
             col.prop(self, "size")
         else:
             row = col.row()
@@ -748,7 +743,7 @@ class OBJECT_OT_resize(Operator):
         layout.separator()
 
     def execute(self, context):
-        size_orig = self.dim_orig[int(self.axis)]
+        size_orig = _xyz(self.dimensions, self.axis)
 
         if not size_orig:
             return {"FINISHED"}
@@ -762,9 +757,9 @@ class OBJECT_OT_resize(Operator):
         if not context.object:
             return {"CANCELLED"}
 
-        self.dim_orig = context.object.dimensions.to_tuple()
-        self.pivot = context.object.matrix_world.translation.to_tuple()
-        self.size = self.dim_orig[int(self.axis)]
+        self.dimensions = context.object.dimensions
+        self.pivot = context.object.matrix_world.translation
+        self.size = _xyz(self.dimensions, self.axis)
 
         wm = context.window_manager
         return wm.invoke_props_dialog(self)
@@ -791,14 +786,14 @@ class OBJECT_OT_incremental_resize(Operator):
     axis: EnumProperty(
         name="Axis",
         items=(
-            ("0", "X", ""),
-            ("1", "Y", ""),
-            ("2", "Z", ""),
+            ("X", "X", ""),
+            ("Y", "Y", ""),
+            ("Z", "Z", ""),
         ),
     )
+    _axis_int: int
 
     filter_gems: BoolProperty(name="Gems Only", description="Ignore other objects")
-    axis_int: IntProperty(min=0, max=2)
     step: FloatProperty(name="Step", min=0.0, soft_max=1.0, default=0.1, step=10)
     min: FloatProperty(name="Min", min=0.0, soft_max=1.0, default=0.3, step=10)
     max: FloatProperty(name="Max", min=0.0, soft_max=1.0, default=1.0, step=10)
@@ -859,9 +854,9 @@ class OBJECT_OT_incremental_resize(Operator):
 
         elif event.type in {"LEFT_ARROW", "RIGHT_ARROW"}:
             if event.type == "LEFT_ARROW":
-                self.axis_int -= 1
+                self._axis_int = max(self._axis_int - 1, 0)
             else:
-                self.axis_int += 1
+                self._axis_int = min(self._axis_int + 1, 2)
             context.region.tag_redraw()
             return {"RUNNING_MODAL"}
 
@@ -907,8 +902,7 @@ class OBJECT_OT_incremental_resize(Operator):
         from ..lib import view3d_lib
 
         self.__class__.is_running = True
-
-        self.axis_int = int(self.axis)
+        self._axis_int = "XYZ".index(self.axis)
 
         context.window_manager.modal_handler_add(self)
         context.workspace.status_text_set("ESC/↵/␣: Exit")
@@ -920,7 +914,7 @@ class OBJECT_OT_incremental_resize(Operator):
         lay.hotkey(_("Exit"), "(Esc)")
         lay.hotkey(_("Resize"), "(Mouse Wheel)")
         lay.separator()
-        lay.enum(_("Axis"), "(←/→)", "axis_int", (_("X"), _("Y"), _("Z")))
+        lay.enum(_("Axis"), "(←/→)", "_axis_int", (_("X"), _("Y"), _("Z")))
         lay.bool(_("Gems Only"), "(F)", "filter_gems")
         lay.separator()
         lay.hotkey(_("Gems"), "")
@@ -989,7 +983,7 @@ class OBJECT_OT_incremental_resize(Operator):
                 _min = self.min
                 _max = self.max
 
-            size_orig = ob.dimensions[self.axis_int]
+            size_orig = ob.dimensions[self._axis_int]
 
             if (neg and size_orig < _min) or (not neg and size_orig > _max):
                 continue
@@ -1041,6 +1035,7 @@ class OBJECT_OT_stretch_along_curve(Operator):
 
     def execute(self, context):
         import bmesh
+
         from ..lib import asset, mesh
 
         if context.mode == "EDIT_MESH":
@@ -1101,6 +1096,7 @@ class OBJECT_OT_move_over_under(Operator):
 
     def execute(self, context):
         import bmesh
+
         from ..lib import asset
 
         context.view_layer.update()
