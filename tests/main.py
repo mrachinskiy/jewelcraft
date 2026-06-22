@@ -58,11 +58,11 @@ def main() -> None:
                 cmd += ["--", "--make_examples"]
             proc = subprocess.run(cmd, capture_output=True)
             if proc.returncode:
-                print(f"{RED + blender.name} {test.stem} {INVERSE}FAILED{RESET}")
+                print(f"{RED}{INVERSE} FAILED {RESET} {RED}{blender.name} {test.stem}{RESET}")
                 print(proc.stderr.decode().strip())
                 return
             else:
-                print(f"{blender.name} {test.stem} {GREEN + INVERSE}PASSED{RESET}")
+                print(f"{GREEN}{INVERSE} PASSED {RESET} {blender.name} {test.stem}")
 
         if make_examples:
             break
@@ -76,7 +76,7 @@ def input_blender_ver(vers: list[tuple[int, ...]]) -> str:
     print_info("TEST SPECIFIC BLENDER VERSION?")
     _input = input(
         "\n"
-        f"DEFAULT:  {vers}\n"
+        f"DEFAULT: {vers}\n"
         "\n"
         "> "
     )
@@ -88,8 +88,7 @@ def input_make_examples() -> bool:
     print_info("MAKE TEST EXAMPLES?")
     _input = input(
         "\n"
-        "[ y ] Yes\n"
-        "[ n ] No\n"
+        "DEFAULT: n\n"
         "\n"
         "> "
     )
@@ -132,5 +131,6 @@ def get_blender_apps() -> list[Path]:
     return list(apps.values())
 
 
+os.system("cls")
 main()
 input()
