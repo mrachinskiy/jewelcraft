@@ -72,6 +72,9 @@ class OBJECT_OT_overlay_override_add(Operator):
         prefs = context.preferences.addons[var.ADDON_ID].preferences
         props = context.scene.jewelcraft
 
+        if not context.selected_objects:
+            return {"CANCELLED"}
+
         default_settings = {
             "color": prefs.overlay_color,
             "linewidth": prefs.overlay_linewidth,
@@ -79,8 +82,7 @@ class OBJECT_OT_overlay_override_add(Operator):
             "locked": False,
         }
 
-        ovrd = context.object.get("gem_overlay")
-        if ovrd:
+        if context.object and (ovrd := context.object.get("gem_overlay")):
             default_settings.update(ovrd)
 
         for k, v in default_settings.items():
