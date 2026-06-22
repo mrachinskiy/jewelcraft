@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.19.0\n"
-"POT-Creation-Date: 2025-11-20\n"
+"Project-Id-Version: JewelCraft 3.0.0\n"
+"POT-Creation-Date: 2026-06-22\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: De Palo Domenico\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -127,6 +127,12 @@ msgstr ""
 msgid "Spacing Overlay"
 msgstr ""
 
+msgid "By Collection"
+msgstr ""
+
+msgid "Tether"
+msgstr ""
+
 msgid "Asset Name"
 msgstr "Nome risorsa"
 
@@ -151,6 +157,15 @@ msgstr "Scala elevazio"
 msgid "Diameter"
 msgstr "Diametro"
 
+msgid "Size Step"
+msgstr ""
+
+msgid "Max Gap"
+msgstr ""
+
+msgid "Taper"
+msgstr ""
+
 msgid "Size Offset"
 msgstr "Dimensione Offset"
 
@@ -159,6 +174,9 @@ msgstr "Cintura"
 
 msgid "Hole"
 msgstr "Foro"
+
+msgid "Seat Depth"
+msgstr ""
 
 msgid "Culet"
 msgstr "Culasse"
@@ -195,6 +213,9 @@ msgstr "Padre della Selezione"
 
 msgid "Use 3D Cursor"
 msgstr "Usa cursore 3D"
+
+msgid "Gems Only"
+msgstr ""
 
 msgid "Ring Size"
 msgstr "Misura anello"
@@ -259,6 +280,12 @@ msgstr ""
 msgid "Limited"
 msgstr ""
 
+msgid "Incremental Resize"
+msgstr ""
+
+msgid "Invert Mouse Wheel"
+msgstr ""
+
 msgid "Open add-on preferences window"
 msgstr ""
 
@@ -306,6 +333,9 @@ msgstr "Mostra peso e volume per gli oggetti mesh selezionati"
 
 msgid "Create instance face for selected objects"
 msgstr "Crea istanza per gli oggetti selezionati"
+
+msgid "Ignore other objects"
+msgstr ""
 
 msgid "Create size curve"
 msgstr "Crea una curva dimensionale"
@@ -412,6 +442,27 @@ msgstr "Utilizza lattice bi-dimensionale per una deformazione uniforme"
 msgid "Scale selected objects to given size"
 msgstr "Ridimensiona gli oggetti selezionati in base alle dimensioni indicate"
 
+msgid "Individually scale selected objects by given increment\n(Shortcut: hold Ctrl to show properties popup before executing)"
+msgstr ""
+
+msgid "Prong diameter relative to gem size"
+msgstr ""
+
+msgid "Prong height relative to gem size"
+msgstr ""
+
+msgid "Step value difference between diameters of generated prongs"
+msgstr ""
+
+msgid "Blends prong size and height toward the median value of all generated prongs"
+msgstr ""
+
+msgid "Distance between two prongs relative to gem size"
+msgstr ""
+
+msgid "Merge prongs located at specified distance"
+msgstr ""
+
 msgid "Move each object individually"
 msgstr "Sposta ogni oggetto singolarmente"
 
@@ -428,6 +479,33 @@ msgid "Show spacing guide for all visible gems"
 msgstr "Visualizza il widget spaziatura per tutte le gemme visibili"
 
 msgid "Show for all visible gems"
+msgstr ""
+
+msgid "Space out nearby gems"
+msgstr ""
+
+msgid "Restrict spacing to gems in the same collection"
+msgstr ""
+
+msgid "Project affected gems on surface"
+msgstr ""
+
+msgid "Effect radius from selected gem"
+msgstr ""
+
+msgid "Distance between gems within effect radius to count as tethered"
+msgstr ""
+
+msgid "Spacing tolerance between gems"
+msgstr ""
+
+msgid "Effect strength"
+msgstr ""
+
+msgid "Lock position for spacing"
+msgstr ""
+
+msgid "Save to File"
 msgstr ""
 
 msgid "Use gem material color for gem map"
@@ -522,6 +600,9 @@ msgstr "È necessario selezionare almeno due oggetti"
 
 msgid "At least one gem object must be selected"
 msgstr "È necessario selezionare almeno un oggetto gemma"
+
+msgid "At least two gem objects must be selected"
+msgstr ""
 
 msgid "At least one mesh object must be selected"
 msgstr "È necessario selezionare almeno un oggetto mesh"
@@ -896,7 +977,15 @@ msgid "Prongs"
 msgstr "Griffe"
 
 msgctxt "Operator"
+msgid "Auto Prongs"
+msgstr ""
+
+msgctxt "Operator"
 msgid "Instance Face"
+msgstr ""
+
+msgctxt "Operator"
+msgid "Incremental"
 msgstr ""
 
 msgctxt "Operator"

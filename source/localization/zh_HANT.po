@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.19.0\n"
-"POT-Creation-Date: 2025-11-20\n"
+"Project-Id-Version: JewelCraft 3.0.0\n"
+"POT-Creation-Date: 2026-06-22\n"
 "PO-Revision-Date: 2026-03-20\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -127,6 +127,12 @@ msgstr "貼齊邊緣"
 msgid "Spacing Overlay"
 msgstr "重疊間距"
 
+msgid "By Collection"
+msgstr ""
+
+msgid "Tether"
+msgstr ""
+
 msgid "Asset Name"
 msgstr "資產名稱"
 
@@ -151,6 +157,15 @@ msgstr "凹凸比例"
 msgid "Diameter"
 msgstr "直徑"
 
+msgid "Size Step"
+msgstr ""
+
+msgid "Max Gap"
+msgstr ""
+
+msgid "Taper"
+msgstr ""
+
 msgid "Size Offset"
 msgstr "偏移大小"
 
@@ -159,6 +174,9 @@ msgstr "寶石腰圍"
 
 msgid "Hole"
 msgstr "開孔"
+
+msgid "Seat Depth"
+msgstr ""
 
 msgid "Culet"
 msgstr "寶石底尖"
@@ -195,6 +213,9 @@ msgstr "設為所選物件的父層"
 
 msgid "Use 3D Cursor"
 msgstr "使用3D游標"
+
+msgid "Gems Only"
+msgstr ""
 
 msgid "Ring Size"
 msgstr "戒圍尺寸"
@@ -259,6 +280,12 @@ msgstr "調色盤大小"
 msgid "Limited"
 msgstr "限制"
 
+msgid "Incremental Resize"
+msgstr ""
+
+msgid "Invert Mouse Wheel"
+msgstr ""
+
 msgid "Open add-on preferences window"
 msgstr "開啟附加元件偏好設置視窗"
 
@@ -306,6 +333,9 @@ msgstr "顯示所選網格物件的重量和體積"
 
 msgid "Create instance face for selected objects"
 msgstr "為選取的物件建立實例面"
+
+msgid "Ignore other objects"
+msgstr ""
 
 msgid "Create size curve"
 msgstr "建立尺寸曲線"
@@ -412,6 +442,27 @@ msgstr "使用二維晶格進行比例變形"
 msgid "Scale selected objects to given size"
 msgstr "將選取物件縮放至指定大小"
 
+msgid "Individually scale selected objects by given increment\n(Shortcut: hold Ctrl to show properties popup before executing)"
+msgstr ""
+
+msgid "Prong diameter relative to gem size"
+msgstr ""
+
+msgid "Prong height relative to gem size"
+msgstr ""
+
+msgid "Step value difference between diameters of generated prongs"
+msgstr ""
+
+msgid "Blends prong size and height toward the median value of all generated prongs"
+msgstr ""
+
+msgid "Distance between two prongs relative to gem size"
+msgstr ""
+
+msgid "Merge prongs located at specified distance"
+msgstr ""
+
 msgid "Move each object individually"
 msgstr "單獨移動個別物件"
 
@@ -429,6 +480,33 @@ msgstr "顯示所有可見寶石的間距指示"
 
 msgid "Show for all visible gems"
 msgstr "顯示所有可見的寶石"
+
+msgid "Space out nearby gems"
+msgstr ""
+
+msgid "Restrict spacing to gems in the same collection"
+msgstr ""
+
+msgid "Project affected gems on surface"
+msgstr ""
+
+msgid "Effect radius from selected gem"
+msgstr ""
+
+msgid "Distance between gems within effect radius to count as tethered"
+msgstr ""
+
+msgid "Spacing tolerance between gems"
+msgstr ""
+
+msgid "Effect strength"
+msgstr ""
+
+msgid "Lock position for spacing"
+msgstr ""
+
+msgid "Save to File"
+msgstr ""
 
 msgid "Use gem material color for gem map"
 msgstr "使用寶石材質顏色作為寶石貼圖"
@@ -522,6 +600,9 @@ msgstr "最少需選取兩個物件"
 
 msgid "At least one gem object must be selected"
 msgstr "最少需選取一個寶石物件"
+
+msgid "At least two gem objects must be selected"
+msgstr ""
 
 msgid "At least one mesh object must be selected"
 msgstr "最少需選取一個網格物件"
@@ -896,8 +977,16 @@ msgid "Prongs"
 msgstr "鑲爪"
 
 msgctxt "Operator"
+msgid "Auto Prongs"
+msgstr ""
+
+msgctxt "Operator"
 msgid "Instance Face"
 msgstr "實例面"
+
+msgctxt "Operator"
+msgid "Incremental"
+msgstr ""
 
 msgctxt "Operator"
 msgid "Lattice Project"

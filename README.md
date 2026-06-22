@@ -11,12 +11,12 @@ Features:
 * Translated to multiple languages:
   * ![100%](https://geps.dev/progress/100) English
   * ![100%](https://geps.dev/progress/100) Russian
-  * ![96%](https://geps.dev/progress/96) Traditional Chinese
-  * ![95%](https://geps.dev/progress/95) Spanish
-  * ![88%](https://geps.dev/progress/88) Simplified Chinese
-  * ![81%](https://geps.dev/progress/81) French
-  * ![80%](https://geps.dev/progress/80) Arabic
-  * ![70%](https://geps.dev/progress/70) Italian
+  * ![91%](https://geps.dev/progress/91) Chinese (Traditional)
+  * ![88%](https://geps.dev/progress/88) Spanish
+  * ![81%](https://geps.dev/progress/81) Chinese (Simplified)
+  * ![75%](https://geps.dev/progress/75) French
+  * ![74%](https://geps.dev/progress/74) Arabic
+  * ![64%](https://geps.dev/progress/64) Italian
   * Your language is missing or incomplete? [Contribute translation](#translations).
 
 

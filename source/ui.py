@@ -415,6 +415,7 @@ class VIEW3D_PT_jewelcraft_spacing_overlay(SidebarSetup, Panel):
 class VIEW3D_PT_jewelcraft_spacing(SidebarSetup, Panel):
     bl_label = "Spacing"
     bl_parent_id = "VIEW3D_PT_jewelcraft_spacing_overlay"
+    bl_translation_context = "Jewelry"
 
     def draw_header(self, context):
         wm_props = context.window_manager.jewelcraft

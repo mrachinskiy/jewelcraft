@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: JewelCraft 2.19.0\n"
-"POT-Creation-Date: 2025-11-20\n"
-"PO-Revision-Date: 2025-11-20\n"
+"Project-Id-Version: JewelCraft 3.0.0\n"
+"POT-Creation-Date: 2026-06-22\n"
+"PO-Revision-Date: 2026-06-22\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
@@ -127,6 +127,12 @@ msgstr "Привязка к рёбрам"
 msgid "Spacing Overlay"
 msgstr "Наложение расстояния"
 
+msgid "By Collection"
+msgstr "По коллекции"
+
+msgid "Tether"
+msgstr "Привязь"
+
 msgid "Asset Name"
 msgstr "Название ассета"
 
@@ -137,7 +143,7 @@ msgid "Curvature Scale"
 msgstr "Масштаб кривизны"
 
 msgid "Prong Number"
-msgstr "Количество корнеров"
+msgstr "Количество крапанов"
 
 msgid "Detalization"
 msgstr "Детализация"
@@ -151,6 +157,15 @@ msgstr "Масштаб выпуклости"
 msgid "Diameter"
 msgstr "Диаметр"
 
+msgid "Size Step"
+msgstr "Шаг размера"
+
+msgid "Max Gap"
+msgstr "Максимальный промежуток"
+
+msgid "Taper"
+msgstr "Сужение"
+
 msgid "Size Offset"
 msgstr "Отступ размера"
 
@@ -159,6 +174,9 @@ msgstr "Рундист"
 
 msgid "Hole"
 msgstr "Отверстие"
+
+msgid "Seat Depth"
+msgstr "Глубина посадки"
 
 msgid "Culet"
 msgstr "Калетта"
@@ -195,6 +213,9 @@ msgstr "Привязать к выделению"
 
 msgid "Use 3D Cursor"
 msgstr "Использовать 3D курсор"
+
+msgid "Gems Only"
+msgstr "Только камни"
 
 msgid "Ring Size"
 msgstr "Размер кольца"
@@ -259,6 +280,12 @@ msgstr "Размер палитры"
 msgid "Limited"
 msgstr "Ограниченный"
 
+msgid "Incremental Resize"
+msgstr "Инкрементальное масштабирование"
+
+msgid "Invert Mouse Wheel"
+msgstr "Инвертировать колесо мыши"
+
 msgid "Open add-on preferences window"
 msgstr "Открыть окно настроек дополнения"
 
@@ -306,6 +333,9 @@ msgstr "Показать вес и объём выделенных мэш объ
 
 msgid "Create instance face for selected objects"
 msgstr "Создать грань-экземпляр для выделенных объектов"
+
+msgid "Ignore other objects"
+msgstr "Игнорировать другие объекты"
 
 msgid "Create size curve"
 msgstr "Создать размерную кривую"
@@ -412,6 +442,27 @@ msgstr "Использовать двумерную решётку для про
 msgid "Scale selected objects to given size"
 msgstr "Масштабировать выделенные объекты в заданный размер"
 
+msgid "Individually scale selected objects by given increment\n(Shortcut: hold Ctrl to show properties popup before executing)"
+msgstr "Индивидуально масштабировать выделенные объекты на заданный шаг\n(Горячая клавиша: удерживайте Ctrl, чтобы вызвать меню настроек инструмента)"
+
+msgid "Prong diameter relative to gem size"
+msgstr "Диаметр крапана относительно размера камня"
+
+msgid "Prong height relative to gem size"
+msgstr "Высота крапана относительно размера камня"
+
+msgid "Step value difference between diameters of generated prongs"
+msgstr "Разница между диаметрами сгенерированных крапанов"
+
+msgid "Blends prong size and height toward the median value of all generated prongs"
+msgstr "Усредняет размер и высоту крапанов, приводя их к среднему значению для всех созданных крапанов"
+
+msgid "Distance between two prongs relative to gem size"
+msgstr "Расстояние между двумя крапанами относительно размера камня"
+
+msgid "Merge prongs located at specified distance"
+msgstr "Объединить крапана, расположенные на заданном расстоянии"
+
 msgid "Move each object individually"
 msgstr "Переместить каждый объект по отдельности"
 
@@ -429,6 +480,33 @@ msgstr "Показывать ориентир расстояния для все
 
 msgid "Show for all visible gems"
 msgstr "Показывать для всех видимых камней"
+
+msgid "Space out nearby gems"
+msgstr "Распределить близлежащие камни"
+
+msgid "Restrict spacing to gems in the same collection"
+msgstr "Ограничить распределение между камнями одной коллекции"
+
+msgid "Project affected gems on surface"
+msgstr "Проецировать затронутые ками на поверхность"
+
+msgid "Effect radius from selected gem"
+msgstr "Радиус воздействия от выделенного камня"
+
+msgid "Distance between gems within effect radius to count as tethered"
+msgstr "Расстояние между камнями в пределах радиуса воздействия при котором они считаются привязанными"
+
+msgid "Spacing tolerance between gems"
+msgstr "Допуск расстояния между камнями"
+
+msgid "Effect strength"
+msgstr "Сила воздействия"
+
+msgid "Lock position for spacing"
+msgstr "Зафиксировать положение при распределении"
+
+msgid "Save to File"
+msgstr "Сохранить в файл"
 
 msgid "Use gem material color for gem map"
 msgstr "Использовать цвет материала камня для карты камней"
@@ -518,13 +596,16 @@ msgid "Curve Length"
 msgstr "Длина кривой"
 
 msgid "At least two objects must be selected"
-msgstr "Как минимум два объекта должны быть выделены"
+msgstr "Необходимо выделить как минимум два объекта"
 
 msgid "At least one gem object must be selected"
-msgstr "Как минимум один объект камня должен быть выделен"
+msgstr "Необходимо выделить как минимум один объект камня"
+
+msgid "At least two gem objects must be selected"
+msgstr "Необходимо выделить как минимум два объекта камней"
 
 msgid "At least one mesh object must be selected"
-msgstr "Как минимум один мэш объект должен быть выделен"
+msgstr "Необходимо выделить как минимум один мэш объект"
 
 msgid "Active object must be a curve"
 msgstr "Активный объект должен быть кривой"
@@ -896,8 +977,16 @@ msgid "Prongs"
 msgstr "Крапана"
 
 msgctxt "Operator"
+msgid "Auto Prongs"
+msgstr "Автокрапана"
+
+msgctxt "Operator"
 msgid "Instance Face"
 msgstr "Грань-экземпляр"
+
+msgctxt "Operator"
+msgid "Incremental"
+msgstr "Инкрементально"
 
 msgctxt "Operator"
 msgid "Lattice Project"
