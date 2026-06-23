@@ -148,17 +148,27 @@ class OBJECT_OT_gem_edit(Operator):
 
     cut: EnumProperty(name="Cut", items=dynamic_list.cuts, options={"SKIP_SAVE"})
     stone: EnumProperty(name="Stone", items=dynamic_list.stones, update=upd_colors, options={"SKIP_SAVE"})
-    use_id_only: BoolProperty(
-        name="Only ID",
-        description="Only edit gem identifiers, not affecting object data and materials",
-        options={"SKIP_SAVE"},
-    )
-    use_force: BoolProperty(
-        name="Force Edit",
-        description="Force edit selected mesh objects, can be used to make gems from non-gem objects",
-        options={"SKIP_SAVE"},
-    )
     show_colors: BoolProperty(name="Show colors list", options={"SKIP_SAVE"})
+    filter_gems: BoolProperty(
+        name="Gems Only",
+        default=True,
+        options={"SKIP_SAVE"},
+    )
+    edit_id: BoolProperty(
+        name="ID",
+        default=True,
+        options={"SKIP_SAVE"},
+    )
+    edit_mesh: BoolProperty(
+        name="Mesh",
+        default=True,
+        options={"SKIP_SAVE"},
+    )
+    edit_mat: BoolProperty(
+        name="Material",
+        default=True,
+        options={"SKIP_SAVE"},
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -197,8 +207,17 @@ class OBJECT_OT_gem_edit(Operator):
                 rows=8,
             )
 
-        layout.prop(self, "use_id_only")
-        layout.prop(self, "use_force")
+        layout.separator()
+
+        col = layout.column(heading="Affect")
+        col.prop(self, "filter_gems")
+
+        layout.separator()
+
+        col = layout.column(heading="Edit")
+        col.prop(self, "edit_id")
+        col.prop(self, "edit_mesh")
+        col.prop(self, "edit_mat")
 
     def execute(self, context):
         from ...lib import asset, gemlib
@@ -213,37 +232,31 @@ class OBJECT_OT_gem_edit(Operator):
 
         for ob in obs:
 
-            if ob.type != "MESH":
+            if ob.type != "MESH" or (self.filter_gems and "gem" not in ob):
                 continue
 
-            if self.use_force or "gem" in ob:
+            if ob.get("gem", {}).get("cut", "") != self.cut:
 
-                if self.use_force:
-                    ob["gem"] = {}
+                if self.edit_mesh:
+                    size_orig = ob.dimensions.y
+                    mats_orig = ob.data.materials
 
-                if self.use_force or ob["gem"]["cut"] != self.cut:
-                    ob["gem"]["cut"] = self.cut
+                    ob.data = me.copy()
+                    ob.name = cut_name
 
-                    if not self.use_id_only:
-                        size_orig = ob.dimensions.y
-                        mats_orig = ob.data.materials
+                    ob.scale = (size_orig, size_orig, size_orig)
+                    asset.apply_scale(ob)
 
-                        ob.data = me.copy()
-                        ob.name = cut_name
+                    for mat in mats_orig:
+                        ob.data.materials.append(mat)
 
-                        ob.scale = (size_orig, size_orig, size_orig)
-                        asset.apply_scale(ob)
+            if self.edit_mat:
+                if ob.data.users > 1 and (not ob.material_slots or ob.material_slots[0].name != wm_props.gem_color_name):
+                    ob.data = ob.data.copy()
+                asset.add_material(ob, name=wm_props.gem_color_name, color=(*wm_props.gem_color, 1.0), is_gem=True)
 
-                        for mat in mats_orig:
-                            ob.data.materials.append(mat)
-
-                if self.use_force or ob["gem"]["stone"] != self.stone:
-                    ob["gem"]["stone"] = self.stone
-
-                if not self.use_id_only:
-                    if ob.data.users > 1 and (not ob.material_slots or ob.material_slots[0].name != wm_props.gem_color_name):
-                        ob.data = ob.data.copy()
-                    asset.add_material(ob, name=wm_props.gem_color_name, color=(*wm_props.gem_color, 1.0), is_gem=True)
+            if self.edit_id:
+                ob["gem"] = {"cut": self.cut, "stone": self.stone}
 
         bpy.data.meshes.remove(me)
 

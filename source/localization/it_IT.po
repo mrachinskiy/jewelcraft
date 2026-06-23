@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 3.0.0\n"
-"POT-Creation-Date: 2026-06-22\n"
+"POT-Creation-Date: 2026-06-23\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: De Palo Domenico\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -241,12 +241,6 @@ msgstr "Circonferenza"
 msgid "Distribution (%)"
 msgstr "Distribuisci (%)"
 
-msgid "Only ID"
-msgstr "Solo ID"
-
-msgid "Force Edit"
-msgstr "Modifica forzata"
-
 msgid "Zero dimensions"
 msgstr "Zero dimesioni"
 
@@ -306,12 +300,6 @@ msgstr ""
 
 msgid "Show colors list"
 msgstr ""
-
-msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
-msgstr "Forza la modifica di oggetti mesh selezionati, può essere utilizzato per creare gemme da oggetti non gemma"
-
-msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr "Modifica solo identificatori di gemme, senza influire sui dati e sui materiali degli oggetti"
 
 msgid "Save to file in project folder"
 msgstr ""

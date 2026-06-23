@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 3.0.0\n"
-"POT-Creation-Date: 2026-06-22\n"
+"POT-Creation-Date: 2026-06-23\n"
 "PO-Revision-Date: 2026-03-20\n"
 "Last-Translator: BiseChen\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -241,12 +241,6 @@ msgstr "周長"
 msgid "Distribution (%)"
 msgstr "分佈（%）"
 
-msgid "Only ID"
-msgstr "只有 ID"
-
-msgid "Force Edit"
-msgstr "強制編輯"
-
 msgid "Zero dimensions"
 msgstr "零維度"
 
@@ -306,12 +300,6 @@ msgstr "僅圓形鑽石"
 
 msgid "Show colors list"
 msgstr "顯示顏色清單"
-
-msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
-msgstr "強制編輯選定的網格物件，可用於從非寶石物件製作寶石"
-
-msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr "僅編輯寶石標示符號，不影響物件數據和材質"
 
 msgid "Save to file in project folder"
 msgstr "保存在項目資料夾"

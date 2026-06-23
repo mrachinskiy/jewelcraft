@@ -12,7 +12,7 @@ Features:
   * ![100%](https://geps.dev/progress/100) English
   * ![100%](https://geps.dev/progress/100) Russian
   * ![91%](https://geps.dev/progress/91) Chinese (Traditional)
-  * ![88%](https://geps.dev/progress/88) Spanish
+  * ![87%](https://geps.dev/progress/87) Spanish
   * ![81%](https://geps.dev/progress/81) Chinese (Simplified)
   * ![75%](https://geps.dev/progress/75) French
   * ![74%](https://geps.dev/progress/74) Arabic

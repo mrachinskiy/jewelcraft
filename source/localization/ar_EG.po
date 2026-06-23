@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 3.0.0\n"
-"POT-Creation-Date: 2026-06-22\n"
+"POT-Creation-Date: 2026-06-23\n"
 "PO-Revision-Date: 2021-10-12\n"
 "Last-Translator: Ahmed Hamad\n"
 "Language-Team: Mikhail Rachinskiy\n"
@@ -241,12 +241,6 @@ msgstr "المحيط الخارجي"
 msgid "Distribution (%)"
 msgstr "التوزيع (%)"
 
-msgid "Only ID"
-msgstr ""
-
-msgid "Force Edit"
-msgstr ""
-
 msgid "Zero dimensions"
 msgstr ""
 
@@ -306,12 +300,6 @@ msgstr "أحجار كريمة مدورة فقط"
 
 msgid "Show colors list"
 msgstr ""
-
-msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
-msgstr ""
-
-msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr "فقط أدوات تعديل الأحجار لا تؤثر علي بيانات العنصر والمواد"
 
 msgid "Save to file in project folder"
 msgstr "احفظه في ملف في مجلد المشروع"

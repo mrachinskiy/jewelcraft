@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JewelCraft 3.0.0\n"
-"POT-Creation-Date: 2026-06-22\n"
-"PO-Revision-Date: 2026-06-22\n"
+"POT-Creation-Date: 2026-06-23\n"
+"PO-Revision-Date: 2026-06-23\n"
 "Last-Translator: Mikhail Rachinskiy\n"
 "Language-Team: Mikhail Rachinskiy\n"
 "Language: ru_RU\n"
@@ -241,12 +241,6 @@ msgstr "Окружность"
 msgid "Distribution (%)"
 msgstr "Распределение (%)"
 
-msgid "Only ID"
-msgstr "Только идентификаторы"
-
-msgid "Force Edit"
-msgstr "Принудительное редактирование"
-
 msgid "Zero dimensions"
 msgstr "Нулевые габариты"
 
@@ -306,12 +300,6 @@ msgstr "Только бриллианты Кр-57"
 
 msgid "Show colors list"
 msgstr "Показать список цветов"
-
-msgid "Force edit selected mesh objects, can be used to make gems from non-gem objects"
-msgstr "Принудительно редактировать выделенные мэш объекты, можно использовать для создания камней из других объектов"
-
-msgid "Only edit gem identifiers, not affecting object data and materials"
-msgstr "Редактировать только идентификаторы камня, не затрагивая объектную информация и материалы"
 
 msgid "Save to file in project folder"
 msgstr "Сохранить в файл в каталоге проекта"
