@@ -47,7 +47,7 @@ msgid "Prongs"
 msgstr "鑲爪"
 
 msgid "Cutter"
-msgstr "刀器"
+msgstr "切割器"
 
 msgid "Overrides"
 msgstr "覆蓋設定"
@@ -89,16 +89,16 @@ msgid "Viewport Background"
 msgstr "視口背景"
 
 msgid "Save to Image"
-msgstr "保存到影像"
+msgstr "儲存成影像"
 
 msgid "Additional Entries"
 msgstr "額外條目"
 
 msgid "Gem Map"
-msgstr "寶石貼圖"
+msgstr "寶石分佈圖"
 
 msgid "Gem Map Overlay"
-msgstr "寶石貼圖覆蓋顯示"
+msgstr "寶石分佈圖覆蓋顯示"
 
 msgid "Gem Table"
 msgstr "寶石列表"
@@ -119,7 +119,7 @@ msgid "Category is empty"
 msgstr "空的類別"
 
 msgid "Popover Width"
-msgstr "彈出視窗寬度"
+msgstr "浮動視窗寬度"
 
 msgid "Snap to Edges"
 msgstr "貼齊邊緣"
@@ -185,7 +185,7 @@ msgid "Handle"
 msgstr "控制桿"
 
 msgid "Curve Seat"
-msgstr "曲線座位"
+msgstr "曲線鑲座"
 
 msgid "Curve Profile"
 msgstr "曲線輪廓"
@@ -209,10 +209,10 @@ msgid "Select Children"
 msgstr "選取子代"
 
 msgid "Parent to selected"
-msgstr "設為所選物件的父層"
+msgstr "設定為所選物件的父層"
 
 msgid "Use 3D Cursor"
-msgstr "使用3D游標"
+msgstr "使用 3D 游標"
 
 msgid "Gems Only"
 msgstr "僅限寶石"
@@ -242,7 +242,7 @@ msgid "Distribution (%)"
 msgstr "分佈（%）"
 
 msgid "Zero dimensions"
-msgstr "零維度"
+msgstr "尺寸為零"
 
 msgid "Action completed"
 msgstr "動作已完成"
@@ -251,7 +251,7 @@ msgid "No corresponding size"
 msgstr "沒有相應的大小"
 
 msgid "Wedge"
-msgstr "楔子"
+msgstr "楔塊"
 
 msgid "Keep Z Direction"
 msgstr "保持 Z 軸方向"
@@ -260,7 +260,7 @@ msgid "Factory Settings"
 msgstr "預設設定"
 
 msgid "Generate color palette"
-msgstr "產生色彩調色盤"
+msgstr "生成色彩調色盤"
 
 msgid "Hue Range"
 msgstr "色相範圍"
@@ -281,10 +281,10 @@ msgid "Invert Mouse Wheel"
 msgstr "反轉滑鼠滾輪"
 
 msgid "Open add-on preferences window"
-msgstr "開啟附加元件偏好設置視窗"
+msgstr "開啟附加元件偏好設定視窗"
 
 msgid "Configuration folder for certain add-on preferences, like asset favorites, gem colors and similar"
-msgstr "某些附加元件偏好設定的配置資料夾，例如資產收藏、寶石顏色等"
+msgstr "用於儲存資產收藏、寶石顏色等特定附加元件偏好設定的配置資料夾"
 
 msgid "Makes transforms on Z axis consistent with original object (does not affect gems)"
 msgstr "使 Z 軸上的變換與原始物件一致（不影響寶石）"
@@ -302,7 +302,7 @@ msgid "Show colors list"
 msgstr "顯示顏色清單"
 
 msgid "Save to file in project folder"
-msgstr "保存在項目資料夾"
+msgstr "保存到項目資料夾"
 
 msgid "Use user preferences language setting"
 msgstr "以用戶偏好設定語言"
@@ -365,7 +365,7 @@ msgid "Rename category"
 msgstr "重新命名類別"
 
 msgid "Refresh asset UI"
-msgstr "更新用戶資產介面"
+msgstr "重新整理資產介面"
 
 msgid "Add selected objects to asset library"
 msgstr "將所選物件添加到資產庫"
@@ -398,7 +398,7 @@ msgid "Use object defined overlay settings"
 msgstr "使用物件定義的疊加設定"
 
 msgid "Draw overlay in front of objects"
-msgstr "在物件前面繪製疊加層"
+msgstr "將疊加層繪製於物件最前端"
 
 msgid "Override overlay settings for selected objects"
 msgstr "覆寫選定物件的疊加設定"
@@ -431,25 +431,25 @@ msgid "Scale selected objects to given size"
 msgstr "將選取物件縮放至指定大小"
 
 msgid "Individually scale selected objects by given increment\n(Shortcut: hold Ctrl to show properties popup before executing)"
-msgstr ""
+msgstr "依指定增量單獨縮放選取的物件\n(快速鍵：執行前按住 Ctrl 可顯示屬性彈出視窗)"
 
 msgid "Prong diameter relative to gem size"
-msgstr ""
+msgstr "對於寶石尺寸的鑲爪直徑"
 
 msgid "Prong height relative to gem size"
-msgstr ""
+msgstr "相對於寶石尺寸的鑲爪高度"
 
 msgid "Step value difference between diameters of generated prongs"
-msgstr ""
+msgstr "生成的鑲爪直徑之間的步進值差異"
 
 msgid "Blends prong size and height toward the median value of all generated prongs"
-msgstr ""
+msgstr "將鑲爪尺寸與高度融合趨近於所有生成鑲爪的中位數值"
 
 msgid "Distance between two prongs relative to gem size"
-msgstr ""
+msgstr "相對於寶石尺寸的兩鑲爪間距"
 
 msgid "Merge prongs located at specified distance"
-msgstr ""
+msgstr "合併位於指定距離內的鑲爪"
 
 msgid "Move each object individually"
 msgstr "單獨移動個別物件"
@@ -470,31 +470,31 @@ msgid "Show for all visible gems"
 msgstr "顯示所有可見的寶石"
 
 msgid "Space out nearby gems"
-msgstr ""
+msgstr "拉開附近寶石的間距"
 
 msgid "Restrict spacing to gems in the same collection"
-msgstr ""
+msgstr "僅限對相同集合中的寶石進行間距調整"
 
 msgid "Project affected gems on surface"
-msgstr ""
+msgstr "將受影響的寶石投影至表面"
 
 msgid "Effect radius from selected gem"
-msgstr ""
+msgstr "以選取寶石為中心的影響半徑"
 
 msgid "Distance between gems within effect radius to count as tethered"
-msgstr ""
+msgstr "影響半徑內被視為相連綁定的寶石間距"
 
 msgid "Spacing tolerance between gems"
-msgstr ""
+msgstr "寶石之間的間距容許值"
 
 msgid "Effect strength"
-msgstr ""
+msgstr "影響強度"
 
 msgid "Lock position for spacing"
-msgstr ""
+msgstr "鎖定位置以調整間距"
 
 msgid "Save to File"
-msgstr ""
+msgstr "儲存至檔案"
 
 msgid "Use gem material color for gem map"
 msgstr "使用寶石材質顏色作為寶石貼圖"
@@ -590,7 +590,7 @@ msgid "At least one gem object must be selected"
 msgstr "最少需選取一個寶石物件"
 
 msgid "At least two gem objects must be selected"
-msgstr ""
+msgstr "最少需選取兩個寶石物件"
 
 msgid "At least one mesh object must be selected"
 msgstr "最少需選取一個網格物件"
@@ -830,10 +830,10 @@ msgid "White Gold 585 Ni"
 msgstr "白金 585 Ni"
 
 msgid "Red Gold 585"
-msgstr "紅金 585"
+msgstr "赤金 585"
 
 msgid "Red Gold 375"
-msgstr "紅金 375"
+msgstr "赤金 375"
 
 msgid "Platinum 950"
 msgstr "鉑金 950"
@@ -902,7 +902,7 @@ msgid "Purple"
 msgstr "紫色"
 
 msgid "Reddish Purple"
-msgstr "紅紫色"
+msgstr "紫紅色"
 
 msgid "Red"
 msgstr "紅色"
@@ -911,7 +911,7 @@ msgid "Blue"
 msgstr "藍色"
 
 msgid "Violetish Blue"
-msgstr "紫藍色"
+msgstr "靛藍色"
 
 msgid "Pink"
 msgstr "粉色"
@@ -966,7 +966,7 @@ msgstr "鑲爪"
 
 msgctxt "Operator"
 msgid "Auto Prongs"
-msgstr ""
+msgstr "自動生成鑲爪"
 
 msgctxt "Operator"
 msgid "Instance Face"
@@ -974,7 +974,7 @@ msgstr "實例面"
 
 msgctxt "Operator"
 msgid "Incremental"
-msgstr ""
+msgstr "增量漸進調整"
 
 msgctxt "Operator"
 msgid "Lattice Project"
@@ -1058,7 +1058,7 @@ msgstr "設定最佳尺寸單位"
 
 msgctxt "Operator"
 msgid "Gem Map"
-msgstr "寶石貼圖"
+msgstr "寶石分佈圖"
 
 msgctxt "Operator"
 msgid "Add New Measurement"
