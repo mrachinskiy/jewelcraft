@@ -128,10 +128,10 @@ msgid "Spacing Overlay"
 msgstr "重疊間距"
 
 msgid "By Collection"
-msgstr ""
+msgstr "依照集合"
 
 msgid "Tether"
-msgstr ""
+msgstr "綁定"
 
 msgid "Asset Name"
 msgstr "資產名稱"
@@ -158,13 +158,13 @@ msgid "Diameter"
 msgstr "直徑"
 
 msgid "Size Step"
-msgstr ""
+msgstr "尺寸增量"
 
 msgid "Max Gap"
-msgstr ""
+msgstr "最大間距"
 
 msgid "Taper"
-msgstr ""
+msgstr "漸變"
 
 msgid "Size Offset"
 msgstr "偏移大小"
@@ -176,7 +176,7 @@ msgid "Hole"
 msgstr "開孔"
 
 msgid "Seat Depth"
-msgstr ""
+msgstr "寶石座深度"
 
 msgid "Culet"
 msgstr "寶石底尖"
