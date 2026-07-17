@@ -215,7 +215,7 @@ msgid "Use 3D Cursor"
 msgstr "使用3D游標"
 
 msgid "Gems Only"
-msgstr ""
+msgstr "僅限寶石"
 
 msgid "Ring Size"
 msgstr "戒圍尺寸"
@@ -275,10 +275,10 @@ msgid "Limited"
 msgstr "限制"
 
 msgid "Incremental Resize"
-msgstr ""
+msgstr "漸進式調整大小"
 
 msgid "Invert Mouse Wheel"
-msgstr ""
+msgstr "反轉滑鼠滾輪"
 
 msgid "Open add-on preferences window"
 msgstr "開啟附加元件偏好設置視窗"
@@ -323,7 +323,7 @@ msgid "Create instance face for selected objects"
 msgstr "為選取的物件建立實例面"
 
 msgid "Ignore other objects"
-msgstr ""
+msgstr "忽略其他物件"
 
 msgid "Create size curve"
 msgstr "建立尺寸曲線"
