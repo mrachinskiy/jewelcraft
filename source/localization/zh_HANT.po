@@ -182,7 +182,7 @@ msgid "Culet"
 msgstr "寶石底尖"
 
 msgid "Handle"
-msgstr "手柄"
+msgstr "控制桿"
 
 msgid "Curve Seat"
 msgstr "曲線座位"
