@@ -27,21 +27,6 @@ How to install
 
 <sub>Or download and drag zip file into Blender</sub>
 
-<details>
-  <summary>For Blender 4.1 or older</summary>
-
-  1. Download [JewelCraft 2.17.4][download_v2_17_4]
-  2. Make sure you have Blender 3.5 or newer.
-  3. Open `Preferences` → `Add-ons` category.
-  4. Use `Install` to install add-on from downloaded zip archive.
-</details>
-
-> [!NOTE]
-> For mac users: Safari browser will automatically unpack downloaded zip archive, to prevent that go `Safari` → `Preferences` → `General` and uncheck `Open "safe" files after downloading` option.
-
-> [!WARNING]
-> If error occurs on add-on activation, it means you are trying to install add-on repository instead of release. Make sure you download add-on release using link provided in step one of this guide.
-
 
 Установка
 ==========================
@@ -49,21 +34,6 @@ How to install
 ### [Перетащите эту ссылку в Blender][download_latest]
 
 <sub>Или скачайте и перетащите zip-файл в Blender</sub>
-
-<details>
-  <summary>Для Blender 4.1 или старше</summary>
-
-  1. Загрузите [JewelCraft 2.17.4][download_v2_17_4]
-  2. Убедитесь, что у вас установлен Blender 3.5 или новее.
-  3. Откройте `Preferences` → `Add-ons`
-  4. Воспользуйтесь `Install` чтобы установить аддон из загруженного архива.
-</details>
-
-> [!NOTE]
-> Примечание для пользователей mac: браузер Safari автоматически распаковывает скачиваемые zip архивы, чтобы это предотвратить в настройках `Safari` → `Preferences` → `General` отключите опцию `Open "safe" files after downloading`.
-
-> [!WARNING]
-> Если при активации аддона возникает ошибка, значит вы пытаетесь установить репозиторий вместо релиза. Для загрузки релиза используйте ссылку, приведённую в первом шаге данного руководства.
 
 
 Contributing
@@ -87,6 +57,5 @@ Contributing
 > * Look out for appropriate context, `Base` for example is used in the context of materials as `Base Metal`, which in other words means `Non-Presious Metal` and should not be translated as `Basis` or `Foundation`.
 
 
-[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v3.0.0/jewelcraft-3.0.0.zip?repository=https://mrachinskiy.github.io/api/v1/extensions.json&blender_version_min=4.2.0
-[download_v2_17_4]: https://github.com/mrachinskiy/jewelcraft/releases/download/v2.17.4-blender3.5.0/jewelcraft-2_17_4.zip
+[download_latest]: https://github.com/mrachinskiy/jewelcraft/releases/download/v3.0.0/jewelcraft-3.0.0.zip?repository=https://mrachinskiy.github.io/api/v1/extensions.json&blender_version_min=4.5.0
 [issues_url]: https://github.com/mrachinskiy/jewelcraft/issues
