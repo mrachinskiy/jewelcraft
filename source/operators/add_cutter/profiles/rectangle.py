@@ -19,10 +19,10 @@ def _add_rect(bm: BMesh, x: float, y: float, z: float) -> list[BMVert]:
 
 class Section:
     __slots__ = (
+        "bv_profile",
+        "bv_segments",
         "bv_type",
         "bv_width",
-        "bv_segments",
-        "bv_profile",
     )
 
     def __init__(self, operator) -> None:

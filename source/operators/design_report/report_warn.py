@@ -21,10 +21,10 @@ def _collection_walk(coll: LayerCollection) -> Iterator[LayerCollection]:
 
 class Warnings:
     __slots__ = (
-        "_overlap_data",
-        "_known_stones",
-        "_known_cuts",
         "_is_unknown_id",
+        "_known_cuts",
+        "_known_stones",
+        "_overlap_data",
     )
 
     def __init__(self) -> None:

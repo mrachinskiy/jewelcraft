@@ -517,7 +517,7 @@ def mod_curve_off(ob: Object) -> Object | None:
 
 
 class BoundBox:
-    __slots__ = "min", "max", "location", "dimensions"
+    __slots__ = "dimensions", "location", "max", "min"
 
     def __init__(self, obs: Iterable[Object]) -> None:
         bbox = []

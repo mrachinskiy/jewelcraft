@@ -235,20 +235,18 @@ class OBJECT_OT_gem_edit(Operator):
             if ob.type != "MESH" or (self.filter_gems and "gem" not in ob):
                 continue
 
-            if ob.get("gem", {}).get("cut", "") != self.cut:
+            if self.edit_mesh and ob.get("gem", {}).get("cut", "") != self.cut:
+                size_orig = ob.dimensions.y
+                mats_orig = ob.data.materials
 
-                if self.edit_mesh:
-                    size_orig = ob.dimensions.y
-                    mats_orig = ob.data.materials
+                ob.data = me.copy()
+                ob.name = cut_name
 
-                    ob.data = me.copy()
-                    ob.name = cut_name
+                ob.scale = (size_orig, size_orig, size_orig)
+                asset.apply_scale(ob)
 
-                    ob.scale = (size_orig, size_orig, size_orig)
-                    asset.apply_scale(ob)
-
-                    for mat in mats_orig:
-                        ob.data.materials.append(mat)
+                for mat in mats_orig:
+                    ob.data.materials.append(mat)
 
             if self.edit_mat:
                 if ob.data.users > 1 and (not ob.material_slots or ob.material_slots[0].name != wm_props.gem_color_name):

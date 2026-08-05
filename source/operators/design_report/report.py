@@ -39,7 +39,7 @@ class Entry(NamedTuple):
 
 
 class Data:
-    __slots__ = "warnings", "metadata", "gems", "entries"
+    __slots__ = "entries", "gems", "metadata", "warnings"
 
     gems: dict[GemRaw, int] | list[GemFmt]
     warnings: list[str]
@@ -53,9 +53,7 @@ class Data:
         self.entries = []
 
     def is_empty(self) -> bool:
-        if any((self.gems, self.entries, self.metadata)):
-            return False
-        return True
+        return not any((self.gems, self.entries, self.metadata))
 
     def asdict(self) -> dict[str, list[str | dict[str, Any]]]:
         d = collections.defaultdict(list)

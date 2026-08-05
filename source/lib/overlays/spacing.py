@@ -55,7 +55,7 @@ def handler_toggle(self, context):
 
 
 class CacheControl:
-    __slots__ = "cache_size"
+    __slots__ = ("cache_size",)
 
     def __init__(self) -> None:
         self.cache_size = 64

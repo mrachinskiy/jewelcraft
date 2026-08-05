@@ -40,10 +40,10 @@ def _edge_loop_walk(verts: list[BMVert]) -> Iterator[BMVert]:
 
 class Section:
     __slots__ = (
+        "bv_profile",
+        "bv_segments",
         "bv_type",
         "bv_width",
-        "bv_segments",
-        "bv_profile",
         "curve_factor",
         "curve_segments",
     )

@@ -17,7 +17,7 @@ def _minify(s: str) -> str:
 
 
 class Document:
-    __slots__ = "template", "sections", "contents"
+    __slots__ = "contents", "sections", "template"
 
     def __init__(self, template_path: Path) -> None:
         self.template = {}

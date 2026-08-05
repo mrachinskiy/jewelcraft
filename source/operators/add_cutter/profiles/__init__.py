@@ -10,7 +10,7 @@ from . import fantasy, rectangle, round, triangle
 
 class Section:
 
-    def add(self, bm: BMesh, size: Vector, offset: tuple[float, float, float] = None) -> tuple[list[BMVert], list[BMVert]]:
+    def add(self, bm: BMesh, size: Vector, offset: tuple[float, float, float] | None = None) -> tuple[list[BMVert], list[BMVert]]:
         ...
 
     def add_z_fmt(self, bm: BMesh, size: Vector) -> tuple[list[BMVert], list[BMVert]]:

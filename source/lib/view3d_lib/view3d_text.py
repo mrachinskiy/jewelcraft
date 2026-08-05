@@ -26,7 +26,7 @@ class _Prop(NamedTuple):
 
 
 class Layout:
-    __slots__ = "children", "enabled_by", "col_max"
+    __slots__ = "children", "col_max", "enabled_by"
     children: "list[Layout | _Prop]"
     enabled_by: str
     col_max: list[str]
@@ -49,7 +49,7 @@ class Layout:
         self.children.append(lay)
         return lay
 
-    def _prop(self, type: int, name: str, key: str, attr: str, items: tuple[str] = None) -> None:
+    def _prop(self, type: int, name: str, key: str, attr: str, items: tuple[str] | None = None) -> None:
         self.children.append(_Prop(type, name, key, attr, items))
         self.col_max[0] = max(self.col_max[0], name, key=len)
         self.col_max[1] = max(self.col_max[1], key, key=len)

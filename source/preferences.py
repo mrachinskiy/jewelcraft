@@ -343,9 +343,7 @@ class ListProperty:
         if self.coll:
             self.coll.remove(self.index)
             index_last = max(0, self.length() - 1)
-
-            if self.index > index_last:
-                self.index = index_last
+            self.index = min(self.index, index_last)
 
     def clear(self):
         self.coll.clear()

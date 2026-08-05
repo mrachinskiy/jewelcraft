@@ -32,10 +32,7 @@ def check() -> bool:
         _init()
         return False
 
-    if repo.use_sync_on_startup is True:
-        return False
-
-    return True
+    return repo.use_sync_on_startup is not True
 
 
 _init()

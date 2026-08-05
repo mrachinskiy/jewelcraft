@@ -7,13 +7,13 @@ from ..localization import DICTIONARY
 
 
 class GetText:
-    __slots__ = ("lang", "gettext")
+    __slots__ = "gettext", "lang"
 
     def __init__(self, lang: str) -> None:
         if lang == "AUTO":
             lang = bpy.app.translations.locale
 
-        if lang in DICTIONARY.keys():
+        if lang in DICTIONARY:
             self.lang = lang
             self.gettext = self._gettext
         else:
