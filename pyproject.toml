@@ -7,4 +7,4 @@ line-ending = "lf"
 quote-style = "double"
 
 [tool.ruff.lint]
-ignore = ["E741"]
+ignore = ["E741", "RUF012"]
