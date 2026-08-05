@@ -75,9 +75,9 @@ def po_update(po_dir: Path, po_ref: tuple[POHeader, POTranslation]) -> Iterator[
 
         # Entries
 
-        for ref_key, _ in ref_d.items():
+        for ref_key in ref_d:
 
-            if ref_key in dictionary.keys():
+            if ref_key in dictionary:
                 text_complete += 1
 
             msgid = ref_key[1].replace("\n", "\\n").strip()

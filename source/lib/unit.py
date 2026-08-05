@@ -42,7 +42,7 @@ def convert_mm_ct(x: float) -> float:
 
 
 class Scale:
-    __slots__ = (
+    __slots__ = (  # noqa: RUF023
         "scale",
         "from_scene",
         "from_scene_vol",
