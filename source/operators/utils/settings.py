@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import bpy
+from bpy.app.translations import pgettext_tip as _
 from bpy.props import StringProperty
 from bpy.types import Operator
 
@@ -20,7 +21,7 @@ class WM_OT_repo_enable_autoupdates(Operator):
         repo.use_sync_on_startup = True
         bpy.ops.wm.save_userpref()
 
-        self.report({"INFO"}, "Check for updates on startup is enabled for {} repository".format(updatelib.repo_name))
+        self.report({"INFO"}, _("Check for updates on startup is enabled for {} repository").format(updatelib.repo_name))
 
         return {"FINISHED"}
 
