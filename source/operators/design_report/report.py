@@ -39,7 +39,7 @@ class Entry(NamedTuple):
 
 
 class Data:
-    __slots__ = "entries", "gems", "metadata", "warnings"
+    __slots__ = "warnings", "metadata", "gems", "entries"  # noqa: RUF023, order important for json report
 
     gems: dict[GemRaw, int] | list[GemFmt]
     warnings: list[str]

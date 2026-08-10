@@ -142,7 +142,7 @@ def gem_overlap(data: list[LocRadMat], threshold: float, first_match=False) -> s
 # ------------------------------------
 
 
-def add_material(ob: Object, name="Material", color: Color | None = None, is_gem=False) -> None:
+def add_material(ob: Object, name="Material", is_gem=False, *, color: Color) -> None:
     mat = bpy.data.materials.get(name)
 
     if not mat:
@@ -408,7 +408,7 @@ def show_window(width: int, height: int, area_type: str | None = None, space_dat
 # ------------------------------------
 
 
-def bm_to_scene(bm, coll: Collection, name="New object", color: Color = Color((1.0, 1.0, 1.0))) -> Object:
+def bm_to_scene(bm, coll: Collection, name="New object", *, color: Color) -> Object:
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
 
@@ -420,7 +420,7 @@ def bm_to_scene(bm, coll: Collection, name="New object", color: Color = Color((1
     return ob
 
 
-def bm_to_parent(bm, obs: list[Object], name="New object", color: Color = Color((1.0, 1.0, 1.0))) -> None:
+def bm_to_parent(bm, obs: list[Object], name="New object", *, color: Color) -> None:
     space_data = bpy.context.space_data
     use_local_view = bool(space_data and space_data.local_view)
 
