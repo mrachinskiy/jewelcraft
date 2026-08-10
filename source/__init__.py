@@ -3,7 +3,7 @@
 
 
 if "bpy" in locals():
-    essentials.reload_recursive(var.ADDON_DIR, locals())
+    essentials.reload_recursive(var.ADDON_DIR, locals())  # noqa: F821
 else:
     import bpy
     from bpy.props import PointerProperty
