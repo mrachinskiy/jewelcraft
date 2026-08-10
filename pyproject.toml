@@ -6,5 +6,8 @@ line-length = 120
 line-ending = "lf"
 quote-style = "double"
 
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+
 [tool.ruff.lint]
-ignore = ["E741", "RUF012"]
+ignore = ["E741", "RUF012", "DTZ011", "PLW1510"]
