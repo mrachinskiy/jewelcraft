@@ -84,7 +84,7 @@ class OBJECT_OT_cutter_add(Operator):
 
         for ob in context.selected_objects:
             if "gem" in ob:
-                size = tuple(round(x, 2) for x in from_scene(ob.dimensions))
+                size = from_scene(ob.dimensions).to_tuple(2)
                 group_by_size[size].append(ob)
 
         for size, obs in group_by_size.items():

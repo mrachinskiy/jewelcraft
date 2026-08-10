@@ -299,7 +299,7 @@ def _gem_records_collect(depsgraph: Depsgraph, show_all: bool, is_overlay: bool,
     for dup, ob, instancer in iter_gems(depsgraph):
         stone = ob["gem"]["stone"]
         cut = ob["gem"]["cut"]
-        size = tuple(round(x, 2) for x in from_scene(gem_dimensions(dup)))
+        size = from_scene(gem_dimensions(dup)).to_tuple(2)
         color_name = ob.material_slots[0].name if ob.material_slots else ""
         gem = stone, cut, size, color_name
         gems.add(gem)
