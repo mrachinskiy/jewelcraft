@@ -5,6 +5,7 @@ import re
 from collections.abc import Iterator
 from pathlib import Path
 
+
 POHeader = dict[str, str]
 POTranslation = dict[tuple[str, str], str]
 

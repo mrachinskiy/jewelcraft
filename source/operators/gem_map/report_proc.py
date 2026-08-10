@@ -8,12 +8,6 @@ from ...lib import gemlib, gettext
 from ..design_report import report
 
 
-def _to_int(x: float) -> int | float:
-    if x.is_integer():
-        return int(x)
-    return x
-
-
 def data_process(Report: report.Data, lang: str) -> tuple[str, tuple[int]]:
     table_data = []
     _table_tmp = []
@@ -43,9 +37,6 @@ def data_process(Report: report.Data, lang: str) -> tuple[str, tuple[int]]:
         # Format
         # ---------------------------
 
-        l = _to_int(size[1])
-        w = _to_int(size[0])
-
         try:
             stone_fmt = _(gemlib.STONES[stone].name)
             cut_fmt = _(gemlib.CUTS[cut].name)
@@ -55,12 +46,14 @@ def data_process(Report: report.Data, lang: str) -> tuple[str, tuple[int]]:
             cut_fmt = cut
             trait = None
 
+        x, y = tuple(int(v) if v.is_integer() else v for v in size[:2])
+
         if trait is gemlib.TRAIT_XY_SYMMETRY:
-            size_fmt = f"{l} {_mm}"
+            size_fmt = f"{y} {_mm}"
         elif trait is gemlib.TRAIT_X_SIZE:
-            size_fmt = f"{w} × {l} {_mm}"
+            size_fmt = f"{x} × {y} {_mm}"
         else:
-            size_fmt = f"{l} × {w} {_mm}"
+            size_fmt = f"{y} × {x} {_mm}"
 
         qty_fmt = f"{qty} {_pcs}"
 

@@ -59,6 +59,7 @@ def _cuts(lang: str, color: tuple[float, ...]) -> EnumItems5:
 @lru_cache(maxsize=1)
 def _stones(lang: str) -> EnumItems4:
     import operator
+
     from . import gemlib
 
     list_ = [

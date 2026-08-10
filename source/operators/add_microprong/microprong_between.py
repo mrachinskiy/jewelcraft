@@ -79,15 +79,15 @@ def add(self, context) -> tuple[float, float]:
     try:
         bm = bmesh.new()
 
-        w = self.between_x / 2
-        l = self.between_y / 2
+        x = self.between_x / 2
+        y = self.between_y / 2
 
         coords = (
-            ( w,   l,  self.between_z1),
-            ( w,   l,  0.0),
-            ( 0.0, l, -self.between_z2),
-            (-w,   l,  0.0),
-            (-w,   l,  self.between_z1),
+            ( x,   y,  self.between_z1),
+            ( x,   y,  0.0),
+            ( 0.0, y, -self.between_z2),
+            (-x,   y,  0.0),
+            (-x,   y,  self.between_z1),
         )
 
         vs_north = [bm.verts.new(co) for co in coords]

@@ -479,6 +479,7 @@ class PaletteList(ListProperty, PropertyGroup):
 
         if not load_factory and (filepath := self.serialize_path()).exists():
             import json
+
             from .lib import colorlib
 
             with open(filepath, "r", encoding="utf-8") as file:

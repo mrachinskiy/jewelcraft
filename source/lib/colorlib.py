@@ -23,5 +23,5 @@ def rbg_to_hex(color: Color) -> str:
 
 
 def luma(rgb: tuple[float, float, float, ...]) -> float:
-    r, g, b, *a = rgb
+    r, g, b, *_ = rgb
     return 0.299 * r + 0.587 * g + 0.114 * b

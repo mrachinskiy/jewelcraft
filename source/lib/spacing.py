@@ -13,6 +13,7 @@ from mathutils import Matrix, Quaternion, Vector, kdtree
 
 from . import unit
 
+
 _TIMER_INTERVAL = 1 / 60
 _BASE_STRENGTH = 10.0
 _CONSTRAINT_PASSES = 7

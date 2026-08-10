@@ -12,6 +12,7 @@ from mathutils import Matrix, Vector, kdtree
 from .. import var
 from . import mesh, unit
 
+
 LocRadMat = tuple[Vector, float, Matrix]
 Color = tuple[float, float, float, float]
 
@@ -42,7 +43,7 @@ def gem_transform(dup: DepsgraphObjectInstance) -> LocRadMat:
 
     if dup.is_instance:
         bbox = dup.instance_object.original.bound_box
-        x, y, _ = bbox[0]
+        x, y = bbox[0][:2]
         dim = (
             (bbox[4][0] - x) * abs(sca.x),
             (bbox[3][1] - y) * abs(sca.y),
@@ -259,7 +260,7 @@ def md_input_set(md: Modifier, prop: str, value: Any, enum_items: list[str] | No
 
 
 def asset_import(filepath: Path, ob_name=False, me_name=False, ng_name=False) -> BlendData:
-    with bpy.data.libraries.load(str(filepath)) as (data_from, data_to):
+    with bpy.data.libraries.load(str(filepath)) as (_, data_to):
         if ob_name:
             data_to.objects = [ob_name]
         if me_name:

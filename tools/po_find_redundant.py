@@ -5,6 +5,7 @@ import re
 from collections.abc import Iterator
 from pathlib import Path
 
+
 PO_REF = "ru_RU.po"
 
 

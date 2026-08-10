@@ -49,15 +49,15 @@ def add(self, context):
     try:
         bm = bmesh.new()
 
-        w = self.side_x / 2
-        l = self.side_y / 2
+        x = self.side_x / 2
+        y = self.side_y / 2
 
         coords = (
-            ( w,   l,  w + self.side_z1),
-            ( w,   l, -w),
-            ( 0.0, l, -w - self.side_z2),
-            (-w,   l, -w),
-            (-w,   l,  w + self.side_z1),
+            ( x,   y,  x + self.side_z1),
+            ( x,   y, -x),
+            ( 0.0, y, -x - self.side_z2),
+            (-x,   y, -x),
+            (-x,   y,  x + self.side_z1),
         )
 
         vs_north = [bm.verts.new(co) for co in coords]

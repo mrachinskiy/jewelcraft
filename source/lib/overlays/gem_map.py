@@ -21,6 +21,7 @@ from .. import gemlib, unit
 from ..asset import gem_dimensions, gem_transform, iter_gems
 from ..colorlib import luma
 
+
 _FONT_ID = 0
 _FONT_ATLAS_PADDING = 4
 _FONT_ATLAS_MIN_SIZE = 64
@@ -344,19 +345,20 @@ def _gem_map_create(gems: set[tuple], use_mat_color: bool, opacity: float, to_sr
             color = (*color, opacity)
 
         color_font = (1.0, 1.0, 1.0) if luma(color) < 0.4 else (0.0, 0.0, 0.0)
-        w, l = tuple(int(value) if value.is_integer() else value for value in gem_size[:2])
 
         try:
             trait = gemlib.CUTS[cut].trait
         except KeyError:
             trait = None
 
+        x, y = tuple(int(v) if v.is_integer() else v for v in gem_size[:2])
+
         if trait is gemlib.TRAIT_XY_SYMMETRY:
-            size = str(l)
+            size = str(y)
         elif trait is gemlib.TRAIT_X_SIZE:
-            size = f"{w}×{l}"
+            size = f"{x}×{y}"
         else:
-            size = f"{l}×{w}"
+            size = f"{y}×{x}"
 
         gem_map[gem] = size, color, color_font
 

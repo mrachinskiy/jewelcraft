@@ -13,6 +13,7 @@ from ... import preferences, var
 def _render_preview_base64(resolution: int) -> str:
     import base64
     import tempfile
+
     from ...lib import asset
 
     w = bpy.context.region.width
@@ -82,6 +83,7 @@ class WM_OT_design_report(preferences.ReportLangEnum, Operator):
 
     def execute(self, context):
         import webbrowser
+
         from ...lib import gettext
         from . import html_doc, report_fmt, report_get
 

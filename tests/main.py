@@ -6,6 +6,7 @@ import subprocess
 import tomllib
 from pathlib import Path
 
+
 BLENDER_APPS_DIR = Path().home()
 TESTS_DIR = Path(__file__).parent
 

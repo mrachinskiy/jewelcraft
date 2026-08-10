@@ -10,6 +10,7 @@ from mathutils import Color
 
 from .. import colorlib
 
+
 _TYPE_BOOL = 1
 _TYPE_INT = 2
 _TYPE_PROC = 3

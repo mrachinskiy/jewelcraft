@@ -11,6 +11,7 @@ from mathutils import Matrix, Vector
 
 from ...lib import asset, unit
 
+
 _EPS = 1e-6
 _MAX_CONNECTIONS = 2048
 _MAX_PRONGS = 4096

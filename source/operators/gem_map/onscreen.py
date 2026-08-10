@@ -8,6 +8,7 @@ from gpu_extras.batch import batch_for_shader
 
 from ...lib import view3d_lib
 
+
 Color = tuple[float, float, float]
 _handler = None
 

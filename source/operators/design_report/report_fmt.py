@@ -20,7 +20,6 @@ def data_format(Report: report.Data, _: Callable[[str], str], fmt_str: bool) -> 
             Report.gems.items(),
             key=lambda x: (x[0][0], x[0][1], -x[0][2][1], -x[0][2][0]),
         ):
-            w, l, h = size
             ct = gemlib.ct_calc(stone, cut, size)
             total_ct = round(ct * qty, 3)
 
@@ -33,12 +32,14 @@ def data_format(Report: report.Data, _: Callable[[str], str], fmt_str: bool) -> 
                 cutf = cut
                 trait = None
 
+            x, y = size[:2]
+
             if trait is gemlib.TRAIT_XY_SYMMETRY:
-                sizef = l
+                sizef = y
             elif trait is gemlib.TRAIT_X_SIZE:
-                sizef = (w, l)
+                sizef = x, y
             else:
-                sizef = (l, w)
+                sizef = y, x
 
             if fmt_str and isinstance(sizef, tuple):
                 sizef = f"{sizef[0]} × {sizef[1]}"

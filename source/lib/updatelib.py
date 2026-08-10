@@ -1,10 +1,10 @@
 # SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-
 import bpy
 
 from .. import var
+
 
 repo_name = ""
 is_remote_repo = False

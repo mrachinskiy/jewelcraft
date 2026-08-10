@@ -388,6 +388,7 @@ class OBJECT_OT_gem_recover(Operator):
         import collections
         import itertools
         import operator
+
         from mathutils import Matrix
 
         rotvar = self.rot_var - 1
