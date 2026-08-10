@@ -131,7 +131,7 @@ def to_size_fmt(cir: float, fmt: str) -> int | float | str | None:
     return size
 
 
-def to_cir(size: int | float, fmt: str) -> float:
+def to_cir(size: float, fmt: str) -> float:
     if fmt == "CH":
         return size + 40.0
 
