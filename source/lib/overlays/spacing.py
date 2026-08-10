@@ -147,8 +147,6 @@ def _draw(self, context):
     if not (show_all or is_gem):
         return
 
-    global _font_loc
-
     prefs = context.preferences.addons[var.ADDON_ID].preferences
     default_color = prefs.overlay_color
     default_linewidth = prefs.overlay_linewidth
@@ -290,8 +288,6 @@ def _draw(self, context):
 
 
 def _draw_font(self, context):
-    global _font_loc
-
     if not _font_loc:
         return
 

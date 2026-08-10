@@ -20,8 +20,6 @@ def handler_del():
 
 
 def _timer():
-    global _is_executed
-
     if _is_executed:
         return
 
