@@ -1,22 +1,13 @@
 # SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from collections.abc import Iterator
-
-from bpy.types import DepsgraphObjectInstance, LayerCollection
+from bpy.types import DepsgraphObjectInstance
 from mathutils import Matrix, Vector
 
 from ...lib import asset, unit
 
 
 ObjectData = tuple[Vector, float, Matrix]
-
-
-def _collection_walk(coll: LayerCollection) -> Iterator[LayerCollection]:
-    for subcoll in coll.children:
-        yield subcoll
-        if subcoll.children:
-            yield from _collection_walk(subcoll)
 
 
 class Warnings:
