@@ -3,7 +3,7 @@
 
 import bpy
 from bpy.app.translations import pgettext_iface as _
-from bpy.props import BoolProperty, EnumProperty, FloatProperty
+from bpy.props import BoolProperty, EnumProperty, FloatProperty, IntProperty
 from bpy.types import Operator
 
 from ... import var
@@ -295,6 +295,10 @@ class OBJECT_OT_gem_recover(Operator):
     axis_in_front: BoolProperty(default=True, options={"HIDDEN"})
     y_align: BoolProperty(options={"HIDDEN"})
     snap_to_edge: BoolProperty(options={"HIDDEN"})
+    rot_var: IntProperty(default=1, options={"HIDDEN", "SKIP_SAVE"})
+    y_var: IntProperty(default=1, options={"HIDDEN", "SKIP_SAVE"})
+    xy_loc: IntProperty(options={"HIDDEN", "SKIP_SAVE"})
+    _mats: list
 
     @classmethod
     def poll(cls, context):
@@ -525,11 +529,6 @@ class OBJECT_OT_gem_recover(Operator):
             self.report({"ERROR"}, "At least one mesh object must be selected")
             return {"CANCELLED"}
 
-        self.mats = []
-        self.rot_var = 1
-        self.y_var = 1
-        self.xy_loc = 0
-
         self.modal_pass(context)
 
         # Onscreen
@@ -569,3 +568,12 @@ class OBJECT_OT_gem_recover(Operator):
         context.workspace.status_text_set("ESC: Cancel, ↵/␣: Confirm")
 
         return {"RUNNING_MODAL"}
+
+    @property
+    def mats(self) -> list:
+        """Hack to avoid mutable class attribute"""
+        try:
+            return self._mats
+        except AttributeError:
+            self._mats = []
+            return self._mats

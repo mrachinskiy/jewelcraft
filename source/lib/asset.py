@@ -193,7 +193,7 @@ def move_to_coll(obs: list[Object], coll: Collection) -> None:
 
 def ob_link(ob: Object, coll: Collection) -> None:
     coll.objects.link(ob)
-    if (sd := bpy.context.space_data) and sd.local_view:
+    if (sd := bpy.context.space_data) is not None and sd.type == "VIEW_3D" and sd.local_view is not None:
         ob.local_view_set(sd, True)
 
 
