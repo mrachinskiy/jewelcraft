@@ -32,8 +32,8 @@ class OBJECT_OT_cutter_add(Operator):
     bl_idname = "object.jewelcraft_cutter_add"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    cut: StringProperty()
-    shape: IntProperty()
+    cut: StringProperty(default="ROUND", options={"HIDDEN"})
+    shape: IntProperty(default=1, options={"HIDDEN"})
 
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
@@ -78,6 +78,9 @@ class OBJECT_OT_cutter_add(Operator):
         from ...lib import asset, unit
         from . import cutter_mesh
 
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        color = prefs.color_cutter
+
         from_scene = unit.Scale().from_scene
         group_by_size = collections.defaultdict(list)
         active_dim = context.object.dimensions
@@ -90,7 +93,7 @@ class OBJECT_OT_cutter_add(Operator):
         for size, obs in group_by_size.items():
             try:
                 bm = cutter_mesh.get(self, obs[0].dimensions, active_dim)
-                asset.bm_to_parent(bm, obs, name="Cutter", color=self.color)
+                asset.bm_to_parent(bm, obs, name="Cutter", color=color)
             finally:
                 bm.free()
 
@@ -111,9 +114,6 @@ class OBJECT_OT_cutter_add(Operator):
             self.shape = gemlib.CUTS[self.cut].shape
         except KeyError:
             self.shape = gemlib.SHAPE_ROUND
-
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.color = prefs.color_cutter
 
         if not event.ctrl:
             init_presets(self, ob.dimensions)

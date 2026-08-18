@@ -44,6 +44,9 @@ class OBJECT_OT_prongs_add(Operator):
         from ...lib import asset, unit
         from . import prongs_mesh
 
+        prefs = context.preferences.addons[var.ADDON_ID].preferences
+        color = prefs.color_prongs
+
         from_scene = unit.Scale().from_scene
         group_by_size = collections.defaultdict(list)
 
@@ -55,7 +58,7 @@ class OBJECT_OT_prongs_add(Operator):
         for size, obs in group_by_size.items():
             try:
                 bm = prongs_mesh.get(self, obs[0].dimensions)
-                asset.bm_to_parent(bm, obs, name="Prongs", color=self.color)
+                asset.bm_to_parent(bm, obs, name="Prongs", color=color)
             finally:
                 bm.free()
 
@@ -71,17 +74,14 @@ class OBJECT_OT_prongs_add(Operator):
             self.report({"ERROR"}, "At least one gem object must be selected")
             return {"CANCELLED"}
 
-        self.cut = ob["gem"]["cut"] if "gem" in ob else None
+        cut = ob["gem"]["cut"] if "gem" in ob else None
         try:
-            self.shape = gemlib.CUTS[self.cut].shape
+            shape = gemlib.CUTS[cut].shape
         except KeyError:
-            self.shape = gemlib.SHAPE_ROUND
-
-        prefs = context.preferences.addons[var.ADDON_ID].preferences
-        self.color = prefs.color_prongs
+            shape = gemlib.SHAPE_ROUND
 
         if not event.ctrl:
-            prongs_presets.init_presets(self, ob.dimensions.copy())
+            prongs_presets.init_presets(self, ob.dimensions.copy(), cut, shape)
 
         wm = context.window_manager
         wm.invoke_props_popup(self, event)

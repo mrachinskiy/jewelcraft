@@ -171,6 +171,7 @@ class OBJECT_OT_prongs_auto_add(Operator):
             self.report({"ERROR"}, "At least two gem objects must be selected")
             return {"CANCELLED"}
 
+        # Hack to reset properties while allowing to save presets
         for name, prop in self.__class__.__annotations__.items():
             setattr(self, name, prop.keywords["default"])
 

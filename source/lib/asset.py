@@ -422,8 +422,8 @@ def bm_to_scene(bm, coll: Collection, name="New object", *, color: Color) -> Obj
 
 
 def bm_to_parent(bm, obs: list[Object], name="New object", *, color: Color) -> None:
-    space_data = bpy.context.space_data
-    use_local_view = bool(space_data and space_data.local_view)
+    sd = bpy.context.space_data
+    use_local_view = sd is not None and sd.type == "VIEW_3D" and sd.local_view is not None
 
     me = bpy.data.meshes.new(name)
     bm.to_mesh(me)
@@ -435,7 +435,7 @@ def bm_to_parent(bm, obs: list[Object], name="New object", *, color: Color) -> N
             coll.objects.link(ob)
 
         if use_local_view:
-            ob.local_view_set(space_data, True)
+            ob.local_view_set(sd, True)
 
         ob.location = parent.location
         ob.rotation_euler = parent.rotation_euler
@@ -446,9 +446,9 @@ def bm_to_parent(bm, obs: list[Object], name="New object", *, color: Color) -> N
 
 
 def ob_copy_and_parent(ob: Object, parents: list[Object]) -> None:
+    sd = bpy.context.space_data
+    use_local_view = sd is not None and sd.type == "VIEW_3D" and sd.local_view is not None
     is_orig = True
-    space_data = bpy.context.space_data
-    use_local_view = bool(space_data and space_data.local_view)
 
     for parent in parents:
         if is_orig:
@@ -461,7 +461,7 @@ def ob_copy_and_parent(ob: Object, parents: list[Object]) -> None:
             coll.objects.link(ob_copy)
 
         if use_local_view:
-            ob_copy.local_view_set(space_data, True)
+            ob_copy.local_view_set(sd, True)
 
         ob_copy.select_set(True)
         ob.location = parent.location
@@ -476,8 +476,8 @@ def ob_copy_to_faces(ob: Object) -> None:
     if mats:
         ob.matrix_world = mats.pop()
         collection = bpy.context.collection
-        space_data = bpy.context.space_data
-        use_local_view = bool(space_data and space_data.local_view)
+        sd = bpy.context.space_data
+        use_local_view = sd is not None and sd.type == "VIEW_3D" and sd.local_view is not None
 
         for mat in mats:
             ob_copy = ob.copy()
@@ -485,7 +485,7 @@ def ob_copy_to_faces(ob: Object) -> None:
             collection.objects.link(ob_copy)
 
             if use_local_view:
-                ob_copy.local_view_set(space_data, True)
+                ob_copy.local_view_set(sd, True)
 
             ob_copy.matrix_world = mat
             ob_copy.select_set(True)
