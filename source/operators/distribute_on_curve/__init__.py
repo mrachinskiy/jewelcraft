@@ -7,6 +7,8 @@ from bpy.types import Operator
 
 class Distribute:
 
+    is_invoked = False
+
     def draw(self, context):
         layout = self.layout
         layout.use_property_split = True
@@ -65,10 +67,18 @@ class Distribute:
 
     def execute(self, context):
         from . import distribute_func
+
+        if not self.is_invoked:
+            self.report({"ERROR"}, "Operator has to be called with INVOKE_DEFAULT")
+            return {"CANCELLED"}
+
         return distribute_func.execute(self, context)
 
     def invoke(self, context, event):
         from . import distribute_func
+
+        self.is_invoked = True
+
         return distribute_func.invoke(self, context, event)
 
 

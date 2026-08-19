@@ -72,8 +72,8 @@ def _deform_redstr(ob: Object, rot_x: float, rot_z: float, loc_z: float) -> None
 
 
 def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> list[tuple[Constraint, float, float]]:
-    space_data = bpy.context.space_data
-    use_local_view = bool(space_data.local_view)
+    sd = bpy.context.space_data
+    use_local_view = sd is not None and sd.type == "VIEW_3D" and sd.local_view is not None
     ob_colls = ob.users_collection
     child_colls = [(child, child.users_collection) for child in ob.children]
 
@@ -91,7 +91,7 @@ def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> list[t
                 coll.objects.link(ob_copy)
 
             if use_local_view:
-                ob_copy.local_view_set(space_data, True)
+                ob_copy.local_view_set(sd, True)
 
             for child, colls in child_colls:
                 child_copy = child.copy()
@@ -238,6 +238,7 @@ def execute(self, context):
 def invoke(self, context, event):
     wm = context.window_manager
     sizes = wm.jewelcraft.sizes
+    show_props = not bpy.app.background and context.area.type == "VIEW_3D"
 
     if self.is_distribute:
 
@@ -260,7 +261,9 @@ def invoke(self, context, event):
             item.qty = 10
             item.size = ob.dimensions.y
 
-        wm.invoke_props_popup(self, event)
+        if show_props:
+            wm.invoke_props_popup(self, event)
+
         return self.execute(context)
 
     obs = []
@@ -310,5 +313,8 @@ def invoke(self, context, event):
             ofst_n = round(ofst_n1 + (ofst_n1 - ofst_n2), 2)
             if abs((ofst_n - 100.0) - ofst_1) < 0.1:
                 self.end = ofst_n
+
+    if not show_props:
+        return self.execute(context)
 
     return wm.invoke_props_popup(self, event)

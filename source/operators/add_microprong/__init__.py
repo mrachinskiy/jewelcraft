@@ -1,8 +1,11 @@
 # SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import bpy
 from bpy.props import BoolProperty, FloatProperty, IntProperty
 from bpy.types import Object, Operator
+
+from ... import var
 
 
 class OBJECT_OT_microprong_cutter_add(Operator):
@@ -64,6 +67,15 @@ class OBJECT_OT_microprong_cutter_add(Operator):
     )
 
     size_active: FloatProperty(options={"HIDDEN", "SKIP_SAVE"})
+
+    color: tuple[float, float, float, float]
+    curve_length: float
+    gem_offset_start: float
+    gem_offset_end: float
+    is_ob_multiple: bool
+    is_cyclic: bool
+
+    is_invoked = False
 
     def draw(self, context):
         layout = self.layout
@@ -146,6 +158,10 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         col.prop(self, "rot_z")
 
     def execute(self, context):
+        if not self.is_invoked:
+            self.report({"ERROR"}, "Operator has to be called with INVOKE_DEFAULT")
+            return {"CANCELLED"}
+
         if self.use_side:
             from . import microprong_side
             microprong_side.add(self, context)
@@ -164,8 +180,9 @@ class OBJECT_OT_microprong_cutter_add(Operator):
         return {"FINISHED"}
 
     def invoke(self, context, event):
-        from ... import var
         from ...lib import mesh
+
+        self.is_invoked = True
 
         curve = None
         obs_count = 0
@@ -222,8 +239,10 @@ class OBJECT_OT_microprong_cutter_add(Operator):
             closed_distribution = abs(ofst[1] - ofst[0] + ofst[-1] - 100 - ofst[0]) < 0.1
             self.is_cyclic = cyclic and closed_distribution
 
-        wm = context.window_manager
-        wm.invoke_props_popup(self, event)
+        if not bpy.app.background:
+            wm = context.window_manager
+            wm.invoke_props_popup(self, event)
+
         return self.execute(context)
 
     @staticmethod
