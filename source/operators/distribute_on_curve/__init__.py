@@ -7,6 +7,11 @@ from bpy.types import Operator
 
 class Distribute:
 
+    base_unit: float
+    hash_sizes: int
+    cyclic: bool
+    is_distribute: bool
+
     is_invoked = False
 
     def draw(self, context):

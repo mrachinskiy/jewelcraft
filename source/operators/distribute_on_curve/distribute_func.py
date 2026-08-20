@@ -1,14 +1,21 @@
 # SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
 import operator
 from collections.abc import Iterator
+from typing import TYPE_CHECKING
 
 import bpy
 from bpy.types import Constraint, Object
 from mathutils import Matrix, Vector
 
 from ...lib import asset, iterutils, mesh
+
+
+if TYPE_CHECKING:
+    from . import OBJECT_OT_curve_distribute
 
 
 def _eq(a: float, b: float) -> bool:
@@ -120,7 +127,7 @@ def _create_dstr(ob: Object, curve: Object, sizes: list, con_add=True) -> list[t
     return obs
 
 
-def execute(self, context):
+def execute(self: OBJECT_OT_curve_distribute, context):
     context.view_layer.update()
 
     # Set objects
@@ -235,7 +242,7 @@ def execute(self, context):
     return {"FINISHED"}
 
 
-def invoke(self, context, event):
+def invoke(self: OBJECT_OT_curve_distribute, context, event):
     wm = context.window_manager
     sizes = wm.jewelcraft.sizes
     show_props = not bpy.app.background and context.area.type == "VIEW_3D"

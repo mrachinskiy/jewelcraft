@@ -298,7 +298,11 @@ class OBJECT_OT_gem_recover(Operator):
     rot_var: IntProperty(default=1, options={"HIDDEN", "SKIP_SAVE"})
     y_var: IntProperty(default=1, options={"HIDDEN", "SKIP_SAVE"})
     xy_loc: IntProperty(options={"HIDDEN", "SKIP_SAVE"})
+
     _mats: list
+    ob_names: list
+    handler_axis = None
+    handler_text = None
 
     @classmethod
     def poll(cls, context):
