@@ -14,11 +14,11 @@ class Dimensions(PropertyGroup):
     z2: FloatProperty(name="Bottom", step=0.1, unit="LENGTH")
 
 
-def upd_coords_handle(self, context):
+def _upd_coords_handle(self, context):
     self.girdle_dim.z1, self.table_z = self.table_z, self.girdle_dim.z1
 
 
-def upd_coords_hole(self, context):
+def _upd_coords_hole(self, context):
     self.hole_dim.z1, self.culet_z = self.culet_z, self.hole_dim.z1
     self.hole_dim.y, self.culet_size = self.culet_size, self.hole_dim.y
 
@@ -37,14 +37,14 @@ class OBJECT_OT_cutter_add(Operator):
 
     detalization: IntProperty(name="Detalization", default=32, min=12, soft_max=64, step=1)
 
-    use_handle: BoolProperty(name="Handle", update=upd_coords_handle)
+    use_handle: BoolProperty(name="Handle", update=_upd_coords_handle)
     handle_dim: PointerProperty(type=Dimensions)
     handle_shift: FloatProperty(name="Position Offset", step=0.1, unit="LENGTH")
 
     girdle_dim: PointerProperty(type=Dimensions)
     table_z: FloatProperty(name="Table", options={"HIDDEN"})
 
-    use_hole: BoolProperty(name="Hole", update=upd_coords_hole)
+    use_hole: BoolProperty(name="Hole", update=_upd_coords_hole)
     hole_dim: PointerProperty(type=Dimensions)
     hole_shift: FloatProperty(name="Position Offset", step=0.1, unit="LENGTH")
     culet_z: FloatProperty(name="Culet", options={"HIDDEN"})

@@ -1,8 +1,15 @@
 # SPDX-FileCopyrightText: 2015-2026 Mikhail Rachinskiy
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import bpy
-from mathutils import Vector
+
+
+if TYPE_CHECKING:
+    from mathutils import Vector
 
 
 WARN_SCALE = 1

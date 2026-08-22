@@ -7,7 +7,6 @@ import bpy
 from bpy.app.translations import pgettext_iface as _
 from bpy.props import BoolProperty, EnumProperty, FloatProperty, FloatVectorProperty, IntProperty, StringProperty
 from bpy.types import Object, Operator
-from mathutils import Matrix
 
 from .. import var
 from ..lib import unit
@@ -139,6 +138,8 @@ class OBJECT_OT_mirror(Operator):
         return wm.invoke_props_popup(self, event)
 
     def object_mirror(self, obs: tuple[Object, bool], i: int) -> tuple[Object, bool]:
+        from mathutils import Matrix
+
         context = bpy.context
         space_data = context.space_data
         use_local_view = bool(space_data.local_view)

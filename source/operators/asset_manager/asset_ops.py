@@ -15,7 +15,7 @@ def _asset_menu_lock():
     bpy.context.window_manager.jewelcraft.asset_menu_ui_lock = True
 
 
-def upd_asset_name(self, context):
+def _upd_asset_name(self, context):
     if self.type == "COLLECTION":
         self.asset_name = self.collection_name
     else:
@@ -30,7 +30,7 @@ class AssetAdd:
             ("COLLECTION", "Collection", ""),
             ("OBJECT", "Object", ""),
         ),
-        update=upd_asset_name,
+        update=_upd_asset_name,
     )
     collection_name: StringProperty(name="Collection", options={"SKIP_SAVE"})
     object_name: StringProperty(name="Object", options={"SKIP_SAVE"})
@@ -110,7 +110,7 @@ class AssetAdd:
             self.object_name = context.object.name
 
         if self.is_add:
-            upd_asset_name(self, context)
+            _upd_asset_name(self, context)
         elif self.filepath:
             self.asset_name = Path(self.filepath).stem
 

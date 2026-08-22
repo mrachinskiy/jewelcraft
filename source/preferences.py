@@ -44,12 +44,12 @@ def _upd_lock(func: Callable) -> None:
 _folder_cache = {}
 
 
-def upd_folder_cache(self, context):
+def _upd_folder_cache(self, context):
     wm_props = context.window_manager.jewelcraft
     _folder_cache[wm_props.asset_libs.index] = wm_props.asset_folder
 
 
-def upd_folder_list(self, context):
+def _upd_folder_list(self, context):
     dynamic_list.asset_folders_refresh()
 
     # Recover previous folder
@@ -70,51 +70,51 @@ def upd_folder_list(self, context):
 # ------------------------------------------
 
 
-def upd_serialize_colors(self, context):
+def _upd_serialize_colors(self, context):
     if self.builtin:
         return
     _upd_lock(bpy.context.window_manager.jewelcraft.gem_colors.serialize)
 
 
-def upd_color_name(self, context=None):
+def _upd_color_name(self, context=None):
     wm_props = context.window_manager.jewelcraft
     color = wm_props.gem_colors.active_item()
     wm_props["gem_color"] = color.color
     wm_props["gem_color_name"] = _(color.name)
 
 
-def upd_folder_list_serialize(self, context):
-    upd_folder_list(self, context)
+def _upd_folder_list_serialize(self, context):
+    _upd_folder_list(self, context)
     bpy.context.window_manager.jewelcraft.asset_libs.serialize()
 
 
-def upd_lib_name(self, context):
+def _upd_lib_name(self, context):
     self["name"] = Path(self.path).name or self.name
-    upd_folder_list_serialize(self, context)
+    _upd_folder_list_serialize(self, context)
 
 
-def upd_asset_popover_width(self, context):
+def _upd_asset_popover_width(self, context):
     ui.VIEW3D_PT_jewelcraft_assets.bl_ui_units_x = self.asset_popover_width
     bpy.utils.unregister_class(ui.VIEW3D_PT_jewelcraft_assets)
     bpy.utils.register_class(ui.VIEW3D_PT_jewelcraft_assets)
 
 
-def upd_spacing(self, context):
+def _upd_spacing(self, context):
     from .lib import spacing
     spacing.handler_toggle(self, context)
 
 
-def upd_spacing_overlay(self, context):
+def _upd_spacing_overlay(self, context):
     from .lib import overlays
     overlays.spacing.handler_toggle(self, context)
 
 
-def upd_gem_map_overlay(self, context):
+def _upd_gem_map_overlay(self, context):
     from .lib import overlays
     overlays.gem_map.handler_toggle(self, context)
 
 
-def upd_material_list_rename(self, context):
+def _upd_material_list_rename(self, context):
     if not self.name:
         self["name"] = self.name_orig
         return
@@ -139,7 +139,7 @@ def upd_material_list_rename(self, context):
 
 
 class GemColor(PropertyGroup):
-    name: StringProperty(name="Click to rename", default="Colorless", update=upd_serialize_colors)
+    name: StringProperty(name="Click to rename", default="Colorless", update=_upd_serialize_colors)
     color: FloatVectorProperty(
         name="Color",
         default=(1.0, 1.0, 1.0),
@@ -147,7 +147,7 @@ class GemColor(PropertyGroup):
         min=0.0,
         max=1.0,
         subtype="COLOR",
-        update=upd_serialize_colors,
+        update=_upd_serialize_colors,
     )
     builtin: BoolProperty()
 
@@ -190,7 +190,7 @@ class WeightingMaterial(PropertyGroup):
 
 
 class WeightingListItem(PropertyGroup):
-    name: StringProperty(name="Click to rename", update=upd_material_list_rename)
+    name: StringProperty(name="Click to rename", update=_upd_material_list_rename)
     name_orig: StringProperty()
     default: BoolProperty()
     builtin: BoolProperty()
@@ -315,8 +315,8 @@ class Measurement(PropertyGroup):
 
 
 class AssetLib(PropertyGroup):
-    name: StringProperty(default="Untitled", update=upd_folder_list_serialize)
-    path: StringProperty(default="/", subtype="DIR_PATH", update=upd_lib_name)
+    name: StringProperty(default="Untitled", update=_upd_folder_list_serialize)
+    path: StringProperty(default="/", subtype="DIR_PATH", update=_upd_lib_name)
 
     def asdict(self) -> dict[str, str]:
         return dict(self)
@@ -408,7 +408,7 @@ class ListProperty:
 
 
 class GemColorsList(ListProperty, PropertyGroup):
-    index: IntProperty(update=upd_color_name)
+    index: IntProperty(update=_upd_color_name)
     coll: CollectionProperty(type=GemColor)
 
     def set_active_by_name(self, name: str) -> tuple[int, int, int]:
@@ -550,7 +550,7 @@ class MeasurementsList(ListProperty, PropertyGroup):
 
 
 class AssetLibsList(ListProperty, PropertyGroup):
-    index: IntProperty(update=upd_folder_list)
+    index: IntProperty(update=_upd_folder_list)
     coll: CollectionProperty(type=AssetLib)
 
     def path(self) -> Path:
@@ -654,7 +654,7 @@ class Preferences(ReportLangEnum, AddonPreferences):
         description="Assets popover width",
         default=20,
         min=0,
-        update=upd_asset_popover_width,
+        update=_upd_asset_popover_width,
     )
     asset_ui_preview_scale: FloatProperty(
         name="Preview Scale",
@@ -780,23 +780,23 @@ class WmProperties(PropertyGroup):
     use_spacing: BoolProperty(
         name="Spacing",
         description="Space out nearby gems",
-        update=upd_spacing,
+        update=_upd_spacing,
     )
     show_spacing: BoolProperty(
         name="Spacing Overlay",
         description="Show distance to nearby gems",
-        update=upd_spacing_overlay,
+        update=_upd_spacing_overlay,
     )
     show_gem_map: BoolProperty(
         name="Gem Map",
         description="Show color-coded gem map",
-        update=upd_gem_map_overlay,
+        update=_upd_gem_map_overlay,
     )
     asset_folder: EnumProperty(
         name="Category",
         description="Asset category",
         items=dynamic_list.asset_folders,
-        update=upd_folder_cache,
+        update=_upd_folder_cache,
     )
     asset_filter: StringProperty(
         name="Filter",
