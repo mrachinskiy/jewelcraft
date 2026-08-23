@@ -40,9 +40,8 @@ def server_gen(src_dir: Path, package_dir: Path) -> list[str]:
 
     manifest = get_manifest(src_dir)
     addon_ver = manifest["version"]
-    min_ver = manifest["blender_version_min"]
     old_url = f"./{zip_name}"
-    new_url = f"https://github.com/mrachinskiy/jewelcraft/releases/download/v{addon_ver}-blender{min_ver}/{zip_name}"
+    new_url = f"https://github.com/mrachinskiy/jewelcraft/releases/download/v{addon_ver}/{zip_name}"
 
     with open(package_dir / json_name, "r") as file:
         contents = file.read().replace(old_url, new_url)
