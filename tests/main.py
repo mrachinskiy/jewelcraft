@@ -15,6 +15,20 @@ GREEN = "\033[92m"
 INVERSE = "\033[7m"
 RESET = "\033[0m"
 
+EXPR = """
+import sys
+import traceback
+
+sys.path.append(r'{0}')
+import {1}
+
+try:
+    {1}.main()
+except:
+    traceback.print_exc()
+    sys.exit(1)
+"""
+
 
 def print_info(s: str) -> None:
     print(f"{INVERSE} {s} {RESET}")
@@ -57,7 +71,7 @@ def main() -> None:
 
     for blender in blender_apps:
         for test in tests:
-            cmd = [blender / "blender.exe", "-b", "-P", test]
+            cmd = [blender / "blender.exe", "-b", "--python-expr", EXPR.format(TESTS_DIR, test.stem)]
             if make_examples:
                 cmd += ["--", "--make_examples"]
             proc = subprocess.run(cmd, capture_output=True)

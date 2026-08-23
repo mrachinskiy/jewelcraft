@@ -4,7 +4,6 @@
 import filecmp
 import sys
 import tempfile
-import traceback
 from pathlib import Path
 
 import bpy
@@ -94,10 +93,3 @@ def main() -> None:
         make_examples()
     else:
         test_design_report()
-
-
-try:
-    main()
-except:
-    traceback.print_exc()
-    sys.exit(1)
