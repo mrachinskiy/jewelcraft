@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2025-2026 Mikhail Rachinskiy
 
-import os
 import subprocess
 import tomllib
 from pathlib import Path
@@ -27,6 +26,10 @@ def print_err(s: str) -> None:
 
 def str_to_ver(s: str) -> tuple[int, ...]:
     return tuple(int(x) for x in s.split(".")[:2] if x.isdigit())
+
+
+def clear() -> None:
+    print("\033[H\033[J", end="")
 
 
 def main() -> None:
@@ -81,7 +84,7 @@ def input_blender_ver(vers: list[tuple[int, ...]]) -> str:
         "\n"
         "> "
     )
-    os.system("cls")
+    clear()
     return _input.strip().lower()
 
 
@@ -93,7 +96,7 @@ def input_make_examples() -> bool:
         "\n"
         "> "
     )
-    os.system("cls")
+    clear()
     return _input.strip().lower() == "y"
 
 
@@ -132,6 +135,6 @@ def get_blender_apps() -> list[Path]:
     return list(apps.values())
 
 
-os.system("cls")
+clear()
 main()
 input()
