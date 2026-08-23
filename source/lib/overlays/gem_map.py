@@ -100,7 +100,10 @@ _shader_info.fragment_source(
     }
     """
 )
-_shader_combined = gpu.shader.create_from_info(_shader_info)
+
+
+if not bpy.app.background:
+    _shader_combined = gpu.shader.create_from_info(_shader_info)
 
 
 def handler_add(self, context, is_overlay=True, to_srgb=False, use_select=False, use_mat_color=False):
