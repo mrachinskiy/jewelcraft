@@ -15,20 +15,6 @@ GREEN = "\033[92m"
 INVERSE = "\033[7m"
 RESET = "\033[0m"
 
-EXPR = """
-import sys
-import traceback
-
-sys.path.append(r'{0}')
-import {1}
-
-try:
-    {1}.main()
-except:
-    traceback.print_exc()
-    sys.exit(1)
-"""
-
 
 def print_info(s: str) -> None:
     print(f"{INVERSE} {s} {RESET}")
@@ -52,6 +38,19 @@ def main() -> None:
     # --------------------
 
     tests = get_tests()
+    expr = f"""
+import sys
+import traceback
+
+sys.path.append(r'{TESTS_DIR}')
+import {','.join(tests)}
+
+try:
+    {';'.join(f'{test}.main()' for test in tests)}
+except:
+    traceback.print_exc()
+    sys.exit(1)
+"""
 
     # Blender apps
     # --------------------
@@ -70,19 +69,23 @@ def main() -> None:
     print_info("BEGIN")
 
     for blender in blender_apps:
-        for test in tests:
-            cmd = [blender / "blender.exe", "-b", "--python-expr", EXPR.format(TESTS_DIR, test.stem)]
-            if make_examples:
-                cmd += ["--", "--make_examples"]
-            proc = subprocess.run(cmd, capture_output=True)
-            if proc.returncode:
-                print(f"{RED}{INVERSE} FAILED {RESET} {RED}{blender.name} {test.stem}{RESET}")
-                print(proc.stderr.decode().strip())
+        cmd = [blender / "blender.exe", "-b", "--python-expr", expr]
+        if make_examples:
+            cmd += ["--", "--make_examples"]
+
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        if proc.returncode:
+            print(f"{RED}{INVERSE} FAILED {RESET} {RED}{blender.name}{RESET}")
+            print(proc.stderr)
+            return
+        else:
+            print(f"{GREEN}{INVERSE} PASSED {RESET} {blender.name}")
+            if proc.stderr:
+                print(proc.stderr)
                 return
-            else:
-                print(f"{GREEN}{INVERSE} PASSED {RESET} {blender.name} {test.stem}")
 
         if make_examples:
+            print(f"{GREEN}Examples genearted{RESET}")
             break
 
     print_info("END")
@@ -114,11 +117,11 @@ def input_make_examples() -> bool:
     return _input.strip().lower() == "y"
 
 
-def get_tests() -> list[Path]:
+def get_tests() -> list[str]:
     tests = []
     for entry in TESTS_DIR.iterdir():
         if entry.is_file() and entry.suffix == ".py" and entry.name.startswith("test") and entry.stem != "test_performance":
-            tests.append(entry)
+            tests.append(entry.stem)
 
     return tests
 
