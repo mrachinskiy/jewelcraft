@@ -11,6 +11,8 @@ else:
     from . import localization, operators, preferences, ui, var
     from .lib import essentials, on_load, previewlib
 
+    essentials.check_integrity(var.GEMS_FILE)
+
 
 classes = essentials.get_classes((operators, preferences, ui))
 
