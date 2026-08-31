@@ -24,15 +24,19 @@ def print_err(s: str) -> None:
     print(f"{RED}{INVERSE} {s} {RESET}")
 
 
-def str_to_ver(s: str) -> tuple[int, ...]:
-    return tuple(int(x) for x in s.split(".")[:2] if x.isdigit())
-
-
 def clear() -> None:
     print("\033[H\033[J", end="")
 
 
 def main() -> None:
+
+    # Add-on
+    # --------------------
+
+    with open(TESTS_DIR.parent / "source" / "blender_manifest.toml", "rb") as file:
+        manifest = tomllib.load(file)
+
+    addon_id = f"bl_ext.user_default.{manifest['id']}"
 
     # Tests
     # --------------------
@@ -41,6 +45,9 @@ def main() -> None:
     expr = f"""
 import sys
 import traceback
+
+import bpy
+bpy.ops.preferences.addon_enable(module='{addon_id}')
 
 sys.path.append(r'{TESTS_DIR}')
 import {','.join(tests)}
@@ -56,7 +63,7 @@ except:
     # --------------------
 
     try:
-        blender_apps = get_blender_apps()
+        blender_apps = get_blender_apps(manifest)
     except FileNotFoundError:
         print_err("BLENDER VERSION NOT FOUND")
         return
@@ -126,9 +133,10 @@ def get_tests() -> list[str]:
     return tests
 
 
-def get_blender_apps() -> list[Path]:
-    with open(TESTS_DIR.parent / "source" / "blender_manifest.toml", "rb") as file:
-        manifest = tomllib.load(file)
+def get_blender_apps(manifest: dict[str, str]) -> list[Path]:
+
+    def str_to_ver(s: str) -> tuple[int, ...]:
+        return tuple(int(x) for x in s.split(".")[:2] if x.isdigit())
 
     ver = str_to_ver(manifest["blender_version_min"])
 
