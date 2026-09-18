@@ -5,12 +5,12 @@ from math import cos, pi, sin, tau
 
 import bmesh
 from bmesh.types import BMesh, BMVert
-from mathutils import Matrix, Vector
+from mathutils import Matrix
 
 from ...lib import iterutils, mesh
 
 
-def get(self, gem_dim: Vector):
+def get(self, gem_size: float) -> BMesh:
     prong_rad = self.diameter / 2
 
     # Prong
@@ -32,7 +32,7 @@ def get(self, gem_dim: Vector):
         bm.transform(Matrix.Rotation(-self.alignment, 4, "X"))
 
     # Intersection
-    pos_offset = (gem_dim.y / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
+    pos_offset = (gem_size / 2 + prong_rad) - (self.diameter * (self.intersection / 100))
     bm.transform(Matrix.Translation((0.0, pos_offset, 0.0)))
 
     # Position

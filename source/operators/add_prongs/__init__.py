@@ -50,14 +50,16 @@ class OBJECT_OT_prongs_add(Operator):
         from_scene = unit.Scale().from_scene
         group_by_size = collections.defaultdict(list)
 
+        context.view_layer.update()
+
         for ob in context.selected_objects:
             if "gem" in ob:
-                size = from_scene(ob.dimensions).to_tuple(2)
+                size = round(from_scene(ob.dimensions.y), 2)
                 group_by_size[size].append(ob)
 
         for size, obs in group_by_size.items():
             try:
-                bm = prongs_mesh.get(self, obs[0].dimensions)
+                bm = prongs_mesh.get(self, size)
                 asset.bm_to_parent(bm, obs, name="Prongs", color=color)
             finally:
                 bm.free()
