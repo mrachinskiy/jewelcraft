@@ -49,7 +49,7 @@ def icon(name: str) -> int:
 
 
 def icon_menu(name: str) -> int:
-    return _icon(name, bpy.context.preferences.themes[0].user_interface.wcol_menu_item.inner[:])
+    return _icon(name, bpy.context.preferences.themes[0].user_interface.wcol_menu_back.inner[:])
 
 
 def _icon(name: str, color: tuple[float, ...]) -> int:
