@@ -4,7 +4,7 @@
 from bpy.types import Menu, Panel, PropertyGroup, UILayout, UIList
 
 from .lib import dynamic_list, unit, updatelib
-from .lib.previewlib import icon, icon_menu
+from .lib.previewlib import icon, icon_menu, icon_tab
 
 
 # Lists
@@ -113,7 +113,7 @@ class VIEW3D_UL_jewelcraft_sizes(UIList):
 def draw_jewelcraft_menu(self, context):
     layout = self.layout
     layout.separator()
-    layout.menu("VIEW3D_MT_jewelcraft")
+    layout.menu("VIEW3D_MT_jewelcraft", icon_value=icon_menu("APP"))
 
 
 class VIEW3D_MT_jewelcraft(Menu):
@@ -307,6 +307,7 @@ class SidebarSetup:
     bl_category = "JewelCraft"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
+    bl_icon_value = icon_tab("APP")
 
     def popover_header(self) -> None:
         self.popover_header_prop(None, None)

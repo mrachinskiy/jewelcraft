@@ -52,6 +52,10 @@ def icon_menu(name: str) -> int:
     return _icon(name, bpy.context.preferences.themes[0].user_interface.wcol_menu_back.inner[:])
 
 
+def icon_tab(name: str) -> int:
+    return _icon(name, bpy.context.preferences.themes[0].user_interface.wcol_tab.inner[:])
+
+
 def _icon(name: str, color: tuple[float, ...]) -> int:
     if (iid := _cache.get((name, color))) is not None:
         return iid
