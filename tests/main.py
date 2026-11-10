@@ -38,6 +38,15 @@ def main() -> None:
 
     addon_id = f"bl_ext.user_default.{manifest['id']}"
 
+    # Blender apps
+    # --------------------
+
+    try:
+        blender_apps = get_blender_apps(manifest)
+    except FileNotFoundError:
+        print_err("BLENDER VERSION NOT FOUND")
+        return
+
     # Tests
     # --------------------
 
@@ -58,15 +67,6 @@ except:
     traceback.print_exc()
     sys.exit(1)
 """
-
-    # Blender apps
-    # --------------------
-
-    try:
-        blender_apps = get_blender_apps(manifest)
-    except FileNotFoundError:
-        print_err("BLENDER VERSION NOT FOUND")
-        return
 
     # Testing
     # --------------------
